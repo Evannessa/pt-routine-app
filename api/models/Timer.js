@@ -20,7 +20,18 @@ const TimerSchema = new mongoose.Schema({
     },
 });
 const TimerSetSchema = new mongoose.Schema({
+    label: {
+        type: String,
+        trim: true,
+        required: true,
+    },
     timers: [TimerSchema],
+    youtubeLink: {
+        type: String,
+    },
+    spotifyLink: {
+        type: String,
+    },
 });
 
 //? model is wrapper around schema
