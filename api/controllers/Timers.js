@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const { Timer, TimerSet } = require("../models/Timer");
 console.log(Timer, TimerSet);
 
@@ -20,7 +21,10 @@ const getBlankSet = async (req, res) => {
 function createDefaultTimers(number) {
     let timers = [];
     for (let i = 0; i < number; i++) {
+        var id = new mongoose.Types.ObjectId();
+        console.log(id);
         timers.push({
+            id: id,
             label: "New Timer",
             time: {
                 seconds: 0,
