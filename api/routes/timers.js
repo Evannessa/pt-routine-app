@@ -12,7 +12,7 @@ const {
 // router.route("/").get(getAllSets).post(createNewSet);
 router.route("/").get(getAllSets);
 router.route("/new").get(getBlankSet).post(createNewSet);
-router.route("/:invoiceId").get(getSingleSet).patch(updateSet).delete(deleteSet);
+router.route("/:id").get(getSingleSet).patch(updateSet).delete(deleteSet);
 // router.route("/").get(getAllTimers).post(createTimer);
 // router.route("/:id").get(getSingleTimer).patch(updateTimer).delete(deleteTimer);
 

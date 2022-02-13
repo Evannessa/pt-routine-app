@@ -11,8 +11,10 @@ const getAllSets = async (req, res) => {
 };
 const getBlankSet = async (req, res) => {
     res.status(202).json({
-        label: "New Timer Set",
-        timers: createDefaultTimers(3),
+        set: {
+            label: "New Timer Set",
+            timers: createDefaultTimers(3),
+        },
     });
 };
 function createDefaultTimers(number) {
