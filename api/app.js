@@ -7,10 +7,12 @@ var cors = require("cors");
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 var testAPIRouter = require("./routes/testAPI");
-var timersRouter = require("./routes/timers");
+var timersRouter = require("./routes/timerRoutes");
 const connectDB = require("./db/connect");
 require("dotenv").config();
+const fileUpload = require("express-fileupload");
 var app = express();
+
 const port = 9000;
 
 // view engine setup
@@ -24,6 +26,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
+app.use(fileUpload()); //! HAD TO PUT THIS BEFORE THE APP.USE() ROUTER
 app.use("/factory", timersRouter);
 app.use("/users", usersRouter);
 app.use("/testAPI", testAPIRouter);
@@ -43,7 +46,10 @@ app.use(function (err, req, res, next) {
     res.status(err.status || 500);
     res.render("error");
 });
-
+app.post("/factory/uploads", (req, res) => {
+    console.log("Files are", req.files);
+    res.status(200).send("idk no files");
+});
 const start = async () => {
     try {
         await connectDB(process.env.MONGO_URI);
