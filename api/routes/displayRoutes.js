@@ -12,5 +12,6 @@ const {
 const { uploadImage } = require("../controllers/uploadsController");
 
 router.route("/").get(getAllSets);
+router.route("/:id").get(getSingleSet);
 
 module.exports = router;
