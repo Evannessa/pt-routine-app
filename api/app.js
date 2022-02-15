@@ -4,10 +4,9 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 var cors = require("cors");
-var indexRouter = require("./routes/index");
-var usersRouter = require("./routes/users");
-var testAPIRouter = require("./routes/testAPI");
-var timersRouter = require("./routes/timerRoutes");
+// var indexRouter = require("./routes/index");
+var factoryRouter = require("./routes/factoryRoutes");
+var displayRouter = require("./routes/displayRoutes");
 const connectDB = require("./db/connect");
 require("dotenv").config();
 const fileUpload = require("express-fileupload");
@@ -27,9 +26,10 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use(fileUpload()); //! HAD TO PUT THIS BEFORE THE APP.USE() ROUTER
-app.use("/factory", timersRouter);
-app.use("/users", usersRouter);
-app.use("/testAPI", testAPIRouter);
+app.use("/factory", factoryRouter);
+app.use("/display", displayRouter);
+// app.use("/users", usersRouter);
+// app.use("/testAPI", testAPIRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -46,10 +46,7 @@ app.use(function (err, req, res, next) {
     res.status(err.status || 500);
     res.render("error");
 });
-app.post("/factory/uploads", (req, res) => {
-    console.log("Files are", req.files);
-    res.status(200).send("idk no files");
-});
+
 const start = async () => {
     try {
         await connectDB(process.env.MONGO_URI);

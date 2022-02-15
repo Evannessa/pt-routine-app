@@ -1,18 +1,20 @@
 const path = require("path");
+var mongoose = require("mongoose");
+const { Timer, TimerSet } = require("../models/Timer");
 
-const fileUpload = require("express-fileupload");
 const uploadImage = async (req, res) => {
-    // console.log(req);
+    console.log("Our files are", req.files);
     const slideImage = req.files.image; //get the image data from the upload
     const imagePath = path.join(__dirname, "../public/uploads/" + `${slideImage.name}`);
     //get the path we want to move it to in tue public folder
     await slideImage.mv(imagePath);
     //move the image to the image path
 
-    //send the data back
+    if (!slideImage) {
+        //send the data back
+        return res.status(500).json({ msg: "Something went wrong" });
+    }
     return res.status(200).json({ image: { src: `/uploads/${slideImage.name}` } });
-
-    res.status(200).send("upload product image");
 };
 
 module.exports = {

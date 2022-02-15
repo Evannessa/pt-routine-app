@@ -15,7 +15,7 @@ const { uploadImage } = require("../controllers/uploadsController");
 router.route("/").get(getAllSets);
 router.route("/new").get(getBlankSet).post(createNewSet);
 router.route("/:id").get(getSingleSet).patch(updateSet).delete(deleteSet);
-router.route("/uploads").post(uploadImage);
+router.route("/:id/uploads").post(uploadImage);
 // router.route("/").get(getAllTimers).post(createTimer);
 // router.route("/:id").get(getSingleTimer).patch(updateTimer).delete(deleteTimer);
 

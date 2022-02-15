@@ -31,6 +31,7 @@ function createDefaultTimers(number) {
                 minutes: 0,
                 hours: 0,
             },
+            slideImagePath: "",
         });
     }
     return timers;
@@ -94,14 +95,43 @@ const getSingleSet = async (req, res) => {
         res.status(500).json({ msg: error });
     }
 };
+
+function findPropertyToUpdate() {}
+
 const updateSet = async (req, res) => {
     try {
+        const { parentProperty, childProperty, timerId, src } = req.body;
         const { id: setId } = req.params;
-        //have to include the options object
-        const set = await TimerSet.findOneAndUpdate({ _id: setId }, req.body, {
-            new: true,
-            runValidators: true,
-        });
+        //have to include the options object with new "true" to return the updated object
+        console.log(req.body);
+        let fullPropertyName;
+        if (req.body.parentProperty && req.body.childProperty) {
+            fullPropertyName = req.body.parentProperty + "." + req.body.childProperty;
+        }
+        console.log(fullPropertyName);
+        switch (parentProperty) {
+            case "timers":
+                break;
+            case "label":
+                break;
+            case "spotifyLink":
+                break;
+            case "youtubeLink":
+                break;
+        }
+        // full property name should be like should be "timers.slideImage"
+        const set = await TimerSet.findOneAndUpdate(
+            { _id: setId }, //get parent TimerSet with this id
+            { $set: { "timers.$[el].slideImagePath": src } }, //point to the specific element we want to update
+            {
+                //options
+                new: true,
+                upsert: true,
+                runValidators: true,
+                arrayFilters: [{ "el._id": timerId }], //filtering the child array by the id
+            }
+        );
+        console.log("Updated set is", set);
         if (!set) {
             res.status(404).json({ msg: `No timer found with id ${setId}` });
         }
