@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { Timer, TimerSet } = require("../models/Timer");
+const { Timer, TimerSet } = require("../models/timerModels");
 console.log(Timer, TimerSet);
 
 const getAllSets = async (req, res) => {
