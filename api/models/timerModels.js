@@ -18,6 +18,7 @@ const TimerSchema = new mongoose.Schema({
     slideImagePath: {
         type: String,
     },
+    description: "",
 });
 const TimerSetSchema = new mongoose.Schema({
     label: {
