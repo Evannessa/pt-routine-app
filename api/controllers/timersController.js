@@ -108,7 +108,7 @@ const updateSet = async (req, res) => {
             //if we're updating one of the timers
             set = await TimerSet.findOneAndUpdate(
                 { _id: setId }, //get parent TimerSet with this id
-                { $set: { "timers.$[el].slideImagePath": src } }, //point to the specific element we want to update
+                { $set: { ["timers.$[el]." + `${childProperty}`]: src } }, //point to the specific element we want to update
                 {
                     //options
                     new: true,
@@ -128,6 +128,7 @@ const updateSet = async (req, res) => {
                     new: true,
                     upsert: true,
                     runValidators: true,
+                    overwrite: true,
                 }
             );
         }
