@@ -101,36 +101,36 @@ function findPropertyToUpdate() {}
 const updateSet = async (req, res) => {
     try {
         const { parentProperty, childProperty, timerId, src } = req.body;
-        const { id: setId } = req.params;
-        //have to include the options object with new "true" to return the updated object
-        console.log(req.body);
-        let fullPropertyName;
-        if (req.body.parentProperty && req.body.childProperty) {
-            fullPropertyName = req.body.parentProperty + "." + req.body.childProperty;
+        let set;
+        if (parentProperty && parentProperty === "timers") {
+            const { id: setId } = req.params;
+            //have to include the options object with new "true" to return the updated object
+            //if we're updating one of the timers
+            set = await TimerSet.findOneAndUpdate(
+                { _id: setId }, //get parent TimerSet with this id
+                { $set: { "timers.$[el].slideImagePath": src } }, //point to the specific element we want to update
+                {
+                    //options
+                    new: true,
+                    upsert: true,
+                    runValidators: true,
+                    arrayFilters: [{ "el._id": timerId }], //filtering the child array by the id
+                }
+            );
+        } else {
+            // const { property, value } = req.body;
+            console.log(req.body);
+            const { id: setId } = req.params;
+            set = await TimerSet.findOneAndUpdate(
+                { _id: setId },
+                { ...req.body },
+                {
+                    new: true,
+                    upsert: true,
+                    runValidators: true,
+                }
+            );
         }
-        console.log(fullPropertyName);
-        switch (parentProperty) {
-            case "timers":
-                break;
-            case "label":
-                break;
-            case "spotifyLink":
-                break;
-            case "youtubeLink":
-                break;
-        }
-        // full property name should be like should be "timers.slideImage"
-        const set = await TimerSet.findOneAndUpdate(
-            { _id: setId }, //get parent TimerSet with this id
-            { $set: { "timers.$[el].slideImagePath": src } }, //point to the specific element we want to update
-            {
-                //options
-                new: true,
-                upsert: true,
-                runValidators: true,
-                arrayFilters: [{ "el._id": timerId }], //filtering the child array by the id
-            }
-        );
         console.log("Updated set is", set);
         if (!set) {
             res.status(404).json({ msg: `No timer found with id ${setId}` });
