@@ -19,6 +19,7 @@ const TimerSchema = new mongoose.Schema({
         type: String,
     },
     description: "",
+    autostart: false,
 });
 const TimerSetSchema = new mongoose.Schema({
     label: {
