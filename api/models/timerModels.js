@@ -30,9 +30,11 @@ const TimerSetSchema = new mongoose.Schema({
     timers: [TimerSchema],
     youtubeLink: {
         type: String,
+        default: "",
     },
     spotifyLink: {
         type: String,
+        default: "",
     },
 });
 
