@@ -21,7 +21,7 @@ const getBlankSet = async (req, res) => {
 function createNewTimer() {
     var id = new mongoose.Types.ObjectId();
     return {
-        id: id,
+        _id: id,
         label: "New Timer",
         time: {
             seconds: 0,
@@ -36,7 +36,7 @@ function createDefaultTimers(number) {
     for (let i = 0; i < number; i++) {
         var id = new mongoose.Types.ObjectId();
         timers.push({
-            id: id,
+            _id: id,
             label: "New Timer",
             time: {
                 seconds: 0,
