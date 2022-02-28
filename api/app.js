@@ -7,6 +7,7 @@ var cors = require("cors");
 // var indexRouter = require("./routes/index");
 var factoryRouter = require("./routes/factoryRoutes");
 var displayRouter = require("./routes/displayRoutes");
+var linkInterfaceRouter = require("./routes/linkInterfaceRoutes");
 const connectDB = require("./db/connect");
 require("dotenv").config();
 const fileUpload = require("express-fileupload");
@@ -28,6 +29,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(fileUpload()); //! HAD TO PUT THIS BEFORE THE APP.USE() ROUTER
 app.use("/factory", factoryRouter);
 app.use("/display", displayRouter);
+app.use("/links", linkInterfaceRouter);
 // app.use("/users", usersRouter);
 // app.use("/testAPI", testAPIRouter);
 
