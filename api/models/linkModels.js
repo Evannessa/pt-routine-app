@@ -1,19 +1,4 @@
 const mongoose = require("mongoose");
-
-const LinkSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: true,
-    },
-    url: {
-        type: String,
-        required: true,
-    },
-    tags: {
-        type: Array,
-    },
-});
-
 const TagSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -25,6 +10,17 @@ const TagSchema = new mongoose.Schema({
         required: true,
         default: "#212121",
     },
+});
+const LinkSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true,
+    },
+    url: {
+        type: String,
+        required: true,
+    },
+    tags: [{ type: mongoose.Schema.Types.ObjectId, ref: "Tag" }],
 });
 
 module.exports = {

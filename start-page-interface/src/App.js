@@ -1,6 +1,7 @@
 import LinkNameInput from "./components/LinkNameInput";
 import "./App.css";
 import styled from "styled-components";
+import { Routes, Route, Outlet, Link } from "react-router-dom";
 
 const StyledContainer = styled.div`
     flex: 1;
@@ -19,7 +20,12 @@ const StyledContainer = styled.div`
 function App() {
     return (
         <StyledContainer className="App">
-            <LinkNameInput></LinkNameInput>
+            <Routes>
+                <Route path="links/">
+                    <Route path="new" element={<LinkNameInput />}></Route>
+                    <Route path=":id" element={<LinkNameInput />}></Route>
+                </Route>
+            </Routes>
         </StyledContainer>
     );
 }
