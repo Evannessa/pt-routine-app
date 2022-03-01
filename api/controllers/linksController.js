@@ -40,46 +40,65 @@ const getAllLinks = async (req, res) => {
         res.status(500).json({ msg: error });
     }
 };
+
+const removeTag(linkId, tagId){
+	
+}
+
 const updateLink = async (req, res) => {
     const { id: linkId } = req.params;
-    const { name, url, tags } = req.body;
+    const { tagName } = req.body;
     let link;
     let newTags = [];
-    for (let tagName of tags) {
-        let oldTagId;
-        //see if the tag exists, and add it to the newTags array
-        try {
-            let oldTag = await Tag.findOne({ name: tagName });
-            if (oldTag) {
-                oldTagId = oldTag._id;
-            }
-            // oldTagId = await Tag.findOne({ name: tagName }).select("_id").lean();
-        } catch (error) {
-            console.log(error);
+    let tagId;
+    try {
+        tagId = await Tag.findOne({ name: tagName }).select("_id").lean();
+        if (!tagId) {
+            await Tag.create({ name: tagName }).then((response) => {
+                tagId = response._id;
+            });
         }
-        //add it to new tags array
-        if (oldTagId) {
-            newTags.push(oldTagId);
-        }
-        //if it doesn't exist, create a new one
-        else {
-            try {
-                await Tag.create({ name: tagName }).then((response) => {
-                    newTags.push(response._id);
-                });
-            } catch (error) {
-                if (error.name === "MongoServerError" && error.code === 11000) {
-                    console.log("Tag already exists");
-                }
-            }
-        }
+    } catch (error) {
+        console.log(error);
     }
-    console.log("Our tags are", newTags);
+
+    console.log("Our new tag id is", tagId);
+
+    // for (let tagName of tags) {
+    //     let oldTagId;
+    //     //see if the tag exists, and add it to the newTags array
+    //     try {
+    //         let oldTag = await Tag.findOne({ name: tagName });
+    //         if (oldTag) {
+    //             oldTagId = oldTag._id;
+    //         }
+    //         // oldTagId = await Tag.findOne({ name: tagName }).select("_id").lean();
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    //     //add it to new tags array
+    //     if (oldTagId) {
+    //         newTags.push(oldTagId);
+    //     }
+    //     //if it doesn't exist, create a new one
+    //     else {
+    //         try {
+    //             await Tag.create({ name: tagName }).then((response) => {
+    //                 newTags.push(response._id);
+    //             });
+    //         } catch (error) {
+    //             if (error.name === "MongoServerError" && error.code === 11000) {
+    //                 console.log("Tag already exists");
+    //             }
+    //         }
+    //     }
+    // }
+    // console.log("Our tags are", newTags);
 
     try {
         let linkTags = await Link.findOne({ _id: linkId }).select("tags").lean();
         console.log("Before", linkTags.tags);
-        let mergedTags = [...linkTags.tags, ...newTags];
+        let mergedTags = [...linkTags.tags, tagId];
         //unique
         mergedTags = mergedTags.reduce((unique, object) => {
             if (!unique.some((obj) => obj._id.equals(object._id))) {
@@ -91,12 +110,14 @@ const updateLink = async (req, res) => {
         try {
             link = await Link.findByIdAndUpdate(
                 { _id: linkId },
-                { name: name, url: url, tags: [...mergedTags] },
+                { tags: [...mergedTags] },
                 { new: true }
             )
                 .populate("tags")
-                .exec((error, obj) => console.log(error, obj));
-            return res.status(200).json({ link });
+                .exec((error, obj) => {
+                    return res.status(200).json({ obj });
+                });
+            // return res.status(200).json({ link });
         } catch (error) {
             console.log("Error is", error);
             return res.status(500).json({ msg: error });

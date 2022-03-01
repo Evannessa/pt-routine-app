@@ -5,16 +5,17 @@ import { useParams, useLocation, useNavigate, Navigate } from "react-router-dom"
 import TextboxPrefix from "./TextboxPrefix";
 import TagChips from "./TagChips";
 
-const StyledTextboxSpan = styled.span`
+const StyledTextboxSpan = styled.div`
     background-color: #373737;
     min-width: 8rem;
-    height: 2rem;
+    min-height: 2rem;
     border-radius: 4px;
     border: none;
     border-bottom: 2px solid #6495ed;
     color: #6495ed;
     padding: 0.25rem 0.5rem;
     display: flex;
+    flex-wrap: wrap;
     gap: 0.25rem;
     align-items: center;
     /* justify-content: center; */
@@ -82,7 +83,7 @@ function LinkNameInput(props) {
         });
     }
 
-    //get tags to suggest when user types
+    //get ALL tags to suggest when user types
     React.useEffect(() => {
         try {
             axios.get(`${urlBase}/tags`).then((result) => {
@@ -108,11 +109,37 @@ function LinkNameInput(props) {
         }
     }, []);
 
-    let tagOptions = formData.tags.map((tag) => <option value={tag.name}></option>);
+    React.useEffect(() => {}, [formData.tags]);
+    let tagOptions = formData.tags.map((tag) => (
+        <option key={tag._id} value={tag.name}></option>
+    ));
     let tagSpans = formData.tags.map((tag) => (
-        <TagChips key={tag._id} tagName={tag.name ? tag.name : tag} />
+        <TagChips
+            key={tag._id}
+            id={tag._id}
+            removeTag={removeTag}
+            tagName={tag.name ? tag.name : tag}
+        />
     ));
 
+    //update the state with new data, and make a patch request
+    async function setStateAndPatch(newData) {
+        try {
+            let updated = await axios
+                .patch(`${urlBase}/${params.id}`, newData)
+                .then((response) => setFormData(response.data.obj));
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    //remove specific tag from this link
+    function removeTag(id) {
+        let tags = [...formData.tags].filter((tag) => tag._id !== id);
+        let newData = { ...formData, tags: tags };
+        console.log(newData);
+        setStateAndPatch(newData);
+    }
     function handleSubmit(event) {
         event.preventDefault();
         event.stopPropagation();
@@ -145,24 +172,33 @@ function LinkNameInput(props) {
         event.stopPropagation();
         let tagBox = event.currentTarget;
         let newTag = tagBox.value;
+        tagBox.value = "";
 
         if (event.key === "Enter" || event.keyCode === 13) {
             console.log("Pressed enter in textbox. Value is", tagBox.value);
+
+            //get tags from old formdata
             let newArray = [...formData.tags];
-            // let isNewTag = false;
+
+            //push new form data if doesn't exist
             if (!newArray.includes(newTag)) {
                 newArray.push(newTag);
-                // isNewTag = true;
             }
+            // let newData = {
+            //     ...formData,
+            //     tags: newArray,
+            // };
             let newData = {
-                ...formData,
-                tags: newArray,
+                id: formData._id,
+                tagName: newTag,
             };
+            //TODO: rather than sending the whole shebang, just send
+            // The new tag name and ID of link
             console.log("Passed data is", newData);
             try {
                 let updated = await axios
                     .patch(`${urlBase}/${params.id}`, newData)
-                    .then((response) => console.log(response));
+                    .then((response) => setFormData(response.data.obj));
             } catch (error) {
                 console.log(error);
             }

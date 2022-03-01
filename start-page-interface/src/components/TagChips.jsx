@@ -13,10 +13,24 @@ const StyledChipSpan = styled.span`
     overflow: hidden;
     text-overflow: ellipsis;
     padding: 0.15rem 0.25rem;
+    > button {
+        opacity: 0%;
+    }
+    &:hover {
+        > button {
+            opacity: 100%;
+        }
+    }
 `;
 
 function TagChips(props) {
-    return <StyledChipSpan>{props.tagName}</StyledChipSpan>;
+    function changeColor() {}
+    return (
+        <StyledChipSpan>
+            <button onClick={() => props.removeTag(props.id)}>X</button>
+            {props.tagName}
+        </StyledChipSpan>
+    );
 }
 
 export default TagChips;
