@@ -77,46 +77,30 @@ const updateLink = async (req, res) => {
     console.log("Our tags are", newTags);
 
     try {
-        link = await Link.findById({ _id: linkId })
-            .then((doc) => {
-                // console.log(doc);
-                newTags = newTags.filter((value) => !doc.tags.includes(value));
-                return doc;
-            })
-            .then(async (doc) => {
-                let link = await Link.updateOne(
-                    { _id: doc._id },
-                    { name: name, url: url, tags: [...doc.tags, ...newTags] },
-                    { new: true }
-                ).then((error, newDoc) => console.log("New doc?", error, newDoc));
-            })
-            .populate("tags");
-        // .exec((error, tag) => {
-        //     if (error) {
-        //         console.log(error);
-        //         return error;
-        //     }
-        //     res.status(200).json({ tag });
-        //     console.log("The tag is %s", tag);
-        //     return;
-        // });
-        // link = await Link.findByIdAndUpdate(
-        //     { _id: linkId },
-        //     {
-        //         name: name,
-        //         url: url,
-        //         tags: { $addToSet: { $each: newTags.map((tag) => tag._id) } },
-        //     },
-        //     { new: true }
-        //     // ).then((response) => console.log(response));
-        // ).populate("tags");
-
-        console.log("ink is", link);
-
-        console.log(link.populated("tags")); // this returns array of ObjectIds
-        console.log(link.tags[0].name); //this returns actual tag
-
-        // res.status(200).json({ link });
+        let linkTags = await Link.findOne({ _id: linkId }).select("tags").lean();
+        console.log("Before", linkTags.tags);
+        let mergedTags = [...linkTags.tags, ...newTags];
+        //unique
+        mergedTags = mergedTags.reduce((unique, object) => {
+            if (!unique.some((obj) => obj._id.equals(object._id))) {
+                unique.push(object);
+            }
+            return unique;
+        }, []);
+        console.log("After", mergedTags);
+        try {
+            link = await Link.findByIdAndUpdate(
+                { _id: linkId },
+                { name: name, url: url, tags: [...mergedTags] },
+                { new: true }
+            )
+                .populate("tags")
+                .exec((error, obj) => console.log(error, obj));
+            return res.status(200).json({ link });
+        } catch (error) {
+            console.log("Error is", error);
+            return res.status(500).json({ msg: error });
+        }
     } catch (error) {
         res.status(500).json({ msg: error });
     }
@@ -135,7 +119,7 @@ const getLink = async (req, res) => {
     try {
         const { id: linkId } = req.params;
         //use static function "findOne"
-        const link = await Link.findOne({ _id: linkId }); //get me the timer whose id is equal to request.params.id
+        const link = await Link.findOne({ _id: linkId }).populate("tags"); //get me the timer whose id is equal to request.params.id
         console.log("Link is", link);
         if (!link) {
             return res.status(404).json({ msg: `No timer with id : ${linkId}` }); //make sure that you ALWAYS have a return here so it exits  so you're not sending response after response

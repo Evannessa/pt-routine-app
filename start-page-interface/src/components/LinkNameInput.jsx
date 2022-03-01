@@ -3,6 +3,7 @@ import styled from "styled-components";
 import axios from "axios";
 import { useParams, useLocation, useNavigate, Navigate } from "react-router-dom";
 import TextboxPrefix from "./TextboxPrefix";
+import TagChips from "./TagChips";
 
 const StyledTextboxSpan = styled.span`
     background-color: #373737;
@@ -13,10 +14,19 @@ const StyledTextboxSpan = styled.span`
     border-bottom: 2px solid #6495ed;
     color: #6495ed;
     padding: 0.25rem 0.5rem;
+    display: flex;
+    gap: 0.25rem;
+    align-items: center;
+    /* justify-content: center; */
+    > span {
+        background-color: #6495ed;
+        color: white;
+    }
     input {
         border: 0px;
         height: 100%;
         background-color: #373737;
+        color: #6495ed;
     }
 `;
 
@@ -82,6 +92,8 @@ function LinkNameInput(props) {
         } catch (error) {
             console.log(error);
         }
+
+        //get the link with this id after redirect
         if (idRef.current !== "new") {
             try {
                 axios.get(`${urlBase}/${id}`).then((response) => {
@@ -98,12 +110,8 @@ function LinkNameInput(props) {
 
     let tagOptions = formData.tags.map((tag) => <option value={tag.name}></option>);
     let tagSpans = formData.tags.map((tag) => (
-        <StyledTextboxSpan>{tag.name}</StyledTextboxSpan>
+        <TagChips key={tag._id} tagName={tag.name ? tag.name : tag} />
     ));
-
-    React.useEffect(() => {
-        // console.log("Form data is", formData);
-    }, [formData]);
 
     function handleSubmit(event) {
         event.preventDefault();
@@ -129,7 +137,7 @@ function LinkNameInput(props) {
         }
     }
     /**
-     *
+     * handle pressing Enter in the tags box
      * @param {event} event - the event data within the text box
      */
     async function handleKeyDown(event) {
@@ -146,11 +154,11 @@ function LinkNameInput(props) {
                 newArray.push(newTag);
                 // isNewTag = true;
             }
-            console.log(newArray);
             let newData = {
                 ...formData,
                 tags: newArray,
             };
+            console.log("Passed data is", newData);
             try {
                 let updated = await axios
                     .patch(`${urlBase}/${params.id}`, newData)
