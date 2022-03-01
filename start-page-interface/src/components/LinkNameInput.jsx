@@ -94,6 +94,7 @@ function LinkNameInput(props) {
             console.log(error);
         }
 
+        console.log("Refreshing with:", "ID REF", idRef.current);
         //get the link with this id after redirect
         if (idRef.current !== "new") {
             try {
@@ -109,25 +110,29 @@ function LinkNameInput(props) {
         }
     }, []);
 
-    React.useEffect(() => {}, [formData.tags]);
-    let tagOptions = formData.tags.map((tag) => (
-        <option key={tag._id} value={tag.name}></option>
-    ));
-    let tagSpans = formData.tags.map((tag) => (
-        <TagChips
-            key={tag._id}
-            id={tag._id}
-            removeTag={removeTag}
-            tagName={tag.name ? tag.name : tag}
-        />
-    ));
+    let tagOptions = formData
+        ? formData.tags.map((tag) => <option key={tag._id} value={tag.name}></option>)
+        : [];
+    let tagSpans = formData
+        ? formData.tags.map((tag) => (
+              <TagChips
+                  key={tag._id}
+                  id={tag._id}
+                  removeTag={removeTag}
+                  tagName={tag.name ? tag.name : tag}
+              />
+          ))
+        : [];
 
     //update the state with new data, and make a patch request
     async function setStateAndPatch(newData) {
         try {
             let updated = await axios
                 .patch(`${urlBase}/${params.id}`, newData)
-                .then((response) => setFormData(response.data.obj));
+                .then((response) => {
+                    console.log("Response", response);
+                    return setFormData(response.data.link);
+                });
         } catch (error) {
             console.log(error);
         }
@@ -135,10 +140,14 @@ function LinkNameInput(props) {
 
     //remove specific tag from this link
     function removeTag(id) {
-        let tags = [...formData.tags].filter((tag) => tag._id !== id);
-        let newData = { ...formData, tags: tags };
-        console.log(newData);
-        setStateAndPatch(newData);
+        // let tags = [...formData.tags].filter((tag) => tag._id !== id);
+        // let newData = { ...formData, tags: tags };
+        let removalData = {
+            id: formData._id,
+            tagId: id,
+            isRemoval: true,
+        };
+        setStateAndPatch(removalData);
     }
     function handleSubmit(event) {
         event.preventDefault();
@@ -150,6 +159,9 @@ function LinkNameInput(props) {
      * axios == post request to new link
      */
     async function createNewLink() {
+        if (location.pathname.includes("new")) {
+            return;
+        }
         try {
             await axios.post(`${urlBase}/new`, formData).then((result) => {
                 console.log("Result is", result);
@@ -191,6 +203,7 @@ function LinkNameInput(props) {
             let newData = {
                 id: formData._id,
                 tagName: newTag,
+                isRemoval: false,
             };
             //TODO: rather than sending the whole shebang, just send
             // The new tag name and ID of link
@@ -198,7 +211,7 @@ function LinkNameInput(props) {
             try {
                 let updated = await axios
                     .patch(`${urlBase}/${params.id}`, newData)
-                    .then((response) => setFormData(response.data.obj));
+                    .then((response) => setFormData(response.data.link));
             } catch (error) {
                 console.log(error);
             }
@@ -219,37 +232,41 @@ function LinkNameInput(props) {
         });
     }
     return (
-        <StyledLinkForm onSubmit={handleSubmit}>
-            <label htmlFor="linkName">Link Name</label>
-            <input
-                type="text"
-                name="name"
-                id="name"
-                value={formData.name}
-                onChange={handleChange}
-            />
-            <label htmlFor="url">URL</label>
-            <input
-                type="text"
-                name="url"
-                id="url"
-                value={formData.url}
-                onChange={handleChange}
-            />
-            <StyledTextboxSpan>
-                {tagSpans}
-                <input
-                    type="text"
-                    list="tags"
-                    name="tags"
-                    onKeyDown={(e) => e.key === "Enter" && handleKeyDown(e)}
-                />
-            </StyledTextboxSpan>
-            {/* <input type="text" list="tags" name="tags" onKeyUp={handleKeyUp} /> */}
-            <datalist id="tags">{tagOptions}</datalist>
+        <div>
+            {formData && (
+                <StyledLinkForm onSubmit={handleSubmit}>
+                    <label htmlFor="linkName">Link Name</label>
+                    <input
+                        type="text"
+                        name="name"
+                        id="name"
+                        value={formData.name}
+                        onChange={handleChange}
+                    />
+                    <label htmlFor="url">URL</label>
+                    <input
+                        type="text"
+                        name="url"
+                        id="url"
+                        value={formData.url}
+                        onChange={handleChange}
+                    />
+                    <StyledTextboxSpan>
+                        {tagSpans}
+                        <input
+                            type="text"
+                            list="tags"
+                            name="tags"
+                            onKeyDown={(e) => e.key === "Enter" && handleKeyDown(e)}
+                        />
+                    </StyledTextboxSpan>
+                    {/* <input type="text" list="tags" name="tags" onKeyUp={handleKeyUp} /> */}
+                    <datalist id="tags">{tagOptions}</datalist>
 
-            <button type="submit">Submit</button>
-        </StyledLinkForm>
+                    <button type="submit">Submit</button>
+                </StyledLinkForm>
+            )}
+        </div>
     );
 }
 
