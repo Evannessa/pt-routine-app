@@ -12,12 +12,16 @@ const StyledTextboxSpan = styled.div`
     border-radius: 4px;
     border: none;
     border-bottom: 2px solid #6495ed;
+
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
     color: #6495ed;
     padding: 0.25rem 0.5rem;
     display: flex;
     flex-wrap: wrap;
     gap: 0.25rem;
     align-items: center;
+    height: fit-content;
     /* justify-content: center; */
     > span {
         background-color: #6495ed;
@@ -34,21 +38,45 @@ const StyledTextboxSpan = styled.div`
 // #region StyledComponents
 
 const StyledLinkForm = styled.form`
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 25% 75%;
+    grid-template-rows: repeat(3, 1fr), 1fr;
     gap: 1rem;
     *:not(input) {
         color: white;
     }
+    label {
+        grid-column: 1/2;
+        text-align: right;
+    }
+    > input,
+    ${StyledTextboxSpan} {
+        grid-column: 2/3;
+    }
+    > button[type="submit"] {
+        grid-column: 1/3;
+        grid-row: 4/5;
+    }
+
+    > button[type="submit"] {
+        background-color: #6495ed;
+        border: none;
+        color: white;
+        padding: 0.5em 1em;
+        border-radius: 5px;
+    }
     > input {
+        background-color: #373737;
         min-width: 8rem;
-        height: 2rem;
+        min-height: 2rem;
         border-radius: 4px;
         border: none;
-        background-color: #373737;
         border-bottom: 2px solid #6495ed;
         color: #6495ed;
         padding: 0.25rem 0.5rem;
+        display: flex;
+        border-bottom-left-radius: 0px;
+        border-bottom-right-radius: 0px;
     }
 `;
 
@@ -251,13 +279,16 @@ function LinkNameInput(props) {
                         value={formData.url}
                         onChange={handleChange}
                     />
+                    <label htmlFor="tags-input">Tags</label>
                     <StyledTextboxSpan>
                         {tagSpans}
                         <input
                             type="text"
                             list="tags"
                             name="tags"
+                            id="tags-input"
                             onKeyDown={(e) => e.key === "Enter" && handleKeyDown(e)}
+                            placeholder="add new tag..."
                         />
                     </StyledTextboxSpan>
                     {/* <input type="text" list="tags" name="tags" onKeyUp={handleKeyUp} /> */}

@@ -19,7 +19,8 @@ const StyledChipSpan = styled.span`
     overflow: hidden;
     text-overflow: ellipsis;
     padding: 0.15rem 0.25rem;
-    > button {
+
+    /* > button {
         width: 0;
         opacity: 0%;
     }
@@ -29,7 +30,7 @@ const StyledChipSpan = styled.span`
             width: fit-content;
             opacity: 100%;
         }
-    }
+    } */
 `;
 
 function TagChips(props) {
