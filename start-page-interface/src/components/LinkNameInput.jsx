@@ -3,6 +3,7 @@ import styled from "styled-components";
 import axios from "axios";
 import { IconButton } from "./styled-components/Buttons.Styled";
 import { useParams, useLocation, useNavigate, Navigate } from "react-router-dom";
+import { requests } from "../helpers/requests";
 import TagChips from "./TagChips";
 
 const StyledTextboxSpan = styled.div`
@@ -119,44 +120,32 @@ function LinkNameInput(props) {
     });
     const idRef = React.useRef();
 
-    /**
-     *
-     * @param {String} property - the name of the property we're updating
-     * @param {Object} data - the data we're updating the property with
-     */
-    function updateFormData(property, data) {
-        setFormData((prevFormData) => {
-            return {
-                ...prevFormData,
-                [property]: data,
-            };
-        });
-    }
-
     //get ALL tags to suggest when user types
     React.useEffect(() => {
-        try {
-            axios.get(`${urlBase}/tags`).then((result) => {
-                setAllTags(result.data.tags);
-                // updateFormData("tags", result.data.tags);
-            });
-        } catch (error) {
-            console.log(error);
-        }
+        requests.getAll(`${urlBase}/tags`, setAllTags, "tags");
+        requests.getObject(id, urlBase, params, setFormData);
+        // try {
+        //     axios.get(`${urlBase}/tags`).then((result) => {
+        //         setAllTags(result.data.tags);
+        //         // updateFormData("tags", result.data.tags);
+        //     });
+        // } catch (error) {
+        //     console.log(error);
+        // }
 
         //get the link with this id after redirect
-        if (idRef.current !== "new") {
-            try {
-                axios.get(`${urlBase}/${id}`).then((response) => {
-                    console.log(response.data);
-                    if (response.data !== null) {
-                        setFormData(response.data.link);
-                    }
-                });
-            } catch (error) {
-                console.log("There was an error");
-            }
-        }
+        // if (idRef.current !== "new") {
+        //     try {
+        //         axios.get(`${urlBase}/${id}`).then((response) => {
+        //             console.log(response.data);
+        //             if (response.data !== null) {
+        //                 setFormData(response.data.link);
+        //             }
+        //         });
+        //     } catch (error) {
+        //         console.log("There was an error");
+        //     }
+        // }
     }, []);
 
     let tagOptions = formData
@@ -175,16 +164,17 @@ function LinkNameInput(props) {
 
     //update the state with new data, and make a patch request
     async function setStateAndPatch(newData) {
-        try {
-            let updated = await axios
-                .patch(`${urlBase}/${params.id}`, newData)
-                .then((response) => {
-                    console.log("Response", response);
-                    return setFormData(response.data.link);
-                });
-        } catch (error) {
-            console.log(error);
-        }
+        requests.updateObject(params.id, newData, urlBase, setFormData, "link");
+        // try {
+        //     let updated = await axios
+        //         .patch(`${urlBase}/${params.id}`, newData)
+        //         .then((response) => {
+        //             console.log("Response", response);
+        //             return setFormData(response.data.link);
+        //         });
+        // } catch (error) {
+        //     console.log(error);
+        // }
     }
 
     //remove specific tag from this link
@@ -208,21 +198,22 @@ function LinkNameInput(props) {
      * axios == post request to new link
      */
     async function createNewLink() {
-        if (location.pathname.includes("new")) {
-            return;
-        }
-        try {
-            await axios.post(`${urlBase}/new`, formData).then((result) => {
-                console.log("Result is", result);
-                idRef.current = result.data.link._id;
-                console.log(idRef.current);
-            });
-        } catch (error) {
-            console.log(error);
-        } finally {
-            console.log("being saved");
-            setSaved(true);
-        }
+        requests.createObject(urlBase, formData, location, setSaved, "new");
+        // if (location.pathname.includes("new")) {
+        //     return;
+        // }
+        // try {
+        //     await axios.post(`${urlBase}/new`, formData).then((result) => {
+        //         console.log("Result is", result);
+        //         idRef.current = result.data.link._id;
+        //         console.log(idRef.current);
+        //     });
+        // } catch (error) {
+        //     console.log(error);
+        // } finally {
+        //     console.log("being saved");
+        //     setSaved(true);
+        // }
     }
     /**
      * handle pressing Enter in the tags box
@@ -257,18 +248,19 @@ function LinkNameInput(props) {
             //TODO: rather than sending the whole shebang, just send
             // The new tag name and ID of link
             console.log("Passed data is", newData);
-            try {
-                let updated = await axios
-                    .patch(`${urlBase}/${params.id}`, newData)
-                    .then((response) => setFormData(response.data.link));
-            } catch (error) {
-                console.log(error);
-            }
+            requests.updateObject(params.id, newData, urlBase, setFormData, "link");
+            // try {
+            //     let updated = await axios
+            //         .patch(`${urlBase}/${params.id}`, newData)
+            //         .then((response) => setFormData(response.data.link));
+            // } catch (error) {
+            //     console.log(error);
+            // }
         }
     }
     //we've created and saved a new link, so navigate to the stored reference of the id
     if (saved === true && `/links/create/${idRef.current}` !== location.pathname) {
-        return <Navigate to={`/links/${idRef.current}`} />;
+        return <Navigate to={`/links/display/${idRef.current}`} />;
     }
     const closeModal = (event) => {
         event.stopPropagation();

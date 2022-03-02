@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export function requests() {
+export var requests = (function () {
     /**
      * Get a specific object using id and such
      * @param {String} id - the id of the object we're getting
@@ -27,10 +27,10 @@ export function requests() {
      * @param {String} urlBase - string for where we're sending get request
      * @param {*} setStateCallback - callback for setting state where this was called
      	 */
-    async function getAll(urlBase, setStateCallback) {
+    async function getAll(urlBase, setStateCallback, propertyName) {
         try {
-            axios.get(`${urlBase}/tags`).then((result) => {
-                setStateCallback(result.data.tags);
+            axios.get(`${urlBase}`).then((result) => {
+                setStateCallback(result.data[propertyName]);
             });
         } catch (error) {
             console.log(error);
@@ -44,16 +44,18 @@ export function requests() {
      * @param {*} urlBase - the base url we're sending the patch request to
      * @param {Object} - location - the location in the url whose pathname we'll use
      	 */
-    async function createObject(urlBase, data, location) {
+    async function createObject(urlBase, data, location, setStateCallback, pathName) {
         if (location.pathname.includes("new")) {
             return;
         }
         try {
-            await axios.post(`${urlBase}/new`, data).then((result) => {
+            await axios.post(`${urlBase}/${pathName}`, data).then((result) => {
                 console.log("Result is", result);
             });
         } catch (error) {
             console.log(error);
+        } finally {
+            setStateCallback(true);
         }
     }
 
@@ -64,6 +66,7 @@ export function requests() {
      * @param {*} urlBase - the base url we're sending the patch request to
      	 */
     async function updateObject(id, updateData, urlBase, setStateCallback, propertyName) {
+        console.log("Calling update here");
         try {
             await axios
                 .patch(`${urlBase}/${id}`, updateData)
@@ -98,6 +101,6 @@ export function requests() {
         createObject,
         updateObject,
         deleteObject,
-        deleteAllInCollection: deleteMultiple,
+        deleteMultiple,
     };
-}
+})();
