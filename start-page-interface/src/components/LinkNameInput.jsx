@@ -87,7 +87,7 @@ function LinkNameInput(props) {
     let id = Object.keys(params).length > 0 ? params.id : "new";
     const location = useLocation();
     console.log(location);
-    const urlBase = "http://localhost:9000/links";
+    const urlBase = "http://localhost:9000/links/create";
     const [saved, setSaved] = React.useState(false);
     const [allTags, setAllTags] = React.useState([]);
     const [formData, setFormData] = React.useState({
@@ -246,7 +246,7 @@ function LinkNameInput(props) {
         }
     }
     //we've created and saved a new link, so navigate to the stored reference of the id
-    if (saved === true && `/links/${idRef.current}` !== location.pathname) {
+    if (saved === true && `/links/create/${idRef.current}` !== location.pathname) {
         return <Navigate to={`/links/${idRef.current}`} />;
     }
 

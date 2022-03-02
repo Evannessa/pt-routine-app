@@ -9,9 +9,10 @@ const {
     createTag,
 } = require("../controllers/linksController");
 
-router.route("/").get(getAllLinks);
-router.route("/tags").get(getAllTags).post(createTag);
-router.route("/new").post(createNewLink);
-router.route("/:id").get(getLink).patch(updateLink);
+router.route("/display").get(getAllLinks);
+router.route("/display/:id").get(getLink);
+router.route("/create/tags").get(getAllTags).post(createTag);
+router.route("/create/new").post(createNewLink);
+router.route("/create/:id").get(getLink).patch(updateLink);
 
 module.exports = router;

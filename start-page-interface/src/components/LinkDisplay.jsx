@@ -10,9 +10,11 @@ import {
     Navigate,
     useNavigate,
     Route,
+    Routes,
 } from "react-router-dom";
 import axios from "axios";
 
+// #region styledComponents
 const StyledLinkContainer = styled.section`
     display: flex;
     flex-direction: column;
@@ -26,6 +28,7 @@ const StyledLink = styled.div`
     border: 2px solid white;
     border-radius: 5px;
 `;
+// #endregion
 
 function LinkDisplay(props) {
     const history = useNavigate();
@@ -33,7 +36,7 @@ function LinkDisplay(props) {
     let id = Object.keys(params).length > 0 ? params.id : "new";
     const location = useLocation();
     const background = location.state && location.state.background;
-    const urlBase = "http://localhost:9000/links";
+    const urlBase = "http://localhost:9000/links/display";
     const [saved, setSaved] = React.useState(false);
     const [allTags, setAllTags] = React.useState([]);
     const [links, setLinks] = useState();
@@ -45,23 +48,14 @@ function LinkDisplay(props) {
     const linkComponents = links
         ? links.map((link) => (
               <StyledLink key={link._id}>
-                  <Link
-                      to={{
-                          pathname: `/links/${link._id}`,
-                          state: { background: location },
-                      }}>
+                  <Link to={`/display/${link._id}`} state={{ background: location }}>
                       test
                   </Link>
                   <a href={link.url}>{link.name}</a>
               </StyledLink>
           ))
         : [];
-    return (
-        <StyledLinkContainer>
-            {linkComponents}
-            {background && <Route path="/links/:id" children={<IndividualLink />} />}
-        </StyledLinkContainer>
-    );
+    return <StyledLinkContainer>{linkComponents}</StyledLinkContainer>;
 }
 
 export default LinkDisplay;
