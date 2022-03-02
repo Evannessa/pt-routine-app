@@ -41,6 +41,19 @@ const getAllLinks = async (req, res) => {
     }
 };
 
+const deleteLink = async (req, res) => {
+    try {
+        const { id: linkId } = req.params;
+        const link = await Link.findOneAndDelete({ _id: linkId });
+        if (!link) {
+            return res.status(404).json({ msg: `No set found with ${linkId}` });
+        }
+        res.status(200).json({ link: link });
+    } catch (error) {
+        res.status(500).json({ msg: error });
+    }
+};
+
 function removeTag(linkId, tagId) {}
 
 const updateLink = async (req, res) => {
@@ -151,5 +164,6 @@ module.exports = {
     getAllLinks,
     createNewLink,
     updateLink,
+    deleteLink,
     createTag,
 };

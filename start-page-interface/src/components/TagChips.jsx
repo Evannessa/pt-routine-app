@@ -37,6 +37,7 @@ const StyledChipSpan = styled.span`
 `;
 
 function TagChips(props) {
+    console.log(props.tagName);
     function changeColor() {}
     return (
         <StyledChipSpan>

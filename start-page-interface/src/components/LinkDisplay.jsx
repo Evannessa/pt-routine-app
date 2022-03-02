@@ -53,6 +53,17 @@ function LinkDisplay(props) {
     function downloadJSON() {
         console.log(JSON.stringify(links));
     }
+    function uploadJSON() {}
+
+    function deleteLink(id) {
+        try {
+            axios.delete(`${urlBase}/${id}`).then((response) => {
+                setLinks(links.filter((link) => link._id !== response.data.link._id));
+            });
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     const linkComponents = links
         ? links.map((link) => (
@@ -63,9 +74,19 @@ function LinkDisplay(props) {
                   <a href={link.url}>{link.name}</a>
                   <div>
                       {link.tags.map((tag) => {
-                          return <TagChips key={tag._id} tagName={tag.name}></TagChips>;
+                          return (
+                              <TagChips
+                                  key={tag._id}
+                                  tag={tag}
+                                  tagName={tag.name}></TagChips>
+                          );
                       })}
                   </div>
+                  <IconButton
+                      className="material-icons"
+                      onClick={(e) => deleteLink(link._id)}>
+                      delete
+                  </IconButton>
               </StyledLink>
           ))
         : [];
