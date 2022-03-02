@@ -1,6 +1,7 @@
 import LinkNameInput from "./components/LinkNameInput";
 import LinkDisplay from "./components/LinkDisplay";
 import Dashboard from "./components/Dashboard";
+import ModalContainer from "./components/ModalContainer";
 import "./App.css";
 import styled from "styled-components";
 import TagChips from "./components/TagChips";
@@ -10,16 +11,19 @@ import IndividualLink from "./components/IndividualLink";
 
 const StyledContainer = styled.div`
     flex: 1;
-    background-color: #212121;
+    background-color: #171529;
     padding: 2rem 3rem;
     border-radius: 15px;
     display: flex;
-    width: 60%;
+    width: 90%;
     margin: 0 auto;
     height: 100%;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+`;
+const ThickerContainer = styled(StyledContainer)`
+    width: 100%;
 `;
 
 function App() {
@@ -30,16 +34,18 @@ function App() {
             <Routes location={background || location}>
                 <Route path="/" element={<Layout />}>
                     <Route index element={<Dashboard />} />
-                    <Route path="display" element={<LinkDisplay />}></Route>
+                    <Route path="display" element={<LinkDisplay />}>
+                        <Route path=":id" element={<LinkNameInput />}></Route>
+                    </Route>
                     <Route path="create" element={<LinkNameInput />}>
                         <Route path="new" element={<LinkNameInput />}></Route>
-                        <Route path=":id" element={<LinkNameInput />}></Route>
+                        {/* <Route path=":id" element={<LinkNameInput />}></Route> */}
                     </Route>
                 </Route>
             </Routes>
             {background && (
                 <Routes>
-                    <Route path="display/:id" element={<IndividualLink />} />
+                    <Route path="create/:id" element={<LinkNameInput modal={true} />} />
                 </Routes>
             )}
         </StyledContainer>
@@ -48,7 +54,7 @@ function App() {
 
 function Layout() {
     return (
-        <div>
+        <ThickerContainer>
             <nav>
                 <ul>
                     <li>
@@ -60,7 +66,7 @@ function Layout() {
                 </ul>
                 <Outlet />
             </nav>
-        </div>
+        </ThickerContainer>
     );
 }
 

@@ -1,7 +1,14 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import TagChips from "./TagChips";
-import { StyledButton, IconButton } from "./styled-components/Buttons.Styled";
+import LinkNameInput from "./LinkNameInput";
+import {
+    StyledButton,
+    IconButton,
+    ButtonGroup,
+    OutlinedButton,
+    ContainedButton,
+} from "./styled-components/Buttons.Styled";
 import {
     useParams,
     useLocation,
@@ -25,6 +32,7 @@ const StyledIndividualLink = styled.div`
     z-index: 100;
     border-radius: 12px;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
@@ -48,15 +56,28 @@ function IndividualLink(props) {
     }, []);
 
     return (
-        <StyledIndividualLink onClick={closeModal}>
+        <StyledIndividualLink>
             <IconButton
                 className="material-icons"
                 btnStyle=""
                 color="#212121"
-                colorAlt="red">
+                colorAlt="red"
+                onClick={closeModal}>
                 close
             </IconButton>
             "Testing": {link && link.name}
+            <ButtonGroup>
+                <ContainedButton
+                    color="black"
+                    btnStyle="contained"
+                    bgColor="cyan"
+                    bgColorAlt="slateblue">
+                    Test1
+                </ContainedButton>
+                <OutlinedButton btnStyle="outlined" color="cyan" bgColorAlt="cyan">
+                    Test2
+                </OutlinedButton>
+            </ButtonGroup>
         </StyledIndividualLink>
     );
 }

@@ -8,7 +8,7 @@ export const StyledButton = styled.button`
     ${(props) => {
         if (props.btnStyle === "contained") {
             return `
-    			transition: background 0.25s linear, color 0.25s linear;
+    			transition: background 0.15s linear, color 0.15s linear;
 				&:hover{
 					background: var(--clr-bg-hover-color);
 				}
@@ -16,7 +16,7 @@ export const StyledButton = styled.button`
         } else if (props.btnStyle === "outlined") {
             //fill with background color?
             return `
-				transition: background 0.25s linear, color 0.25s linear;
+				transition: background 0.15s linear, color 0.15s linear;
 				&:hover{
 					background: var(--clr-bg-hover-color);
 					color: var(--clr-text-hover-color);
@@ -24,7 +24,7 @@ export const StyledButton = styled.button`
 			`;
         } else {
             return `
-				transition: color 0.25s linear;
+				transition: color 0.15s linear;
 				&:hover{
 					color: var(--clr-text-hover-color);
 				}
@@ -38,9 +38,11 @@ export const StyledButton = styled.button`
 export const IconButton = styled(StyledButton)`
     background: transparent;
     border: none;
+    color: var(--clr-text-color);
 `;
 export const ContainedButton = styled(StyledButton)`
     background: var(--clr-background-color);
+    border: none;
     color: var(--clr-text-color);
     padding: 0.25em 1em;
 `;

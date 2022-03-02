@@ -23,9 +23,10 @@ const StyledLinkContainer = styled.section`
 `;
 const StyledLink = styled.div`
     display: flex;
+    flex-direction: column;
     padding: 2rem;
     color: white;
-    border: 2px solid white;
+    background: #25203f;
     border-radius: 5px;
 `;
 // #endregion
@@ -37,8 +38,6 @@ function LinkDisplay(props) {
     const location = useLocation();
     const background = location.state && location.state.background;
     const urlBase = "http://localhost:9000/links/display";
-    const [saved, setSaved] = React.useState(false);
-    const [allTags, setAllTags] = React.useState([]);
     const [links, setLinks] = useState();
 
     useEffect(() => {
@@ -48,9 +47,10 @@ function LinkDisplay(props) {
     const linkComponents = links
         ? links.map((link) => (
               <StyledLink key={link._id}>
-                  <Link to={`/display/${link._id}`} state={{ background: location }}>
-                      test
-                  </Link>
+                  <h2>{link.name}</h2>
+                  {/* <Link to={`/create/${link._id}`} state={{ background: location }}>
+                  </Link> */}
+                  {link._id === params.id && <Outlet />}
                   <a href={link.url}>{link.name}</a>
               </StyledLink>
           ))

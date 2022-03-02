@@ -1,12 +1,12 @@
 import React from "react";
 import styled from "styled-components";
 import axios from "axios";
+import { IconButton } from "./styled-components/Buttons.Styled";
 import { useParams, useLocation, useNavigate, Navigate } from "react-router-dom";
-import TextboxPrefix from "./TextboxPrefix";
 import TagChips from "./TagChips";
 
 const StyledTextboxSpan = styled.div`
-    background-color: #373737;
+    background-color: #171529;
     min-width: 8rem;
     min-height: 2rem;
     border-radius: 4px;
@@ -30,18 +30,39 @@ const StyledTextboxSpan = styled.div`
     input {
         border: 0px;
         height: 100%;
-        background-color: #373737;
+        background-color: #171529;
         color: #6495ed;
     }
 `;
 
 // #region StyledComponents
 
+const StyledContainer = styled.div`
+    /* position: absolute; */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 1.5rem 2rem;
+    gap: 1rem;
+    /* top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transform-style: preserve-3d; */
+    width: fit-content;
+    background: #342e57;
+    border-radius: 15px;
+    z-index: 1;
+    > button {
+        align-self: flex-end;
+    }
+`;
+
 const StyledLinkForm = styled.form`
     display: grid;
     grid-template-columns: 25% 75%;
     grid-template-rows: repeat(3, 1fr), 1fr;
     gap: 1rem;
+    z-index: 1;
     *:not(input) {
         color: white;
     }
@@ -66,7 +87,7 @@ const StyledLinkForm = styled.form`
         border-radius: 5px;
     }
     > input {
-        background-color: #373737;
+        background-color: #171529;
         min-width: 8rem;
         min-height: 2rem;
         border-radius: 4px;
@@ -83,6 +104,7 @@ const StyledLinkForm = styled.form`
 // #endregion
 function LinkNameInput(props) {
     const params = useParams();
+    const navigate = useNavigate();
     console.log(params);
     let id = Object.keys(params).length > 0 ? params.id : "new";
     const location = useLocation();
@@ -122,7 +144,6 @@ function LinkNameInput(props) {
             console.log(error);
         }
 
-        console.log("Refreshing with:", "ID REF", idRef.current);
         //get the link with this id after redirect
         if (idRef.current !== "new") {
             try {
@@ -249,7 +270,10 @@ function LinkNameInput(props) {
     if (saved === true && `/links/create/${idRef.current}` !== location.pathname) {
         return <Navigate to={`/links/${idRef.current}`} />;
     }
-
+    const closeModal = (event) => {
+        event.stopPropagation();
+        navigate(-1);
+    };
     function handleChange(event) {
         let { name, type, checked, value } = event.currentTarget;
         setFormData((prevData) => {
@@ -260,7 +284,17 @@ function LinkNameInput(props) {
         });
     }
     return (
-        <div>
+        <StyledContainer modal={props.modal}>
+            {props.modal && (
+                <IconButton
+                    className="material-icons"
+                    btnStyle=""
+                    color="white"
+                    colorAlt="red"
+                    onClick={closeModal}>
+                    close
+                </IconButton>
+            )}
             {formData && (
                 <StyledLinkForm onSubmit={handleSubmit}>
                     <label htmlFor="linkName">Link Name</label>
@@ -297,7 +331,7 @@ function LinkNameInput(props) {
                     <button type="submit">Submit</button>
                 </StyledLinkForm>
             )}
-        </div>
+        </StyledContainer>
     );
 }
 
