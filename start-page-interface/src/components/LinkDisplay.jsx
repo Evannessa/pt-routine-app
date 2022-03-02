@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { requests } from "../helpers/requests";
 import IndividualLink from "./IndividualLink";
 import styled from "styled-components";
 import {
@@ -47,7 +48,8 @@ function LinkDisplay(props) {
     const [links, setLinks] = useState();
 
     useEffect(() => {
-        axios.get(`${urlBase}/`).then((response) => setLinks(response.data.sets));
+        requests.getAll(urlBase, setLinks, "sets");
+        // axios.get(`${urlBase}/`).then((response) => setLinks(response.data.sets));
     }, []);
 
     function downloadJSON() {
@@ -56,13 +58,14 @@ function LinkDisplay(props) {
     function uploadJSON() {}
 
     function deleteLink(id) {
-        try {
-            axios.delete(`${urlBase}/${id}`).then((response) => {
-                setLinks(links.filter((link) => link._id !== response.data.link._id));
-            });
-        } catch (error) {
-            console.log(error);
-        }
+        requests.deleteObject(id, urlBase, setLinks, links, "link");
+        // try {
+        //     axios.delete(`${urlBase}/${id}`).then((response) => {
+        //         setLinks(links.filter((link) => link._id !== response.data.link._id));
+        //     });
+        // } catch (error) {
+        //     console.log(error);
+        // }
     }
 
     const linkComponents = links

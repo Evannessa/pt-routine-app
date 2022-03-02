@@ -28,6 +28,7 @@ export var requests = (function () {
      * @param {*} setStateCallback - callback for setting state where this was called
      	 */
     async function getAll(urlBase, setStateCallback, propertyName) {
+        console.log("getting all objects");
         try {
             axios.get(`${urlBase}`).then((result) => {
                 setStateCallback(result.data[propertyName]);
@@ -76,11 +77,19 @@ export var requests = (function () {
         }
     }
 
-    async function deleteObject(id, urlBase, setStateCallback, currentState) {
+    async function deleteObject(
+        id,
+        urlBase,
+        setStateCallback,
+        currentState,
+        propertyName
+    ) {
         try {
             await axios.delete(`${urlBase}/${id}`).then((response) => {
                 setStateCallback(
-                    currentState.filter((link) => link._id !== response.data.link._id)
+                    currentState.filter(
+                        (link) => link._id !== response.data[propertyName]._id
+                    )
                 );
             });
         } catch (error) {
