@@ -8,9 +8,9 @@ const ChipButton = styled.button`
 `;
 
 const StyledChipSpan = styled.span`
-    display: inline-box;
+    display: inline-flex;
+    align-items: center;
     border-radius: 3px;
-    background-color: "cyan";
     color: white;
     min-height: 1rem;
     max-width: fit-content;
@@ -19,18 +19,21 @@ const StyledChipSpan = styled.span`
     overflow: hidden;
     text-overflow: ellipsis;
     padding: 0.15rem 0.25rem;
-
-    /* > button {
-        width: 0;
-        opacity: 0%;
+    > span {
+        display: inline-flex;
+        text-transform: capitalize;
     }
-    &:hover,
-    &:focus {
-        > button {
-            width: fit-content;
-            opacity: 100%;
+
+    > button {
+        max-height: 1rem;
+        display: inline-flex;
+        align-items: center;
+        font-size: 1rem;
+        transition: color 0.1s linear;
+        &:hover {
+            color: red;
         }
-    } */
+    }
 `;
 
 function TagChips(props) {
@@ -38,13 +41,15 @@ function TagChips(props) {
     return (
         <StyledChipSpan>
             <ChipButton
+                className="material-icons"
                 onClick={(e) => {
                     e.preventDefault();
                     return props.removeTag(props.id);
                 }}>
-                X
+                clear
             </ChipButton>
-            {props.tagName}
+            {/* {props.tagName} */}
+            <span>{props.tagName}</span>
         </StyledChipSpan>
     );
 }

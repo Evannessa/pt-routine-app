@@ -1,4 +1,5 @@
 import LinkNameInput from "./components/LinkNameInput";
+import LinkDisplay from "./components/LinkDisplay";
 import "./App.css";
 import styled from "styled-components";
 import { Routes, Route, Outlet, Link } from "react-router-dom";
@@ -22,6 +23,7 @@ function App() {
         <StyledContainer className="App">
             <Routes>
                 <Route path="links/">
+                    <Route path="" element={<LinkDisplay />}></Route>
                     <Route path="new" element={<LinkNameInput />}></Route>
                     <Route path=":id" element={<LinkNameInput />}></Route>
                 </Route>
