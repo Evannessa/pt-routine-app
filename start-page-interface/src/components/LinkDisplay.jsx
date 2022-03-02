@@ -1,7 +1,16 @@
 import React, { useEffect, useState } from "react";
+import IndividualLink from "./IndividualLink";
 import styled from "styled-components";
 import TagChips from "./TagChips";
-import { useParams, useLocation, Navigate } from "react-router-dom";
+import {
+    useParams,
+    useLocation,
+    Link,
+    Outlet,
+    Navigate,
+    useNavigate,
+    Route,
+} from "react-router-dom";
 import axios from "axios";
 
 const StyledLinkContainer = styled.section`
@@ -19,10 +28,11 @@ const StyledLink = styled.div`
 `;
 
 function LinkDisplay(props) {
+    const history = useNavigate();
     const params = useParams();
     let id = Object.keys(params).length > 0 ? params.id : "new";
     const location = useLocation();
-    console.log(location);
+    const background = location.state && location.state.background;
     const urlBase = "http://localhost:9000/links";
     const [saved, setSaved] = React.useState(false);
     const [allTags, setAllTags] = React.useState([]);
@@ -35,11 +45,23 @@ function LinkDisplay(props) {
     const linkComponents = links
         ? links.map((link) => (
               <StyledLink key={link._id}>
+                  <Link
+                      to={{
+                          pathname: `/links/${link._id}`,
+                          state: { background: location },
+                      }}>
+                      test
+                  </Link>
                   <a href={link.url}>{link.name}</a>
               </StyledLink>
           ))
         : [];
-    return <StyledLinkContainer>{linkComponents}</StyledLinkContainer>;
+    return (
+        <StyledLinkContainer>
+            {linkComponents}
+            {background && <Route path="/links/:id" children={<IndividualLink />} />}
+        </StyledLinkContainer>
+    );
 }
 
 export default LinkDisplay;
