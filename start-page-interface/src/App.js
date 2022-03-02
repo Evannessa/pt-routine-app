@@ -24,6 +24,10 @@ const StyledContainer = styled.div`
 `;
 const ThickerContainer = styled(StyledContainer)`
     width: 100%;
+    nav {
+        overflow: visible;
+        width: 100%;
+    }
 `;
 
 function App() {

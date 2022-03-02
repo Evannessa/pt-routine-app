@@ -285,16 +285,14 @@ function LinkNameInput(props) {
     }
     return (
         <StyledContainer modal={props.modal}>
-            {props.modal && (
-                <IconButton
-                    className="material-icons"
-                    btnStyle=""
-                    color="white"
-                    colorAlt="red"
-                    onClick={closeModal}>
-                    close
-                </IconButton>
-            )}
+            <IconButton
+                className="material-icons"
+                btnStyle=""
+                color="white"
+                colorAlt="red"
+                onClick={closeModal}>
+                close
+            </IconButton>
             {formData && (
                 <StyledLinkForm onSubmit={handleSubmit}>
                     <label htmlFor="linkName">Link Name</label>

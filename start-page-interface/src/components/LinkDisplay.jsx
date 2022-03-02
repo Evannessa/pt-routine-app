@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from "react";
 import IndividualLink from "./IndividualLink";
 import styled from "styled-components";
+import {
+    ButtonGroup,
+    IconButton,
+    CircleIconButton,
+} from "./styled-components/Buttons.Styled";
 import TagChips from "./TagChips";
 import {
     useParams,
@@ -18,13 +23,14 @@ import axios from "axios";
 const StyledLinkContainer = styled.section`
     display: flex;
     flex-direction: column;
+    flex-wrap: wrap;
     gap: 1rem;
     width: 100%;
 `;
 const StyledLink = styled.div`
     display: flex;
     flex-direction: column;
-    padding: 2rem;
+    padding: 1rem 2rem;
     color: white;
     background: #25203f;
     border-radius: 5px;
@@ -44,6 +50,10 @@ function LinkDisplay(props) {
         axios.get(`${urlBase}/`).then((response) => setLinks(response.data.sets));
     }, []);
 
+    function downloadJSON() {
+        console.log(JSON.stringify(links));
+    }
+
     const linkComponents = links
         ? links.map((link) => (
               <StyledLink key={link._id}>
@@ -51,10 +61,43 @@ function LinkDisplay(props) {
                   <Link to={`/display/${link._id}`}>Edit</Link>
                   {link._id === params.id && <Outlet />}
                   <a href={link.url}>{link.name}</a>
+                  <div>
+                      {link.tags.map((tag) => {
+                          return <TagChips key={tag._id} tagName={tag.name}></TagChips>;
+                      })}
+                  </div>
               </StyledLink>
           ))
         : [];
-    return <StyledLinkContainer>{linkComponents}</StyledLinkContainer>;
+    return (
+        <StyledLinkContainer>
+            {linkComponents}
+            <ButtonGroup>
+                <CircleIconButton
+                    className="material-icons"
+                    btnStyle="contained"
+                    color="white"
+                    bgColorAlt="white"
+                    bgColor="cornflowerblue"
+                    colorAlt="cornflowerblue"
+                    onClick={(event) => downloadJSON()}>
+                    file_download
+                </CircleIconButton>
+                <CircleIconButton
+                    className="material-icons"
+                    btnStyle="contained"
+                    color="white"
+                    bgColorAlt="white"
+                    bgColor="cornflowerblue"
+                    colorAlt="cornflowerblue"
+                    // onClick={}
+                >
+                    file_upload
+                </CircleIconButton>
+                <Link to="/create/new">Create New</Link>
+            </ButtonGroup>
+        </StyledLinkContainer>
+    );
 }
 
 export default LinkDisplay;

@@ -11,6 +11,7 @@ export const StyledButton = styled.button`
     			transition: background 0.15s linear, color 0.15s linear;
 				&:hover{
 					background: var(--clr-bg-hover-color);
+					color: var(--clr-text-hover-color);
 				}
 			`;
         } else if (props.btnStyle === "outlined") {
@@ -39,6 +40,15 @@ export const IconButton = styled(StyledButton)`
     background: transparent;
     border: none;
     color: var(--clr-text-color);
+`;
+export const CircleIconButton = styled(IconButton)`
+    background: var(--clr-background-color);
+    border: none;
+    color: var(--clr-text-color);
+    border-radius: 50%;
+    padding: 0.5em;
+    /* width: 2rem; */
+    /* height: 2rem; */
 `;
 export const ContainedButton = styled(StyledButton)`
     background: var(--clr-background-color);
