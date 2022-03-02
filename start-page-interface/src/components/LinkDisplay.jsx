@@ -48,8 +48,7 @@ function LinkDisplay(props) {
         ? links.map((link) => (
               <StyledLink key={link._id}>
                   <h2>{link.name}</h2>
-                  {/* <Link to={`/create/${link._id}`} state={{ background: location }}>
-                  </Link> */}
+                  <Link to={`/display/${link._id}`}>Edit</Link>
                   {link._id === params.id && <Outlet />}
                   <a href={link.url}>{link.name}</a>
               </StyledLink>
