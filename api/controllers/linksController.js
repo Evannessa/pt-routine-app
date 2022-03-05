@@ -16,8 +16,16 @@ const createNewLink = async (req, res) => {
         res.status(500).json({ msg: error });
     }
 };
+
+const createMultipleNewLinks = async (req, res) => {
+    let linkData = req.body;
+    const newLinks = await Link.insertMany(linkData)
+        .then((links) => res.json(links))
+        .catch((error) => res.status(500).json({ msg: error }));
+};
+
 const getAllTags = async (req, res) => {
-    console.log(req);
+    console.log("Request is", req);
     try {
         const tags = await Tag.find({});
         console.log(tags);
@@ -34,8 +42,15 @@ const getAllTags = async (req, res) => {
 
 const getAllLinks = async (req, res) => {
     try {
-        const sets = await Link.find({});
-        res.status(200).json({ sets });
+        const sets = await Link.find({})
+            .populate("tags")
+            .exec((error, links) => {
+                if (error) {
+                    return;
+                }
+                return res.status(200).json({ links });
+            });
+        // res.status(200).json({ sets });
     } catch (error) {
         res.status(500).json({ msg: error });
     }
@@ -163,6 +178,7 @@ module.exports = {
     getAllTags,
     getAllLinks,
     createNewLink,
+    createMultipleNewLinks,
     updateLink,
     deleteLink,
     createTag,

@@ -1,13 +1,29 @@
 import LinkNameInput from "./components/LinkNameInput";
 import LinkDisplay from "./components/LinkDisplay";
 import Dashboard from "./components/Dashboard";
+
 import ModalContainer from "./components/ModalContainer";
 import "./App.css";
-import styled from "styled-components";
+import styled, { createGlobalStyle } from "styled-components";
 import TagChips from "./components/TagChips";
 import { useParams, useLocation, Route, Routes, Link, Outlet } from "react-router-dom";
+import {
+    StyledInlineLink,
+    StyledNavBar,
+    StyledNavLink,
+} from "./components/styled-components/nav.styled";
 import axios from "axios";
 import IndividualLink from "./components/IndividualLink";
+
+const Global = createGlobalStyle`
+	:root{
+  --clr-primary-deep-dark: #171529;
+  --clr-primary-dark: #25203f;
+  --clr-primary-base: #342E57;
+  --clr-accent: #6495ed;
+	}
+
+`;
 
 const StyledContainer = styled.div`
     flex: 1;
@@ -15,12 +31,12 @@ const StyledContainer = styled.div`
     padding: 2rem 3rem;
     border-radius: 15px;
     display: flex;
-    width: 90%;
+    width: 100%;
     margin: 0 auto;
-    height: 100%;
+    max-height: 100vh;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    /* align-items: center; */
+    /* justify-content: center; */
 `;
 const ThickerContainer = styled(StyledContainer)`
     width: 100%;
@@ -35,6 +51,7 @@ function App() {
     const background = location.state && location.state.background;
     return (
         <StyledContainer className="App">
+            <Global></Global>
             <Routes location={background || location}>
                 <Route path="/" element={<Layout />}>
                     <Route index element={<Dashboard />} />
@@ -60,16 +77,17 @@ function Layout() {
     return (
         <ThickerContainer>
             <nav>
-                <ul>
-                    <li>
+                <StyledNavBar>
+                    <StyledNavLink underlineColor="#8e7eef">
                         <Link to="/">Dashboard</Link>
-                    </li>
-                    <li>
+                    </StyledNavLink>
+                    <StyledNavLink underlineColor="#8e7eef">
                         <Link to="/display">Link Display</Link>
-                    </li>
-                </ul>
-                <Outlet />
+                    </StyledNavLink>
+                </StyledNavBar>
             </nav>
+
+            <Outlet />
         </ThickerContainer>
     );
 }

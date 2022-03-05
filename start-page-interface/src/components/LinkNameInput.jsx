@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import axios from "axios";
-import { IconButton } from "./styled-components/Buttons.Styled";
+import { IconButton, ContainedButton } from "./styled-components/Buttons.Styled";
 import { useParams, useLocation, useNavigate, Navigate } from "react-router-dom";
 import { requests } from "../helpers/requests";
 import TagChips from "./TagChips";
@@ -275,6 +275,9 @@ function LinkNameInput(props) {
             };
         });
     }
+    function isNew() {
+        return location.pathname.includes("new");
+    }
     return (
         <StyledContainer modal={props.modal}>
             <IconButton
@@ -318,7 +321,7 @@ function LinkNameInput(props) {
                     {/* <input type="text" list="tags" name="tags" onKeyUp={handleKeyUp} /> */}
                     <datalist id="tags">{tagOptions}</datalist>
 
-                    <button type="submit">Submit</button>
+                    {isNew() && <ContainedButton type="submit">Submit</ContainedButton>}
                 </StyledLinkForm>
             )}
         </StyledContainer>
