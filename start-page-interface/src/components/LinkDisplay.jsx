@@ -267,28 +267,16 @@ function LinkDisplay(props) {
               </StyledCard>
           ))
         : [];
-    function renderSearchFilters() {
-        let filterChips = [];
-        for (let filterName in formData.searchFilters) {
-            filterChips.push(
-                <Input
-                    key={filterName}
-                    type="checkbox"
-                    name={filterName}
-                    value={formData.searchFilters[filterName]}
-                    checked={formData.searchFilters[filterName]}
-                    setStateFunction={updateFormData}
-                    hasLabel={true}
-                    parentName={"searchFilters"}
-                />
-            );
-        }
-        return filterChips;
-    }
+
     return (
         <main>
             <StyledRouterLink to="/create/new">Create New</StyledRouterLink>
-            <Form>{renderSearchFilters()}</Form>
+            <Form>
+                <ChipGroup
+                    chips={formData.searchFilters}
+                    setStateFunction={updateFormData}
+                    parentName="searchFilters"></ChipGroup>
+            </Form>
             <Form action="" submitFunction={uploadJSON} submitText="Upload JSON">
                 <Input
                     type="textarea"

@@ -29,14 +29,12 @@ function Input({
     function handleChange(event) {
         console.log("clicked?");
         let { value, checked, type } = event.currentTarget;
-        // event.preventDefault();
-        // event.stopPropagation();
         let passValue = type === "checkbox" ? checked : value;
         console.log("Passing up", name, passValue, parentName);
         setStateFunction(name, passValue, parentName);
     }
     return (
-        <StyledChipBox>
+        <Fragment>
             <InputTag
                 type={type}
                 name={name}
@@ -56,7 +54,7 @@ function Input({
                     {capitalizeFirstLetter(camelCaseToWords(name))}
                 </label>
             )}
-        </StyledChipBox>
+        </Fragment>
     );
 }
 
