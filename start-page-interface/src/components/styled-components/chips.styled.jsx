@@ -1,10 +1,12 @@
 import styled from "styled-components";
+import Input from "../input/Input";
 
 const color =
     (variant, type = "main") =>
     (props) =>
         props.theme?.palette[variant][type];
-const backgroundColor = (variant) => (props) => props.bgColor[variant];
+const backgroundColor = (variant) => (props) =>
+    props.bgColor ? props.bgColor[variant] : "cornflowerblue";
 
 const primaryColor = (type) => color("primary", type);
 const secondaryColor = (type) => color("secondary", type);
@@ -46,54 +48,50 @@ export const StyledChipSpan = styled.span`
     }
 `;
 
+export const StyledChipFieldset = styled.fieldset`
+    display: flex;
+`;
 //radio buttons with the "chip" class
-export const chipGroup = styled.div`
+export const StyledChipDiv = styled.div`
     display: flex;
     flex-wrap: wrap;
     gap: 1rem;
     margin: 1rem 0;
-    input[type="radio"],
-    input[type="checkbox"] {
-        display: none;
-        position: absolute;
-        overflow: hidden;
-        clip: rect(0 0 0 0);
-        height: 1px;
-        width: 1px;
-        margin: -1px;
-        padding: 0;
-        border: 0;
 
-        & + label {
-            background-color: transparent;
-            border: 1px solid cornflowerblue;
-            color: cornflowerblue;
-            padding: 0.5em 1em;
-            text-align: center;
-            border-radius: 9999px;
-            z-index: 10;
-            display: inline-block;
-            vertical-align: middle;
-            display: flex;
-            align-items: center;
-            gap: 0.45rem;
-
+    &&& {
+        input[type="radio"],
+        input[type="checkbox"] {
+            display: none;
+            position: absolute;
+            overflow: hidden;
+            clip: rect(0 0 0 0);
+            height: 1px;
+            width: 1px;
+            margin: -1px;
+            padding: 0;
+            border: 0;
             &:hover {
                 cursor: pointer;
             }
-        }
-
-        &:checked {
-            & + label {
+            & ~ label {
+                background-color: transparent;
+                border: 1px solid cornflowerblue !important;
+                color: cornflowerblue;
+                padding: 0.5em 1em;
+                text-align: center;
+                border-radius: 9999px;
+                z-index: 10;
+                display: inline-block;
+                vertical-align: middle;
+                display: flex;
+                align-items: center;
+                gap: 0.45rem;
+            }
+            &:checked ~ label {
                 background-color: cornflowerblue;
                 color: white;
                 font-weight: bold;
-                // color: var(--clr-primary-pink)
             }
         }
-    }
-
-    .chip.chip-radio {
-        position: relative;
     }
 `;

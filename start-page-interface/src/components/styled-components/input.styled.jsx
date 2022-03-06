@@ -61,11 +61,11 @@ export const StyledForm = styled.form`
     *:not(input) {
         color: white;
     }
-    label {
+    /* label:not(.chip) {
         grid-column: 1/2;
         text-align: right;
-    }
-    input,
+    } */
+    input[type="text"],
     textarea,
     ${StyledTextboxSpan} {
         grid-column: 2/3;
@@ -82,7 +82,7 @@ export const StyledForm = styled.form`
         padding: 0.5em 1em;
         border-radius: 5px;
     }
-    > input,
+    > input[type="text"],
     > textarea {
         background-color: #171529;
         min-width: 8rem;

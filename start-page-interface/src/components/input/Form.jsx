@@ -5,14 +5,19 @@ import React from "react";
 export function Form({ action, submitFunction, children, submitText }) {
     function handleSubmit(event) {
         event.preventDefault();
-        submitFunction();
+        if (submitFunction) {
+            submitFunction();
+        }
     }
     return (
         <StyledForm onSubmit={handleSubmit}>
             {children}
-            <ContainedButton color="white" bgColor="cornflowerblue" type="submit">
-                {submitText}
-            </ContainedButton>
+
+            {submitText && (
+                <ContainedButton color="white" bgColor="cornflowerblue" type="submit">
+                    {submitText}
+                </ContainedButton>
+            )}
         </StyledForm>
     );
 }

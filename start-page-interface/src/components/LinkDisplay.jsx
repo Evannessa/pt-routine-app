@@ -4,6 +4,7 @@ import styled from "styled-components";
 import Avatar from "boring-avatars";
 import Input from "./input/Input";
 import Form from "./input/Form";
+import ChipGroup from "./ChipGroup";
 import {
     ButtonGroup,
     IconButton,
@@ -20,6 +21,7 @@ import {
 } from "./styled-components/cards.styled";
 import { StyledRouterLink } from "./styled-components/nav.styled";
 import TagChips from "./TagChips";
+import { chipGroup, StyledChipSpan } from "./styled-components/chips.styled";
 import {
     useParams,
     useLocation,
@@ -69,7 +71,7 @@ function LinkDisplay(props) {
     const [allTags, setAllTags] = React.useState([]);
     const [queryTags, setQueryTags] = React.useState([]);
     const [searchFilters, setSearchFilters] = React.useState({
-        tags: true,
+        tags: false,
         titles: true,
         urls: false,
     });
@@ -136,6 +138,8 @@ function LinkDisplay(props) {
         setQueryTags(searchArray);
     }, [formData.search]);
 
+    // let filterChips = searchFilters.map();
+
     function createRegex(word, count) {
         let pattern = /\b(bet)/;
     }
@@ -165,9 +169,9 @@ function LinkDisplay(props) {
         requests.createMultiple(urlBase, formData.jsonData, "object");
     }
 
-    function updateFormData(name, value) {
+    function updateFormData(name, value, setStateFunction) {
         let escapedValue = escapeRegExp(value);
-        setFormData((prevFormData) => {
+        setStateFunction((prevFormData) => {
             return {
                 ...prevFormData,
                 [name]: name === "search" ? escapedValue : value,
@@ -240,6 +244,13 @@ function LinkDisplay(props) {
     return (
         <main>
             <StyledRouterLink to="/create/new">Create New</StyledRouterLink>
+            <Form>
+                <ChipGroup
+                    chips={searchFilters}
+                    setStateFunction={(name, value) =>
+                        updateFormData(name, value, setSearchFilters)
+                    }></ChipGroup>
+            </Form>
 
             <Form
                 submitFunction={(e) => {
@@ -248,7 +259,9 @@ function LinkDisplay(props) {
                 submitText="Search">
                 <Input
                     type="text"
-                    setStateFunction={updateFormData}
+                    setStateFunction={(name, value) =>
+                        updateFormData(name, value, setFormData)
+                    }
                     name="search"
                     value={formData.search}
                     hasLabel={true}></Input>
@@ -256,7 +269,10 @@ function LinkDisplay(props) {
             <Form action="" submitFunction={uploadJSON} submitText="Upload JSON">
                 <Input
                     type="textarea"
-                    setStateFunction={updateFormData}
+                    setStateFunction={(name, value) =>
+                        updateFormData(name, value, setFormData)
+                    }
+                    // setStateFunction={updateFormData}
                     name="jsonData"
                     value={formData.jsonData}
                     hasLabel={true}></Input>
