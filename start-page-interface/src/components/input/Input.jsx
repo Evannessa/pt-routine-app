@@ -1,5 +1,7 @@
-import React, { Fragment } from "react";
-
+import React, { Fragment, useState, useEffect } from "react";
+import styled from "styled-components";
+import { StyledChipBox } from "../styled-components/input.styled";
+// const StyledInput = styled
 function Input({
     name,
     type,
@@ -8,11 +10,15 @@ function Input({
     setStateFunction,
     hasLabel = false,
     icon = null,
+    parentName = "",
 }) {
+    const [isChecked, setIsChecked] = useState(checked);
+
+    useEffect(() => {
+        setIsChecked(checked);
+    }, [checked]);
     /** determine whether it's an input or something different */
     const InputTag = `${type === "textarea" ? "textarea" : "input"}`;
-
-    console.log("Checked:", name, checked);
 
     function camelCaseToWords(string) {
         return string.replace(/([a-z0-9])([A-Z])/g, "$1 $2");
@@ -21,27 +27,36 @@ function Input({
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
     function handleChange(event) {
+        console.log("clicked?");
         let { value, checked, type } = event.currentTarget;
-        event.preventDefault();
-        event.stopPropagation();
+        // event.preventDefault();
+        // event.stopPropagation();
         let passValue = type === "checkbox" ? checked : value;
-        setStateFunction(name, passValue);
+        console.log("Passing up", name, passValue, parentName);
+        setStateFunction(name, passValue, parentName);
     }
     return (
-        <Fragment>
+        <StyledChipBox>
             <InputTag
                 type={type}
                 name={name}
                 value={value}
-                checked={checked}
+                id={name}
+                checked={isChecked}
                 onChange={handleChange}></InputTag>
             {hasLabel && (
-                <label htmlFor={name}>
+                <label
+                    htmlFor={name}
+                    style={{
+                        backgroundColor: isChecked ? "cornflowerblue" : "transparent",
+                        color: isChecked ? "white" : "cornflowerblue",
+                        fontWeight: isChecked ? "bold" : "regular",
+                    }}>
                     {icon && <span className="material-icons">{icon}</span>}
                     {capitalizeFirstLetter(camelCaseToWords(name))}
                 </label>
             )}
-        </Fragment>
+        </StyledChipBox>
     );
 }
 

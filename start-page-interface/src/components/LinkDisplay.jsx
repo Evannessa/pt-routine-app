@@ -33,6 +33,7 @@ import {
     Routes,
 } from "react-router-dom";
 import axios from "axios";
+import { StyledChipbox } from "./styled-components/input.styled";
 
 // #region styledComponents
 const StyledLinkContainer = styled.section`
@@ -67,14 +68,18 @@ function LinkDisplay(props) {
     const urlBase = "http://localhost:9000/links/display";
     const [links, setLinks] = useState();
     const [filteredLinks, setFilteredLinks] = useState();
-    const [formData, setFormData] = React.useState({ jsonData: "", search: "" });
+    const [formData, setFormData] = React.useState({
+        jsonData: "",
+        search: "",
+        searchFilters: { tags: false, titles: true, urls: false },
+    });
     const [allTags, setAllTags] = React.useState([]);
     const [queryTags, setQueryTags] = React.useState([]);
-    const [searchFilters, setSearchFilters] = React.useState({
-        tags: false,
-        titles: true,
-        urls: false,
-    });
+    // const [searchFilters, setSearchFilters] = React.useState({
+    //     tags: false,
+    //     titles: true,
+    //     urls: false,
+    // });
 
     useEffect(() => {
         requests.getAll(urlBase, setLinks, "links");
@@ -93,21 +98,29 @@ function LinkDisplay(props) {
         if (formData.search === "") {
             filtered = [];
         } else {
-            filtered = links.filter((link) => {
-                //filter all the links
-                return link.tags.some((tag) => {
-                    //where this specific link's tags names include
-                    //the stuff in the search
-                    return queryTags.some((el) => tag.name.includes(el));
-                });
-            });
-            //TODO: add chip filters to search only tags, name, or url
-            let filteredNames = links.filter((link) => {
-                return queryTags.some((el) => link.name.includes(el));
-            });
-            let filteredUrls = links.filter((link) => {
-                return queryTags.some((el) => link.url.includes(el));
-            });
+            filtered = formData.searchFilters.tags
+                ? links.filter((link) => {
+                      //filter all the links
+                      return link.tags.some((tag) => {
+                          //where this specific link's tags names include
+                          //the stuff in the search
+                          return queryTags.some((el) => tag.name.includes(el));
+                      });
+                  })
+                : [];
+            //if the name filter is selected
+            let filteredNames = formData.searchFilters.titles
+                ? links.filter((link) => {
+                      return queryTags.some((el) => link.name.includes(el));
+                  })
+                : [];
+
+            //if the url filter is selected
+            let filteredUrls = formData.searchFilters.urls
+                ? links.filter((link) => {
+                      return queryTags.some((el) => link.url.includes(el));
+                  })
+                : [];
             filtered = [...filtered, ...filteredNames, ...filteredUrls];
             console.log([...filtered]);
             filtered = [...new Set(filtered)];
@@ -120,7 +133,7 @@ function LinkDisplay(props) {
             console.log("Filtered", filtered);
             setFilteredLinks(filtered);
         }
-    }, [links, formData.search]);
+    }, [links, formData.search, formData.searchFilters]);
 
     useEffect(() => {
         //filter tags, then set query tags to equal the filtered tags
@@ -169,15 +182,29 @@ function LinkDisplay(props) {
         requests.createMultiple(urlBase, formData.jsonData, "object");
     }
 
-    function updateFormData(name, value, setStateFunction) {
-        let escapedValue = escapeRegExp(value);
-        setStateFunction((prevFormData) => {
+    function updateFormData(name, value, parentName) {
+        let escapedValue;
+        if (name === "search") {
+            escapedValue = escapeRegExp(value);
+        }
+        setFormData((prevFormData) => {
+            let updateObject = {};
+            if (parentName) {
+                let property = { ...formData[parentName] };
+                property[name] = value;
+                console.log("Update?", { ...prevFormData, [parentName]: property });
+                return {
+                    ...prevFormData,
+                    [parentName]: property,
+                };
+            }
             return {
                 ...prevFormData,
                 [name]: name === "search" ? escapedValue : value,
             };
         });
     }
+
     function escapeRegExp(string) {
         return string.replaceAll('"', "'"); // $& means the whole matched string
     }
@@ -240,38 +267,32 @@ function LinkDisplay(props) {
               </StyledCard>
           ))
         : [];
-
+    function renderSearchFilters() {
+        let filterChips = [];
+        for (let filterName in formData.searchFilters) {
+            filterChips.push(
+                <Input
+                    key={filterName}
+                    type="checkbox"
+                    name={filterName}
+                    value={formData.searchFilters[filterName]}
+                    checked={formData.searchFilters[filterName]}
+                    setStateFunction={updateFormData}
+                    hasLabel={true}
+                    parentName={"searchFilters"}
+                />
+            );
+        }
+        return filterChips;
+    }
     return (
         <main>
             <StyledRouterLink to="/create/new">Create New</StyledRouterLink>
-            <Form>
-                <ChipGroup
-                    chips={searchFilters}
-                    setStateFunction={(name, value) =>
-                        updateFormData(name, value, setSearchFilters)
-                    }></ChipGroup>
-            </Form>
-
-            <Form
-                submitFunction={(e) => {
-                    e.preventDefault();
-                }}
-                submitText="Search">
-                <Input
-                    type="text"
-                    setStateFunction={(name, value) =>
-                        updateFormData(name, value, setFormData)
-                    }
-                    name="search"
-                    value={formData.search}
-                    hasLabel={true}></Input>
-            </Form>
+            <Form>{renderSearchFilters()}</Form>
             <Form action="" submitFunction={uploadJSON} submitText="Upload JSON">
                 <Input
                     type="textarea"
-                    setStateFunction={(name, value) =>
-                        updateFormData(name, value, setFormData)
-                    }
+                    setStateFunction={updateFormData}
                     // setStateFunction={updateFormData}
                     name="jsonData"
                     value={formData.jsonData}

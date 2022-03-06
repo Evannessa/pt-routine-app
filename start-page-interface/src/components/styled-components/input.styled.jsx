@@ -1,5 +1,6 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import Form from "../input/Form";
+import Input from "../input/Input";
 export const StyledTextboxSpan = styled.div`
     background-color: #171529;
     min-width: 8rem;
@@ -51,7 +52,34 @@ export const StyledContainer = styled.div`
         align-self: flex-end;
     }
 `;
-
+export const StyledChipBox = styled.div`
+ display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin: 1rem 0;
+        input[type="radio"],
+        input[type="checkbox"] {
+            /* display: none;
+            position: absolute;
+            overflow: hidden;
+            clip: rect(0 0 0 0);
+            height: 1px;
+            width: 1px;
+            margin: -1px;
+            padding: 0;
+            border: 0; */
+    label {
+        background-color: ${(props) =>
+            props.checked ? "cornflowerblue" : "transparent"};
+        color: ${(props) => (props.checked ? "white" : "cornflowerblue")};
+        ${(props) =>
+            props.checked &&
+            css`
+                font-weight: bold;
+            `};
+    }
+`;
+export const StyledChipbox = styled.input``;
 export const StyledForm = styled.form`
     display: grid;
     grid-template-columns: 25% 75%;

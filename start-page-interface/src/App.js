@@ -49,8 +49,11 @@ const ThickerContainer = styled(StyledContainer)`
 function App() {
     const location = useLocation();
     const background = location.state && location.state.background;
+    function determineClickedElement(event) {
+        console.log(event.target);
+    }
     return (
-        <StyledContainer className="App">
+        <StyledContainer className="App" onClick={determineClickedElement}>
             <Global></Global>
             <Routes location={background || location}>
                 <Route path="/" element={<Layout />}>

@@ -5,7 +5,10 @@ import styled from "styled-components";
 
 function ChipGroup(props) {
     const [chipObjects, setChipObjects] = useState([]);
+
     let groupType = props.groupType || "checkbox";
+    console.log("Our filters are now", props.chips);
+
     useEffect(() => {
         let objects = [];
         if (groupType === "checkbox") {
@@ -17,21 +20,40 @@ function ChipGroup(props) {
                 });
             }
         }
-        setChipObjects(objects);
-    }, []);
+        setChipObjects([...objects]);
+    }, [props.chips]);
 
-    let chipComponents = chipObjects.map((chip) => (
-        <StyledChipDiv key={chip.name}>
+    // useEffect(() => {
+
+    // }, [chipObjects])
+    let chipComponents = Object.keys(props.chips).map((chip) => (
+        <StyledChipDiv key={chip}>
             <Input
-                type={chip.type}
-                name={chip.name}
-                value={chip.value}
-                checked={chip.checked}
+                type={groupType}
+                name={chip}
+                value={props.chips[chip]}
+                checked={props.chips[chip]}
                 setStateFunction={props.setStateFunction}
                 hasLabel={true}
+                parentName={props.parentName}
             />
         </StyledChipDiv>
     ));
+    console.log(chipComponents);
+    console.log("Chip objects are", [...chipObjects]);
+    // let chipComponents = chipObjects.map((chip) => (
+    //     <StyledChipDiv key={chip.name}>
+    //         <Input
+    //             type={chip.type}
+    //             name={chip.name}
+    //             value={chip.value}
+    //             checked={chip.checked}
+    //             setStateFunction={props.setStateFunction}
+    //             hasLabel={true}
+    //             parentName={props.parentName}
+    //         />
+    //     </StyledChipDiv>
+    // ));
     return (
         <StyledChipFieldset className="chip-group">{chipComponents}</StyledChipFieldset>
     );

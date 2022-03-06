@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import Input from "../input/Input";
 
 const color =
@@ -50,8 +50,10 @@ export const StyledChipSpan = styled.span`
 
 export const StyledChipFieldset = styled.fieldset`
     display: flex;
+    gap: 0.5rem;
 `;
 //radio buttons with the "chip" class
+
 export const StyledChipDiv = styled.div`
     display: flex;
     flex-wrap: wrap;
@@ -70,13 +72,11 @@ export const StyledChipDiv = styled.div`
             margin: -1px;
             padding: 0;
             border: 0;
-            &:hover {
-                cursor: pointer;
-            }
+
             & ~ label {
-                background-color: transparent;
+                /* background-color: transparent; */
                 border: 1px solid cornflowerblue !important;
-                color: cornflowerblue;
+                /* color: cornflowerblue; */
                 padding: 0.5em 1em;
                 text-align: center;
                 border-radius: 9999px;
@@ -86,6 +86,9 @@ export const StyledChipDiv = styled.div`
                 display: flex;
                 align-items: center;
                 gap: 0.45rem;
+                &:hover {
+                    cursor: pointer;
+                }
             }
             &:checked ~ label {
                 background-color: cornflowerblue;
