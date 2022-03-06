@@ -6,10 +6,22 @@
     ],
     "settings": {
         "files.exclude": {
+            "**/.git": true,
+            "**/.svn": true,
+            "**/.hg": true,
+            "**/CVS": true,
+            "**/.DS_Store": true,
+            "**/Thumbs.db": true,
+            "*.class": true,
+            "*.docx": true,
+            "*.pdf": true,
+            "*.zip": true,
             "**/node_modules": true,
             "**/OLD": true,
             "stretches-site/components": true,
-            "stretches-site/styles": true
+            "stretches-site/styles": true,
+            "start-page-interface/.babelrc": true,
+            "stretches-site/.next": true
         },
         "search.exclude": {
             "**/OLD": true,
@@ -42,6 +54,7 @@
             "titleBar.inactiveForeground": "#e7e7e799",
             "tab.activeBackground": "#7886ff44"
         },
-        "peacock.color": "#832561"
+        "peacock.color": "#832561",
+        "explorerExclude.backup": null
     }
 }

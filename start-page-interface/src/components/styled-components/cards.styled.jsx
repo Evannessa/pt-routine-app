@@ -5,6 +5,7 @@ export const CardComponent = styled.div`
     display: flex;
     flex-direction: ${(props) => props.direction || "row"};
     justify-content: ${(props) => props.justifyContent || "space-evenly"};
+    flex-wrap: ${(props) => props.wrap || "wrap"};
 `;
 
 export const StyledCardHeader = styled.div`
@@ -43,7 +44,7 @@ export const StyledCard = styled.div`
     display: flex;
     border-left: ${(props) => (props.highlighted ? `3px solid white` : `none`)};
     flex-direction: row;
-    padding: 1rem 2rem;
+    /* padding: 1rem 2rem; */
     color: white;
     background: #25203f;
     /* justify-content: space-between; */

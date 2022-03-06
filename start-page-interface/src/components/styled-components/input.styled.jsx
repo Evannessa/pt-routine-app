@@ -65,8 +65,9 @@ export const StyledForm = styled.form`
         grid-column: 1/2;
         text-align: right;
     }
-    > input,
-    > textarea ${StyledTextboxSpan} {
+    input,
+    textarea,
+    ${StyledTextboxSpan} {
         grid-column: 2/3;
     }
     > button[type="submit"] {

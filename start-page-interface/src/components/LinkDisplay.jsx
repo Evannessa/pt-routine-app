@@ -60,45 +60,103 @@ const StyledLink = styled.div`
 // #endregion
 
 function LinkDisplay(props) {
-    const history = useNavigate();
     const params = useParams();
     let id = Object.keys(params).length > 0 ? params.id : "new";
-    const location = useLocation();
-    const background = location.state && location.state.background;
     const urlBase = "http://localhost:9000/links/display";
     const [links, setLinks] = useState();
     const [filteredLinks, setFilteredLinks] = useState();
     const [formData, setFormData] = React.useState({ jsonData: "", search: "" });
     const [allTags, setAllTags] = React.useState([]);
     const [queryTags, setQueryTags] = React.useState([]);
+    const [searchFilters, setSearchFilters] = React.useState({
+        tags: true,
+        titles: true,
+        urls: false,
+    });
 
     useEffect(() => {
         requests.getAll(urlBase, setLinks, "links");
         requests.getAll(`${urlBase}/tags`, setAllTags, "tags");
     }, []);
 
+    /**
+     * When the links or the search data changes, update to see what has been filtered
+     */
     useEffect(() => {
         if (!links) {
             return;
         }
-        let filtered = links.filter((link) => {
-            return link.tags.some((tag) => {
-                return tag.name.includes(formData.search);
+        let filtered;
+        //no form data, so no filters
+        if (formData.search === "") {
+            filtered = [];
+        } else {
+            filtered = links.filter((link) => {
+                //filter all the links
+                return link.tags.some((tag) => {
+                    //where this specific link's tags names include
+                    //the stuff in the search
+                    return queryTags.some((el) => tag.name.includes(el));
+                });
             });
-        });
-        console.log("Filtered", filtered);
-        setFilteredLinks(filtered);
+            //TODO: add chip filters to search only tags, name, or url
+            let filteredNames = links.filter((link) => {
+                return queryTags.some((el) => link.name.includes(el));
+            });
+            let filteredUrls = links.filter((link) => {
+                return queryTags.some((el) => link.url.includes(el));
+            });
+            filtered = [...filtered, ...filteredNames, ...filteredUrls];
+            console.log([...filtered]);
+            filtered = [...new Set(filtered)];
+            console.log([...filtered]);
+        }
+        //no matches found found, so filtered links will be empty
+        if (filtered.length === 0) {
+            setFilteredLinks([]);
+        } else {
+            console.log("Filtered", filtered);
+            setFilteredLinks(filtered);
+        }
     }, [links, formData.search]);
 
     useEffect(() => {
         //filter tags, then set query tags to equal the filtered tags
         // tags are an array, and you need the tag names
         //we want to find the text in the search that matches tag names
-        //
-        let searchArray = formData.search.split(" "); //split by space characters
+        //but also names/urls
+        let searchData = formData.search;
+        // let quotePattern = /('(((\\)+(')?)|([^']))*')|("(((\\)+(")?)|([^"]))*")/g;
+        // let exact = searchData.match(quotePattern);
+        // console.log(exact);
+        searchRegexPattern();
+        let searchArray = searchRegexPattern();
+        // let searchArray = formData.search.split(" "); //split by space characters
+        // console.log(searchArray);
         setQueryTags(searchArray);
     }, [formData.search]);
 
+    function createRegex(word, count) {
+        let pattern = /\b(bet)/;
+    }
+    function searchRegexPattern() {
+        let searchData = formData.search.toString();
+        //1. extract items in quotes from the string first
+        // // let quotePattern = /"(.*?)"/;
+        // searchData = searchData.replace(/\\/g, "");
+        // let quotePattern = /(?<=(["']))(?:(?=(\\?))\2.)*?(?=\1)/;
+        // let exactMatches = searchData.match(quotePattern);
+        // console.log("Ext matches", exactMatches);
+        // searchData = searchData.replace(quotePattern, "");
+        // console.log("Search data", searchData);
+        //then split the remaining words based on delimeters space or comma
+        let searchKeywords = searchData.split(/[\s,]+/);
+        //combine in array and match each with tags and name, using boundaries to match partial or whole
+        // for()
+        console.log(searchKeywords);
+        return searchKeywords;
+        // let ^(?=.*\bjack\b)(?=.*\bjames\b)(?=.*\bjason\b)(?=.*\bjules\b).*$
+    }
     function downloadJSON() {
         console.log(JSON.stringify(links));
     }
@@ -108,12 +166,16 @@ function LinkDisplay(props) {
     }
 
     function updateFormData(name, value) {
+        let escapedValue = escapeRegExp(value);
         setFormData((prevFormData) => {
             return {
                 ...prevFormData,
-                [name]: value,
+                [name]: name === "search" ? escapedValue : value,
             };
         });
+    }
+    function escapeRegExp(string) {
+        return string.replaceAll('"', "'"); // $& means the whole matched string
     }
 
     function deleteLink(id) {
