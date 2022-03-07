@@ -5,9 +5,12 @@ import { IconButton, ContainedButton } from "./styled-components/Buttons.Styled"
 import { useParams, useLocation, useNavigate, Navigate } from "react-router-dom";
 import { requests } from "../helpers/requests";
 import TagChips from "./TagChips";
+import withWrapper from "./input/withWrapper.js";
 import ChipGroup from "./ChipGroup";
 import Form from "./input/Form";
 import Input from "./input/Input";
+import { StyledForm } from "./styled-components/input.styled";
+import { StyledChipFieldset } from "./styled-components/chips.styled";
 
 const StyledTextboxSpan = styled.div`
     background-color: #171529;
@@ -303,48 +306,45 @@ function LinkNameInput(props) {
     let linkTypeOptions = Object.keys(LinkType).map((linkType) => (
         <option key={linkType}>{linkType}</option>
     ));
+    function returnInput(property) {
+        let name = Object.keys(formData).find((key) => key === property);
+        return (
+            <Input
+                key={name}
+                name={name}
+                type="text"
+                value={formData[name]}
+                setStateFunction={updateFormData}
+                hasLabel={true}
+            />
+        );
+    }
+    function returnWrappedInput(property) {
+        return (
+            <StyledTextboxSpan>
+                {tagSpans}
+                {returnInput(property)}
+            </StyledTextboxSpan>
+        );
+    }
+
     return (
         <StyledContainer modal={props.modal}>
-            <IconButton
-                className="material-icons"
-                btnStyle=""
-                color="white"
-                colorAlt="red"
-                onClick={closeModal}>
-                close
-            </IconButton>
+            {!isNew() && (
+                <IconButton
+                    className="material-icons"
+                    btnStyle=""
+                    color="white"
+                    colorAlt="red"
+                    onClick={closeModal}>
+                    close
+                </IconButton>
+            )}
             {formData && (
-                <StyledLinkForm onSubmit={handleSubmit}>
-                    <label htmlFor="linkName">Link Name</label>
-                    <input
-                        type="text"
-                        name="name"
-                        id="name"
-                        value={formData.name}
-                        onChange={handleChange}
-                    />
-                    <label htmlFor="url">URL</label>
-                    <input
-                        type="text"
-                        name="url"
-                        id="url"
-                        value={formData.url}
-                        onChange={handleChange}
-                    />
-                    <label htmlFor="tags-input">Tags</label>
-                    <StyledTextboxSpan>
-                        {tagSpans}
-                        <input
-                            type="text"
-                            list="tags"
-                            name="tags"
-                            id="tags-input"
-                            onKeyDown={(e) => e.key === "Enter" && handleKeyDown(e)}
-                            placeholder="add new tag..."
-                        />
-                    </StyledTextboxSpan>
-                    {/* <input type="text" list="tags" name="tags" onKeyUp={handleKeyUp} /> */}
-                    <datalist id="tags">{tagOptions}</datalist>
+                <Form submitFunction={handleSubmit} submitText="Create New Link">
+                    {returnInput("name")}
+                    {returnInput("url")}
+                    {returnWrappedInput("tags")}
                     <ChipGroup
                         groupType="radio"
                         groupName="type"
@@ -352,9 +352,8 @@ function LinkNameInput(props) {
                         selectedValue={formData.type}
                         setStateFunction={updateFormData}
                     />
-                    {/* <select>{linkTypeOptions}</select> */}
                     {isNew() && <ContainedButton type="submit">Submit</ContainedButton>}
-                </StyledLinkForm>
+                </Form>
             )}
         </StyledContainer>
     );
