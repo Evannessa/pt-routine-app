@@ -39,19 +39,21 @@ function Input({
                 type={type}
                 name={name}
                 value={value}
-                id={name}
+                id={type === "radio" ? value : name}
                 checked={isChecked}
                 onChange={handleChange}></InputTag>
             {hasLabel && (
                 <label
-                    htmlFor={name}
+                    htmlFor={type === "radio" ? value : name}
                     style={{
                         backgroundColor: isChecked ? "cornflowerblue" : "transparent",
                         color: isChecked ? "white" : "cornflowerblue",
                         fontWeight: isChecked ? "bold" : "regular",
                     }}>
                     {icon && <span className="material-icons">{icon}</span>}
-                    {capitalizeFirstLetter(camelCaseToWords(name))}
+                    {type === "radio"
+                        ? capitalizeFirstLetter(camelCaseToWords(value))
+                        : capitalizeFirstLetter(camelCaseToWords(name))}
                 </label>
             )}
         </Fragment>

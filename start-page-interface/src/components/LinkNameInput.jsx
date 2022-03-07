@@ -5,6 +5,7 @@ import { IconButton, ContainedButton } from "./styled-components/Buttons.Styled"
 import { useParams, useLocation, useNavigate, Navigate } from "react-router-dom";
 import { requests } from "../helpers/requests";
 import TagChips from "./TagChips";
+import ChipGroup from "./ChipGroup";
 
 const StyledTextboxSpan = styled.div`
     background-color: #171529;
@@ -101,7 +102,16 @@ const StyledLinkForm = styled.form`
         border-bottom-right-radius: 0px;
     }
 `;
+class LinkType {
+    static External = new LinkType("external");
+    static Text = new LinkType("text");
 
+    static Frame = new LinkType("frame");
+    static Image = new LinkType("image");
+    constructor(name) {
+        this.name = name;
+    }
+}
 // #endregion
 function LinkNameInput(props) {
     const params = useParams();
@@ -117,6 +127,7 @@ function LinkNameInput(props) {
         name: "",
         url: "",
         tags: [],
+        type: LinkType.External.name,
     });
     const idRef = React.useRef();
 
@@ -278,6 +289,18 @@ function LinkNameInput(props) {
     function isNew() {
         return location.pathname.includes("new");
     }
+    function updateFormData(name, value) {
+        setFormData((prevFormData) => {
+            return {
+                ...prevFormData,
+                [name]: value,
+            };
+        });
+    }
+
+    let linkTypeOptions = Object.keys(LinkType).map((linkType) => (
+        <option key={linkType}>{linkType}</option>
+    ));
     return (
         <StyledContainer modal={props.modal}>
             <IconButton
@@ -320,7 +343,14 @@ function LinkNameInput(props) {
                     </StyledTextboxSpan>
                     {/* <input type="text" list="tags" name="tags" onKeyUp={handleKeyUp} /> */}
                     <datalist id="tags">{tagOptions}</datalist>
-
+                    <ChipGroup
+                        groupType="radio"
+                        groupName="type"
+                        chips={Object.keys(LinkType)}
+                        selectedValue={formData.type}
+                        setStateFunction={updateFormData}
+                    />
+                    {/* <select>{linkTypeOptions}</select> */}
                     {isNew() && <ContainedButton type="submit">Submit</ContainedButton>}
                 </StyledLinkForm>
             )}

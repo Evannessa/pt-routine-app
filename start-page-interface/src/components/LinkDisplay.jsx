@@ -122,15 +122,12 @@ function LinkDisplay(props) {
                   })
                 : [];
             filtered = [...filtered, ...filteredNames, ...filteredUrls];
-            console.log([...filtered]);
             filtered = [...new Set(filtered)];
-            console.log([...filtered]);
         }
         //no matches found found, so filtered links will be empty
         if (filtered.length === 0) {
             setFilteredLinks([]);
         } else {
-            console.log("Filtered", filtered);
             setFilteredLinks(filtered);
         }
     }, [links, formData.search, formData.searchFilters]);

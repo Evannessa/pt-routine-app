@@ -9,7 +9,7 @@ export var requests = (function () {
      * @param {functionReference} setStateCallback - reference to setting state
      */
     async function getObject(id, urlBase, params, setStateCallback) {
-        if (params && params?.id !== "new") {
+        if (params && id !== "new") {
             try {
                 axios.get(`${urlBase}/${id}`).then((response) => {
                     if (response.data !== null) {

@@ -7,6 +7,7 @@ function ChipGroup(props) {
     const [chipObjects, setChipObjects] = useState([]);
 
     let groupType = props.groupType || "checkbox";
+    let groupName = props.groupName || "";
     console.log("Our filters are now", props.chips);
 
     useEffect(() => {
@@ -19,6 +20,16 @@ function ChipGroup(props) {
                     [groupType === "checkbox" ? "checked" : "value"]: props.chips[chip],
                 });
             }
+        } else if (groupType === "radio") {
+            for (let radioValue of props.chips) {
+                console.log("Radio chips are", radioValue);
+                objects.push({
+                    type: groupType,
+                    name: groupName,
+                    checked: props.selectedValue === radioValue,
+                    value: radioValue,
+                });
+            }
         }
         setChipObjects([...objects]);
     }, [props.chips]);
@@ -26,34 +37,35 @@ function ChipGroup(props) {
     // useEffect(() => {
 
     // }, [chipObjects])
-    let chipComponents = Object.keys(props.chips).map((chip) => (
-        <StyledChipDiv key={chip}>
-            <Input
-                type={groupType}
-                name={chip}
-                value={props.chips[chip]}
-                checked={props.chips[chip]}
-                setStateFunction={props.setStateFunction}
-                hasLabel={true}
-                parentName={props.parentName}
-            />
-        </StyledChipDiv>
-    ));
-    console.log(chipComponents);
-    console.log("Chip objects are", [...chipObjects]);
-    // let chipComponents = chipObjects.map((chip) => (
-    //     <StyledChipDiv key={chip.name}>
+    // let chipComponents = Object.keys(props.chips).map((chip) => (
+    //     <StyledChipDiv key={chip}>
     //         <Input
-    //             type={chip.type}
-    //             name={chip.name}
-    //             value={chip.value}
-    //             checked={chip.checked}
+    //             type={groupType}
+    //             name={chip}
+    //             value={props.chips[chip]}
+    //             checked={props.chips[chip]}
     //             setStateFunction={props.setStateFunction}
     //             hasLabel={true}
     //             parentName={props.parentName}
     //         />
     //     </StyledChipDiv>
     // ));
+    // console.log(chipComponents);
+    // console.log("Chip objects are", [...chipObjects]);
+    // console.log("Equal?", chipObjects[0].value, props.selectedValue);
+    let chipComponents = chipObjects.map((chip) => (
+        <StyledChipDiv key={chip.type === "checkbox" ? chip.name : chip.value}>
+            <Input
+                type={chip.type}
+                name={chip.type === "checkbox" ? chip.name : groupName}
+                value={chip.value}
+                checked={chip.checked}
+                setStateFunction={props.setStateFunction}
+                hasLabel={true}
+                parentName={props.parentName}
+            />
+        </StyledChipDiv>
+    ));
     return (
         <StyledChipFieldset className="chip-group">{chipComponents}</StyledChipFieldset>
     );
