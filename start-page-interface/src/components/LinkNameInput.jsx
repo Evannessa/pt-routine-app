@@ -1,4 +1,5 @@
 import React from "react";
+import tf from "../helpers/formatText";
 import styled from "styled-components";
 import axios from "axios";
 import { IconButton, ContainedButton } from "./styled-components/Buttons.Styled";
@@ -39,6 +40,7 @@ const StyledTextboxSpan = styled.div`
         height: 100%;
         background-color: #171529;
         color: #6495ed;
+        border-bottom: 0px;
     }
 `;
 
@@ -129,8 +131,8 @@ function LinkNameInput(props) {
     const [saved, setSaved] = React.useState(false);
     const [allTags, setAllTags] = React.useState([]);
     const [formData, setFormData] = React.useState({
-        name: "",
-        url: "",
+        name: "Untitled",
+        url: "#",
         tags: [],
         type: LinkType.External.name,
     });
@@ -139,29 +141,12 @@ function LinkNameInput(props) {
     //get ALL tags to suggest when user types
     React.useEffect(() => {
         requests.getAll(`${urlBase}/tags`, setAllTags, "tags");
-        requests.getObject(id, urlBase, params, setFormData);
-        // try {
-        //     axios.get(`${urlBase}/tags`).then((result) => {
-        //         setAllTags(result.data.tags);
-        //         // updateFormData("tags", result.data.tags);
-        //     });
-        // } catch (error) {
-        //     console.log(error);
-        // }
-
-        //get the link with this id after redirect
-        // if (idRef.current !== "new") {
-        //     try {
-        //         axios.get(`${urlBase}/${id}`).then((response) => {
-        //             console.log(response.data);
-        //             if (response.data !== null) {
-        //                 setFormData(response.data.link);
-        //             }
-        //         });
-        //     } catch (error) {
-        //         console.log("There was an error");
-        //     }
-        // }
+        console.log(id);
+        if (id === "new") {
+            createNewLink(); //create a new untitled link
+        } else {
+            requests.getObject(id, urlBase, params, setFormData);
+        }
     }, []);
 
     let tagOptions = formData
@@ -179,18 +164,12 @@ function LinkNameInput(props) {
         : [];
 
     //update the state with new data, and make a patch request
-    async function setStateAndPatch(newData) {
-        requests.updateObject(params.id, newData, urlBase, setFormData, "link");
-        // try {
-        //     let updated = await axios
-        //         .patch(`${urlBase}/${params.id}`, newData)
-        //         .then((response) => {
-        //             console.log("Response", response);
-        //             return setFormData(response.data.link);
-        //         });
-        // } catch (error) {
-        //     console.log(error);
-        // }
+    async function patchAndSetState(newData) {
+        if (id !== "new") {
+            requests.updateObject(params.id, newData, urlBase, setFormData, "link");
+        } else {
+            requests.createObject(urlBase);
+        }
     }
 
     //remove specific tag from this link
@@ -202,34 +181,23 @@ function LinkNameInput(props) {
             tagId: id,
             isRemoval: true,
         };
-        setStateAndPatch(removalData);
+        patchAndSetState(removalData);
     }
-    function handleSubmit(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        console.log("Event is", event, event.currentTarget);
+
+    function handleSubmit() {
         createNewLink();
+    }
+    function setSavedAndUpdate(data) {
+        idRef.current = data._id;
+        setSaved(true);
     }
     /**
      * axios == post request to new link
      */
     async function createNewLink() {
-        requests.createObject(urlBase, formData, location, setSaved, "new");
-        // if (location.pathname.includes("new")) {
-        //     return;
-        // }
-        // try {
-        //     await axios.post(`${urlBase}/new`, formData).then((result) => {
-        //         console.log("Result is", result);
-        //         idRef.current = result.data.link._id;
-        //         console.log(idRef.current);
-        //     });
-        // } catch (error) {
-        //     console.log(error);
-        // } finally {
-        //     console.log("being saved");
-        //     setSaved(true);
-        // }
+        await requests
+            .createObject(urlBase, formData, location, setSavedAndUpdate, "new")
+            .then((result) => {});
     }
     /**
      * handle pressing Enter in the tags box
@@ -252,17 +220,12 @@ function LinkNameInput(props) {
             if (!newArray.includes(newTag)) {
                 newArray.push(newTag);
             }
-            // let newData = {
-            //     ...formData,
-            //     tags: newArray,
-            // };
             let newData = {
                 id: formData._id,
                 tagName: newTag,
                 isRemoval: false,
             };
-            //TODO: rather than sending the whole shebang, just send
-            // The new tag name and ID of link
+
             console.log("Passed data is", newData);
             requests.updateObject(params.id, newData, urlBase, setFormData, "link");
             // try {
@@ -276,7 +239,7 @@ function LinkNameInput(props) {
     }
     //we've created and saved a new link, so navigate to the stored reference of the id
     if (saved === true && `/links/create/${idRef.current}` !== location.pathname) {
-        return <Navigate to={`/links/display/${idRef.current}`} />;
+        return <Navigate to={`/display/${idRef.current}`} />;
     }
     const closeModal = (event) => {
         event.stopPropagation();
@@ -295,36 +258,51 @@ function LinkNameInput(props) {
         return location.pathname.includes("new");
     }
     function updateFormData(name, value) {
-        setFormData((prevFormData) => {
-            return {
-                ...prevFormData,
-                [name]: value,
-            };
-        });
+        let data = {
+            ...formData,
+            [name]: value,
+        };
+        patchAndSetState(data);
+        // setFormData((prevFormData) => {
+        //     return {
+        //         ...prevFormData,
+        //         [name]: value,
+        //     };
+        // });
+        // setStateAndPatch()
     }
 
-    let linkTypeOptions = Object.keys(LinkType).map((linkType) => (
-        <option key={linkType}>{linkType}</option>
-    ));
-    function returnInput(property) {
+    function returnInput(property, wrapped, hasLabel = true, extraProps = {}) {
         let name = Object.keys(formData).find((key) => key === property);
+        console.log("Name is", name);
+        console.log(formData[name]);
         return (
             <Input
                 key={name}
                 name={name}
                 type="text"
+                extraProps={extraProps}
                 value={formData[name]}
                 setStateFunction={updateFormData}
-                hasLabel={true}
+                hasLabel={hasLabel}
+                wrapped={wrapped}
             />
         );
     }
-    function returnWrappedInput(property) {
+    function returnWrappedInput(
+        property,
+        hasLabel = false,
+        wrapped = true,
+        extraProps = {}
+    ) {
         return (
-            <StyledTextboxSpan>
-                {tagSpans}
-                {returnInput(property)}
-            </StyledTextboxSpan>
+            <span>
+                <label htmlFor={property}>{tf.capitalizeFirstLetter(property)}</label>
+                <StyledTextboxSpan>
+                    {tagSpans}
+                    {returnInput(property, wrapped, hasLabel, extraProps)}
+                </StyledTextboxSpan>
+            </span>
         );
     }
 
@@ -341,10 +319,14 @@ function LinkNameInput(props) {
                 </IconButton>
             )}
             {formData && (
-                <Form submitFunction={handleSubmit} submitText="Create New Link">
+                <Form
+                    submitFunction={createNewLink}
+                    submitText={isNew() ? "Create New Link" : ""}>
                     {returnInput("name")}
                     {returnInput("url")}
-                    {returnWrappedInput("tags")}
+                    {returnWrappedInput("tags", false, false, {
+                        onKeyDown: handleKeyDown,
+                    })}
                     <ChipGroup
                         groupType="radio"
                         groupName="type"
@@ -352,7 +334,6 @@ function LinkNameInput(props) {
                         selectedValue={formData.type}
                         setStateFunction={updateFormData}
                     />
-                    {isNew() && <ContainedButton type="submit">Submit</ContainedButton>}
                 </Form>
             )}
         </StyledContainer>

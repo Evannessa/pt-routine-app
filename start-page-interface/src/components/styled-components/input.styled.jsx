@@ -81,18 +81,31 @@ export const StyledChipBox = styled.div`
 `;
 export const StyledChipbox = styled.input``;
 export const StyledForm = styled.form`
-    display: grid;
-    grid-template-columns: 25% 75%;
-    grid-template-rows: repeat(3, 1fr), 1fr;
+    display: flex;
+    flex-direction: column;
+    /* grid-template-columns: 25% 75%; */
+    /* grid-template-rows: repeat(3, 1fr), 1fr; */
+    label {
+        color: cornflowerblue;
+    }
     gap: 1rem;
     z-index: 1;
     *:not(input) {
         color: white;
     }
+    div,
+    > span {
+        display: flex;
+        gap: 1rem;
+    }
+    div {
+        flex-direction: row-reverse;
+    }
+
     /* label:not(.chip) {
         grid-column: 1/2;
         text-align: right;
-    } */
+    } 
     input[type="text"],
     textarea,
     ${StyledTextboxSpan} {
@@ -101,7 +114,7 @@ export const StyledForm = styled.form`
     > button[type="submit"] {
         grid-column: 1/3;
         grid-row: 4/5;
-    }
+    } */
 
     > button[type="submit"] {
         background-color: #6495ed;
@@ -110,8 +123,8 @@ export const StyledForm = styled.form`
         padding: 0.5em 1em;
         border-radius: 5px;
     }
-    > input[type="text"],
-    > textarea {
+    input[type="text"],
+    textarea {
         background-color: #171529;
         min-width: 8rem;
         min-height: 2rem;
@@ -124,7 +137,12 @@ export const StyledForm = styled.form`
         border-bottom-left-radius: 0px;
         border-bottom-right-radius: 0px;
     }
-    textarea {
-        color: black;
+    ${StyledTextboxSpan} {
+        display: flex;
+        &&& {
+            input[type="text"] {
+                border-bottom: 0px !important;
+            }
+        }
     }
 `;

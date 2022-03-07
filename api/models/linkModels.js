@@ -20,6 +20,11 @@ const LinkSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    type: {
+        type: String,
+        required: true,
+        default: "External",
+    },
     tags: [{ type: mongoose.Schema.Types.ObjectId, ref: "Tag" }],
 });
 

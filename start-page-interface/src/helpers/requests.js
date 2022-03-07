@@ -46,17 +46,19 @@ export var requests = (function () {
      * @param {Object} - location - the location in the url whose pathname we'll use
      */
     async function createObject(urlBase, data, location, setStateCallback, pathName) {
-        if (location.pathname.includes("new")) {
+        if (!location.pathname.includes("new")) {
             return;
         }
+        let responseData;
         try {
             await axios.post(`${urlBase}/${pathName}`, data).then((result) => {
                 console.log("Result is", result);
+                responseData = result.data.link;
             });
         } catch (error) {
             console.log(error);
         } finally {
-            setStateCallback(true);
+            setStateCallback(responseData);
         }
     }
 

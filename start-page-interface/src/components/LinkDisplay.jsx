@@ -66,6 +66,7 @@ function LinkDisplay(props) {
     const params = useParams();
     let id = Object.keys(params).length > 0 ? params.id : "new";
     const urlBase = "http://localhost:9000/links/display";
+    const createBase = "http://localhost:9000/links/create";
     const [links, setLinks] = useState();
     const [filteredLinks, setFilteredLinks] = useState();
     const [formData, setFormData] = React.useState({
@@ -75,11 +76,6 @@ function LinkDisplay(props) {
     });
     const [allTags, setAllTags] = React.useState([]);
     const [queryTags, setQueryTags] = React.useState([]);
-    // const [searchFilters, setSearchFilters] = React.useState({
-    //     tags: false,
-    //     titles: true,
-    //     urls: false,
-    // });
 
     useEffect(() => {
         requests.getAll(urlBase, setLinks, "links");
@@ -97,6 +93,7 @@ function LinkDisplay(props) {
         //no form data, so no filters
         if (formData.search === "") {
             filtered = [];
+            setFilteredLinks(links);
         } else {
             filtered = formData.searchFilters.tags
                 ? links.filter((link) => {
@@ -123,12 +120,13 @@ function LinkDisplay(props) {
                 : [];
             filtered = [...filtered, ...filteredNames, ...filteredUrls];
             filtered = [...new Set(filtered)];
-        }
-        //no matches found found, so filtered links will be empty
-        if (filtered.length === 0) {
-            setFilteredLinks([]);
-        } else {
-            setFilteredLinks(filtered);
+
+            //no matches found found, so filtered links will be empty
+            if (filtered.length === 0) {
+                setFilteredLinks([]);
+            } else {
+                setFilteredLinks(filtered);
+            }
         }
     }, [links, formData.search, formData.searchFilters]);
 
@@ -239,7 +237,11 @@ function LinkDisplay(props) {
                       </StyledCardHeader>
                       <StyledCardBody>
                           {link._id === params.id && <Outlet />}
-                          <a href={link.url}>{link.name}</a>
+                          {link.type === "External" ? (
+                              <a href={link.url}>{link.name}</a>
+                          ) : (
+                              <Link to={`/display/internal/${link._id}/`}></Link>
+                          )}
                       </StyledCardBody>
                       <StyledCardFooter>
                           <CardComponent>

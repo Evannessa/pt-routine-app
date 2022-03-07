@@ -70,6 +70,7 @@ function App() {
             {background && (
                 <Routes>
                     <Route path="create/:id" element={<LinkNameInput modal={true} />} />
+                    <Route path="display/internal/:id" element={<ModalContainer />} />
                 </Routes>
             )}
         </StyledContainer>

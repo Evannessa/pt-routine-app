@@ -36,10 +36,10 @@ function ModalContainer({ children }, props) {
             <StyledModalHeader>
                 {props.title && <h1 className="modal__title>">{props.title}</h1>}
             </StyledModalHeader>
-            <StyledModalBody
-                className="modal__body"
-                style={{ color: "black" }}></StyledModalBody>
-            <ButtonGroup>{children}</ButtonGroup>
+            <StyledModalBody className="modal__body" style={{ color: "black" }}>
+                {children}
+            </StyledModalBody>
+            <ButtonGroup></ButtonGroup>
         </StyledModalContainer>
     );
 }
