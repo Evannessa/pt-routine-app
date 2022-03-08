@@ -274,7 +274,13 @@ function LinkNameInput(props) {
         patchAndSetState(data);
     }
 
-    function returnInput(property, wrapped, hasLabel = true, extraProps = {}) {
+    function returnInput(
+        property,
+        wrapped,
+        hasLabel = true,
+        extraProps = {},
+        type = "text"
+    ) {
         let name = Object.keys(formData).find((key) => key === property);
         console.log("Name is", name);
         console.log(formData[name]);
@@ -282,7 +288,7 @@ function LinkNameInput(props) {
             <Input
                 key={name}
                 name={name}
-                type="text"
+                type={type}
                 extraProps={extraProps}
                 value={formData[name]}
                 setStateFunction={updateFormData}
@@ -308,7 +314,11 @@ function LinkNameInput(props) {
         );
     }
     function returnDropArea() {
-        return <DropArea slideImagePath={formData.imagePath}></DropArea>;
+        return (
+            <DropArea
+                imagePath={formData.imagePath}
+                updateFormData={updateFormData}></DropArea>
+        );
     }
 
     return (
@@ -341,7 +351,7 @@ function LinkNameInput(props) {
                     />
                     {formData.type === "Text" &&
                         formData.text &&
-                        returnInput("textarea", false, true, {})}
+                        returnInput("text", false, true, {}, "textarea")}
                     {formData.type === "Image" && formData.imagePath && returnDropArea()}
                 </Form>
             )}

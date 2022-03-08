@@ -159,6 +159,7 @@ function DropArea(props) {
                 src={props.imagePath ? `${uploadsUrl}/${props.imagePath}` : ""}
                 alt="preview"
                 ref={previewRef}
+                style={{ width: "10%", height: "auto" }}
             />
         </div>
     );
