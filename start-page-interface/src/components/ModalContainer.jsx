@@ -175,7 +175,7 @@ function ModalContainer({ children }, props) {
                     close
                 </IconButton>
             </StyledModalHeader>
-            <StyledModalBody className="modal__body" type={linkData.type}>
+            <StyledModalBody className="modal__body" type={linkData ? linkData.type : ""}>
                 {linkData && returnChildren()}
 
                 {/* {children} */}

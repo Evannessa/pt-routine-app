@@ -22,13 +22,16 @@ const Global = createGlobalStyle`
   --clr-primary-base: #342E57;
   --clr-accent: #6495ed;
 	}
+	html, body{
+		scrollbar-width: thin;
+	}
 
 `;
 
 const StyledContainer = styled.div`
     flex: 1;
     background-color: #171529;
-    padding: 2rem 3rem;
+    padding: 0rem 2rem;
     border-radius: 15px;
     display: flex;
     width: 100%;
@@ -37,6 +40,7 @@ const StyledContainer = styled.div`
     flex-direction: column;
     /* align-items: center; */
     /* justify-content: center; */
+    scrollbar-width: thin;
 `;
 const ThickerContainer = styled(StyledContainer)`
     width: 100%;

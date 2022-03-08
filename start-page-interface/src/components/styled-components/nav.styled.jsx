@@ -9,6 +9,7 @@ export const StyledRouterLink = styled(Link)`
     padding: 0.25em 0.25em 0.15em 0.25em;
     text-decoration: none;
     color: white;
+    font-size: 1rem;
     border-bottom: 3px solid #171529;
     box-shadow: 0px 2px 0px 0px var(--clr-underline-color);
     transition: background-color 0.15s ease-in, border-color 0.15s ease-in;

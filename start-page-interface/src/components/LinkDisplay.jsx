@@ -10,14 +10,21 @@ import {
     IconButton,
     CircleIconButton,
 } from "./styled-components/Buttons.Styled";
+import * as Layout from "./styled-components/layout.styled";
+import {
+    StyledContent,
+    StyledSidebar,
+    StyledMain,
+} from "./styled-components/layout.styled";
 import {
     StyledCard,
     StyledCardHeader,
     StyledCardBody,
     StyledCardFooter,
     StyledCardSidebar,
-    StyledCardWrapper,
+    StyledCardSidebarLeft,
     CardComponent,
+    StyledCardHorizontal,
 } from "./styled-components/cards.styled";
 import { StyledRouterLink } from "./styled-components/nav.styled";
 import TagChips from "./TagChips";
@@ -211,58 +218,54 @@ function LinkDisplay(props) {
 
     const linkComponents = filteredLinks
         ? filteredLinks.map((link) => (
-              <StyledCard
+              <StyledCardHorizontal
                   key={link._id}
                   highlighted={link._id === params.id ? true : false}
                   hasSidebar={true}>
-                  <StyledCardWrapper>
-                      <StyledCardHeader>
-                          <Avatar
-                              size="4rem"
-                              variant="marble"
-                              colors={[
-                                  "#02797E",
-                                  "#FFA689",
-                                  "#D62B58",
-                                  "#BF2063",
-                                  "#572F4F",
-                              ]}
-                          />
-                          <h2>{link.name}</h2>
+                  <StyledCardHeader>
+                      <h2>
+                          {link.name}
                           <StyledRouterLink
                               color="white"
-                              underlineColor="white"
-                              to={`/display/${link._id}`}>
-                              Edit
+                              to={`/display/${link._id}`}
+                              className="material-icons">
+                              edit
                           </StyledRouterLink>
-                      </StyledCardHeader>
-                      <StyledCardBody>
-                          {link._id === params.id && <Outlet />}
-                          {link.type === "External" ? (
-                              <a href={link.url}>{link.name}</a>
-                          ) : (
-                              <Link
-                                  to={{
-                                      pathname: `/display/internal/${link._id}/`,
-                                      //   state: { background: location },
-                                  }}>
-                                  {link.name}
-                              </Link>
-                          )}
-                      </StyledCardBody>
-                      <StyledCardFooter>
-                          <CardComponent>
-                              {link.tags.map((tag) => {
-                                  return (
-                                      <TagChips
-                                          key={tag._id}
-                                          tag={tag}
-                                          tagName={tag.name}></TagChips>
-                                  );
-                              })}
-                          </CardComponent>
-                      </StyledCardFooter>
-                  </StyledCardWrapper>
+                      </h2>
+                  </StyledCardHeader>
+                  <StyledCardSidebarLeft>
+                      <Avatar
+                          size="3rem"
+                          variant="marble"
+                          colors={["#02797E", "#FFA689", "#D62B58", "#BF2063", "#572F4F"]}
+                      />
+                  </StyledCardSidebarLeft>
+                  <StyledCardBody>
+                      {/* {link._id === params.id && <Outlet />} */}
+                      {link.type === "External" ? (
+                          <a href={link.url}>{link.name}</a>
+                      ) : (
+                          <Link
+                              to={{
+                                  pathname: `/display/internal/${link._id}/`,
+                                  //   state: { background: location },
+                              }}>
+                              {link.name}
+                          </Link>
+                      )}
+                  </StyledCardBody>
+                  <StyledCardFooter>
+                      <CardComponent>
+                          {link.tags.map((tag) => {
+                              return (
+                                  <TagChips
+                                      key={tag._id}
+                                      tag={tag}
+                                      tagName={tag.name}></TagChips>
+                              );
+                          })}
+                      </CardComponent>
+                  </StyledCardFooter>
                   <StyledCardSidebar>
                       <IconButton
                           className="material-icons"
@@ -270,42 +273,50 @@ function LinkDisplay(props) {
                           delete
                       </IconButton>
                   </StyledCardSidebar>
-              </StyledCard>
+              </StyledCardHorizontal>
           ))
         : [];
 
     return (
-        <main>
-            <StyledRouterLink to="/create/new">Create New</StyledRouterLink>
-            <Form>
-                <ChipGroup
-                    chips={formData.searchFilters}
-                    setStateFunction={updateFormData}
-                    parentName="searchFilters"></ChipGroup>
-            </Form>
-            <Form action="" submitFunction={uploadJSON} submitText="Upload JSON">
-                <Input
-                    type="textarea"
-                    setStateFunction={updateFormData}
-                    // setStateFunction={updateFormData}
-                    name="jsonData"
-                    value={formData.jsonData}
-                    hasLabel={true}></Input>
-            </Form>
-            <StyledLinkContainer>{linkComponents}</StyledLinkContainer>
-            <ButtonGroup>
-                <CircleIconButton
-                    className="material-icons"
-                    btnStyle="contained"
-                    color="white"
-                    bgColorAlt="white"
-                    bgColor="cornflowerblue"
-                    colorAlt="cornflowerblue"
-                    onClick={(event) => downloadJSON()}>
-                    file_download
-                </CircleIconButton>
-            </ButtonGroup>
-        </main>
+        <Layout.StyledOuterMain>
+            <Layout.StyledHeader>
+                <StyledRouterLink to="/create/new">Create New</StyledRouterLink>
+                <Form>
+                    <ChipGroup
+                        chips={formData.searchFilters}
+                        setStateFunction={updateFormData}
+                        parentName="searchFilters"></ChipGroup>
+                </Form>
+                <Form action="" submitFunction={uploadJSON} submitText="Upload JSON">
+                    <Input
+                        type="textarea"
+                        setStateFunction={updateFormData}
+                        // setStateFunction={updateFormData}
+                        name="jsonData"
+                        value={formData.jsonData}
+                        hasLabel={true}></Input>
+                </Form>
+                <ButtonGroup>
+                    <CircleIconButton
+                        className="material-icons"
+                        btnStyle="contained"
+                        color="white"
+                        bgColorAlt="white"
+                        bgColor="cornflowerblue"
+                        colorAlt="cornflowerblue"
+                        onClick={(event) => downloadJSON()}>
+                        file_download
+                    </CircleIconButton>
+                </ButtonGroup>
+            </Layout.StyledHeader>
+            <StyledMain>
+                <StyledSidebar>{linkComponents}</StyledSidebar>
+
+                <StyledContent>
+                    <Outlet />
+                </StyledContent>
+            </StyledMain>
+        </Layout.StyledOuterMain>
     );
 }
 

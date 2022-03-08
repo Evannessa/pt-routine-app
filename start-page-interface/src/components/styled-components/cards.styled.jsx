@@ -6,18 +6,34 @@ export const CardComponent = styled.div`
     flex-direction: ${(props) => props.direction || "row"};
     justify-content: ${(props) => props.justifyContent || "space-evenly"};
     flex-wrap: ${(props) => props.wrap || "wrap"};
+    width: 100%;
 `;
 
 export const StyledCardHeader = styled.div`
+    /* grid-area: hd; */
+    grid-column: 2/5;
+    grid-row: 1/2;
     display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 1.5rem;
+    h2 {
+        display: inline-flex;
+        gap: 0.5rem;
+    }
 `;
 
 export const StyledCardBody = styled.div`
+    grid-column: 2/5;
+    grid-row: 2/3;
+    /* grid-area: main; */
     display: flex;
-    flex-direction: column;
+    width: 100%;
+    justify-content: space-evenly;
 `;
 
 export const StyledCardWrapper = styled.div`
+    grid-area: main;
     display: flex;
     flex-direction: column;
     flex: 2;
@@ -25,20 +41,57 @@ export const StyledCardWrapper = styled.div`
     justify-content: center;
 `;
 export const StyledCardFooter = styled.div`
+    /* grid-area: ft; */
+    grid-column: 2/5;
     display: flex;
+    flex-direction: row;
+    padding-bottom: 1rem;
 `;
 export const StyledCardSidebar = styled.div`
+    /* grid-area: rt; */
+    grid-row: 1/4;
+    grid-column: 5/6;
+    height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 0rem 1rem;
+    /* padding: 0rem 1rem; */
     background-color: #bf2063;
-    margin-right: -3rem;
-    margin-top: -1rem;
-    margin-bottom: -1rem;
-    margin-left: 2rem;
+    /* margin-right: -3rem; */
+    margin-top: -2rem;
+    margin-bottom: -2rem;
+    /* margin-left: 2rem; */
 `;
+export const StyledCardSidebarLeft = styled.div`
+    grid-column: 1/2;
+    grid-row: 1/4;
+`;
+
+export const StyledCardHorizontal = styled.div`
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-auto-rows: minmax(0, 1fr) 45% minmax(0, 1fr);
+    overflow: visible;
+    /* grid-template-areas:
+        "hd hd hd hd"
+        "lft main main rt"
+        "ft ft ft ft"; */
+    border-left: ${(props) => (props.highlighted ? `3px solid white` : `none`)};
+    flex-direction: row;
+    /* padding: 1rem 0rem 1rem 2rem; */
+    color: white;
+    background: #25203f;
+    /* justify-content: space-between; */
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+    /* overflow: hidden; */
+    width: 100%;
+    min-width: 15%;
+    /* max-width: 50%; */
+`;
+
 export const StyledCard = styled.div`
     --highlighted: ${(props) => props.highlighted};
     --child-direction: ${(props) => (props.direction ? props.direction : "column")};
@@ -56,6 +109,7 @@ export const StyledCard = styled.div`
     overflow: hidden;
     width: fit-content;
     min-width: 15%;
+    max-width: 50%;
     /* max-width: ${(props) => props.maxWidth || "45%"}; */
     * {
         justify-content: center;
