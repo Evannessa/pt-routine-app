@@ -1,5 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
+import { requests } from "../helpers/requests";
+import LinkDisplay from "./LinkDisplay";
 import {
     StyledButton,
     IconButton,
@@ -8,7 +11,7 @@ import {
     ContainedButton,
 } from "./styled-components/Buttons.Styled";
 const StyledModalContainer = styled.div`
-    background: white;
+    background: slateblue;
     /* width: fit-content; */
     /* height: auto; */
     position: absolute;
@@ -31,13 +34,50 @@ const StyledModalBody = styled.div``;
 const StyledModalHeader = styled.div``;
 
 function ModalContainer({ children }, props) {
+    let [linkData, setLinkData] = useState();
+    let params = useParams();
+    React.useEffect(() => {
+        requests.getObject(params.id, requests.displayBase, params, setLinkData);
+    }, []);
+
+    function returnIFrame() {
+        return <iframe src={linkData.url} title={linkData.name}></iframe>;
+    }
+    function returnText() {
+        return <div>linkData.text</div>;
+    }
+    function returnImage() {
+        return <image src={linkData.imageSource} />;
+    }
+
+    function returnChildren() {
+        let child;
+        switch (linkData.type) {
+            case "Frame":
+                child = returnIFrame();
+                break;
+            case "Text":
+                child = returnText();
+                break;
+            case "Image":
+                child = returnImage();
+                break;
+            default:
+                break;
+        }
+        return child;
+    }
+
     return (
         <StyledModalContainer>
             <StyledModalHeader>
+                <h2>HELLO WORLD</h2>
                 {props.title && <h1 className="modal__title>">{props.title}</h1>}
             </StyledModalHeader>
             <StyledModalBody className="modal__body" style={{ color: "black" }}>
-                {children}
+                {returnChildren()}
+
+                {/* {children} */}
             </StyledModalBody>
             <ButtonGroup></ButtonGroup>
         </StyledModalContainer>

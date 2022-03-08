@@ -64,6 +64,7 @@ const StyledLink = styled.div`
 
 function LinkDisplay(props) {
     const params = useParams();
+    const location = useLocation();
     let id = Object.keys(params).length > 0 ? params.id : "new";
     const urlBase = "http://localhost:9000/links/display";
     const createBase = "http://localhost:9000/links/create";
@@ -240,7 +241,13 @@ function LinkDisplay(props) {
                           {link.type === "External" ? (
                               <a href={link.url}>{link.name}</a>
                           ) : (
-                              <Link to={`/display/internal/${link._id}/`}></Link>
+                              <Link
+                                  to={{
+                                      pathname: `/display/internal/${link._id}/`,
+                                      state: { background: location },
+                                  }}>
+                                  {link.name}
+                              </Link>
                           )}
                       </StyledCardBody>
                       <StyledCardFooter>

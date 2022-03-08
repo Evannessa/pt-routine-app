@@ -60,6 +60,7 @@ function App() {
                     <Route index element={<Dashboard />} />
                     <Route path="display" element={<LinkDisplay />}>
                         <Route path=":id" element={<LinkNameInput />}></Route>
+                        <Route path="internal/:id" element={<ModalContainer />} />
                     </Route>
                     <Route path="create" element={<LinkNameInput />}>
                         <Route path="new" element={<LinkNameInput />}></Route>
@@ -70,7 +71,9 @@ function App() {
             {background && (
                 <Routes>
                     <Route path="create/:id" element={<LinkNameInput modal={true} />} />
-                    <Route path="display/internal/:id" element={<ModalContainer />} />
+                    <Route
+                        path="display/internal/:id"
+                        element={<ModalContainer />}></Route>
                 </Routes>
             )}
         </StyledContainer>

@@ -1,6 +1,9 @@
 import axios from "axios";
 
 export var requests = (function () {
+    const displayBase = "http://localhost:9000/links/display";
+    const createBase = "http://localhost:9000/links/create";
+    const urlBase = "http://localhost:9000/links";
     /**
      * Get a specific object using id and such
      * @param {String} id - the id of the object we're getting
@@ -145,5 +148,7 @@ export var requests = (function () {
         updateObject,
         deleteObject,
         deleteMultiple,
+        createBase,
+        displayBase,
     };
 })();
