@@ -165,28 +165,19 @@ function LinkNameInput(props) {
 
     //update the state with new data, and make a patch request
     async function patchAndSetState(newData) {
+        console.log(newData);
         if (id !== "new") {
             requests.updateObject(params.id, newData, urlBase, setFormData, "link");
-        } else {
-            requests.createObject(urlBase);
         }
     }
 
     //remove specific tag from this link
     function removeTag(id) {
-        // let tags = [...formData.tags].filter((tag) => tag._id !== id);
-        // let newData = { ...formData, tags: tags };
-        let removalData = {
-            id: formData._id,
-            tagId: id,
-            isRemoval: true,
-        };
+        // propertyName, value, action, filter
+        let removalData = createUpdateData("tags", "", "delete", { id: id });
         patchAndSetState(removalData);
     }
 
-    function handleSubmit() {
-        createNewLink();
-    }
     function setSavedAndUpdate(data) {
         idRef.current = data._id;
         setSaved(true);
@@ -198,6 +189,25 @@ function LinkNameInput(props) {
         await requests
             .createObject(urlBase, formData, location, setSavedAndUpdate, "new")
             .then((result) => {});
+    }
+
+    /**
+     * create data to be passed into an update for our link
+     * @param {*} propertyPath
+     * @param {*} value - update value, if any
+     * @param {*} action - the sub-action to perform on a property
+     * @param {*} filter - the id or other data we want to filter it by
+     * @returns object
+     */
+    function createUpdateData(propertyPath, value, action, filter) {
+        let newData = {
+            id: formData._id,
+            propertyPath: propertyPath,
+            update: value,
+            action: action,
+            filter: filter,
+        };
+        return newData;
     }
     /**
      * handle pressing Enter in the tags box
@@ -220,11 +230,7 @@ function LinkNameInput(props) {
             if (!newArray.includes(newTag)) {
                 newArray.push(newTag);
             }
-            let newData = {
-                id: formData._id,
-                tagName: newTag,
-                isRemoval: false,
-            };
+            let newData = createUpdateData("tags", newTag, "insert", "");
 
             console.log("Passed data is", newData);
             requests.updateObject(params.id, newData, urlBase, setFormData, "link");
@@ -258,18 +264,9 @@ function LinkNameInput(props) {
         return location.pathname.includes("new");
     }
     function updateFormData(name, value) {
-        let data = {
-            ...formData,
-            [name]: value,
-        };
+        let data = createUpdateData(name, value, "update", "");
+        console.log(data);
         patchAndSetState(data);
-        // setFormData((prevFormData) => {
-        //     return {
-        //         ...prevFormData,
-        //         [name]: value,
-        //     };
-        // });
-        // setStateAndPatch()
     }
 
     function returnInput(property, wrapped, hasLabel = true, extraProps = {}) {
