@@ -244,7 +244,7 @@ function LinkDisplay(props) {
                               <Link
                                   to={{
                                       pathname: `/display/internal/${link._id}/`,
-                                      state: { background: location },
+                                      //   state: { background: location },
                                   }}>
                                   {link.name}
                               </Link>

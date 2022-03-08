@@ -26,6 +26,8 @@ const LinkSchema = new mongoose.Schema({
         default: "External",
     },
     tags: [{ type: mongoose.Schema.Types.ObjectId, ref: "Tag" }],
+    text: "",
+    imagePath: "",
 });
 
 module.exports = {

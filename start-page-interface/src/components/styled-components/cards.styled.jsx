@@ -21,6 +21,8 @@ export const StyledCardWrapper = styled.div`
     display: flex;
     flex-direction: column;
     flex: 2;
+    align-items: center;
+    justify-content: center;
 `;
 export const StyledCardFooter = styled.div`
     display: flex;
@@ -44,23 +46,32 @@ export const StyledCard = styled.div`
     display: flex;
     border-left: ${(props) => (props.highlighted ? `3px solid white` : `none`)};
     flex-direction: row;
-    /* padding: 1rem 2rem; */
+    padding: 1rem 2rem;
     color: white;
     background: #25203f;
     /* justify-content: space-between; */
+    align-items: center;
+    justify-content: center;
     border-radius: 5px;
     overflow: hidden;
-    width: calc(25% - 1rem);
-    /* min-width: 25%; */
+    width: fit-content;
+    min-width: 15%;
     /* max-width: ${(props) => props.maxWidth || "45%"}; */
+    * {
+        justify-content: center;
+    }
 
     ${StyledCardHeader}, ${StyledCardFooter},${StyledCardSidebar} {
         --highlighted: ${(props) => props.highlighted};
         flex-direction: var(--child-direction);
+        align-items: center;
+        justify-content: center;
     }
     ${StyledCardSidebar} {
         pointer-events: none;
         transform: scaleX(0);
+        position: absolute;
+        clip-path: 0;
         /* width: 0; */
         /* padding: 0; */
         /* opacity: 0; */

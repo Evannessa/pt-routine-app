@@ -140,6 +140,18 @@ export var requests = (function () {
             console.log(error);
         }
     }
+
+    function compileUpdateData(id, propertyPath, value, action, filter) {
+        let newData = {
+            id: id,
+            propertyPath: propertyPath,
+            update: value,
+            action: action,
+            filter: filter,
+        };
+        return newData;
+    }
+
     return {
         getObject,
         getAll,
@@ -148,6 +160,7 @@ export var requests = (function () {
         updateObject,
         deleteObject,
         deleteMultiple,
+        compileUpdateData,
         createBase,
         displayBase,
     };

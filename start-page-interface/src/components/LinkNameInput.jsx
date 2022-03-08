@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import tf from "../helpers/formatText";
 import styled from "styled-components";
 import axios from "axios";
@@ -12,6 +12,7 @@ import Form from "./input/Form";
 import Input from "./input/Input";
 import { StyledForm } from "./styled-components/input.styled";
 import { StyledChipFieldset } from "./styled-components/chips.styled";
+import DropArea from "./DropArea";
 
 const StyledTextboxSpan = styled.div`
     background-color: #171529;
@@ -135,6 +136,8 @@ function LinkNameInput(props) {
         url: "#",
         tags: [],
         type: LinkType.External.name,
+        text: "",
+        imagePath: "",
     });
     const idRef = React.useRef();
 
@@ -148,6 +151,16 @@ function LinkNameInput(props) {
             requests.getObject(id, urlBase, params, setFormData);
         }
     }, []);
+
+    useEffect(() => {
+        if (formData.type === "Text" && !formData.text) {
+            //if we're setting it to text type but there's no text
+            updateFormData("text", " ");
+        } else if (formData.type === "Image" && !formData.imagePath) {
+            //if we're setting it to image type but there's no image
+            updateFormData("imagePath", " ");
+        }
+    }, [formData.type]);
 
     let tagOptions = formData
         ? formData.tags.map((tag) => <option key={tag._id} value={tag.name}></option>)
@@ -200,14 +213,13 @@ function LinkNameInput(props) {
      * @returns object
      */
     function createUpdateData(propertyPath, value, action, filter) {
-        let newData = {
-            id: formData._id,
-            propertyPath: propertyPath,
-            update: value,
-            action: action,
-            filter: filter,
-        };
-        return newData;
+        return requests.compileUpdateData(
+            formData.id,
+            propertyPath,
+            value,
+            action,
+            filter
+        );
     }
     /**
      * handle pressing Enter in the tags box
@@ -234,13 +246,6 @@ function LinkNameInput(props) {
 
             console.log("Passed data is", newData);
             requests.updateObject(params.id, newData, urlBase, setFormData, "link");
-            // try {
-            //     let updated = await axios
-            //         .patch(`${urlBase}/${params.id}`, newData)
-            //         .then((response) => setFormData(response.data.link));
-            // } catch (error) {
-            //     console.log(error);
-            // }
         }
     }
     //we've created and saved a new link, so navigate to the stored reference of the id
@@ -302,6 +307,9 @@ function LinkNameInput(props) {
             </span>
         );
     }
+    function returnDropArea() {
+        return <DropArea slideImagePath={formData.imagePath}></DropArea>;
+    }
 
     return (
         <StyledContainer modal={props.modal}>
@@ -331,6 +339,10 @@ function LinkNameInput(props) {
                         selectedValue={formData.type}
                         setStateFunction={updateFormData}
                     />
+                    {formData.type === "Text" &&
+                        formData.text &&
+                        returnInput("textarea", false, true, {})}
+                    {formData.type === "Image" && formData.imagePath && returnDropArea()}
                 </Form>
             )}
         </StyledContainer>

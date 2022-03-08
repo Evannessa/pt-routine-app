@@ -1,6 +1,5 @@
 const path = require("path");
 var mongoose = require("mongoose");
-const { Timer, TimerSet } = require("../models/timerModels");
 
 const uploadImage = async (req, res) => {
     console.log("Our files are", req.files);
