@@ -35,6 +35,20 @@ export const StyledButton = styled.button`
     cursor: pointer;
 `;
 
+export const StyledSplitButtonWrapper = styled.span`
+    border-radius: 10px;
+    display: inline-flex;
+`;
+export const StyledSplitButtonPrimary = styled.button`
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+`;
+export const StyledSplitButtonOverflow = styled.button`
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+`;
+export const StyledSplitButtonDropdown = styled.div``;
+
 /** small buttons with no background or border, like close buttons on modals or chips, etc. */
 export const IconButton = styled(StyledButton)`
     background: transparent;

@@ -310,7 +310,10 @@ function LinkDisplay(props) {
                 </ButtonGroup>
             </Layout.StyledHeader>
             <StyledMain>
-                <StyledSidebar>{linkComponents}</StyledSidebar>
+                <StyledSidebar>
+                    <div></div>
+                    {linkComponents}
+                </StyledSidebar>
 
                 <StyledContent>
                     <Outlet />

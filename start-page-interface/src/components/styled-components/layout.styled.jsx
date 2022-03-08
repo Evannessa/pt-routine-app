@@ -7,6 +7,8 @@ export const StyledHeader = styled.header`
     padding: 2rem;
     /* margin-left: -6rem; */
     /* margin-right: -6rem; */
+    display: flex;
+    flex-wrap: wrap;
 `;
 export const StyledMain = styled.main`
     grid-area: main;
