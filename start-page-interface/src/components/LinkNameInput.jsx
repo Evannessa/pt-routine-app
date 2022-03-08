@@ -51,13 +51,13 @@ const StyledContainer = styled.div`
     /* position: absolute; */
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: stretch;
     padding: 1.5rem 2rem;
     gap: 1rem;
     /* width: fit-content; */
     width: 100%;
     /* max-width: 50%; */
-    background: #342e57;
+    background: var(--clr-primary-dark);
     border-radius: 15px;
     z-index: 1;
     > button {

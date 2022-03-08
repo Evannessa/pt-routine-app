@@ -59,14 +59,7 @@ const StyledLinkContainer = styled.section`
     min-height: 200vh;
     overflow: hidden;
 `;
-const StyledLink = styled.div`
-    display: flex;
-    flex-direction: column;
-    padding: 1rem 2rem;
-    color: white;
-    background: #25203f;
-    border-radius: 5px;
-`;
+
 // #endregion
 
 function LinkDisplay(props) {
@@ -220,8 +213,7 @@ function LinkDisplay(props) {
         ? filteredLinks.map((link) => (
               <StyledCardHorizontal
                   key={link._id}
-                  highlighted={link._id === params.id ? true : false}
-                  hasSidebar={true}>
+                  highlighted={link._id === params.id ? true : false}>
                   <StyledCardHeader>
                       <h2>
                           {link.name}
@@ -240,20 +232,7 @@ function LinkDisplay(props) {
                           colors={["#02797E", "#FFA689", "#D62B58", "#BF2063", "#572F4F"]}
                       />
                   </StyledCardSidebarLeft>
-                  <StyledCardBody>
-                      {/* {link._id === params.id && <Outlet />} */}
-                      {link.type === "External" ? (
-                          <a href={link.url}>{link.name}</a>
-                      ) : (
-                          <Link
-                              to={{
-                                  pathname: `/display/internal/${link._id}/`,
-                                  //   state: { background: location },
-                              }}>
-                              {link.name}
-                          </Link>
-                      )}
-                  </StyledCardBody>
+                  <StyledCardBody></StyledCardBody>
                   <StyledCardFooter>
                       <CardComponent>
                           {link.tags.map((tag) => {
@@ -267,11 +246,25 @@ function LinkDisplay(props) {
                       </CardComponent>
                   </StyledCardFooter>
                   <StyledCardSidebar>
-                      <IconButton
+                      {link.type === "External" ? (
+                          <a href={link.url} className="material-icons">
+                              arrow_forward
+                          </a>
+                      ) : (
+                          <Link
+                              className="material-icons"
+                              to={{
+                                  pathname: `/display/internal/${link._id}/`,
+                                  //   state: { background: location },
+                              }}>
+                              arrow_forward
+                          </Link>
+                      )}
+                      {/* <IconButton
                           className="material-icons"
                           onClick={(e) => deleteLink(link._id)}>
                           delete
-                      </IconButton>
+                      </IconButton> */}
                   </StyledCardSidebar>
               </StyledCardHorizontal>
           ))
@@ -280,14 +273,15 @@ function LinkDisplay(props) {
     return (
         <Layout.StyledOuterMain>
             <Layout.StyledHeader>
-                <StyledRouterLink to="/create/new">Create New</StyledRouterLink>
                 <Form>
                     <ChipGroup
                         chips={formData.searchFilters}
                         setStateFunction={updateFormData}
                         parentName="searchFilters"></ChipGroup>
                 </Form>
-                <Form action="" submitFunction={uploadJSON} submitText="Upload JSON">
+                <StyledRouterLink to="/create/new">Create New</StyledRouterLink>
+
+                {/* <Form action="" submitFunction={uploadJSON} submitText="Upload JSON">
                     <Input
                         type="textarea"
                         setStateFunction={updateFormData}
@@ -307,7 +301,7 @@ function LinkDisplay(props) {
                         onClick={(event) => downloadJSON()}>
                         file_download
                     </CircleIconButton>
-                </ButtonGroup>
+                </ButtonGroup> */}
             </Layout.StyledHeader>
             <StyledMain>
                 <StyledSidebar>

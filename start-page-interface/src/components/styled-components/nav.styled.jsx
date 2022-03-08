@@ -7,10 +7,11 @@ export const StyledRouterLink = styled(Link)`
     --clr-text-hover-color: ${(props) => props.colorAlt};
     --clr-underline-color: ${(props) => props.underlineColor};
     padding: 0.25em 0.25em 0.15em 0.25em;
+    height: fit-content;
     text-decoration: none;
     color: white;
     font-size: 1rem;
-    border-bottom: 3px solid #171529;
+    border-bottom: 3px solid transparent;
     box-shadow: 0px 2px 0px 0px var(--clr-underline-color);
     transition: background-color 0.15s ease-in, border-color 0.15s ease-in;
     &:focus,

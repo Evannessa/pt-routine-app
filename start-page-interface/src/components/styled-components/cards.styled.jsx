@@ -1,5 +1,5 @@
 import styled, { css } from "styled-components";
-
+import { Link } from "react-router-dom";
 /** for generic wrappers to go around components */
 export const CardComponent = styled.div`
     display: flex;
@@ -29,6 +29,7 @@ export const StyledCardBody = styled.div`
     /* grid-area: main; */
     display: flex;
     width: 100%;
+    height: fit-content;
     justify-content: space-evenly;
 `;
 
@@ -57,11 +58,26 @@ export const StyledCardSidebar = styled.div`
     align-items: center;
     justify-content: center;
     /* padding: 0rem 1rem; */
-    background-color: #bf2063;
+    /* background-color: #bf2063; */
     /* margin-right: -3rem; */
     margin-top: -2rem;
     margin-bottom: -2rem;
     /* margin-left: 2rem; */
+    a,
+    Link {
+        display: inline-flex;
+        background-color: #bf2063;
+        width: 100%;
+        height: 100%;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        text-decoration: none;
+        &:visited,
+        &:hover {
+            color: var(--clr--accent);
+        }
+    }
 `;
 export const StyledCardSidebarLeft = styled.div`
     grid-column: 1/2;
@@ -71,8 +87,9 @@ export const StyledCardSidebarLeft = styled.div`
 export const StyledCardHorizontal = styled.div`
     display: grid;
     grid-template-columns: repeat(5, minmax(0, 1fr));
-    grid-auto-rows: minmax(0, 1fr) 45% minmax(0, 1fr);
+    grid-auto-rows: repeat(minmax(3, 1fr));
     overflow: visible;
+    cursor: pointer;
     /* grid-template-areas:
         "hd hd hd hd"
         "lft main main rt"

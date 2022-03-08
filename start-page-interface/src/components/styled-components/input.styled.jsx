@@ -53,13 +53,13 @@ export const StyledContainer = styled.div`
     }
 `;
 export const StyledChipBox = styled.div`
- display: flex;
+    display: flex;
     flex-wrap: wrap;
     gap: 1rem;
     margin: 1rem 0;
-        input[type="radio"],
-        input[type="checkbox"] {
-            /* display: none;
+    input[type="radio"],
+    input[type="checkbox"] {
+        /* display: none;
             position: absolute;
             overflow: hidden;
             clip: rect(0 0 0 0);
@@ -68,23 +68,29 @@ export const StyledChipBox = styled.div`
             margin: -1px;
             padding: 0;
             border: 0; */
-    label {
-        background-color: ${(props) =>
-            props.checked ? "cornflowerblue" : "transparent"};
-        color: ${(props) => (props.checked ? "white" : "cornflowerblue")};
-        ${(props) =>
-            props.checked &&
-            css`
-                font-weight: bold;
-            `};
+        label {
+            background-color: ${(props) =>
+                props.checked ? "cornflowerblue" : "transparent"};
+            color: ${(props) => (props.checked ? "white" : "cornflowerblue")};
+            ${(props) =>
+                props.checked &&
+                css`
+                    font-weight: bold;
+                `};
+        }
     }
 `;
 export const StyledChipbox = styled.input``;
 export const StyledForm = styled.form`
     display: flex;
     flex-direction: column;
+    justify-content: stretch;
+    align-items: stretch;
     /* grid-template-columns: 25% 75%; */
     /* grid-template-rows: repeat(3, 1fr), 1fr; */
+    fieldset {
+        border: none;
+    }
     label {
         color: cornflowerblue;
     }
@@ -96,9 +102,15 @@ export const StyledForm = styled.form`
     div,
     > span {
         display: flex;
+        justify-content: stretch;
+        align-items: stretch;
         gap: 1rem;
+        * {
+            flex: 2;
+        }
     }
     div {
+        justify-content: stretch;
         flex-direction: row-reverse;
     }
 

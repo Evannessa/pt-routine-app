@@ -21,6 +21,8 @@ const Global = createGlobalStyle`
   --clr-primary-dark: #25203f;
   --clr-primary-base: #342E57;
   --clr-accent: #6495ed;
+  --clr-accent-green:#4ab4c7;
+  --clr-shadow: rgba(0, 0, 0, 0.25);
 	}
 	html, body{
 		scrollbar-width: thin;
@@ -30,7 +32,7 @@ const Global = createGlobalStyle`
 
 const StyledContainer = styled.div`
     flex: 1;
-    background-color: #171529;
+    background-color: var(--clr-primary-base);
     padding: 0rem 2rem;
     border-radius: 15px;
     display: flex;
@@ -43,9 +45,13 @@ const StyledContainer = styled.div`
     scrollbar-width: thin;
 `;
 const ThickerContainer = styled(StyledContainer)`
+    padding: 0;
     width: 100%;
     nav {
+        position: absolute;
+        top: -999px;
         overflow: visible;
+        height: 0;
         width: 100%;
     }
 `;
@@ -89,12 +95,12 @@ function Layout() {
         <ThickerContainer>
             <nav>
                 <StyledNavBar>
-                    <StyledNavLink underlineColor="#8e7eef">
+                    {/* <StyledNavLink underlineColor="#8e7eef">
                         <Link to="/">Dashboard</Link>
                     </StyledNavLink>
                     <StyledNavLink underlineColor="#8e7eef">
                         <Link to="/display">Link Display</Link>
-                    </StyledNavLink>
+                    </StyledNavLink> */}
                 </StyledNavBar>
             </nav>
 
