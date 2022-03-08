@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { requests } from "../helpers/requests";
 import { Navigate, useNavigate } from "react-router-dom";
 import tf from "../helpers/formatText";
+import { Remarkable } from "remarkable";
 import {
     StyledButton,
     IconButton,
@@ -43,6 +44,9 @@ const StyledModalContainer = styled.div`
 const StyledModalBody = styled.div`
     width: 90%;
     height: 80%;
+    overflow: hidden;
+    overflow: scroll;
+    scrollbar-width: thin;
 `;
 
 const StyledModalHeader = styled.div`
@@ -58,6 +62,41 @@ const StyledModalHeader = styled.div`
     }
 `;
 
+const StyledHtmlWrapper = styled.div`
+    /* background: #212121; */
+    color: white;
+    display: flex;
+    flex-direction: column;
+    table {
+        & tr {
+            margin: 2rem 0rem;
+        }
+        & th {
+            padding: 2rem 0rem 1rem 1rem;
+        }
+        & td {
+            padding: 2rem 0rem 2rem 1rem;
+        }
+        & * {
+            font-size: 1.25rem;
+            text-align: left !important;
+            border: none !important;
+        }
+        & th {
+            color: white;
+        }
+        & tr:nth-child(even) {
+            background-color: #292b5f;
+        }
+        & tr:nth-child(even) {
+            background-color: #292b5f;
+        }
+    }
+`;
+
+var md = new Remarkable(); //markdown
+md.set({ html: true });
+
 function ModalContainer({ children }, props) {
     let [linkData, setLinkData] = useState();
     let navigate = useNavigate();
@@ -70,12 +109,21 @@ function ModalContainer({ children }, props) {
         return <iframe src={linkData.url} title={linkData.name}></iframe>;
     }
     function returnText() {
-        return <div>linkData.text</div>;
+        return (
+            <StyledHtmlWrapper
+                dangerouslySetInnerHTML={{
+                    __html: md.render(linkData.text),
+                }}></StyledHtmlWrapper>
+        );
     }
     function returnImage() {
         return <image src={linkData.imageSource} />;
     }
 
+    /**
+     * Return a child depending on what type the link is
+     * @returns an iFrame, image, or div with html rendered from markdown
+     */
     function returnChildren() {
         let child;
         switch (linkData.type) {
