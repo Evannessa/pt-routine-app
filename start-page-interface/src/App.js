@@ -22,6 +22,7 @@ const Global = createGlobalStyle`
   --clr-primary-base: #342E57;
   --clr-accent: #6495ed;
   --clr-accent-green:#4ab4c7;
+--clr-accent-pink: #bf2063;
   --clr-shadow: rgba(0, 0, 0, 0.25);
 	}
 	html, body{
@@ -46,7 +47,10 @@ const StyledContainer = styled.div`
 `;
 const ThickerContainer = styled(StyledContainer)`
     padding: 0;
+
     width: 100%;
+    width: max(80%, 900px);
+    /* max-width:   */
     nav {
         position: absolute;
         top: -999px;

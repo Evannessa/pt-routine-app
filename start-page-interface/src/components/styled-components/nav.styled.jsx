@@ -1,14 +1,20 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+
+export const ActionLink = styled(Link)``;
 export const StyledRouterLink = styled(Link)`
     --clr-background-color: ${(props) => props.bgColor};
     --clr-bg-hover-color: ${(props) => props.bgColorAlt};
     --clr-text-color: ${(props) => props.color};
     --clr-text-hover-color: ${(props) => props.colorAlt};
     --clr-underline-color: ${(props) => props.underlineColor};
+    border-radius: 999px;
     padding: 0.25em 0.25em 0.15em 0.25em;
     height: fit-content;
     text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+
     color: white;
     font-size: 1rem;
     border-bottom: 3px solid transparent;

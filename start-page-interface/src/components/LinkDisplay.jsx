@@ -279,7 +279,10 @@ function LinkDisplay(props) {
                         setStateFunction={updateFormData}
                         parentName="searchFilters"></ChipGroup>
                 </Form>
-                <StyledRouterLink to="/create/new">Create New</StyledRouterLink>
+                <StyledRouterLink to="/create/new">
+                    {" "}
+                    Create New <span className="material-icons">add</span>
+                </StyledRouterLink>
 
                 {/* <Form action="" submitFunction={uploadJSON} submitText="Upload JSON">
                     <Input

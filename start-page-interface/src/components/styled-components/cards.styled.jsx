@@ -73,9 +73,10 @@ export const StyledCardSidebar = styled.div`
         align-items: center;
         color: white;
         text-decoration: none;
-        &:visited,
+        /* &:visited, */
         &:hover {
-            color: var(--clr--accent);
+            /* color: var(--clr-accent); */
+            background-color: var(--clr-accent);
         }
     }
 `;
@@ -94,11 +95,13 @@ export const StyledCardHorizontal = styled.div`
         "hd hd hd hd"
         "lft main main rt"
         "ft ft ft ft"; */
-    border-left: ${(props) => (props.highlighted ? `3px solid white` : `none`)};
+    border-left: ${(props) =>
+        props.highlighted ? `5px solid var(--clr-accent)` : `none`};
     flex-direction: row;
     /* padding: 1rem 0rem 1rem 2rem; */
     color: white;
-    background: #25203f;
+    background: ${(props) =>
+        props.highlighted ? `var(--clr-primary-base)` : `var(--clr-primary-dark)`};
     /* justify-content: space-between; */
     align-items: center;
     justify-content: center;
@@ -107,6 +110,13 @@ export const StyledCardHorizontal = styled.div`
     width: 100%;
     min-width: 15%;
     /* max-width: 50%; */
+    ${StyledCardSidebar} {
+        a,
+        Link {
+            background-color: ${(props) =>
+                props.highlighted ? `var(--clr-accent)` : `var(--clr-accent-pink)`};
+        }
+    }
 `;
 
 export const StyledCard = styled.div`
