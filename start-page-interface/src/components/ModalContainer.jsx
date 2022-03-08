@@ -44,9 +44,14 @@ const StyledModalContainer = styled.div`
 const StyledModalBody = styled.div`
     width: 90%;
     height: 80%;
-    overflow: hidden;
-    overflow: scroll;
+    overflow: ${(props) => (props.type === "Text" ? "scroll" : "hidden")};
     scrollbar-width: thin;
+    object-fit: contain;
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
 `;
 
 const StyledModalHeader = styled.div`
@@ -98,6 +103,7 @@ var md = new Remarkable(); //markdown
 md.set({ html: true });
 
 function ModalContainer({ children }, props) {
+    const uploadsUrl = "http://localhost:9000";
     let [linkData, setLinkData] = useState();
     let navigate = useNavigate();
     let params = useParams();
@@ -117,7 +123,13 @@ function ModalContainer({ children }, props) {
         );
     }
     function returnImage() {
-        return <image src={linkData.imageSource} />;
+        return (
+            <img
+                src={linkData.imagePath ? `${uploadsUrl}/${linkData.imagePath}` : ""}
+                alt="leaf"
+                // style={{ width: "50%", height: "auto" }}
+            />
+        );
     }
 
     /**
@@ -163,7 +175,7 @@ function ModalContainer({ children }, props) {
                     close
                 </IconButton>
             </StyledModalHeader>
-            <StyledModalBody className="modal__body" style={{ color: "black" }}>
+            <StyledModalBody className="modal__body" type={linkData.type}>
                 {linkData && returnChildren()}
 
                 {/* {children} */}
