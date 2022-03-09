@@ -102,9 +102,6 @@ function LinkDisplay(props) {
             //if the name filter is selected
             let filteredNames = formData.searchFilters.titles
                 ? links.filter((link) => {
-                      if (link.name.includes(queryTags[0])) {
-                          console.log(link, "Contains", queryTags[0]);
-                      }
                       return queryTags.some((el) =>
                           link.name.toLowerCase().includes(el.toLowerCase())
                       );
@@ -271,7 +268,7 @@ function LinkDisplay(props) {
     return (
         <Layout.StyledOuterMain>
             <Layout.StyledHeader>
-                <Form direction="row">
+                <Form direction="row" justify="center" align="center">
                     <Input
                         name="search"
                         type="text"

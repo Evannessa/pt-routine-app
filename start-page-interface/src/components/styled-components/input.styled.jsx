@@ -85,11 +85,17 @@ export const StyledChipbox = styled.input``;
 const returnDirection = function (props) {
     return props.direction || "column";
 };
+const returnJustify = function (props) {
+    return props.justify || "stretch";
+};
+const returnAlign = function (props) {
+    return props.align || "stretch";
+};
 export const StyledForm = styled.form`
     display: flex;
     flex-direction: ${returnDirection};
-    justify-content: stretch;
-    align-items: stretch;
+    justify-content: ${returnJustify};
+    align-items: ${returnAlign};
     fieldset {
         border: none;
     }

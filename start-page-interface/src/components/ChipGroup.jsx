@@ -21,7 +21,6 @@ function ChipGroup(props) {
             }
         } else if (groupType === "radio") {
             for (let radioValue of props.chips) {
-                console.log("Radio chips are", radioValue);
                 objects.push({
                     type: groupType,
                     name: groupName,

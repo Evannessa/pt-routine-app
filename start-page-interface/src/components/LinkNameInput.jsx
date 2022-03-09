@@ -81,10 +81,8 @@ class LinkType {
 function LinkNameInput(props) {
     const params = useParams();
     const navigate = useNavigate();
-    console.log(params);
     let id = Object.keys(params).length > 0 ? params.id : "new";
     const location = useLocation();
-    console.log(location);
     const urlBase = "http://localhost:9000/links/create";
     const [saved, setSaved] = React.useState(false);
     const [allTags, setAllTags] = React.useState([]);
@@ -96,6 +94,7 @@ function LinkNameInput(props) {
         text: "",
         imagePath: "",
     });
+    const [tagsInput, setTagsInput] = React.useState({ inputValue: "" });
     const idRef = React.useRef();
 
     //get ALL tags to suggest when user types
@@ -119,9 +118,6 @@ function LinkNameInput(props) {
         }
     }, [formData.type]);
 
-    let tagOptions = formData
-        ? formData.tags.map((tag) => <option key={tag._id} value={tag.name}></option>)
-        : [];
     let tagSpans = formData
         ? formData.tags.map((tag) => (
               <TagChips
@@ -213,59 +209,63 @@ function LinkNameInput(props) {
         event.stopPropagation();
         navigate(-1);
     };
-    function handleChange(event) {
-        let { name, type, checked, value } = event.currentTarget;
-        setFormData((prevData) => {
-            return {
-                ...prevData,
-                [name]: type === "checkbox" ? checked : value,
-            };
-        });
-    }
+
     function isNew() {
         return location.pathname.includes("new");
     }
+    /**
+     * creates an object to pass to the "patch" request when api is called
+     * which will update state afterward
+     * @param {String} name - the name of the property we're updating in the formData Object
+     * @param {*} value  - the value that we're updating
+     */
     function updateFormData(name, value) {
         let data = createUpdateData(name, value, "update", "");
         console.log(data);
         patchAndSetState(data);
     }
 
-    function returnInput(
-        property,
-        wrapped,
-        hasLabel = true,
-        extraProps = {},
-        type = "text"
-    ) {
-        let name = Object.keys(formData).find((key) => key === property);
-        console.log("Name is", name);
-        console.log(formData[name]);
+    /**
+     *
+     *
+     * @param {String} value - string of words we want to become tags. For updating input that's not directly saved
+     */
+    function updateTagsInput(value) {
+        console.log(value);
+        setTagsInput({ inputValue: value });
+    }
+
+    function returnInput(args) {
+        let { object, property, wrapped, hasLabel, extraProps, type, updateFunction } =
+            args;
+        let name = Object.keys(object).find((key) => key === property);
+        console.log(object, name);
         return (
             <Input
                 key={name}
                 name={name}
                 type={type}
                 extraProps={extraProps}
-                value={formData[name]}
-                setStateFunction={updateFormData}
+                value={object[name]}
+                setStateFunction={updateFunction}
                 hasLabel={hasLabel}
                 wrapped={wrapped}
             />
         );
     }
-    function returnWrappedInput(
-        property,
-        hasLabel = false,
-        wrapped = true,
-        extraProps = {}
-    ) {
+    /**
+     * Input wrapped in a span for things like displaying tags.
+     * returns a span-wrapped Input component
+     */
+    function returnWrappedInput(args) {
         return (
             <span>
-                <label htmlFor={property}>{tf.capitalizeFirstLetter(property)}</label>
+                <label htmlFor={args.property}>
+                    {tf.capitalizeFirstLetter(args.property)}
+                </label>
                 <StyledTextboxSpan>
                     {tagSpans}
-                    {returnInput(property, wrapped, hasLabel, extraProps)}
+                    {returnInput(args)}
                 </StyledTextboxSpan>
             </span>
         );
@@ -277,6 +277,31 @@ function LinkNameInput(props) {
                 updateFormData={updateFormData}></DropArea>
         );
     }
+    //default data to pass to our inputs
+    let inputData = {
+        object: formData,
+        property: "",
+        wrapped: false,
+        hasLabel: true,
+        extraProps: {},
+        type: "text",
+        updateFunction: updateFormData,
+    };
+    //data for the "name" input
+    let nameInputData = { ...inputData, property: "name" };
+
+    //data for the "url" input
+    let urlInputData = { ...inputData, property: "url" };
+
+    //data for the "tags" input
+    let tagsInputData = {
+        ...inputData,
+        object: tagsInput,
+        property: "value",
+        hasLabel: false,
+        extraProps: { onKeyDown: handleKeyDown },
+        updateFunction: updateTagsInput,
+    };
 
     return (
         <StyledContainer modal={props.modal}>
@@ -294,11 +319,9 @@ function LinkNameInput(props) {
                 <Form
                     submitFunction={createNewLink}
                     submitText={isNew() ? "Create New Link" : ""}>
-                    {returnInput("name")}
-                    {returnInput("url")}
-                    {returnWrappedInput("tags", false, false, {
-                        onKeyDown: handleKeyDown,
-                    })}
+                    {returnInput(nameInputData)}
+                    {returnInput(urlInputData)}
+                    {returnWrappedInput(tagsInputData)}
                     <ChipGroup
                         groupType="radio"
                         groupName="type"

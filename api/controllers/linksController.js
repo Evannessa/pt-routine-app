@@ -157,12 +157,13 @@ const updateLink = async (req, res) => {
                 { [propertyPath]: value },
                 { new: true }
             )
-                .then((link) => {
-                    console.log("Response is", link);
+                .populate("tags")
+                .exec((error, link) => {
+                    if (error) {
+                        console.log(error);
+                        return res.status(505).json({ msg: error });
+                    }
                     return res.status(202).json({ link });
-                })
-                .catch((error) => {
-                    console.log(error);
                 });
         } catch (error) {
             console.log(error);
