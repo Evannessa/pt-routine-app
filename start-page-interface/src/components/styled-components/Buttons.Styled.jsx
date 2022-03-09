@@ -69,6 +69,7 @@ export const ContainedButton = styled(StyledButton)`
     border: none;
     color: var(--clr-text-color);
     padding: 0.25em 1em;
+    border-radius: 5px;
 `;
 export const OutlinedButton = styled(ContainedButton)`
     background: transparent;

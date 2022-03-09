@@ -51,6 +51,8 @@ export const StyledChipSpan = styled.span`
 export const StyledChipFieldset = styled.fieldset`
     display: flex;
     gap: 0.5rem;
+    align-items: center;
+    justify-content: center;
 `;
 //radio buttons with the "chip" class
 

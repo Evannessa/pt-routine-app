@@ -104,9 +104,16 @@ export const StyledForm = styled.form`
         display: flex;
         justify-content: stretch;
         align-items: stretch;
-        gap: 1rem;
-        * {
-            flex: 2;
+        gap: 1.5rem;
+        label {
+            flex: 1;
+            color: cornflowerblue;
+            font-weight: bold;
+            text-align: right;
+        }
+        input,
+        div {
+            flex: 3;
         }
     }
     div {

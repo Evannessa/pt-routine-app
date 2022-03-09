@@ -6,6 +6,7 @@ import Input from "./input/Input";
 import Form from "./input/Form";
 import ChipGroup from "./ChipGroup";
 import {
+    ContainedButton,
     ButtonGroup,
     IconButton,
     CircleIconButton,
@@ -313,6 +314,14 @@ function LinkDisplay(props) {
                 </StyledSidebar>
 
                 <StyledContent>
+                    <ButtonGroup>
+                        <ContainedButton bgColor="cornflowerblue" color="white">
+                            Edit
+                        </ContainedButton>
+                        <ContainedButton bgColor="cornflowerblue" color="white">
+                            View
+                        </ContainedButton>
+                    </ButtonGroup>
                     <Outlet />
                 </StyledContent>
             </StyledMain>

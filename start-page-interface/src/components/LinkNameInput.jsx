@@ -52,10 +52,12 @@ const StyledContainer = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: stretch;
-    padding: 1.5rem 2rem;
+    padding: 1.5rem 3rem;
     gap: 1rem;
     /* width: fit-content; */
     width: 100%;
+    width: min(100%, 700px);
+
     /* max-width: 50%; */
     background: var(--clr-primary-dark);
     border-radius: 15px;

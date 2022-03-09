@@ -51,6 +51,7 @@ export const StyledContent = styled.section`
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    /* background-color: var(--clr-primary-dark); */
 `;
 export const StyledSidebar = styled.section`
     grid-area: sd;
