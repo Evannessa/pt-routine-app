@@ -23,7 +23,6 @@ function Input({
     /** determine whether it's an input or something different */
     const InputTag = `${type === "textarea" ? "textarea" : "input"}`;
 
-    console.log(name, value, "Is wrapped?", wrapped);
     const WrapperTag = !wrapped ? "div" : Fragment;
 
     function handleChange(event) {

@@ -1,10 +1,24 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
+
+const backgroundColor = (props) => {
+    return props.bgColor || "var(--clr-accent)";
+};
+const backgroundColorAlt = (props) => {
+    return props.bgColorAlt || "var(--clr-accent-green)";
+};
+const color = (props) => {
+    return props.color || "white";
+};
+
+const colorAlt = (props) => {
+    return props.colorAlt || "white";
+};
 
 export const StyledButton = styled.button`
-    --clr-background-color: ${(props) => props.bgColor};
-    --clr-bg-hover-color: ${(props) => props.bgColorAlt};
-    --clr-text-color: ${(props) => props.color};
-    --clr-text-hover-color: ${(props) => props.colorAlt};
+    --clr-background-color: ${backgroundColor};
+    --clr-bg-hover-color: ${backgroundColorAlt};
+    --clr-text-color: ${color};
+    --clr-text-hover-color: ${colorAlt};
     ${(props) => {
         if (props.btnStyle === "contained") {
             return `
@@ -34,20 +48,6 @@ export const StyledButton = styled.button`
     }}
     cursor: pointer;
 `;
-
-export const StyledSplitButtonWrapper = styled.span`
-    border-radius: 10px;
-    display: inline-flex;
-`;
-export const StyledSplitButtonPrimary = styled.button`
-    border-top-left-radius: 10px;
-    border-bottom-left-radius: 10px;
-`;
-export const StyledSplitButtonOverflow = styled.button`
-    border-top-right-radius: 10px;
-    border-bottom-right-radius: 10px;
-`;
-export const StyledSplitButtonDropdown = styled.div``;
 
 /** small buttons with no background or border, like close buttons on modals or chips, etc. */
 export const IconButton = styled(StyledButton)`
@@ -108,3 +108,44 @@ export const ToggleButtonGroup = styled(ButtonGroup)`
         justify-content: center;
     }
 `;
+export const StyledSplitButtonWrapper = styled.span`
+    border-radius: 10px;
+    display: inline-flex;
+    gap: 0.1rem;
+`;
+export const StyledSplitButtonPrimary = styled(ContainedButton).attrs((props) => ({
+    className: props.className || "material-icons",
+}))`
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+    flex: 2;
+    padding: 0.35rem 0.65rem;
+`;
+export const StyledSplitButtonOverflow = styled(ContainedButton).attrs((props) => ({
+    className: props.className || "material-icons",
+}))`
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    flex: 1;
+    padding: 0;
+    /* font-size: 1rem; */
+`;
+export const TabButton = styled(OutlinedButton)`
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-color: var(--clr-primary-base);
+    border-bottom-color: transparent;
+    ${({ active }) =>
+        active
+            ? css`
+                  background-color: var(--clr-primary-base);
+              `
+            : css`
+                  background-color: transparent;
+              `};
+`;
+export const StyledSplitButtonDropdown = styled.div``;

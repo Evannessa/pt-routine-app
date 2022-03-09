@@ -14,22 +14,22 @@ import {
 } from "./components/styled-components/nav.styled";
 import axios from "axios";
 import IndividualLink from "./components/IndividualLink";
+import { Global } from "./components/styled-components/global.colors";
+// const Global = createGlobalStyle`
+// 	:root{
+//   --clr-primary-deep-dark: #171529;
+//   --clr-primary-dark: #25203f;
+//   --clr-primary-base: #342E57;
+//   --clr-accent: #6495ed;
+//   --clr-accent-green:#4ab4c7;
+// --clr-accent-pink: #bf2063;
+//   --clr-shadow: rgba(0, 0, 0, 0.25);
+// 	}
+// 	html, body{
+// 		scrollbar-width: thin;
+// 	}
 
-const Global = createGlobalStyle`
-	:root{
-  --clr-primary-deep-dark: #171529;
-  --clr-primary-dark: #25203f;
-  --clr-primary-base: #342E57;
-  --clr-accent: #6495ed;
-  --clr-accent-green:#4ab4c7;
---clr-accent-pink: #bf2063;
-  --clr-shadow: rgba(0, 0, 0, 0.25);
-	}
-	html, body{
-		scrollbar-width: thin;
-	}
-
-`;
+// `;
 
 const StyledContainer = styled.div`
     flex: 1;
@@ -44,6 +44,7 @@ const StyledContainer = styled.div`
     /* align-items: center; */
     /* justify-content: center; */
     scrollbar-width: thin;
+    min-height: 90vh;
 `;
 const ThickerContainer = styled(StyledContainer)`
     padding: 0;
@@ -74,7 +75,15 @@ function App() {
                     <Route index element={<Dashboard />} />
                     <Route path="display" element={<LinkDisplay />}>
                         <Route path=":id" element={<LinkNameInput />}></Route>
-                        <Route path="internal/:id" element={<ModalContainer />} />
+                        <Route
+                            path="internal/:id"
+                            element={<ModalContainer isModal={true} />}
+                        />
+                        <Route
+                            exact
+                            path="internal/:id/inset"
+                            element={<ModalContainer isModal={false} />}
+                        />
                     </Route>
                     <Route path="create" element={<LinkNameInput />}>
                         <Route path="new" element={<LinkNameInput />}></Route>

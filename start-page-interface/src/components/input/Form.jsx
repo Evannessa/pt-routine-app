@@ -2,7 +2,7 @@ import { ContainedButton } from "../styled-components/Buttons.Styled";
 import { StyledForm } from "../styled-components/input.styled";
 import React from "react";
 
-export function Form({ action, submitFunction, children, submitText }) {
+export function Form({ action, submitFunction, children, submitText, direction }) {
     function handleSubmit(event) {
         event.preventDefault();
         if (submitFunction) {
@@ -10,7 +10,7 @@ export function Form({ action, submitFunction, children, submitText }) {
         }
     }
     return (
-        <StyledForm onSubmit={handleSubmit}>
+        <StyledForm onSubmit={handleSubmit} direction={direction}>
             {children}
 
             {submitText && (

@@ -81,13 +81,15 @@ export const StyledChipBox = styled.div`
     }
 `;
 export const StyledChipbox = styled.input``;
+
+const returnDirection = function (props) {
+    return props.direction || "column";
+};
 export const StyledForm = styled.form`
     display: flex;
-    flex-direction: column;
+    flex-direction: ${returnDirection};
     justify-content: stretch;
     align-items: stretch;
-    /* grid-template-columns: 25% 75%; */
-    /* grid-template-rows: repeat(3, 1fr), 1fr; */
     fieldset {
         border: none;
     }

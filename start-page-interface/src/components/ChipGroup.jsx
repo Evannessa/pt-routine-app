@@ -8,7 +8,6 @@ function ChipGroup(props) {
 
     let groupType = props.groupType || "checkbox";
     let groupName = props.groupName || "";
-    console.log("Our filters are now", props.chips);
 
     useEffect(() => {
         let objects = [];

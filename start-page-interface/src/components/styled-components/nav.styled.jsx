@@ -1,7 +1,27 @@
-import styled from "styled-components";
-import { Link } from "react-router-dom";
+import styled, { css } from "styled-components";
+import { Link, NavLink } from "react-router-dom";
 
 export const ActionLink = styled(Link)``;
+
+export const TabLink = styled(NavLink)`
+    border-radius: 10px;
+    padding: 0.25rem 0.55rem;
+    color: white;
+    text-decoration: none;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border: 1px solid var(--clr-primary-base);
+    border-color: var(--clr-primary-base);
+    border-bottom-color: transparent;
+    ${({ active }) =>
+        active === true
+            ? css`
+                  background-color: var(--clr-primary-base);
+              `
+            : css`
+                  background-color: transparent;
+              `};
+`;
 export const StyledRouterLink = styled(Link)`
     --clr-background-color: ${(props) => props.bgColor};
     --clr-bg-hover-color: ${(props) => props.bgColorAlt};

@@ -1,47 +1,37 @@
-import React, { useEffect, useState } from "react";
-import { requests } from "../helpers/requests";
-import styled from "styled-components";
 import Avatar from "boring-avatars";
-import Input from "./input/Input";
-import Form from "./input/Form";
+import React, { useEffect, useState } from "react";
+import { Link, Outlet, useLocation, useParams } from "react-router-dom";
+import styled from "styled-components";
+import { requests } from "../helpers/requests";
 import ChipGroup from "./ChipGroup";
+import Form from "./input/Form";
+import Input from "./input/Input";
+import * as Buttons from "./styled-components/Buttons.Styled";
 import {
-    ContainedButton,
     ButtonGroup,
-    IconButton,
-    CircleIconButton,
+    ContainedButton,
+    StyledSplitButtonWrapper,
+    StyledSplitButtonPrimary,
+    StyledSplitButtonOverflow,
+    StyledSplitButtonDropdown,
 } from "./styled-components/Buttons.Styled";
+import {
+    CardComponent,
+    StyledCardBody,
+    StyledCardFooter,
+    StyledCardHeader,
+    StyledCardHorizontal,
+    StyledCardSidebar,
+    StyledCardSidebarLeft,
+} from "./styled-components/cards.styled";
 import * as Layout from "./styled-components/layout.styled";
 import {
     StyledContent,
-    StyledSidebar,
     StyledMain,
+    StyledSidebar,
 } from "./styled-components/layout.styled";
-import {
-    StyledCard,
-    StyledCardHeader,
-    StyledCardBody,
-    StyledCardFooter,
-    StyledCardSidebar,
-    StyledCardSidebarLeft,
-    CardComponent,
-    StyledCardHorizontal,
-} from "./styled-components/cards.styled";
-import { StyledRouterLink } from "./styled-components/nav.styled";
+import * as StyledNav from "./styled-components/nav.styled";
 import TagChips from "./TagChips";
-import { chipGroup, StyledChipSpan } from "./styled-components/chips.styled";
-import {
-    useParams,
-    useLocation,
-    Link,
-    Outlet,
-    Navigate,
-    useNavigate,
-    Route,
-    Routes,
-} from "react-router-dom";
-import axios from "axios";
-import { StyledChipbox } from "./styled-components/input.styled";
 
 // #region styledComponents
 const StyledLinkContainer = styled.section`
@@ -103,21 +93,30 @@ function LinkDisplay(props) {
                       return link.tags.some((tag) => {
                           //where this specific link's tags names include
                           //the stuff in the search
-                          return queryTags.some((el) => tag.name.includes(el));
+                          return queryTags.some((el) =>
+                              tag.name.toLowerCase().includes(el.toLowerCase())
+                          );
                       });
                   })
                 : [];
             //if the name filter is selected
             let filteredNames = formData.searchFilters.titles
                 ? links.filter((link) => {
-                      return queryTags.some((el) => link.name.includes(el));
+                      if (link.name.includes(queryTags[0])) {
+                          console.log(link, "Contains", queryTags[0]);
+                      }
+                      return queryTags.some((el) =>
+                          link.name.toLowerCase().includes(el.toLowerCase())
+                      );
                   })
                 : [];
 
             //if the url filter is selected
             let filteredUrls = formData.searchFilters.urls
                 ? links.filter((link) => {
-                      return queryTags.some((el) => link.url.includes(el));
+                      return queryTags.some((el) =>
+                          link.url.toLowerCase().includes(el.toLowerCase())
+                      );
                   })
                 : [];
             filtered = [...filtered, ...filteredNames, ...filteredUrls];
@@ -130,7 +129,7 @@ function LinkDisplay(props) {
                 setFilteredLinks(filtered);
             }
         }
-    }, [links, formData.search, formData.searchFilters]);
+    }, [links, queryTags, formData.search, formData.searchFilters]);
 
     useEffect(() => {
         //filter tags, then set query tags to equal the filtered tags
@@ -141,7 +140,6 @@ function LinkDisplay(props) {
         // let quotePattern = /('(((\\)+(')?)|([^']))*')|("(((\\)+(")?)|([^"]))*")/g;
         // let exact = searchData.match(quotePattern);
         // console.log(exact);
-        searchRegexPattern();
         let searchArray = searchRegexPattern();
         // let searchArray = formData.search.split(" "); //split by space characters
         // console.log(searchArray);
@@ -167,7 +165,6 @@ function LinkDisplay(props) {
         let searchKeywords = searchData.split(/[\s,]+/);
         //combine in array and match each with tags and name, using boundaries to match partial or whole
         // for()
-        console.log(searchKeywords);
         return searchKeywords;
         // let ^(?=.*\bjack\b)(?=.*\bjames\b)(?=.*\bjason\b)(?=.*\bjules\b).*$
     }
@@ -218,12 +215,12 @@ function LinkDisplay(props) {
                   <StyledCardHeader>
                       <h2>
                           {link.name}
-                          <StyledRouterLink
+                          <StyledNav.StyledRouterLink
                               color="white"
                               to={`/display/${link._id}`}
                               className="material-icons">
                               edit
-                          </StyledRouterLink>
+                          </StyledNav.StyledRouterLink>
                       </h2>
                   </StyledCardHeader>
                   <StyledCardSidebarLeft>
@@ -274,16 +271,28 @@ function LinkDisplay(props) {
     return (
         <Layout.StyledOuterMain>
             <Layout.StyledHeader>
-                <Form>
+                <Form direction="row">
+                    <Input
+                        name="search"
+                        type="text"
+                        value={formData.search}
+                        checked={formData.search}
+                        setStateFunction={updateFormData}
+                        hasLabel={true}></Input>
                     <ChipGroup
                         chips={formData.searchFilters}
                         setStateFunction={updateFormData}
                         parentName="searchFilters"></ChipGroup>
                 </Form>
-                <StyledRouterLink to="/create/new">
-                    {" "}
+                <StyledSplitButtonWrapper>
+                    <StyledSplitButtonPrimary bgColor="cornflowerblue">
+                        add
+                    </StyledSplitButtonPrimary>
+                    <StyledSplitButtonOverflow>arrow_drop_down</StyledSplitButtonOverflow>
+                </StyledSplitButtonWrapper>
+                <StyledNav.StyledRouterLink to="/create/new">
                     Create New <span className="material-icons">add</span>
-                </StyledRouterLink>
+                </StyledNav.StyledRouterLink>
 
                 {/* <Form action="" submitFunction={uploadJSON} submitText="Upload JSON">
                     <Input
@@ -308,19 +317,37 @@ function LinkDisplay(props) {
                 </ButtonGroup> */}
             </Layout.StyledHeader>
             <StyledMain>
-                <StyledSidebar>
-                    <div></div>
-                    {linkComponents}
-                </StyledSidebar>
+                <StyledSidebar>{linkComponents}</StyledSidebar>
 
                 <StyledContent>
                     <ButtonGroup>
-                        <ContainedButton bgColor="cornflowerblue" color="white">
+                        <StyledNav.TabLink
+                            to={`/display/${params.id}`}
+                            className={(state) => console.log(state)}
+                            active={(state) => state.isActive}
+                            bgColor="cornflowerblue"
+                            color="white"
+                            bgColorAlt="var(--clr-accent-green)">
                             Edit
-                        </ContainedButton>
-                        <ContainedButton bgColor="cornflowerblue" color="white">
-                            View
-                        </ContainedButton>
+                        </StyledNav.TabLink>
+                        <StyledNav.TabLink
+                            to={`/display/internal/${params.id}`}
+                            className={(state) => console.log(state)}
+                            active={(state) => state.isActive}
+                            bgColor="cornflowerblue"
+                            color="white"
+                            bgColorAlt="var(--clr-accent-green)">
+                            Modal View
+                        </StyledNav.TabLink>
+                        <StyledNav.TabLink
+                            to={`/display/internal/${params.id}/inset`}
+                            className={(state) => console.log(state)}
+                            active={(state) => state.isActive}
+                            bgColor="cornflowerblue"
+                            color="white"
+                            bgColorAlt="var(--clr-accent-green)">
+                            In Place View
+                        </StyledNav.TabLink>
                     </ButtonGroup>
                     <Outlet />
                 </StyledContent>

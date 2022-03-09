@@ -40,6 +40,7 @@ export const StyledOuterMain = styled(StyledMain)`
     overflow-x: visible;
     overflow-y: hidden;
     background-color: var(--clr-primary-deep-dark);
+    min-height: 80vh;
 `;
 
 export const StyledContent = styled.section`

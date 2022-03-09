@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { requests } from "../helpers/requests";
 import { Navigate, useNavigate } from "react-router-dom";
 import tf from "../helpers/formatText";
@@ -16,10 +16,18 @@ const StyledModalContainer = styled.div`
     background: rgba(106, 90, 205, 0.9);
     /* width: fit-content; */
     /* height: auto; */
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    ${(props) =>
+        props.isModal
+            ? css`
+                  position: absolute;
+                  top: 50%;
+                  left: 50%;
+                  transform: translate(-50%, -50%);
+              `
+            : css`
+                  position: relative;
+                  transform: translate(0, 0);
+              `}
     width: 70%;
     height: 90vh;
     z-index: 100;
@@ -41,6 +49,12 @@ const StyledModalContainer = styled.div`
         border-radius: 12px;
     }
 `;
+
+const StyledModalContainerInset = styled(StyledModalContainer)`
+    position: relative;
+    transform: translate(0, 0);
+`;
+
 const StyledModalBody = styled.div`
     width: 90%;
     height: 80%;
@@ -102,7 +116,7 @@ const StyledHtmlWrapper = styled.div`
 var md = new Remarkable(); //markdown
 md.set({ html: true });
 
-function ModalContainer({ children }, props) {
+function ModalContainer({ children, isModal }, props) {
     const uploadsUrl = "http://localhost:9000";
     let [linkData, setLinkData] = useState();
     let navigate = useNavigate();
@@ -158,7 +172,7 @@ function ModalContainer({ children }, props) {
         navigate(-1);
     };
     return (
-        <StyledModalContainer>
+        <StyledModalContainer isModal={isModal}>
             <StyledModalHeader>
                 {linkData && (
                     <h2 className="modal__title>">
