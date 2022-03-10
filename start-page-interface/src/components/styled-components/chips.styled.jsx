@@ -17,6 +17,7 @@ export const ChipButton = styled.button`
     border: none;
     cursor: pointer;
 `;
+ChipButton.displayName = "ChipButton";
 
 export const StyledChipSpan = styled.span`
     background-color: ${backgroundColor("primary")};
@@ -47,6 +48,7 @@ export const StyledChipSpan = styled.span`
         }
     }
 `;
+StyledChipSpan.displayName = "StyledChipSpan";
 
 export const StyledChipFieldset = styled.fieldset`
     display: flex;
@@ -54,6 +56,7 @@ export const StyledChipFieldset = styled.fieldset`
     align-items: center;
     justify-content: center;
 `;
+StyledChipFieldset.displayName = "StyledChipFieldset";
 //radio buttons with the "chip" class
 
 export const StyledChipDiv = styled.div`
@@ -100,3 +103,4 @@ export const StyledChipDiv = styled.div`
         }
     }
 `;
+StyledChipDiv.displayName = "StyledChipDiv";

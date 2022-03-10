@@ -140,6 +140,13 @@ export var requests = (function () {
             console.log(error);
         }
     }
+    /**
+     *
+     * @param {*} urlBase - the base url
+     * @param {*} itemsToUpdate the list of items we want to update
+     * @param {*} property - the property we want to update
+     */
+    async function updateMultiple(urlBase, itemsToUpdate, property) {}
 
     function compileUpdateData(id, propertyPath, value, action, filter) {
         let newData = {

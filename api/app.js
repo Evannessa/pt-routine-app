@@ -10,6 +10,7 @@ var displayRouter = require("./routes/displayRoutes");
 var linkInterfaceRouter = require("./routes/linkInterfaceRoutes");
 const connectDB = require("./db/connect");
 require("dotenv").config();
+const notFound = require("./middleware/not-found");
 const fileUpload = require("express-fileupload");
 var app = express();
 
@@ -30,6 +31,7 @@ app.use(fileUpload()); //! HAD TO PUT THIS BEFORE THE APP.USE() ROUTER
 app.use("/factory", factoryRouter);
 app.use("/display", displayRouter);
 app.use("/links", linkInterfaceRouter);
+app.use(notFound);
 // app.use("/users", usersRouter);
 // app.use("/testAPI", testAPIRouter);
 

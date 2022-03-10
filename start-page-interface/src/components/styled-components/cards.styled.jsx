@@ -1,5 +1,5 @@
 import styled, { css } from "styled-components";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 /** for generic wrappers to go around components */
 export const CardComponent = styled.div`
     display: flex;
@@ -7,8 +7,9 @@ export const CardComponent = styled.div`
     justify-content: ${(props) => props.justifyContent || "space-evenly"};
     flex-wrap: ${(props) => props.wrap || "wrap"};
     width: 100%;
+    row-gap: 0.45rem;
 `;
-
+CardComponent.displayName = "CardComponent";
 export const StyledCardHeader = styled.div`
     /* grid-area: hd; */
     grid-column: 2/5;
@@ -23,6 +24,8 @@ export const StyledCardHeader = styled.div`
     }
 `;
 
+StyledCardHeader.displayName = "StyledCardHeader";
+
 export const StyledCardBody = styled.div`
     grid-column: 2/5;
     grid-row: 2/3;
@@ -33,6 +36,7 @@ export const StyledCardBody = styled.div`
     justify-content: space-evenly;
 `;
 
+StyledCardBody.displayName = "StyledCardBody";
 export const StyledCardWrapper = styled.div`
     grid-area: main;
     display: flex;
@@ -41,6 +45,7 @@ export const StyledCardWrapper = styled.div`
     align-items: center;
     justify-content: center;
 `;
+StyledCardWrapper.displayName = "StyledCardWrapper";
 export const StyledCardFooter = styled.div`
     /* grid-area: ft; */
     grid-column: 2/5;
@@ -48,6 +53,7 @@ export const StyledCardFooter = styled.div`
     flex-direction: row;
     padding-bottom: 1rem;
 `;
+StyledCardFooter.displayName = "StyledCardFooter";
 export const StyledCardSidebar = styled.div`
     /* grid-area: rt; */
     grid-row: 1/4;
@@ -64,7 +70,9 @@ export const StyledCardSidebar = styled.div`
     margin-bottom: -2rem;
     /* margin-left: 2rem; */
     a,
-    Link {
+    NavLink {
+        transform-origin: right center;
+        transform: scaleX(0);
         display: inline-flex;
         background-color: #bf2063;
         width: 100%;
@@ -73,17 +81,28 @@ export const StyledCardSidebar = styled.div`
         align-items: center;
         color: white;
         text-decoration: none;
+        transition: transform 100ms ease-in;
         /* &:visited, */
         &:hover {
+            background-color: blue;
             /* color: var(--clr-accent); */
             background-color: var(--clr-accent);
         }
     }
+    &:hover {
+        a,
+        NavLink {
+            background-color: var(--clr-accent);
+        }
+    }
 `;
+
+StyledCardSidebar.displayName = "StyledCardSidebar";
 export const StyledCardSidebarLeft = styled.div`
     grid-column: 1/2;
     grid-row: 1/4;
 `;
+StyledCardSidebarLeft.displayName = "StyledCardSidebarLeft";
 
 export const StyledCardHorizontal = styled.div`
     display: grid;
@@ -110,14 +129,26 @@ export const StyledCardHorizontal = styled.div`
     width: 100%;
     min-width: 15%;
     /* max-width: 50%; */
+    &:hover {
+        a,
+        NavLink {
+            transform: scaleX(1);
+        }
+    }
     ${StyledCardSidebar} {
         a,
         Link {
             background-color: ${(props) =>
                 props.highlighted ? `var(--clr-accent)` : `var(--clr-accent-pink)`};
+
+            transition: background-color 100ms ease-in, transform 100ms ease-in;
+            &:hover {
+                background-color: var(--clr-accent);
+            }
         }
     }
 `;
+StyledCardHorizontal.displayName = "StyledCardHorizontal";
 
 export const StyledCard = styled.div`
     --highlighted: ${(props) => props.highlighted};
@@ -180,3 +211,4 @@ export const StyledCard = styled.div`
             }
         `}
 `;
+StyledCard.displayName = `StyledCard`;

@@ -30,6 +30,7 @@ export const StyledTextboxSpan = styled.div`
         color: #6495ed;
     }
 `;
+StyledTextboxSpan.displayName = StyledTextboxSpan;
 
 // const StyledInputComponent = styled(Input)``;
 // export const StyledInputReverse = styled.div`
@@ -63,6 +64,7 @@ export const StyledContainer = styled.div`
         align-self: flex-end;
     }
 `;
+StyledContainer.displayName = StyledContainer;
 export const StyledChipBox = styled.div`
     display: flex;
     flex-wrap: wrap;
@@ -91,7 +93,7 @@ export const StyledChipBox = styled.div`
         }
     }
 `;
-export const StyledChipbox = styled.input``;
+StyledChipBox.displayName = "StyledChipBox";
 
 const returnDirection = function (props) {
     return props.direction || "column";
@@ -118,6 +120,7 @@ export const StyledForm = styled.form`
     }
     gap: 1rem;
     z-index: 1;
+
     *:not(input) {
         color: white;
     }
@@ -141,6 +144,10 @@ export const StyledForm = styled.form`
     div {
         justify-content: stretch;
         flex-direction: ${returnChildDirection};
+    }
+    ${StyledTextboxSpan} {
+        flex-direction: row;
+        gap: 0.25rem;
     }
 
     /* label:not(.chip) {
@@ -187,3 +194,4 @@ export const StyledForm = styled.form`
         }
     }
 `;
+StyledForm.displayName = "StyledForm";

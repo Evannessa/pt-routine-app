@@ -1,9 +1,14 @@
 const mongoose = require("mongoose");
-const { Link, Tag } = require("../models/linkModels");
+const asyncWrapper = require("../middleware/async");
+const { Link, Tag, TagGroup } = require("../models/linkModels");
 
-const createNewLink = async (req, res) => {
+const createNewLink = asyncWrapper(async (req, res) => {
     //pass the body  into the response
-
+    let name = req.body.name;
+    let url = req.body.url;
+    const obj = { name: name, url: url };
+    const link = await Link.create(obj);
+    res.status(201).send({ link });
     try {
         console.log(req.body);
         let name = req.body.name;
@@ -15,7 +20,7 @@ const createNewLink = async (req, res) => {
         console.log(error);
         res.status(500).json({ msg: error });
     }
-};
+});
 
 const createMultipleNewLinks = async (req, res) => {
     let linkData = req.body;
@@ -195,6 +200,32 @@ const getLink = async (req, res) => {
         //! 2.this generic is just in case the syntax for the id is totally off
         res.status(500).json({ msg: error });
     }
+};
+
+const createTagGroup = async (req, res) => {
+    try {
+        await TagGroup.create(req.body)
+            .populate("Tags")
+            .exec((error, group) => {
+                if (error) {
+                    return res.status(500).json({ msg: error });
+                }
+                res.status(201).json({ group });
+            });
+    } catch (error) {}
+};
+
+const updateTagGroup = async (req, res) => {
+    try {
+        await TagGroup.findOneAndUpdate()
+            .populate("Tags")
+            .exec((error, group) => {
+                if (error) {
+                    return res.status(500).json({ msg: error });
+                }
+                return res.status(201).json({ group });
+            });
+    } catch (error) {}
 };
 
 module.exports = {

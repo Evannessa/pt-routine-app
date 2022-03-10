@@ -22,6 +22,7 @@ export const TabLink = styled(NavLink)`
                   background-color: transparent;
               `};
 `;
+TabLink.displayName = "TabLink";
 export const StyledRouterLink = styled(Link)`
     --clr-background-color: ${(props) => props.bgColor};
     --clr-bg-hover-color: ${(props) => props.bgColorAlt};
@@ -75,10 +76,13 @@ export const StyledRouterLink = styled(Link)`
     }}
     cursor: pointer;
 `;
+
+StyledRouterLink.displayName = "StyledRouterLink";
 export const StyledNavBar = styled.ul`
     display: flex;
     justify-content: space-evenly;
 `;
+StyledNavBar.displayName = "StyledNavBar";
 export const StyledNavLink = styled.li`
     --clr-underline-color: ${(props) => props.underlineColor};
     a {
@@ -97,8 +101,10 @@ export const StyledNavLink = styled.li`
     }
     list-style-type: none;
 `;
+StyledNavLink.displayName = "StyledNavLink";
 
 export const StyledInlineLink = styled.a`
     --clr-underline-color: ${(props) => props.underlineColor};
     box-shadow: 2px 2px 0px 0px var(--clr-underline-color);
 `;
+StyledInlineLink.displayName = "StyledInlineLink";

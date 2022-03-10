@@ -11,6 +11,10 @@ const TagSchema = new mongoose.Schema({
         default: "#212121",
     },
 });
+const TagGroupSchema = new mongoose.Schema({
+    name: {},
+    tags: [{ type: mongoose.Schema.Types.ObjectId, ref: "Tag" }],
+});
 const LinkSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -33,4 +37,5 @@ const LinkSchema = new mongoose.Schema({
 module.exports = {
     Link: mongoose.model("Link", LinkSchema),
     Tag: mongoose.model("Tag", TagSchema),
+    TagGroup: mongoose.model("TagGroup", TagGroupSchema),
 };

@@ -46,6 +46,7 @@ const StyledContainer = styled.div`
     scrollbar-width: thin;
     min-height: 90vh;
 `;
+StyledContainer.displayName = "StyledContainer";
 const ThickerContainer = styled(StyledContainer)`
     padding: 0;
 

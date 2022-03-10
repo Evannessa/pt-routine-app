@@ -48,6 +48,7 @@ export const StyledButton = styled.button`
     }}
     cursor: pointer;
 `;
+StyledButton.displayName = "StyledButton";
 
 /** small buttons with no background or border, like close buttons on modals or chips, etc. */
 export const IconButton = styled(StyledButton)`
@@ -55,6 +56,7 @@ export const IconButton = styled(StyledButton)`
     border: none;
     color: var(--clr-text-color);
 `;
+IconButton.displayName = "IconButton";
 export const CircleIconButton = styled(IconButton)`
     background: var(--clr-background-color);
     border: none;
@@ -64,6 +66,7 @@ export const CircleIconButton = styled(IconButton)`
     /* width: 2rem; */
     /* height: 2rem; */
 `;
+CircleIconButton.displayName = "CircleIconButton";
 export const ContainedButton = styled(StyledButton)`
     background: var(--clr-background-color);
     border: none;
@@ -71,21 +74,26 @@ export const ContainedButton = styled(StyledButton)`
     padding: 0.25em 1em;
     border-radius: 5px;
 `;
+ContainedButton.displayName = "ContainedButton";
 export const OutlinedButton = styled(ContainedButton)`
     background: transparent;
     border: 1px solid var(--clr-text-color);
 `;
 
+OutlinedButton.displayName = "OutlinedButton";
+
 export const TextButton = styled(OutlinedButton)`
     border: none;
 `;
 
+TextButton.displayName = "TextButton";
 export const FloatingActionButton = styled(StyledButton)`
     position: absolute;
     display: flex;
     align-items: center;
     justify-content: center;
 `;
+FloatingActionButton.displayName = "FloatingActionButton";
 export const ToggleButton = styled(StyledButton)`
     display: flex;
     align-items: center;
@@ -93,12 +101,14 @@ export const ToggleButton = styled(StyledButton)`
     --clr-text-color: ${(props) => props.color};
 `;
 
+ToggleButton.displayName = "ToggleButton";
 export const ButtonGroup = styled.span`
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 1rem;
 `;
+ButtonGroup.displayName = "ButtonGroup";
 
 export const ToggleButtonGroup = styled(ButtonGroup)`
     gap: 0;
@@ -108,11 +118,13 @@ export const ToggleButtonGroup = styled(ButtonGroup)`
         justify-content: center;
     }
 `;
+ToggleButtonGroup.displayName = "ToggleButtonGroup";
 export const StyledSplitButtonWrapper = styled.span`
     border-radius: 10px;
     display: inline-flex;
     gap: 0.1rem;
 `;
+StyledSplitButtonWrapper.displayName = "StyledSplitButtonWrapper";
 export const StyledSplitButtonPrimary = styled(ContainedButton).attrs((props) => ({
     className: props.className || "material-icons",
 }))`
@@ -123,6 +135,7 @@ export const StyledSplitButtonPrimary = styled(ContainedButton).attrs((props) =>
     flex: 2;
     padding: 0.35rem 0.65rem;
 `;
+StyledSplitButtonPrimary.displayName = "StyledSplitButtonPrimary";
 export const StyledSplitButtonOverflow = styled(ContainedButton).attrs((props) => ({
     className: props.className || "material-icons",
 }))`
@@ -134,6 +147,7 @@ export const StyledSplitButtonOverflow = styled(ContainedButton).attrs((props) =
     padding: 0;
     /* font-size: 1rem; */
 `;
+StyledSplitButtonOverflow.displayName = "StyledSplitButtonOverflow";
 export const TabButton = styled(OutlinedButton)`
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
@@ -148,4 +162,7 @@ export const TabButton = styled(OutlinedButton)`
                   background-color: transparent;
               `};
 `;
+TabButton.displayName = "TabButton";
 export const StyledSplitButtonDropdown = styled.div``;
+
+StyledSplitButtonDropdown.displayName = "ButtonDropdown";

@@ -2,6 +2,7 @@ import { ContainedButton } from "../styled-components/Buttons.Styled";
 import { StyledForm } from "../styled-components/input.styled";
 import React from "react";
 
+// StyledForm.displayName = "StyledForm";
 export function Form({
     action,
     submitFunction,

@@ -64,7 +64,7 @@ function LinkDisplay(props) {
     const [formData, setFormData] = React.useState({
         jsonData: "",
         search: "",
-        searchFilters: { tags: false, titles: true, urls: false },
+        searchFilters: { tags: true, titles: true, urls: false },
     });
     const [allTags, setAllTags] = React.useState([]);
     const [queryTags, setQueryTags] = React.useState([]);

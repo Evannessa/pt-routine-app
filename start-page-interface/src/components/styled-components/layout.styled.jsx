@@ -15,6 +15,8 @@ export const StyledHeader = styled.header`
     align-items: center;
     box-shadow: 0px 6px 10px 5px rgba(0, 0, 0, 0.5);
 `;
+
+StyledHeader.displayName = "StyledHeader";
 export const StyledMain = styled.main`
     grid-area: main;
     display: grid;
@@ -30,6 +32,7 @@ export const StyledMain = styled.main`
     overflow: hidden;
     /* box-shadow: inset 6px 0px 10px 5px rgba(0, 0, 0, 0.5); */
 `;
+StyledMain.displayName = "StyledMain";
 
 export const StyledOuterMain = styled(StyledMain)`
     display: grid;
@@ -43,6 +46,7 @@ export const StyledOuterMain = styled(StyledMain)`
     min-height: 80vh;
 `;
 
+StyledOuterMain.displayName = "StyledOuterMain";
 export const StyledContent = styled.section`
     grid-area: main;
     > {
@@ -54,6 +58,7 @@ export const StyledContent = styled.section`
     justify-content: center;
     /* background-color: var(--clr-primary-dark); */
 `;
+StyledContent.displayName = "StyledContent";
 export const StyledSidebar = styled.section`
     grid-area: sd;
     display: flex;
@@ -62,3 +67,4 @@ export const StyledSidebar = styled.section`
     overflow: scroll;
     scrollbar-width: thin;
 `;
+StyledSidebar.displayName = "StyledSidebar";
