@@ -31,6 +31,17 @@ export const StyledTextboxSpan = styled.div`
     }
 `;
 
+// const StyledInputComponent = styled(Input)``;
+// export const StyledInputReverse = styled.div`
+//     ${StyledInputComponent} {
+//         flex-direction: row-reverse;
+//     }
+// `;
+// export const StyledInput = styled.div`
+//     ${StyledInputComponent} {
+//         flex-direction: row;
+//     }
+// `;
 // #region StyledComponents
 
 export const StyledContainer = styled.div`
@@ -91,6 +102,9 @@ const returnJustify = function (props) {
 const returnAlign = function (props) {
     return props.align || "stretch";
 };
+const returnChildDirection = function (props) {
+    return props.childDirection || "row-reverse";
+};
 export const StyledForm = styled.form`
     display: flex;
     flex-direction: ${returnDirection};
@@ -126,7 +140,7 @@ export const StyledForm = styled.form`
     }
     div {
         justify-content: stretch;
-        flex-direction: row-reverse;
+        flex-direction: ${returnChildDirection};
     }
 
     /* label:not(.chip) {

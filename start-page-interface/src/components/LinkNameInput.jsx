@@ -117,6 +117,13 @@ function LinkNameInput(props) {
             updateFormData("imagePath", " ");
         }
     }, [formData.type]);
+    /**
+     * TODO: this will save the state to the API after the user is done typing
+     */
+    // useEffect(()=> {
+    // 	const timeOutId = setTimeout(()=> {}, 500)
+    // 	return () => clearTimeout(timeOutId);
+    // }, [formData])
 
     let tagSpans = formData
         ? formData.tags.map((tag) => (
@@ -179,13 +186,14 @@ function LinkNameInput(props) {
      * @param {event} event - the event data within the text box
      */
     async function handleKeyDown(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        let tagBox = event.currentTarget;
-        let newTag = tagBox.value;
-        tagBox.value = "";
-
         if (event.key === "Enter" || event.keyCode === 13) {
+            event.preventDefault();
+            event.stopPropagation();
+            let tagBox = event.currentTarget;
+            let newTag = tagBox.value;
+            tagBox.value = "";
+            setTagsInput({ inputValue: "" });
+
             console.log("Pressed enter in textbox. Value is", tagBox.value);
 
             //get tags from old formdata
@@ -230,8 +238,8 @@ function LinkNameInput(props) {
      *
      * @param {String} value - string of words we want to become tags. For updating input that's not directly saved
      */
-    function updateTagsInput(value) {
-        console.log(value);
+    function updateTagsInput(name, value) {
+        console.log(name, value);
         setTagsInput({ inputValue: value });
     }
 
@@ -263,7 +271,7 @@ function LinkNameInput(props) {
                 <label htmlFor={args.property}>
                     {tf.capitalizeFirstLetter(args.property)}
                 </label>
-                <StyledTextboxSpan>
+                <StyledTextboxSpan style={{ flexDirection: "row" }}>
                     {tagSpans}
                     {returnInput(args)}
                 </StyledTextboxSpan>
@@ -297,9 +305,10 @@ function LinkNameInput(props) {
     let tagsInputData = {
         ...inputData,
         object: tagsInput,
-        property: "value",
+        property: "inputValue",
+        wrapped: true,
         hasLabel: false,
-        extraProps: { onKeyDown: handleKeyDown },
+        extraProps: { onKeyDown: handleKeyDown, style: { flexDirection: "row" } },
         updateFunction: updateTagsInput,
     };
 
@@ -318,7 +327,8 @@ function LinkNameInput(props) {
             {formData && (
                 <Form
                     submitFunction={createNewLink}
-                    submitText={isNew() ? "Create New Link" : ""}>
+                    submitText={isNew() ? "Create New Link" : ""}
+                    childDirection="row">
                     {returnInput(nameInputData)}
                     {returnInput(urlInputData)}
                     {returnWrappedInput(tagsInputData)}
