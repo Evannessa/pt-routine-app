@@ -256,18 +256,11 @@ function LinkDisplay(props) {
         let searchData = formData.search.toString();
         //1. extract items in quotes from the string first
         // // let quotePattern = /"(.*?)"/;
-        // searchData = searchData.replace(/\\/g, "");
-        // let quotePattern = /(?<=(["']))(?:(?=(\\?))\2.)*?(?=\1)/;
-        // let exactMatches = searchData.match(quotePattern);
-        // console.log("Ext matches", exactMatches);
-        // searchData = searchData.replace(quotePattern, "");
-        // console.log("Search data", searchData);
+
         //then split the remaining words based on delimeters space or comma
         let searchKeywords = searchData.split(/[\s,]+/);
         //combine in array and match each with tags and name, using boundaries to match partial or whole
-        // for()
         return searchKeywords;
-        // let ^(?=.*\bjack\b)(?=.*\bjames\b)(?=.*\bjason\b)(?=.*\bjules\b).*$
     }
     function downloadJSON() {
         console.log(JSON.stringify(links));
@@ -372,6 +365,7 @@ function LinkDisplay(props) {
     return (
         <Layout.StyledOuterMain>
             <Layout.StyledHeader>
+                <FilterGroups links={links || []} tags={allTags || []} />
                 <Form direction="row" justify="center" align="center">
                     <Input
                         name="search"

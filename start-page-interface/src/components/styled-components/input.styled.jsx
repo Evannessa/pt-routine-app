@@ -32,6 +32,17 @@ export const StyledTextboxSpan = styled.div`
 `;
 StyledTextboxSpan.displayName = StyledTextboxSpan;
 
+export const StyledSelect = styled.select`
+    background-color: var(--clr-primary-dark);
+    color: white;
+`;
+StyledSelect.displayName = "StyledSelect";
+
+export const StyledDatalist = styled.datalist`
+    background-color: var(--clr-primary-dark);
+    color: white;
+`;
+StyledSelect.displayName = "StyledDatalist";
 // const StyledInputComponent = styled(Input)``;
 // export const StyledInputReverse = styled.div`
 //     ${StyledInputComponent} {
