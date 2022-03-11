@@ -84,6 +84,7 @@ function LinkDisplay(props) {
             return property === match;
         } else {
             //match all should return a non-exact, case-insensitive match that includes portions of the word
+            console.log(property);
             return property.toLowerCase().includes(match.toLowerCase());
         }
     }
@@ -94,12 +95,9 @@ function LinkDisplay(props) {
      * @param {*} match
      * @returns
      */
-    function filterArrayProperty(childArray, childProperty, match, matchAll) {
-        //use every to make sure ALL the values in the child array match
-        //!we don't want to do it this way, as this will mean every item
-        //in the child array has to match the same string
-
-        let nameArray = childArray.map((item) => item[childProperty].toLowerCase()); //get names of items
+    function filterArrayProperty(childArray, match, matchAll) {
+        console.log(childArray);
+        let nameArray = childArray.map((item) => item.toLowerCase()); //get names of items
         if (matchAll && match instanceof Array) {
             let allIncluded = match.every((matchString) =>
                 nameArray.includes(matchString.toLowerCase())
@@ -112,17 +110,50 @@ function LinkDisplay(props) {
                 nameArray.includes(matchString.toLowerCase())
             );
             return someIncluded;
-            return childArray.some((item) =>
-                filterStringProperty(item[childProperty], match)
-            );
         }
     }
+    const getNestedObject = (nestedObject, pathArray) => {
+        return pathArray.reduce(function (obj, key) {
+            if (obj && obj[key] !== undefined) {
+                console.log(obj, key, obj[key]);
+                return obj[key];
+            }
+            return undefined;
+        }, nestedObject);
+    };
+    function breakDownPropertyName(propertyName) {
+        return propertyName.split(".");
+    }
 
-    function any(array, property, conditionToMeet, matchAll = false) {
+    function getMatches(array, property, conditionToMeet, matchAll = false) {
         //for the strings, match all could be ""
-        return array.filter((item) =>
-            matchFunctions[property](item[property], "name", conditionToMeet, matchAll)
-        );
+        let propertyPathArray = breakDownPropertyName(property);
+        let propertyName = propertyPathArray[0];
+        propertyPathArray.push(0);
+        array.forEach((item, index) => {
+            let newPathString = property.replace("index", index);
+            console.log(newPathString);
+            propertyPathArray = breakDownPropertyName(newPathString);
+            propertyPathArray = propertyPathArray.map((string) =>
+                isNaN(Number(string)) ? string : Number(string)
+            );
+            console.log(propertyPathArray);
+            console.log(getNestedObject(item, propertyPathArray));
+        });
+        return array.filter((item, index) => {
+            let newPathString = property.replace("index", index);
+            console.log(newPathString);
+            propertyPathArray = breakDownPropertyName(newPathString);
+            propertyPathArray = propertyPathArray.map((string) =>
+                isNaN(Number(string)) ? string : Number(string)
+            );
+            console.log(propertyPathArray);
+            return matchFunctions[propertyName](
+                getNestedObject(item, propertyPathArray),
+                conditionToMeet,
+                matchAll
+            );
+        });
     }
 
     useEffect(() => {
@@ -139,7 +170,11 @@ function LinkDisplay(props) {
         }
         // console.log(any(links, "tags", "gaming"));
         // console.log(any(links, "tags", ["gaming", "Test", "Action"]));
-        console.log(any(links, "tags", ["gaming", "Test", "Action"], true));
+        console.log(
+            getMatches(links, "tags.index.name", ["gaming", "Test", "Action"], true)
+            // getMatches(links, "name", "Kevin")
+        );
+
         let filtered;
         //TODO: refactor to backend later
         // //no form data, so no filters
