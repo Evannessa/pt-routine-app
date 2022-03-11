@@ -102,7 +102,6 @@ function LinkDisplay(props) {
         } else {
             nameArray = childArray.map((item) => item.toLowerCase()); //get names of items
         }
-        console.log(childArray);
         if (matchAll && match instanceof Array) {
             let allIncluded = match.every((matchString) =>
                 nameArray.includes(matchString.toLowerCase())

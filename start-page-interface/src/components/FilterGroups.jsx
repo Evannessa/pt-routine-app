@@ -1,142 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
-import ComboBox from "./input/ComboBox";
 import * as StyledInputs from "./styled-components/input.styled";
 import Select from "./input/Select";
 import Form from "./input/Form";
+import { FilterGroup } from "./FilterGroup";
 
-function FilterGroup(props) {
-    const [names, setNames] = useState(props.links.map((link) => link.name));
-    const [tags, setTags] = useState(props.tags.map((tag) => tag.name));
-
-    const [filter, setFilter] = useState({
-        propertyChoice: "name",
-        relation: "equal",
-        stringMatch: "",
-        arrayMatch: [],
-    });
-    const matchType = {
-        name: String,
-        url: String,
-        tags: Array,
-    };
-
-    useEffect(() => {
-        setNames(props.links.map((link) => link.name));
-        setTags(props.tags.map((tag) => tag.name));
-    }, []);
-
-    /**
-     *
-     * @param {String} propertyName - the name of the property we're updating
-     * @param {*} value - the value we're updating with
-     */
-    function updateFilter(propertyName, value) {
-        console.log("Updating with", propertyName, value);
-        setFilter((prevFilter) => {
-            return { ...prevFilter, [propertyName]: value };
-        });
-    }
-    let optionsByType = {
-        string: [
-            { name: "equals", _id: "equals" },
-            { name: "doesNotEqual", _id: "doesNotEqual" },
-            { name: "not", _id: "not" },
-        ],
-        array: [
-            { name: "contains", _id: "contains" },
-            { name: "doesNotContain", _id: "doesNotContain" },
-        ],
-    };
-
-    // any vs all
-    let relationProps = {
-        name: "relation",
-        options: [
-            { name: "equals", _id: "equals" },
-            { name: "doesNotEqual", _id: "doesNotEqual" },
-            { name: "not", _id: "not" },
-        ],
-        setStateFunction: updateFilter,
-        value: filter["relation"],
-    };
-    let propertyChoiceProps = {
-        name: "propertyChoice",
-        options: [
-            { name: "tags", _id: "tags" },
-            { name: "name", _id: "name" },
-            { name: "url", _id: "url" },
-            { name: "type", _id: "type" },
-        ],
-        setStateFunction: updateFilter,
-        value: filter["propertyChoice"],
-    };
-
-    let precisionProps = {
-        name: "precision",
-        options: [
-            { name: "any", _id: "any" },
-            { name: "all", _id: "all" },
-        ],
-    };
-
-    let matchByType = {
-        string: {},
-    };
-
-    /**
-     * gets different props depending on the type
-     * @param {String} propertyName - the name of the property
-     * @param {*} propertyType - the type of the property
-     * @returns - an object to be destructured into props
-     */
-    function getMatchProps(propertyName, propertyType) {
-        console.log("Name and type", propertyName, propertyType);
-        let matchProps = {
-            name: "match",
-            id: "match",
-            list: `${propertyName}s`,
-            datalistId: `${propertyName}s`,
-            setStateFunction: updateFilter,
-        };
-        //if it's a string
-        if (propertyType === "string") {
-            //want to show a combobox with all the various
-            console.log("names array", names);
-            matchProps.name = "stringMatch";
-            matchProps.options = names.map((name) => {
-                return { name: name, _id: name };
-            });
-            matchProps.value = filter.stringMatch;
-
-            //if it's an array
-        } else if (propertyType === "array") {
-            matchProps.name = "arrayMatch";
-            matchProps.multiple = true;
-            matchProps.options = tags.map((name) => {
-                return { name: name, _id: name };
-            });
-            matchProps.value = filter.arrayMatch;
-        }
-        return matchProps;
-    }
-
-    return (
-        <fieldset flex-direction="row">
-            <Select {...propertyChoiceProps}></Select>
-            <Select {...relationProps}></Select>
-            <Select {...precisionProps}></Select>
-            <ComboBox
-                {...getMatchProps(
-                    filter.propertyChoice,
-                    filter.propertyChoice === "name" || "url" || "type"
-                        ? "string"
-                        : "array"
-                )}></ComboBox>
-        </fieldset>
-    );
-}
-
+/**
+ *
+ * @param {*} props
+ * @returns - grouped filters
+ */
 function FilterGroups(props) {
     const [filters, setFilters] = useState({
         propertyChoice: "name",
