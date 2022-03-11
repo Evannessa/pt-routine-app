@@ -95,9 +95,14 @@ function LinkDisplay(props) {
      * @param {*} match
      * @returns
      */
-    function filterArrayProperty(childArray, match, matchAll) {
+    function filterArrayProperty(childArray, match, matchAll, childProperty = "") {
+        let nameArray = [];
+        if (childProperty) {
+            nameArray = childArray.map((item) => item[childProperty].toLowerCase());
+        } else {
+            nameArray = childArray.map((item) => item.toLowerCase()); //get names of items
+        }
         console.log(childArray);
-        let nameArray = childArray.map((item) => item.toLowerCase()); //get names of items
         if (matchAll && match instanceof Array) {
             let allIncluded = match.every((matchString) =>
                 nameArray.includes(matchString.toLowerCase())
@@ -125,33 +130,32 @@ function LinkDisplay(props) {
         return propertyName.split(".");
     }
 
-    function getMatches(array, property, conditionToMeet, matchAll = false) {
+    function getMatches(
+        array,
+        property,
+        conditionToMeet,
+        matchAll = false,
+        childProperty = ""
+    ) {
         //for the strings, match all could be ""
-        let propertyPathArray = breakDownPropertyName(property);
-        let propertyName = propertyPathArray[0];
-        propertyPathArray.push(0);
-        array.forEach((item, index) => {
-            let newPathString = property.replace("index", index);
-            console.log(newPathString);
-            propertyPathArray = breakDownPropertyName(newPathString);
-            propertyPathArray = propertyPathArray.map((string) =>
-                isNaN(Number(string)) ? string : Number(string)
-            );
-            console.log(propertyPathArray);
-            console.log(getNestedObject(item, propertyPathArray));
-        });
+        // let propertyPathArray = breakDownPropertyName(property);
+        // let propertyName = propertyPathArray[0];
+        // propertyPathArray.push(0);
+        let propertyName = property;
+
         return array.filter((item, index) => {
-            let newPathString = property.replace("index", index);
-            console.log(newPathString);
-            propertyPathArray = breakDownPropertyName(newPathString);
-            propertyPathArray = propertyPathArray.map((string) =>
-                isNaN(Number(string)) ? string : Number(string)
-            );
-            console.log(propertyPathArray);
+            // let newPathString = property.replace("index", index);
+            // console.log(newPathString);
+            // propertyPathArray = breakDownPropertyName(newPathString);
+            // propertyPathArray = propertyPathArray.map((string) =>
+            //     isNaN(Number(string)) ? string : Number(string)
+            // );
+            // console.log(propertyPathArray);
             return matchFunctions[propertyName](
-                getNestedObject(item, propertyPathArray),
+                item[propertyName],
                 conditionToMeet,
-                matchAll
+                matchAll,
+                childProperty
             );
         });
     }
@@ -171,8 +175,8 @@ function LinkDisplay(props) {
         // console.log(any(links, "tags", "gaming"));
         // console.log(any(links, "tags", ["gaming", "Test", "Action"]));
         console.log(
-            getMatches(links, "tags.index.name", ["gaming", "Test", "Action"], true)
-            // getMatches(links, "name", "Kevin")
+            getMatches(links, "tags", ["gaming", "Test", "Action"], true, "name"),
+            getMatches(links, "name", "Kevin")
         );
 
         let filtered;
