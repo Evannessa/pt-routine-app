@@ -1,17 +1,21 @@
 import React, { useState, useEffect } from "react";
 import ComboBox from "./input/ComboBox";
+import Input from "./input/Input";
 import Select from "./input/Select";
 
 export function FilterGroup(props) {
     const [names, setNames] = useState(props.links.map((link) => link.name));
     const [tags, setTags] = useState(props.tags.map((tag) => tag.name));
+    const [matches, setMatches] = useState();
 
     const [filter, setFilter] = useState({
+        categoryName: "",
         propertyChoice: "name",
         relation: "equal",
         stringMatch: "",
         arrayMatch: [],
     });
+
     const [propertyChoiceProps, setPropertyChoiceProps] = useState(
         getPropertyChoiceProps()
     );
@@ -34,6 +38,13 @@ export function FilterGroup(props) {
         );
     }, []);
 
+    function findMatches() {
+        setMatches(getMatches(props.links, filter.propertyChoice, filter.stringMatch));
+    }
+    useEffect(() => {
+        findMatches();
+    }, [props.links, filter]);
+
     useEffect(() => {
         // setPropertyChoiceProps(getPropertyChoiceProps());
 
@@ -43,7 +54,94 @@ export function FilterGroup(props) {
                 filter.propertyChoice === "tags" ? "array" : "string"
             )
         );
+        findMatches();
     }, [filter, names, tags]);
+
+    //the methods associated with each type
+    const matchFunctions = {
+        name: filterStringProperty,
+        url: filterStringProperty,
+        tags: filterArrayProperty,
+    };
+
+    /**
+     *
+     * @param {String} property - the name of the property we're testing
+     * @param {String|Array} match - a string or array to match
+     * @param {Boolean} matchAll - if all should match, or just some. For Strings it'll be if the word should match exactly or just partially.
+     * @returns a boolean saying whether or not the property matches
+     */
+    function filterStringProperty(property, match, matchAll = false) {
+        //match all should return an EXACT match
+        if (matchAll) {
+            return property === match;
+        } else {
+            //match all should return a non-exact, case-insensitive match that includes portions of the word
+            console.log(property);
+            return property.toLowerCase().includes(match.toLowerCase());
+        }
+    }
+    /**
+     *
+     * @param {*} childArray - the nested array of items
+     * @param {*} property -
+     * @param {*} match
+     * @returns if all (or some) of the values in the array match
+     */
+    function filterArrayProperty(childArray, match, matchAll, childProperty = "") {
+        let nameArray = [];
+        if (childProperty) {
+            nameArray = childArray.map((item) => item[childProperty].toLowerCase());
+        } else {
+            nameArray = childArray.map((item) => item.toLowerCase()); //get names of items
+        }
+        if (matchAll && match instanceof Array) {
+            let allIncluded = match.every((matchString) =>
+                nameArray.includes(matchString.toLowerCase())
+            );
+            return allIncluded;
+        }
+        //use some to make sure only some of the values in the child array match
+        else {
+            let someIncluded = match.some((matchString) =>
+                nameArray.includes(matchString.toLowerCase())
+            );
+            return someIncluded;
+        }
+    }
+    const getNestedObject = (nestedObject, pathArray) => {
+        return pathArray.reduce(function (obj, key) {
+            if (obj && obj[key] !== undefined) {
+                console.log(obj, key, obj[key]);
+                return obj[key];
+            }
+            return undefined;
+        }, nestedObject);
+    };
+    function breakDownPropertyName(propertyName) {
+        return propertyName.split(".");
+    }
+
+    function getMatches(
+        array,
+        property,
+        conditionToMeet,
+        matchAll = false,
+        childProperty = ""
+    ) {
+        //for the strings, match all could be ""
+        let propertyName = property;
+
+        return array.filter((item, index) => {
+            // let newPathString = property.replace("index", index);
+            return matchFunctions[propertyName](
+                item[propertyName],
+                conditionToMeet,
+                matchAll,
+                childProperty
+            );
+        });
+    }
 
     /**
      *
@@ -107,7 +205,6 @@ export function FilterGroup(props) {
     let matchByType = {
         string: {},
     };
-    console.log("Props updated?", propertyChoiceProps);
 
     /**
      * gets different props depending on the type
@@ -149,6 +246,12 @@ export function FilterGroup(props) {
 
     return (
         <fieldset flex-direction="row">
+            <Input
+                type="text"
+                value={filter.categoryName}
+                name="categoryName"
+                setStateFunction={updateFilter}
+                hasLabel={true}></Input>
             <Select {...propertyChoiceProps} value={filter.propertyChoice}></Select>
             <Select {...getRelationProps()}></Select>
             <Select {...precisionProps}></Select>
@@ -165,6 +268,11 @@ export function FilterGroup(props) {
                     )}
                 </div>
             )}
+            <div>
+                {matches
+                    ? matches.map((match) => <div key={match._id}>{match.name}</div>)
+                    : []}
+            </div>
         </fieldset>
     );
 }

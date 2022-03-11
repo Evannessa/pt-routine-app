@@ -7,6 +7,7 @@ import ChipGroup from "./ChipGroup";
 import Form from "./input/Form";
 import Input from "./input/Input";
 import FilterGroups from "./FilterGroups";
+import CategoryView from "./CategoryView";
 import * as Buttons from "./styled-components/Buttons.Styled";
 import {
     ButtonGroup,
@@ -364,6 +365,7 @@ function LinkDisplay(props) {
     return (
         <Layout.StyledOuterMain>
             <Layout.StyledHeader>
+                <CategoryView links={links || []} tags={allTags || []} />
                 <FilterGroups links={links || []} tags={allTags || []} />
                 <Form direction="row" justify="center" align="center">
                     <Input

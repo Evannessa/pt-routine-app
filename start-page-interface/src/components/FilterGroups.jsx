@@ -11,7 +11,7 @@ import { FilterGroup } from "./FilterGroup";
  * @returns - grouped filters
  */
 function FilterGroups(props) {
-    const [filters, setFilters] = useState({
+    const [filterGroups, setFilterGroups] = useState({
         propertyChoice: "name",
         relation: "and",
         match: [],
@@ -109,7 +109,7 @@ function FilterGroups(props) {
     }
 
     function updateFilters(propertyName, value) {
-        setFilters({ [propertyName]: value });
+        setFilterGroups({ [propertyName]: value });
     }
 
     let andOrProps = {
@@ -120,7 +120,7 @@ function FilterGroups(props) {
             { name: "not", _id: "not" },
         ],
         setStateFunction: updateFilters,
-        value: filters["relation"],
+        value: filterGroups["relation"],
     };
 
     return (
