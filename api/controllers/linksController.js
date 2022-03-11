@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { createCustomError, CustomAPIError } = require("../errors/custom-error");
 const asyncWrapper = require("../middleware/async");
 const { Link, Tag, TagGroup } = require("../models/linkModels");
 
@@ -9,74 +10,71 @@ const createNewLink = asyncWrapper(async (req, res) => {
     const obj = { name: name, url: url };
     const link = await Link.create(obj);
     res.status(201).send({ link });
-    try {
-        console.log(req.body);
-        let name = req.body.name;
-        let url = req.body.url;
-        const obj = { name: name, url: url };
-        const link = await Link.create(obj);
-        res.status(201).send({ link });
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({ msg: error });
-    }
 });
 
-const createMultipleNewLinks = async (req, res) => {
-    let linkData = req.body;
-    const newLinks = await Link.insertMany(linkData)
-        .then((links) => res.json(links))
-        .catch((error) => res.status(500).json({ msg: error }));
-};
-
-const getAllTags = async (req, res) => {
-    console.log("Request is", req);
-    try {
-        const tags = await Tag.find({});
-        console.log(tags);
-        if (tags) {
-            res.status(200).json({ tags });
-        } else {
-            res.status(404).json({ msg: "No tags found" });
-        }
-    } catch (error) {
-        res.status(500).json({ msg: error });
-        console.log(error);
+const createMultipleNewLinks = asyncWrapper(async (req, res) => {
+    async (req, res) => {
+        let linkData = req.body;
+        const newLinks = await Link.insertMany(linkData)
+            .then((links) => res.json(links))
+            .catch((error) => res.status(500).json({ msg: error }));
+    };
+});
+const getAllTags = asyncWrapper(async (req, res, next) => {
+    const tags = await Tag.find({});
+    if (!tags) {
+        return next(createCustomError(`No tags found`, 404));
     }
-};
+    res.status(200).json({ tags });
+});
 
-const getAllLinks = async (req, res) => {
-    try {
-        const sets = await Link.find({})
-            .populate("tags")
-            .exec((error, links) => {
-                if (error) {
-                    return;
-                }
-                return res.status(200).json({ links });
-            });
-        // res.status(200).json({ sets });
-    } catch (error) {
-        res.status(500).json({ msg: error });
+const getAllLinks = asyncWrapper(async (req, res, next) => {
+    //name, url, type, tags, imagePath, text
+    const { name, type, tags } = req.query;
+    console.log("Query is", req.query);
+    const queryObject = {};
+    //if featured doesn't exist, it's not passed into the query, we don't put it in the object
+    //we get all the products back if you pass something invalid
+    if (type) {
+        queryObject.type = type.toString();
     }
-};
+    if (name) {
+        //mongo query data
+        queryObject.name = { $regex: name.toString(), $options: "i" };
+    }
+    console.log(queryObject);
+    const sets = await Link.find(queryObject)
+        .populate("tags")
+        .exec((error, links) => {
+            if (error) {
+                return next(createCustomError(`No links found`, 404));
+            }
+            return res.status(200).json({ links, nbHits: links.length });
+        });
+});
+const getAllLinksStatic = asyncWrapper(async (req, res, next) => {
+    const sets = await Link.find({})
+        .populate("tags")
+        .exec((error, links) => {
+            if (error) {
+                return next(createCustomError(`No links found`, 404));
+            }
+            return res.status(200).json({ links });
+        });
+});
 
-const deleteLink = async (req, res) => {
-    try {
-        const { id: linkId } = req.params;
-        const link = await Link.findOneAndDelete({ _id: linkId });
-        if (!link) {
-            return res.status(404).json({ msg: `No set found with ${linkId}` });
-        }
-        res.status(200).json({ link: link });
-    } catch (error) {
-        res.status(500).json({ msg: error });
+const deleteLink = asyncWrapper(async (req, res) => {
+    const { id: linkId } = req.params;
+    const link = await Link.findOneAndDelete({ _id: linkId });
+    if (!link) {
+        return res.status(404).json({ msg: `No set found with ${linkId}` });
     }
-};
+    res.status(200).json({ link: link });
+});
 
 function removeTag(linkId, tagId) {}
 
-const updateLink = async (req, res) => {
+const updateLink = asyncWrapper(async (req, res) => {
     const { id: linkId } = req.params;
     //if we're not removing a tag
     console.log(req.body);
@@ -175,58 +173,42 @@ const updateLink = async (req, res) => {
             return res.status(500).json({ msg: error });
         }
     }
-};
+});
 
-const createTag = async (req, res) => {
-    try {
-        const link = await Tag.create(req.body);
-        res.status(201).send({ link });
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({ msg: error });
+const createTag = asyncWrapper(async (req, res) => {
+    const link = await Tag.create(req.body);
+    res.status(201).send({ link });
+});
+const getLink = asyncWrapper(async (req, res, next) => {
+    const { id: linkId } = req.params;
+    const link = await Link.findOne({ _id: linkId }).populate("tags"); //get me the timer whose id is equal to request.params.id
+    if (!link) {
+        return next(createCustomError(`No link found with id ${linkId}`, 404));
     }
-};
-const getLink = async (req, res) => {
-    try {
-        const { id: linkId } = req.params;
-        //use static function "findOne"
-        const link = await Link.findOne({ _id: linkId }).populate("tags"); //get me the timer whose id is equal to request.params.id
-        console.log("Link is", link);
-        if (!link) {
-            return res.status(404).json({ msg: `No timer with id : ${linkId}` }); //make sure that you ALWAYS have a return here so it exits  so you're not sending response after response
-        }
-        res.status(200).json({ link: link });
-    } catch (error) {
-        //! 2.this generic is just in case the syntax for the id is totally off
-        res.status(500).json({ msg: error });
-    }
-};
+    return res.status(200).json({ link: link });
+});
 
-const createTagGroup = async (req, res) => {
-    try {
-        await TagGroup.create(req.body)
-            .populate("Tags")
-            .exec((error, group) => {
-                if (error) {
-                    return res.status(500).json({ msg: error });
-                }
-                res.status(201).json({ group });
-            });
-    } catch (error) {}
-};
+const createTagGroup = asyncWrapper(async (req, res) => {
+    await TagGroup.create(req.body)
+        .populate("Tags")
+        .exec((error, group) => {
+            if (error) {
+                return res.status(500).json({ msg: error });
+            }
+            res.status(201).json({ group });
+        });
+});
 
-const updateTagGroup = async (req, res) => {
-    try {
-        await TagGroup.findOneAndUpdate()
-            .populate("Tags")
-            .exec((error, group) => {
-                if (error) {
-                    return res.status(500).json({ msg: error });
-                }
-                return res.status(201).json({ group });
-            });
-    } catch (error) {}
-};
+const updateTagGroup = asyncWrapper(async (req, res) => {
+    await TagGroup.findOneAndUpdate()
+        .populate("Tags")
+        .exec((error, group) => {
+            if (error) {
+                return res.status(500).json({ msg: error });
+            }
+            return res.status(201).json({ group });
+        });
+});
 
 module.exports = {
     getLink,
@@ -237,4 +219,6 @@ module.exports = {
     updateLink,
     deleteLink,
     createTag,
+    createTagGroup,
+    updateTagGroup,
 };

@@ -27,7 +27,7 @@ const LinkSchema = new mongoose.Schema({
     type: {
         type: String,
         required: true,
-        default: "External",
+        default: "External", //TODO: turn this to enum value later
     },
     tags: [{ type: mongoose.Schema.Types.ObjectId, ref: "Tag" }],
     text: "",

@@ -11,10 +11,11 @@ var linkInterfaceRouter = require("./routes/linkInterfaceRoutes");
 const connectDB = require("./db/connect");
 require("dotenv").config();
 const notFound = require("./middleware/not-found");
+const errorHandlerMiddleware = require("./middleware/error-handler");
 const fileUpload = require("express-fileupload");
 var app = express();
 
-const port = 9000;
+const port = process.env.PORT || 9000;
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
@@ -32,6 +33,7 @@ app.use("/factory", factoryRouter);
 app.use("/display", displayRouter);
 app.use("/links", linkInterfaceRouter);
 app.use(notFound);
+app.use(errorHandlerMiddleware);
 // app.use("/users", usersRouter);
 // app.use("/testAPI", testAPIRouter);
 

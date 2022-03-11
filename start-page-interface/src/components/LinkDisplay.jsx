@@ -1,11 +1,12 @@
 import Avatar from "boring-avatars";
 import React, { useEffect, useState } from "react";
-import { Link, Outlet, useLocation, useParams } from "react-router-dom";
+import { Link, Outlet, useLocation, useParams, useSearchParams } from "react-router-dom";
 import styled from "styled-components";
 import { requests } from "../helpers/requests";
 import ChipGroup from "./ChipGroup";
 import Form from "./input/Form";
 import Input from "./input/Input";
+import FilterGroups from "./FilterGroups";
 import * as Buttons from "./styled-components/Buttons.Styled";
 import {
     ButtonGroup,
@@ -54,6 +55,9 @@ const StyledLinkContainer = styled.section`
 // #endregion
 
 function LinkDisplay(props) {
+    const [searchParams, setSearchParams] = useSearchParams();
+    // single-time read
+    const sParams = Object.fromEntries([...searchParams]);
     const params = useParams();
     const location = useLocation();
     let id = Object.keys(params).length > 0 ? params.id : "new";
@@ -68,9 +72,61 @@ function LinkDisplay(props) {
     });
     const [allTags, setAllTags] = React.useState([]);
     const [queryTags, setQueryTags] = React.useState([]);
+    const matchFunctions = {
+        name: filterStringProperty,
+        url: filterStringProperty,
+        tags: filterArrayProperty,
+    };
+
+    function filterStringProperty(property, match, matchAll = false) {
+        //match all should return an EXACT match
+        if (matchAll) {
+            return property === match;
+        } else {
+            //match all should return a non-exact, case-insensitive match that includes portions of the word
+            return property.toLowerCase().includes(match.toLowerCase());
+        }
+    }
+    /**
+     *
+     * @param {*} childArray - the nested array of items
+     * @param {*} property -
+     * @param {*} match
+     * @returns
+     */
+    function filterArrayProperty(childArray, childProperty, match, matchAll) {
+        //use every to make sure ALL the values in the child array match
+        //!we don't want to do it this way, as this will mean every item
+        //in the child array has to match the same string
+
+        let nameArray = childArray.map((item) => item[childProperty].toLowerCase()); //get names of items
+        if (matchAll && match instanceof Array) {
+            let allIncluded = match.every((matchString) =>
+                nameArray.includes(matchString.toLowerCase())
+            );
+            return allIncluded;
+        }
+        //use some to make sure only some of the values in the child array match
+        else {
+            let someIncluded = match.some((matchString) =>
+                nameArray.includes(matchString.toLowerCase())
+            );
+            return someIncluded;
+            return childArray.some((item) =>
+                filterStringProperty(item[childProperty], match)
+            );
+        }
+    }
+
+    function any(array, property, conditionToMeet, matchAll = false) {
+        //for the strings, match all could be ""
+        return array.filter((item) =>
+            matchFunctions[property](item[property], "name", conditionToMeet, matchAll)
+        );
+    }
 
     useEffect(() => {
-        requests.getAll(urlBase, setLinks, "links");
+        requests.getAll(`${urlBase}`, setLinks, "links");
         requests.getAll(`${urlBase}/tags`, setAllTags, "tags");
     }, []);
 
@@ -81,8 +137,15 @@ function LinkDisplay(props) {
         if (!links) {
             return;
         }
+        // console.log(any(links, "tags", "gaming"));
+        // console.log(any(links, "tags", ["gaming", "Test", "Action"]));
+        console.log(any(links, "tags", ["gaming", "Test", "Action"], true));
         let filtered;
-        //no form data, so no filters
+        //TODO: refactor to backend later
+        // //no form data, so no filters
+        // const currentParams = Object.fromEntries([...searchParams]);
+        // console.log(currentParams);
+        // setSearchParams({ name: formData.search });
         if (formData.search === "") {
             filtered = [];
             setFilteredLinks(links);
@@ -142,6 +205,8 @@ function LinkDisplay(props) {
         // console.log(searchArray);
         setQueryTags(searchArray);
     }, [formData.search]);
+
+    useEffect(() => {}, [searchParams]);
 
     // let filterChips = searchFilters.map();
 
