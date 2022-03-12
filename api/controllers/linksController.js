@@ -1,8 +1,18 @@
 const mongoose = require("mongoose");
 const { createCustomError, CustomAPIError } = require("../errors/custom-error");
 const asyncWrapper = require("../middleware/async");
-const { Link, Tag, TagGroup } = require("../models/linkModels");
+const { Link, Tag, TagGroup, FilterGroup } = require("../models/linkModels");
 
+async function create(type, req, res) {
+    const document = await type.create({ ...req.body });
+    return res.status(201).json({ document });
+}
+async function getSingle() {}
+async function getAll() {}
+async function deleteSingle() {}
+async function updateSingle() {}
+
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 const createNewLink = asyncWrapper(async (req, res) => {
     //pass the body  into the response
     let name = req.body.name;
@@ -19,13 +29,6 @@ const createMultipleNewLinks = asyncWrapper(async (req, res) => {
             .then((links) => res.json(links))
             .catch((error) => res.status(500).json({ msg: error }));
     };
-});
-const getAllTags = asyncWrapper(async (req, res, next) => {
-    const tags = await Tag.find({});
-    if (!tags) {
-        return next(createCustomError(`No tags found`, 404));
-    }
-    res.status(200).json({ tags });
 });
 
 const getAllLinks = asyncWrapper(async (req, res, next) => {
@@ -72,8 +75,7 @@ const deleteLink = asyncWrapper(async (req, res) => {
     res.status(200).json({ link: link });
 });
 
-function removeTag(linkId, tagId) {}
-
+//TODO: Update this to be cleaner, oof
 const updateLink = asyncWrapper(async (req, res) => {
     const { id: linkId } = req.params;
     //if we're not removing a tag
@@ -175,10 +177,6 @@ const updateLink = asyncWrapper(async (req, res) => {
     }
 });
 
-const createTag = asyncWrapper(async (req, res) => {
-    const link = await Tag.create(req.body);
-    res.status(201).send({ link });
-});
 const getLink = asyncWrapper(async (req, res, next) => {
     const { id: linkId } = req.params;
     const link = await Link.findOne({ _id: linkId }).populate("tags"); //get me the timer whose id is equal to request.params.id
@@ -187,6 +185,77 @@ const getLink = asyncWrapper(async (req, res, next) => {
     }
     return res.status(200).json({ link: link });
 });
+
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+
+const createTag = asyncWrapper(async (req, res) => {
+    const link = await Tag.create(req.body);
+    res.status(201).send({ link });
+});
+
+const getAllTags = asyncWrapper(async (req, res, next) => {
+    const tags = await Tag.find({});
+    if (!tags) {
+        return next(createCustomError(`No tags found`, 404));
+    }
+    res.status(200).json({ tags });
+});
+
+function removeTag(linkId, tagId) {}
+
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+
+/**
+ *
+ */
+const createFilterGroup = asyncWrapper(async (req, res) => {
+    create(FilterGroup, req, res);
+    // const filterGroup = await FilterGroup.create({ ...req.body });
+    // return res.status(201).json({ filterGroup });
+});
+
+const getAllFilterGroups = asyncWrapper(async (req, res) => {
+    const filterGroups = await FilterGroup.find({});
+    if (!filterGroups) {
+        return next(createCustomError(`No tags found`, 404));
+    }
+    return res.status(200).json({ filterGroups });
+});
+
+const deleteFilterGroup = asyncWrapper(async (req, res) => {
+    let { id: groupId } = req.params;
+    const filterGroup = await FilterGroup.findOneAndDelete({ _id: groupId });
+    if (!filterGroup) {
+        return next(createCustomError(`No link found with id ${groupId}`, 404));
+    }
+    return res.status(200).json({ filterGroup });
+});
+/**
+ *
+ */
+const getFilterGroup = asyncWrapper(async (req, res, next) => {
+    const { id: groupId } = req.params;
+    const filterGroup = await FilterGroup.findOne({ _id: groupId });
+    if (!filterGroup) {
+        return next(createCustomError(`No Filter Group found with id ${groupId}`, 404));
+    }
+    return res.status(200).json({ filterGroup });
+});
+
+const updateFilterGroup = asyncWrapper(async (req, res) => {
+    const { id: groupId } = req.params;
+    const filterGroup = await FilterGroup.findOneAndUpdate(
+        { _id: groupId },
+        { ...req.body },
+        { new: true }
+    );
+    if (!filterGroup) {
+        return next(createCustomError(`No Filter Group found with id ${groupId}`, 404));
+    }
+    return res.status(200).json({ filterGroup });
+});
+
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
 const createTagGroup = asyncWrapper(async (req, res) => {
     await TagGroup.create(req.body)
@@ -219,6 +288,9 @@ module.exports = {
     updateLink,
     deleteLink,
     createTag,
-    createTagGroup,
-    updateTagGroup,
+    createFilterGroup,
+    getFilterGroup,
+    updateFilterGroup,
+    getAllFilterGroups,
+    deleteFilterGroup,
 };

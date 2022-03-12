@@ -20,11 +20,24 @@ const FilterGroupSchema = new mongoose.Schema({
     propertyChoice: {
         type: String,
         enum: ["name", "tags", "url"],
+        required: true,
         default: "name",
     },
-    relation: ["equal"],
-    tags: [{ type: mongoose.Schema.Types.ObjectId, ref: "Tag" }],
+    relation: {
+        type: String,
+        enum: ["equals", "doesNotEqual", "isEmpty", "isNotEmpty"],
+        required: true,
+        default: "equals",
+    },
+    precision: {
+        type: String,
+        enum: ["any", "all"],
+        required: true,
+        default: "any",
+    },
+    match: [String],
 });
+
 const TagGroupSchema = new mongoose.Schema({
     name: {},
     tags: [{ type: mongoose.Schema.Types.ObjectId, ref: "Tag" }],
@@ -51,5 +64,6 @@ const LinkSchema = new mongoose.Schema({
 module.exports = {
     Link: mongoose.model("Link", LinkSchema),
     Tag: mongoose.model("Tag", TagSchema),
+    FilterGroup: mongoose.model("FilterGroup", FilterGroupSchema),
     TagGroup: mongoose.model("TagGroup", TagGroupSchema),
 };
