@@ -11,6 +11,20 @@ const TagSchema = new mongoose.Schema({
         default: "#212121",
     },
 });
+const FilterGroupSchema = new mongoose.Schema({
+    categoryName: {
+        type: String,
+        default: "New Category",
+        required: true,
+    },
+    propertyChoice: {
+        type: String,
+        enum: ["name", "tags", "url"],
+        default: "name",
+    },
+    relation: ["equal"],
+    tags: [{ type: mongoose.Schema.Types.ObjectId, ref: "Tag" }],
+});
 const TagGroupSchema = new mongoose.Schema({
     name: {},
     tags: [{ type: mongoose.Schema.Types.ObjectId, ref: "Tag" }],
