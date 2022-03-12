@@ -10,6 +10,7 @@ const asyncWrapper = (callback) => {
         try {
             await callback(req, res, next);
         } catch (error) {
+            console.log("Error in async is", error);
             next(error); //passing this to a next middleware
         }
     };
