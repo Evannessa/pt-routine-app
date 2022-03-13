@@ -77,7 +77,6 @@ export function FilterGroup(props) {
             return property === match;
         } else {
             //match all should return a non-exact, case-insensitive match that includes portions of the word
-            console.log(property);
             return property.toLowerCase().includes(match.toLowerCase());
         }
     }

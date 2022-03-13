@@ -244,11 +244,16 @@ const createTag = asyncWrapper(async (req, res) => {
 });
 
 const getAllTags = asyncWrapper(async (req, res, next) => {
-    const tags = await Tag.find({});
-    if (!tags) {
-        return next(createCustomError(`No tags found`, 404));
-    }
-    res.status(200).json({ tags });
+    getAll(Tag, req, res, next, "tag");
+    // const tags = await Tag.find({});
+    // if (!tags) {
+    //     return next(createCustomError(`No tags found`, 404));
+    // }
+    // res.status(200).json({ tags });
+});
+
+const deleteTag = asyncWrapper(async (req, res, next) => {
+    deleteSingle(Tag, req, res, next, "tag");
 });
 
 function removeTag(linkId, tagId) {}
@@ -260,53 +265,24 @@ function removeTag(linkId, tagId) {}
  */
 const createFilterGroup = asyncWrapper(async (req, res) => {
     return create(FilterGroup, req, res);
-    // const filterGroup = await FilterGroup.create({ ...req.body });
-    // return res.status(201).json({ filterGroup });
 });
 
 const getAllFilterGroups = asyncWrapper(async (req, res, next) => {
     return getAll(FilterGroup, req, res, next, "Filter Group", "");
-    // const filterGroups = await FilterGroup.find({});
-    // if (!filterGroups) {
-    //     return next(createCustomError(`No tags found`, 404));
-    // }
-    // return res.status(200).json({ filterGroups });
 });
 
 const deleteFilterGroup = asyncWrapper(async (req, res, next) => {
     return deleteSingle(FilterGroup, req, res, next, "Filter Group");
-    // let { id: groupId } = req.params;
-    // const filterGroup = await FilterGroup.findOneAndDelete({ _id: groupId });
-    // if (!filterGroup) {
-    //     return next(createCustomError(`No link found with id ${groupId}`, 404));
-    // }
-    // return res.status(200).json({ filterGroup });
 });
 /**
  *
  */
 const getFilterGroup = asyncWrapper(async (req, res, next) => {
     return getSingle(FilterGroup, req, res, next, "Filter Group");
-    // const { id: groupId } = req.params;
-    // const filterGroup = await FilterGroup.findOne({ _id: groupId });
-    // if (!filterGroup) {
-    //     return next(createCustomError(`No Filter Group found with id ${groupId}`, 404));
-    // }
-    // return res.status(200).json({ filterGroup });
 });
 
 const updateFilterGroup = asyncWrapper(async (req, res, next) => {
     return updateSingle(FilterGroup, req, res, next, "Filter Group");
-    // const { id: groupId } = req.params;
-    // const filterGroup = await FilterGroup.findOneAndUpdate(
-    //     { _id: groupId },
-    //     { ...req.body },
-    //     { new: true }
-    // );
-    // if (!filterGroup) {
-    //     return next(createCustomError(`No Filter Group found with id ${groupId}`, 404));
-    // }
-    // return res.status(200).json({ filterGroup });
 });
 
 module.exports = {
@@ -318,6 +294,7 @@ module.exports = {
     updateLink,
     deleteLink,
     createTag,
+    deleteTag,
     createFilterGroup,
     getFilterGroup,
     updateFilterGroup,
