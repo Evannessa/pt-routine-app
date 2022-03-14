@@ -1,14 +1,38 @@
 import axios from "axios";
-const path = require("path");
+
+// export const instance = axios.create({
+// 	baseURL: `http://localhost:9000/links`,
+// })
 
 export var requests = (function () {
     const displayBase = "http://localhost:9000/links/display";
     const createBase = "http://localhost:9000/links/create";
     const urlBase = "http://localhost:9000/links";
 
+    async function axiosRequest(method, pathsArray, data, setStateCallback) {
+        let url = pathsArray.join("/");
+        console.log(url);
+        axios({
+            baseURL: urlBase,
+            method: method,
+            url: url,
+            data: data,
+        })
+            .then((response) => {
+                // console.log("Hello?", response.status);
+                if (response.status >= 200 && response.status < 300) {
+                    console.log("Our response", response.data.document);
+                    setStateCallback(response.data.document);
+                } else {
+                    console.log("Response status was", response.status);
+                }
+            })
+            .catch(handleError);
+    }
+
     //join together an array of commponents for a path
-    function appendPath(pathName) {
-        return path.join(pathName);
+    function appendPath(pathsArray) {
+        return pathsArray.join("/");
     }
 
     const handleError = (error) => {
@@ -43,18 +67,22 @@ export var requests = (function () {
      * @param {Object} params - the params, if there are any
      * @param {functionReference} setStateCallback - reference to setting state
      */
-    async function getObject(id, setStateCallback, pathName) {
-        let fullPath = appendPath(pathName, id);
-        console.log(fullPath);
-        try {
-            axios.get(fullPath).then((response) => {
-                if (response.data !== null) {
-                    setStateCallback(response.data.link);
-                }
-            });
-        } catch (error) {
-            console.log("There was an error");
-        }
+    async function getObject(id, setStateCallback, pathsArray) {
+        let url = pathsArray.join("/");
+        await axiosRequest("post", url).then((response) => {
+            if (response.data !== null) {
+                setStateCallback(response.data.document);
+            }
+        });
+        // try {
+        //     axios.get(fullPath).then((response) => {
+        //         if (response.data !== null) {
+        //             setStateCallback(response.data.link);
+        //         }
+        //     });
+        // } catch (error) {
+        //     console.log("There was an error");
+        // }
     }
 
     /**
@@ -194,5 +222,6 @@ export var requests = (function () {
         createBase,
         displayBase,
         urlBase,
+        axiosRequest,
     };
 })();

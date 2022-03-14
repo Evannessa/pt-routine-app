@@ -98,11 +98,12 @@ const getAllLinks = asyncWrapper(async (req, res, next) => {
     console.log(queryObject);
     const sets = await Link.find(queryObject)
         .populate("tags")
-        .exec((error, links) => {
+        .exec((error, document) => {
             if (error) {
                 return next(createCustomError(`No links found`, 404));
             }
-            return res.status(200).json({ links, nbHits: links.length });
+            return res.status(200).json({ document });
+            // return res.status(200).json({ links, nbHits: links.length });
         });
 });
 const getAllLinksStatic = asyncWrapper(async (req, res, next) => {

@@ -161,8 +161,10 @@ function LinkDisplay(props) {
     }
 
     useEffect(() => {
-        requests.getAll(`${urlBase}`, setLinks, "links");
-        requests.getAll(`${urlBase}/tags`, setAllTags, "tags");
+        requests.axiosRequest("GET", ["display"], {}, setLinks);
+        requests.axiosRequest("GET", ["display", "tags"], {}, setAllTags);
+        // requests.getAll(`${urlBase}`, setLinks, "links");
+        // requests.getAll(`${urlBase}/tags`, setAllTags, "tags");
     }, []);
 
     /**
