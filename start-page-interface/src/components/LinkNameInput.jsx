@@ -66,12 +66,14 @@ function LinkNameInput(props) {
 
     //get ALL tags to suggest when user types
     React.useEffect(() => {
-        requests.getAll(`${urlBase}/tags`, setAllTags, "tags");
-        console.log(id);
+        requests.axiosRequest("GET", ["display", "tags"], {}, setAllTags);
+        // requests.getAll(`${urlBase}/tags`, setAllTags, "tags");
         if (id === "new") {
             createNewLink(); //create a new untitled link
         } else {
-            requests.getObject(id, urlBase, params, setFormData);
+            console.log("ID is", id);
+            requests.axiosRequest("GET", ["display", id], {}, setFormData);
+            // requests.getObject(id, urlBase, params, setFormData);
         }
     }, []);
 
@@ -126,9 +128,10 @@ function LinkNameInput(props) {
      * axios == post request to new link
      */
     async function createNewLink() {
-        await requests
-            .createObject(formData, location, setSavedAndUpdate, "new")
-            .then((result) => {});
+        requests.axiosRequest("POST", ["create", "new"], formData, setSavedAndUpdate);
+        // await requests
+        // .createObject(formData, location, setSavedAndUpdate, "new")
+        // .then((result) => {});
     }
 
     /**
@@ -173,7 +176,8 @@ function LinkNameInput(props) {
             let newData = createUpdateData("tags", newTag, "insert", "");
 
             console.log("Passed data is", newData);
-            requests.updateObject(params.id, newData, urlBase, setFormData, "link");
+            requests.axiosRequest("PATCH", ["create", "id"], newData, setFormData);
+            // requests.updateObject(params.id, newData, urlBase, setFormData, "link");
         }
     }
     //we've created and saved a new link, so navigate to the stored reference of the id

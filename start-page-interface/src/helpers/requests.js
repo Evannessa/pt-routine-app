@@ -211,17 +211,17 @@ export var requests = (function () {
     }
 
     return {
-        getObject,
-        getAll,
-        createObject,
-        createMultiple,
-        updateObject,
-        deleteObject,
-        deleteMultiple,
-        compileUpdateData,
-        createBase,
-        displayBase,
-        urlBase,
+        // getObject,
+        // getAll,
+        // createObject,
+        // createMultiple,
+        // updateObject,
+        // deleteObject,
+        // deleteMultiple,
+        // compileUpdateData,
+        // createBase,
+        // displayBase,
+        // urlBase,
         axiosRequest,
     };
 })();
