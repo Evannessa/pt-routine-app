@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import * as StyledInputs from "./styled-components/input.styled";
+import * as StyledButtons from "./styled-components/Buttons.Styled";
 import Select from "./input/Select";
 import Form from "./input/Form";
 import { FilterGroup } from "./FilterGroup";
@@ -52,12 +53,22 @@ function FilterGroups(props) {
         }
     }
     // let filterGrouptions = allGroups.map(group => {name: group.categoryName, _id: group._id});
-
+    function addNewFilterGroup(event) {
+        let element = event.currentTarget;
+        requests.createObject(requests.displayBase, { name: "New Filter Group" });
+        setFilterGroups((prevState) => "Un");
+    }
     return (
         <Form>
-            <FilterGroup links={props.links} tags={props.tags}></FilterGroup>
+            {/* <FilterGroup links={props.links} tags={props.tags}></FilterGroup> */}
             {filterGroups.subGroups.length > 1 && <Select {...andOrProps}></Select>}
-            <FilterGroup links={props.links} tags={props.tags}></FilterGroup>
+            {/* <FilterGroup links={props.links} tags={props.tags}></FilterGroup> */}
+            <StyledButtons.TextButton onClick={addNewFilterGroup}>
+                <StyledButtons.StyledButtonIconSpan>
+                    add
+                </StyledButtons.StyledButtonIconSpan>
+                Add New Filter Group
+            </StyledButtons.TextButton>
         </Form>
     );
 }

@@ -11,14 +11,18 @@ const color = (props) => {
 };
 
 const colorAlt = (props) => {
-    return props.colorAlt || "white";
+    return props.colorAlt || "var(--clr-accent-green)";
 };
-
+export const StyledButtonIconSpan = styled.span.attrs(({ className }) => ({
+    className: className || "material-icons",
+}))``;
 export const StyledButton = styled.button`
     --clr-background-color: ${backgroundColor};
     --clr-bg-hover-color: ${backgroundColorAlt};
     --clr-text-color: ${color};
     --clr-text-hover-color: ${colorAlt};
+    display: flex;
+    align-items: center;
     ${(props) => {
         if (props.btnStyle === "contained") {
             return `
@@ -42,6 +46,10 @@ export const StyledButton = styled.button`
 				transition: color 0.15s linear;
 				&:hover{
 					color: var(--clr-text-hover-color);
+					> * {
+						transition: color 0.15s linear;
+						color: var(--clr-text-hover-color);
+					}
 				}
 			`;
         }
@@ -51,7 +59,9 @@ export const StyledButton = styled.button`
 StyledButton.displayName = "StyledButton";
 
 /** small buttons with no background or border, like close buttons on modals or chips, etc. */
-export const IconButton = styled(StyledButton)`
+export const IconButton = styled(StyledButton).attrs(({ className }) => ({
+    className: className || "material-icons",
+}))`
     background: transparent;
     border: none;
     color: var(--clr-text-color);

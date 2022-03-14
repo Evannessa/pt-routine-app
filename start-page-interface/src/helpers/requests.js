@@ -170,5 +170,6 @@ export var requests = (function () {
         compileUpdateData,
         createBase,
         displayBase,
+        urlBase,
     };
 })();
