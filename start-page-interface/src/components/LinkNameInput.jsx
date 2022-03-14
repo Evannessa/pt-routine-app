@@ -1,4 +1,5 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState, useCallback, useMemo } from "react";
+import debounce from "lodash.debounce";
 import tf from "../helpers/formatText";
 import styled from "styled-components";
 import axios from "axios";
@@ -34,6 +35,26 @@ const StyledContainer = styled.div`
     }
 `;
 
+// function Autosave({ experimentData, data }) {
+//     const debouncedPatch = useCallback(
+//         debounce(async (newData) => {
+//             let options = {
+//                 method: "PATCH",
+//                 pathsArray: ["create", data.id],
+//                 data: newData,
+//                 setStateCallback: data.setFormData,
+//             };
+//             await requests.axiosRequest(options);
+//             // requests.updateObject(params.id, newData, setFormData, "link");
+//         }, 2000),
+//         []
+//     );
+
+//     useEffect(() => {
+//         debouncedPatch(experimentData);
+//     }, [experimentData, debouncedPatch]);
+//     return null;
+// }
 class LinkType {
     static External = new LinkType("external");
     static Text = new LinkType("text");
@@ -66,6 +87,11 @@ function LinkNameInput(props) {
     const idRef = React.useRef();
 
     //get ALL tags to suggest when user types
+    const debouncedPatch = useCallback(
+        debounce((newData) => patchAndSetState(newData), 3000),
+        [formData]
+    );
+
     React.useEffect(() => {
         let options = {
             method: "GET",
@@ -120,7 +146,7 @@ function LinkNameInput(props) {
                 method: "PATCH",
                 pathsArray: ["create", id],
                 data: newData,
-                setStateCallback: setFormData,
+                // setStateCallback: setFormData,
             };
             requests.axiosRequest(options);
             // requests.updateObject(params.id, newData, setFormData, "link");
@@ -220,12 +246,21 @@ function LinkNameInput(props) {
                 [name]: value,
             };
         });
-        clearTimeout(timeoutId.current);
-        timeoutId.current = setTimeout(() => {
-            //1 second after the last change
-            patchAndSetState(data);
-        }, 1000);
+        debouncedPatch({ ...formData, [name]: value });
+        // clearTimeout(timeoutId.current);
+        // timeoutId.current = setTimeout(() => {
+        //     //1 second after the last change
+        //     patchAndSetState(formData);
+        // }, 2000);
     }
+
+    // function debounce(func, timeout = 1000){
+    // 	let timer;
+    // 	return (...args) => {
+    // 		clearTimeout(timer);
+    // 		timer = setTimeout(()=> {func.apply(this, args);}, timeout)
+    // 	}
+    // }
 
     /**
      *
@@ -339,6 +374,10 @@ function LinkNameInput(props) {
                     {formData.type === "Image" && formData.imagePath && returnDropArea()}
                 </Form>
             )}
+            {/* <Autosave
+                experimentData={formData}
+                data={{ id: id, setFormData: setFormData }}
+            /> */}
         </StyledContainer>
     );
 }
