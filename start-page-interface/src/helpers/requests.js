@@ -1,9 +1,41 @@
 import axios from "axios";
+const path = require("path");
 
 export var requests = (function () {
     const displayBase = "http://localhost:9000/links/display";
     const createBase = "http://localhost:9000/links/create";
     const urlBase = "http://localhost:9000/links";
+
+    //join together an array of commponents for a path
+    function appendPath(pathName) {
+        return path.join(pathName);
+    }
+
+    const handleError = (error) => {
+        console.log("There was an error", error);
+    };
+    const makeSafe = (callback, errorHandler, pathArgs) => {
+        return async () => {
+            let fullPath = appendPath(pathArgs);
+            await callback(fullPath).catch(errorHandler);
+        };
+    };
+
+    //create
+    const safeCreate = makeSafe(createObject, handleError);
+    const safeCreateMultiple = makeSafe(createMultiple, handleError);
+
+    //get
+    const safeGetSingle = makeSafe(getObject, handleError);
+    const safeGetAll = makeSafe(getAll, handleError);
+
+    //delete
+    const safeDelete = makeSafe(deleteObject, handleError);
+    const safeDeleteMultiple = makeSafe(deleteMultiple, handleError);
+
+    //update
+    const safeUpdate = makeSafe(updateObject, handleError);
+
     /**
      * Get a specific object using id and such
      * @param {String} id - the id of the object we're getting
@@ -11,17 +43,17 @@ export var requests = (function () {
      * @param {Object} params - the params, if there are any
      * @param {functionReference} setStateCallback - reference to setting state
      */
-    async function getObject(id, urlBase, params, setStateCallback) {
-        if (params && id !== "new") {
-            try {
-                axios.get(`${urlBase}/${id}`).then((response) => {
-                    if (response.data !== null) {
-                        setStateCallback(response.data.link);
-                    }
-                });
-            } catch (error) {
-                console.log("There was an error");
-            }
+    async function getObject(id, setStateCallback, pathName) {
+        let fullPath = appendPath(pathName, id);
+        console.log(fullPath);
+        try {
+            axios.get(fullPath).then((response) => {
+                if (response.data !== null) {
+                    setStateCallback(response.data.link);
+                }
+            });
+        } catch (error) {
+            console.log("There was an error");
         }
     }
 
@@ -30,11 +62,12 @@ export var requests = (function () {
      * @param {String} urlBase - string for where we're sending get request
      * @param {*} setStateCallback - callback for setting state where this was called
      */
-    async function getAll(urlBase, setStateCallback, propertyName) {
+    async function getAll(setStateCallback, pathName) {
         console.log("getting all objects");
+        let fullPath = appendPath(urlBase, pathName);
         try {
-            axios.get(`${urlBase}`).then((result) => {
-                setStateCallback(result.data[propertyName]);
+            axios.get(`${pathName}`).then((result) => {
+                setStateCallback(result.data.document);
             });
         } catch (error) {
             console.log(error);
@@ -48,10 +81,7 @@ export var requests = (function () {
      * @param {*} urlBase - the base url we're sending the patch request to
      * @param {Object} - location - the location in the url whose pathname we'll use
      */
-    async function createObject(urlBase, data, location, setStateCallback, pathName) {
-        if (!location.pathname.includes("new")) {
-            return;
-        }
+    async function createObject(data, setStateCallback, pathName) {
         let responseData;
         try {
             await axios.post(`${urlBase}/${pathName}`, data).then((result) => {
@@ -71,8 +101,7 @@ export var requests = (function () {
      * @param {*} updateData - the data we're updating with
      * @param {*} urlBase - the base url we're sending the patch request to
      */
-    async function updateObject(id, updateData, urlBase, setStateCallback, propertyName) {
-        console.log("Calling update here");
+    async function updateObject(id, updateData, setStateCallback, propertyName) {
         try {
             await axios
                 .patch(`${urlBase}/${id}`, updateData)
@@ -82,13 +111,7 @@ export var requests = (function () {
         }
     }
 
-    async function deleteObject(
-        id,
-        urlBase,
-        setStateCallback,
-        currentState,
-        propertyName
-    ) {
+    async function deleteObject(id, setStateCallback, currentState, propertyName) {
         try {
             await axios.delete(`${urlBase}/${id}`).then((response) => {
                 setStateCallback(
@@ -107,7 +130,7 @@ export var requests = (function () {
      * @param {*} urlBase - url base we'll send the delete request to
      * @param {Object} deleteData - the data used to determine what should be deleted -- empty object will delete all
      */
-    async function deleteMultiple(urlBase, deleteData) {}
+    async function deleteMultiple(deleteData) {}
 
     function flattenData(format, outerData, propertyName) {
         let dataToPost = [];
@@ -128,7 +151,7 @@ export var requests = (function () {
         }
         return dataToPost;
     }
-    async function createMultiple(urlBase, data, format) {
+    async function createMultiple(data, format) {
         console.log("Incoming data", data);
         let dataToPost = flattenData(format, data, "youtube");
         console.log(dataToPost);
@@ -146,7 +169,7 @@ export var requests = (function () {
      * @param {*} itemsToUpdate the list of items we want to update
      * @param {*} property - the property we want to update
      */
-    async function updateMultiple(urlBase, itemsToUpdate, property) {}
+    async function updateMultiple(itemsToUpdate, property) {}
 
     function compileUpdateData(id, propertyPath, value, action, filter) {
         let newData = {

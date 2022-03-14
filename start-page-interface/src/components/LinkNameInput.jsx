@@ -14,39 +14,6 @@ import { StyledForm, StyledTextboxSpan } from "./styled-components/input.styled"
 import { StyledChipFieldset } from "./styled-components/chips.styled";
 import DropArea from "./DropArea";
 
-// const StyledTextboxSpan = styled.div`
-//     background-color: #171529;
-//     min-width: 8rem;
-//     min-height: 2rem;
-//     border-radius: 4px;
-//     border: none;
-//     border-bottom: 2px solid #6495ed;
-
-//     border-bottom-left-radius: 0px;
-//     border-bottom-right-radius: 0px;
-//     color: #6495ed;
-//     padding: 0.25rem 0.5rem;
-//     display: flex;
-//     flex-wrap: wrap;
-//     gap: 0.25rem;
-//     align-items: center;
-//     height: fit-content;
-//     /* justify-content: center; */
-//     > span {
-//         background-color: #6495ed;
-//         color: white;
-//     }
-//     input {
-//         border: 0px;
-//         height: 100%;
-//         background-color: #171529;
-//         color: #6495ed;
-//         border-bottom: 0px;
-//     }
-// `;
-
-// #region StyledComponents
-
 const StyledContainer = styled.div`
     /* position: absolute; */
     display: flex;
@@ -140,7 +107,7 @@ function LinkNameInput(props) {
     async function patchAndSetState(newData) {
         console.log(newData);
         if (id !== "new") {
-            requests.updateObject(params.id, newData, urlBase, setFormData, "link");
+            requests.updateObject(params.id, newData, setFormData, "link");
         }
     }
 
@@ -160,7 +127,7 @@ function LinkNameInput(props) {
      */
     async function createNewLink() {
         await requests
-            .createObject(urlBase, formData, location, setSavedAndUpdate, "new")
+            .createObject(formData, location, setSavedAndUpdate, "new")
             .then((result) => {});
     }
 
