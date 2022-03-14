@@ -21,7 +21,12 @@ function FilterGroups(props) {
     const [allGroups, setAllGroups] = useState();
 
     useEffect(() => {
-        requests.axiosRequest("GET", ["display", "groups"], {}, setAllGroups);
+        let options = {
+            method: "GET",
+            pathsArray: ["display", "groups"],
+            setStateCallback: setAllGroups,
+        };
+        requests.axiosRequest(options);
         // requests.getAll(baseUrl, setAllGroups, "document");
     }, []);
 
@@ -55,13 +60,14 @@ function FilterGroups(props) {
     }
     // let filterGrouptions = allGroups.map(group => {name: group.categoryName, _id: group._id});
     function addNewFilterGroup(event) {
-        let element = event.currentTarget;
-        requests.axiosRequest(
-            "POST",
-            ["display"],
-            { name: "New Filter Group" },
-            setFilterGroups
-        );
+        let options = {
+            method: "POST",
+            pathsArray: ["display", "groups"],
+            data: { name: "New Filter Group" },
+            setStateCallback: setAllGroups,
+        };
+        requests.axiosRequest(options);
+
         // requests.createObject(requests.displayBase, { name: "New Filter Group" });
         // setFilterGroups((prevState) => "Un");
     }

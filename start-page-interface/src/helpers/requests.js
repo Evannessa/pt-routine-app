@@ -9,20 +9,39 @@ export var requests = (function () {
     const createBase = "http://localhost:9000/links/create";
     const urlBase = "http://localhost:9000/links";
 
-    async function axiosRequest(method, pathsArray, data, setStateCallback) {
+    /**
+     *
+     * @description
+     * axios request to our API
+     * @param {Object} method - the method
+     * @param {Array} pathsArray - array of paths to be joined together into sub-url
+     * @param {functionReference} setStateCallback -  a callback
+     * @param {Object} data - the optional data for the request if not default
+     * @param {Object} headers - the headers for the request if not default
+     */
+    async function axiosRequest(options) {
+        options.baseURL = urlBase;
+
+        //destructure the pathsArray and setStateCallback to be used elsewhere
+        let { pathsArray, setStateCallback } = options;
+
+        //join the paths in the array, then delete the array before passing the object on
         let url = pathsArray.join("/");
-        console.log(url);
-        axios({
-            baseURL: urlBase,
-            method: method,
-            url: url,
-            data: data,
-        })
+        delete options.pathsArray;
+        options.url = url;
+
+        //delete the setStateCallback from the object too
+        delete options.setStateCallback;
+        //TODO: Refactor this to use "transformRequest"
+
+        axios(options)
             .then((response) => {
                 // console.log("Hello?", response.status);
                 if (response.status >= 200 && response.status < 300) {
                     console.log("Our response", response.data.document);
-                    setStateCallback(response.data.document);
+                    if (setStateCallback) {
+                        setStateCallback(response.data.document);
+                    }
                 } else {
                     console.log("Response status was", response.status);
                 }
@@ -218,7 +237,7 @@ export var requests = (function () {
         // updateObject,
         // deleteObject,
         // deleteMultiple,
-        // compileUpdateData,
+        compileUpdateData,
         // createBase,
         // displayBase,
         // urlBase,

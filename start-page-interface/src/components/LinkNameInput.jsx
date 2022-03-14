@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import tf from "../helpers/formatText";
 import styled from "styled-components";
 import axios from "axios";
@@ -46,6 +46,7 @@ class LinkType {
 }
 // #endregion
 function LinkNameInput(props) {
+    const timeoutId = useRef();
     const params = useParams();
     const navigate = useNavigate();
     let id = Object.keys(params).length > 0 ? params.id : "new";
@@ -66,14 +67,23 @@ function LinkNameInput(props) {
 
     //get ALL tags to suggest when user types
     React.useEffect(() => {
-        requests.axiosRequest("GET", ["display", "tags"], {}, setAllTags);
-        // requests.getAll(`${urlBase}/tags`, setAllTags, "tags");
+        let options = {
+            method: "GET",
+            pathsArray: ["display", "tags"],
+            setStateCallback: setAllTags,
+        };
+        requests.axiosRequest(options);
+        // requests.axiosRequest("GET", ["display", "tags"], {}, setAllTags);
         if (id === "new") {
             createNewLink(); //create a new untitled link
         } else {
-            console.log("ID is", id);
-            requests.axiosRequest("GET", ["display", id], {}, setFormData);
-            // requests.getObject(id, urlBase, params, setFormData);
+            let options = {
+                method: "GET",
+                pathsArray: ["display", id],
+                setStateCallback: setFormData,
+            };
+            requests.axiosRequest(options);
+            // requests.axiosRequest("GET", ["display", id], {}, setFormData);
         }
     }, []);
 
@@ -89,10 +99,7 @@ function LinkNameInput(props) {
     /**
      * TODO: this will save the state to the API after the user is done typing
      */
-    // useEffect(()=> {
-    // 	const timeOutId = setTimeout(()=> {}, 500)
-    // 	return () => clearTimeout(timeOutId);
-    // }, [formData])
+    useEffect(() => {});
 
     let tagSpans = formData
         ? formData.tags.map((tag) => (
@@ -109,7 +116,14 @@ function LinkNameInput(props) {
     async function patchAndSetState(newData) {
         console.log(newData);
         if (id !== "new") {
-            requests.updateObject(params.id, newData, setFormData, "link");
+            let options = {
+                method: "PATCH",
+                pathsArray: ["create", id],
+                data: newData,
+                setStateCallback: setFormData,
+            };
+            requests.axiosRequest(options);
+            // requests.updateObject(params.id, newData, setFormData, "link");
         }
     }
 
@@ -128,10 +142,13 @@ function LinkNameInput(props) {
      * axios == post request to new link
      */
     async function createNewLink() {
-        requests.axiosRequest("POST", ["create", "new"], formData, setSavedAndUpdate);
-        // await requests
-        // .createObject(formData, location, setSavedAndUpdate, "new")
-        // .then((result) => {});
+        let options = {
+            method: "POST",
+            pathsArray: ["create", "new"],
+            data: formData,
+            setStateCallback: setSavedAndUpdate,
+        };
+        requests.axiosRequest(options);
     }
 
     /**
@@ -163,9 +180,6 @@ function LinkNameInput(props) {
             let newTag = tagBox.value;
             tagBox.value = "";
             setTagsInput({ inputValue: "" });
-
-            console.log("Pressed enter in textbox. Value is", tagBox.value);
-
             //get tags from old formdata
             let newArray = [...formData.tags];
 
@@ -174,9 +188,13 @@ function LinkNameInput(props) {
                 newArray.push(newTag);
             }
             let newData = createUpdateData("tags", newTag, "insert", "");
-
-            console.log("Passed data is", newData);
-            requests.axiosRequest("PATCH", ["create", "id"], newData, setFormData);
+            let options = {
+                method: "PATCH",
+                pathsArray: ["create", "id"],
+                data: newData,
+                setStateCallback: setFormData,
+            };
+            requests.axiosRequest(options);
             // requests.updateObject(params.id, newData, urlBase, setFormData, "link");
         }
     }
@@ -184,10 +202,6 @@ function LinkNameInput(props) {
     if (saved === true && `/links/create/${idRef.current}` !== location.pathname) {
         return <Navigate to={`/display/${idRef.current}`} />;
     }
-    const closeModal = (event) => {
-        event.stopPropagation();
-        navigate(-1);
-    };
 
     function isNew() {
         return location.pathname.includes("new");
@@ -200,8 +214,17 @@ function LinkNameInput(props) {
      */
     function updateFormData(name, value) {
         let data = createUpdateData(name, value, "update", "");
-        console.log(data);
-        patchAndSetState(data);
+        setFormData((prevData) => {
+            return {
+                ...prevData,
+                [name]: value,
+            };
+        });
+        clearTimeout(timeoutId.current);
+        timeoutId.current = setTimeout(() => {
+            //1 second after the last change
+            patchAndSetState(data);
+        }, 1000);
     }
 
     /**
@@ -214,6 +237,11 @@ function LinkNameInput(props) {
         setTagsInput({ inputValue: value });
     }
 
+    /**
+     * Returns an Input component with the passed in properties
+     * @param {*} args - the various arguments passed to this
+     * @returns Input component
+     */
     function returnInput(args) {
         let { object, property, wrapped, hasLabel, extraProps, type, updateFunction } =
             args;
@@ -249,6 +277,10 @@ function LinkNameInput(props) {
             </span>
         );
     }
+    /**
+     * Returns a drop area component for if this is of type "Image"
+     * @returns a DropArea component
+     */
     function returnDropArea() {
         return (
             <DropArea
@@ -285,16 +317,7 @@ function LinkNameInput(props) {
 
     return (
         <StyledContainer modal={props.modal}>
-            {!isNew() && (
-                <IconButton
-                    className="material-icons"
-                    btnStyle=""
-                    color="white"
-                    colorAlt="red"
-                    onClick={closeModal}>
-                    close
-                </IconButton>
-            )}
+            <h1 style={{ color: "white" }}>Editing Link</h1>
             {formData && (
                 <Form
                     submitFunction={createNewLink}

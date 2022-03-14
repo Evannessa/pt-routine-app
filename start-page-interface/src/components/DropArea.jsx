@@ -23,23 +23,8 @@ function DropArea(props) {
         const formData = new FormData();
 
         formData.append("image", imageFile);
-
-        try {
-            //upload image
-            const {
-                data: {
-                    image: { src },
-                },
-            } = await axios.post(
-                `${requests.createBase}/${params.id}/uploads`,
-                formData,
-                {
-                    headers: {
-                        "Content-Type": "multipart/form-data",
-                    },
-                }
-            );
-            imageValue = src;
+        function updateImage(response) {
+            let src = response.data.image;
 
             let updateObj = requests.compileUpdateData(
                 params.id,
@@ -47,17 +32,64 @@ function DropArea(props) {
                 src,
                 "update"
             );
-            requests.updateObject(
-                params.id,
-                updateObj,
-                requests.createBase,
-                props.updateFormData,
-                "link"
-            );
-        } catch (error) {
-            imageValue = null;
-            console.log(error);
+            let options = {
+                method: "PATCH",
+                pathsArray: ["create", params.id],
+                setStateCallback: props.updateFormData,
+                data: updateObj,
+            };
+            requests.axiosRequest(options);
+            // requests.updateObject(
+            //     params.id,
+            //     updateObj,
+            //     requests.createBase,
+            //     props.updateFormData,
+            //     "link"
+            // );
         }
+        let options = {
+            method: "POST",
+            pathsArray: ["create", params.id, "uploads"],
+            setStateCallback: updateImage,
+            data: formData,
+            headers: { "Content-Type": "multipart/form-data" },
+        };
+        requests.axiosRequest(options);
+
+        // try {
+        //     //upload image
+        //     const {
+        //         data: {
+        //             image: { src },
+        //         },
+        //     } = await axios.post(
+        //         `${requests.createBase}/${params.id}/uploads`,
+        //         formData,
+        //         {
+        //             headers: {
+        //                 "Content-Type": "multipart/form-data",
+        //             },
+        //         }
+        //     );
+        //     imageValue = src;
+
+        //     let updateObj = requests.compileUpdateData(
+        //         params.id,
+        //         "imagePath",
+        //         src,
+        //         "update"
+        //     );
+        //     requests.updateObject(
+        //         params.id,
+        //         updateObj,
+        //         requests.createBase,
+        //         props.updateFormData,
+        //         "link"
+        //     );
+        // } catch (error) {
+        //     imageValue = null;
+        //     console.log(error);
+        // }
         previewRef.current.src = imageValue;
     }
 
