@@ -65,20 +65,22 @@ async function updateSubDocument(type, req, res, next, name) {}
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 const createNewLink = asyncWrapper(async (req, res) => {
     //pass the body  into the response
-    let name = req.body.name;
-    let url = req.body.url;
-    const obj = { name: name, url: url };
-    const link = await Link.create(obj);
-    res.status(201).send({ link });
+    return create(Link, req, res);
+    // let name = req.body.name;
+    // let url = req.body.url;
+    // const obj = { name: name, url: url };
+    // const link = await Link.create(obj);
+    // res.status(201).send({ link });
 });
 
 const createMultipleNewLinks = asyncWrapper(async (req, res) => {
-    async (req, res) => {
-        let linkData = req.body;
-        const newLinks = await Link.insertMany(linkData)
-            .then((links) => res.json(links))
-            .catch((error) => res.status(500).json({ msg: error }));
-    };
+    return createMultiple(Link, req, res);
+    // async (req, res) => {
+    //     let linkData = req.body;
+    //     const newLinks = await Link.insertMany(linkData)
+    //         .then((links) => res.json(links))
+    //         .catch((error) => res.status(500).json({ msg: error }));
+    // };
 });
 
 const getAllLinks = asyncWrapper(async (req, res, next) => {
@@ -117,13 +119,14 @@ const getAllLinksStatic = asyncWrapper(async (req, res, next) => {
         });
 });
 
-const deleteLink = asyncWrapper(async (req, res) => {
-    const { id: linkId } = req.params;
-    const link = await Link.findOneAndDelete({ _id: linkId });
-    if (!link) {
-        return res.status(404).json({ msg: `No set found with ${linkId}` });
-    }
-    res.status(200).json({ link: link });
+const deleteLink = asyncWrapper(async (req, res, next) => {
+    return deleteSingle(Link, req, res, next, "Link");
+    // const { id: linkId } = req.params;
+    // const link = await Link.findOneAndDelete({ _id: linkId });
+    // if (!link) {
+    //     return res.status(404).json({ msg: `No set found with ${linkId}` });
+    // }
+    // res.status(200).json({ link: link });
 });
 
 //TODO: Update this to be cleaner, oof
@@ -229,23 +232,24 @@ const updateLink = asyncWrapper(async (req, res) => {
 });
 
 const getLink = asyncWrapper(async (req, res, next) => {
-    const { id: linkId } = req.params;
-    const link = await Link.findOne({ _id: linkId }).populate("tags"); //get me the timer whose id is equal to request.params.id
-    if (!link) {
-        return next(createCustomError(`No link found with id ${linkId}`, 404));
-    }
-    return res.status(200).json({ link: link });
+    return getSingle(Link, req, res, next, "Link", "tags");
+    // const { id: linkId } = req.params;
+    // const link = await Link.findOne({ _id: linkId }).populate("tags"); //get me the timer whose id is equal to request.params.id
+    // if (!link) {
+    //     return next(createCustomError(`No link found with id ${linkId}`, 404));
+    // }
+    // return res.status(200).json({ link: link });
 });
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
 const createTag = asyncWrapper(async (req, res) => {
-    const link = await Tag.create(req.body);
-    res.status(201).send({ link });
+    const document = await Tag.create(req.body);
+    res.status(201).send({ document });
 });
 
 const getAllTags = asyncWrapper(async (req, res, next) => {
-    getAll(Tag, req, res, next, "tag");
+    return getAll(Tag, req, res, next, "tag");
     // const tags = await Tag.find({});
     // if (!tags) {
     //     return next(createCustomError(`No tags found`, 404));
@@ -254,7 +258,7 @@ const getAllTags = asyncWrapper(async (req, res, next) => {
 });
 
 const deleteTag = asyncWrapper(async (req, res, next) => {
-    deleteSingle(Tag, req, res, next, "tag");
+    return deleteSingle(Tag, req, res, next, "tag");
 });
 
 function removeTag(linkId, tagId) {}
