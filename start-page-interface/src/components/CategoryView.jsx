@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import FilterGroups from "./FilterGroups";
-import { FilterGroup } from "./FilterGroup";
+import FilterGroup from "./FilterGroup";
+import { Filter } from "./Filter";
 import { Link } from "react-router-dom";
 
 function CategoryView(props) {
@@ -14,7 +14,7 @@ function CategoryView(props) {
 
     return (
         <div>
-            <FilterGroup links={props.links} tags={props.tags}></FilterGroup>
+            <Filter links={props.links} tags={props.tags}></Filter>
         </div>
     );
 }

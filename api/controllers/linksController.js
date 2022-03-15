@@ -1,7 +1,13 @@
 const mongoose = require("mongoose");
 const { createCustomError, CustomAPIError } = require("../errors/custom-error");
 const asyncWrapper = require("../middleware/async");
-const { Link, Tag, TagGroup, FilterGroup } = require("../models/linkModels");
+const {
+    Link,
+    Tag,
+    TagGroup,
+    Filter: FilterGroup,
+    Filter: GroupedFilters,
+} = require("../models/linkModels");
 
 async function create(type, req, res) {
     const document = await type.create({ ...req.body });
@@ -282,26 +288,49 @@ function removeTag(linkId, tagId) {}
 /**
  *
  */
-const createFilterGroup = asyncWrapper(async (req, res) => {
+const createFilter = asyncWrapper(async (req, res) => {
     return create(FilterGroup, req, res);
 });
 
-const getAllFilterGroups = asyncWrapper(async (req, res, next) => {
+const getAllFilters = asyncWrapper(async (req, res, next) => {
     return getAll(FilterGroup, req, res, next, "Filter Group", "");
 });
 
-const deleteFilterGroup = asyncWrapper(async (req, res, next) => {
+const deleteFilter = asyncWrapper(async (req, res, next) => {
     return deleteSingle(FilterGroup, req, res, next, "Filter Group");
 });
 /**
  *
  */
-const getFilterGroup = asyncWrapper(async (req, res, next) => {
+const getFilter = asyncWrapper(async (req, res, next) => {
     return getSingle(FilterGroup, req, res, next, "Filter Group");
 });
 
-const updateFilterGroup = asyncWrapper(async (req, res, next) => {
+const updateFilter = asyncWrapper(async (req, res, next) => {
     return updateSingle(FilterGroup, req, res, next, "Filter Group");
+});
+/**
+ *
+ */
+const createFilterGroup = asyncWrapper(async (req, res, next) => {
+    return create(GroupedFilters, req, res);
+});
+const getAllFilterGroups = asyncWrapper(async (req, res, next) => {
+    return getAll(GroupedFilters, req, res, next, "Filter Collection", "");
+});
+
+const deleteFilterGroup = asyncWrapper(async (req, res, next) => {
+    return deleteSingle(GroupedFilters, req, res, next, "Filter Collection");
+});
+/**
+ *
+ */
+const getFilterGroup = asyncWrapper(async (req, res, next) => {
+    return getSingle(GroupedFilters, req, res, next, "Filter Collection");
+});
+
+const updateFilterGroup = asyncWrapper(async (req, res, next) => {
+    return updateSingle(GroupedFilters, req, res, next, "Filter Collection");
 });
 
 module.exports = {
