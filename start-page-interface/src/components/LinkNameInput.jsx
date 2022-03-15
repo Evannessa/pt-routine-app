@@ -155,17 +155,12 @@ function LinkNameInput(props) {
 
     //remove specific tag from this link
     function removeTag(id) {
-        console.log("IS THIS BEING CALLED?", id, formData.tags);
         let tags = [...formData.tags];
         tags = tags.filter((tag) => tag._id !== id);
         setFormData((prevData) => {
             return { ...prevData, tags: tags };
         });
-        console.log(formData);
         patchAndSetState(formData);
-        // propertyName, value, action, filter
-        // let removalData = createUpdateData("tags", "", "delete", { id: id });
-        // patchAndSetState(removalData);
     }
 
     function setSavedAndUpdate(data) {
@@ -337,6 +332,7 @@ function LinkNameInput(props) {
      * returns a span-wrapped Input component
      */
     function returnWrappedInput(args) {
+        console.log("Arguments are", args);
         return (
             <span>
                 <label htmlFor={args.property}>
@@ -376,6 +372,11 @@ function LinkNameInput(props) {
     //data for the "url" input
     let urlInputData = { ...inputData, property: "url" };
 
+    //data for the "Text" input
+    let textInputData = { ...inputData, property: "text", type: "textarea" };
+
+    let imageInputData = { ...inputData, property: "imagePath" };
+
     //data for the "tags" input
     let tagsInputData = {
         ...inputData,
@@ -398,17 +399,22 @@ function LinkNameInput(props) {
                     {returnInput(nameInputData)}
                     {returnInput(urlInputData)}
                     {returnWrappedInput(tagsInputData)}
-                    <ChipGroup
-                        groupType="radio"
-                        groupName="type"
-                        chips={Object.keys(LinkType)}
-                        selectedValue={formData.type}
-                        setStateFunction={updateFormData}
-                    />
-                    {formData.type === "Text" &&
-                        formData.text &&
-                        returnInput("text", false, true, {}, "textarea")}
-                    {formData.type === "Image" && formData.imagePath && returnDropArea()}
+                    <fieldset>
+                        <legend>Display As:</legend>
+                        <ChipGroup
+                            groupType="radio"
+                            groupName="type"
+                            chips={Object.keys(LinkType)}
+                            selectedValue={formData.type}
+                            setStateFunction={updateFormData}
+                        />
+                        {formData.type === "Text" &&
+                            formData.text &&
+                            returnInput(textInputData)}
+                        {formData.type === "Image" &&
+                            formData.imagePath &&
+                            returnDropArea()}
+                    </fieldset>{" "}
                 </Form>
             )}
             {/* <Autosave

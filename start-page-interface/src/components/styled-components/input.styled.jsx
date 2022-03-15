@@ -135,19 +135,30 @@ export const StyledForm = styled.form`
     *:not(input) {
         color: white;
     }
+    fieldset {
+        background-color: var(--clr-primary-base);
+        border-radius: 15px;
+        padding: 0.75rem 1.4rem;
+        legend {
+            color: cornflowerblue;
+            font-weight: bold;
+        }
+    }
     div,
     > span {
         display: flex;
         justify-content: stretch;
         align-items: stretch;
         gap: 1.5rem;
-        label {
+        label,
+        legend {
             flex: 1;
             color: cornflowerblue;
             font-weight: bold;
             text-align: right;
         }
         input,
+        textarea,
         div {
             flex: 3;
         }

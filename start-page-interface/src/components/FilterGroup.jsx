@@ -2,19 +2,27 @@ import React, { useState, useEffect } from "react";
 import ComboBox from "./input/ComboBox";
 import Input from "./input/Input";
 import Select from "./input/Select";
+import { ChipButton } from "./styled-components/chips.styled";
+import * as Buttons from "./styled-components/Buttons.Styled";
+import * as Layout from "./styled-components/layout.styled";
 
 export function FilterGroup(props) {
     const [names, setNames] = useState(props.links.map((link) => link.name));
     const [tags, setTags] = useState(props.tags.map((tag) => tag.name));
     const [matches, setMatches] = useState();
+    const [displayMode, setDisplayMode] = useState(props.displayMode);
 
-    const [filter, setFilter] = useState({
-        categoryName: "",
-        propertyChoice: "name",
-        relation: "equal",
-        stringMatch: "",
-        arrayMatch: [],
-    });
+    const [filter, setFilter] = useState(
+        props.defaultValues
+            ? { ...props.defaultValues, stringMatch: "", arrayMatch: [] } //spread in the default values with the matches
+            : {
+                  categoryName: "",
+                  propertyChoice: "name",
+                  relation: "equal",
+                  stringMatch: "",
+                  arrayMatch: [],
+              }
+    );
 
     const [propertyChoiceProps, setPropertyChoiceProps] = useState(
         getPropertyChoiceProps()
@@ -38,6 +46,9 @@ export function FilterGroup(props) {
         );
     }, []);
 
+    function toggleDisplayMode(event) {
+        setDisplayMode((prevMode) => !prevMode);
+    }
     function findMatches() {
         setMatches(getMatches(props.links, filter.propertyChoice, filter.stringMatch));
     }
@@ -73,6 +84,7 @@ export function FilterGroup(props) {
      */
     function filterStringProperty(property, match, matchAll = false) {
         //match all should return an EXACT match
+        console.log("Filter string property?", property, typeof property, match);
         if (matchAll) {
             return property === match;
         } else {
@@ -130,9 +142,9 @@ export function FilterGroup(props) {
     ) {
         //for the strings, match all could be ""
         let propertyName = property;
+        // console.log(array[0], array[0][propertyName], property);
 
         return array.filter((item, index) => {
-            // let newPathString = property.replace("index", index);
             return matchFunctions[propertyName](
                 item[propertyName],
                 conditionToMeet,
@@ -244,34 +256,48 @@ export function FilterGroup(props) {
     }
 
     return (
-        <fieldset flex-direction="row">
-            <Input
-                type="text"
-                value={filter.categoryName}
-                name="categoryName"
-                setStateFunction={updateFilter}
-                hasLabel={true}></Input>
-            <Select {...propertyChoiceProps} value={filter.propertyChoice}></Select>
-            <Select {...getRelationProps()}></Select>
-            <Select {...precisionProps}></Select>
-            {filter.propertyChoice && (
-                <div>
-                    {filter.propertyChoice !== "tags" ? (
-                        <ComboBox {...matchProps}></ComboBox>
-                    ) : (
+        <section>
+            <Buttons.ContainedButton onClick={toggleDisplayMode}>
+                <Buttons.StyledButtonIconSpan>
+                    {displayMode ? "expand_more" : "unfold_less"}
+                </Buttons.StyledButtonIconSpan>
+                {filter.categoryName}
+            </Buttons.ContainedButton>
+            {!displayMode && (
+                <Layout.StyledDropdown>
+                    <fieldset flex-direction="row">
+                        <Input
+                            type="text"
+                            value={filter.categoryName}
+                            name="categoryName"
+                            setStateFunction={updateFilter}
+                            hasLabel={true}></Input>
                         <Select
-                            {...matchProps}
-                            options={props.tags.map((tag) => {
-                                return { name: tag.name, _id: tag.name };
-                            })}></Select>
-                    )}
-                </div>
+                            {...propertyChoiceProps}
+                            value={filter.propertyChoice}></Select>
+                        <Select {...getRelationProps()}></Select>
+                        <Select {...precisionProps}></Select>
+                        {filter.propertyChoice && (
+                            <div>
+                                {filter.propertyChoice !== "tags" ? (
+                                    <ComboBox {...matchProps}></ComboBox>
+                                ) : (
+                                    <Select
+                                        {...matchProps}
+                                        options={props.tags.map((tag) => {
+                                            return { name: tag.name, _id: tag.name };
+                                        })}></Select>
+                                )}
+                            </div>
+                        )}
+                        {/* <div>
+					{matches
+						? matches.map((match) => <div key={match._id}>{match.name}</div>)
+						: []}
+								</div> */}
+                    </fieldset>
+                </Layout.StyledDropdown>
             )}
-            <div>
-                {matches
-                    ? matches.map((match) => <div key={match._id}>{match.name}</div>)
-                    : []}
-            </div>
-        </fieldset>
+        </section>
     );
 }

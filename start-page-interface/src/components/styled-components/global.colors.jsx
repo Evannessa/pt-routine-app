@@ -5,6 +5,7 @@ export const Global = createGlobalStyle`
   --clr-primary-deep-dark: #171529;
   --clr-primary-dark: #25203f;
   --clr-primary-base: #342E57;
+  --clr-primary-light: #6357a6;
   --clr-accent: #6495ed;
   --clr-accent-green:#4ab4c7;
 --clr-accent-pink: #bf2063;

@@ -122,7 +122,13 @@ function ModalContainer({ children, isModal }, props) {
     let navigate = useNavigate();
     let params = useParams();
     React.useEffect(() => {
-        requests.getObject(params.id, requests.displayBase, params, setLinkData);
+        let options = {
+            method: "GET",
+            pathsArray: ["display", params.id],
+            setStateCallback: setLinkData,
+        };
+        requests.axiosRequest(options);
+        // requests.getObject(params.id, requests.displayBase, params, setLinkData);
     }, []);
 
     function returnIFrame() {

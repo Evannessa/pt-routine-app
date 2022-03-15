@@ -4,7 +4,8 @@ import { Link, NavLink } from "react-router-dom";
 export const CardComponent = styled.div`
     display: flex;
     flex-direction: ${(props) => props.direction || "row"};
-    justify-content: ${(props) => props.justifyContent || "space-evenly"};
+    justify-content: ${(props) => props.justifyContent || "flex-start"};
+    gap: 0.25rem;
     flex-wrap: ${(props) => props.wrap || "wrap"};
     width: 100%;
     row-gap: 0.45rem;

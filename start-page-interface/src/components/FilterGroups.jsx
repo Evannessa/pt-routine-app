@@ -6,7 +6,7 @@ import Select from "./input/Select";
 import Form from "./input/Form";
 import { FilterGroup } from "./FilterGroup";
 import { requests } from "../helpers/requests";
-
+import { ConditionalWrapper } from "./ConditionalWrapper";
 /**
  *
  * @param {*} props
@@ -49,33 +49,73 @@ function FilterGroups(props) {
         let groupComponents = [];
         let counter = 1;
         for (let fg of filterGroups.subGroups) {
-            groupComponents.push(<FilterGroup key={fg._id}>{fg.name}</FilterGroup>);
+            if (counter > 1) {
+                groupComponents.push(
+                    <ConditionalWrapper
+                        condition={counter > 1}
+                        wrapper={(children) => (
+                            <span
+                                style={{ display: "inline-flex", alignItems: "center" }}>
+                                {children}
+                            </span>
+                        )}>
+                        <Select {...andOrProps} disabled={counter > 2 ? true : false} />
+                        <FilterGroup
+                            key={fg._id}
+                            defaultValues={fg}
+                            displayMode={true}
+                            tags={props.tags}
+                            links={props.links}>
+                            {/* {fg.name} */}
+                        </FilterGroup>
+                    </ConditionalWrapper>
+                );
+            } else {
+                groupComponents.push(
+                    <FilterGroup
+                        key={fg._id}
+                        defaultValues={fg}
+                        displayMode={true}
+                        tags={props.tags}
+                        links={props.links}>
+                        {/* {fg.name} */}
+                    </FilterGroup>
+                );
+            }
             //for every group in the array that's beyond the first one,
             //add the "and or" selector
-            if (counter > 1) {
-                groupComponents.push(<Select {...andOrProps} />);
-            }
+
             counter += 1;
         }
+        return groupComponents;
     }
     // let filterGrouptions = allGroups.map(group => {name: group.categoryName, _id: group._id});
+
     function addNewFilterGroup(event) {
+        function updateSubgroups(document) {
+            let array =
+                filterGroups.subGroups.length > 0 ? [...filterGroups.subGroups] : [];
+            array.push(document);
+            setFilterGroups((prevData) => {
+                return {
+                    ...prevData,
+                    subGroups: array,
+                };
+            });
+        }
         let options = {
             method: "POST",
             pathsArray: ["display", "groups"],
             data: { name: "New Filter Group" },
-            setStateCallback: setAllGroups,
+            setStateCallback: updateSubgroups,
         };
         requests.axiosRequest(options);
-
-        // requests.createObject(requests.displayBase, { name: "New Filter Group" });
-        // setFilterGroups((prevState) => "Un");
     }
+
     return (
         <Form>
-            {/* <FilterGroup links={props.links} tags={props.tags}></FilterGroup> */}
-            {filterGroups.subGroups.length > 1 && <Select {...andOrProps}></Select>}
-            {/* <FilterGroup links={props.links} tags={props.tags}></FilterGroup> */}
+            <div style={{ display: "flex", flexDirection: "column" }}>{addOptions()}</div>
+
             <StyledButtons.TextButton onClick={addNewFilterGroup}>
                 <StyledButtons.StyledButtonIconSpan>
                     add

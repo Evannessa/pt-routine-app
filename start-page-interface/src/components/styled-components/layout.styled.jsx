@@ -9,6 +9,7 @@ export const StyledHeader = styled.header`
     /* margin-left: -6rem; */
     /* margin-right: -6rem; */
     height: fit-content;
+    height: 100%;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-evenly;
@@ -37,6 +38,7 @@ StyledMain.displayName = "StyledMain";
 export const StyledOuterMain = styled(StyledMain)`
     display: grid;
     grid-template-columns: 100%;
+    grid-template-rows: fit-content, 1fr;
     grid-template-areas:
         "hd"
         "main";
@@ -44,6 +46,7 @@ export const StyledOuterMain = styled(StyledMain)`
     overflow-y: hidden;
     background-color: var(--clr-primary-deep-dark);
     min-height: 80vh;
+    align-content: stretch;
 `;
 
 StyledOuterMain.displayName = "StyledOuterMain";
@@ -68,3 +71,12 @@ export const StyledSidebar = styled.section`
     scrollbar-width: thin;
 `;
 StyledSidebar.displayName = "StyledSidebar";
+
+export const StyledDropdown = styled.section`
+    position: absolute;
+    width: fit-content;
+    height: fit-content;
+    /* background-color: var(--clr-primary-light); */
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+`;
+StyledDropdown.displayName = "StyledDropdown";
