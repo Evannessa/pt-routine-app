@@ -48,17 +48,20 @@ async function deleteSingle(type, req, res, next, name) {
     }
     return res.status(200).json({ document });
 }
-async function updateSingle(type, req, res, next, name) {
+async function updateSingle(type, req, res, next, name, populateWith = "") {
     const { id } = req.params;
-    const document = await type.findOneAndUpdate(
-        { _id: id },
-        { ...req.body },
-        { new: true }
-    );
+    const document = await type
+        .findOneAndUpdate({ _id: id }, { ...req.body }, { new: true })
+        .populate(populateWith);
     if (!document) {
         return next(createCustomError(`No ${name} found with id ${id}`, 404));
     }
     return res.status(200).json({ document });
+    if (populateWith) {
+        return populate(document, populateWith, name);
+    } else {
+        return res.status(200).json({ document });
+    }
 }
 async function updateSubDocument(type, req, res, next, name) {}
 
@@ -130,7 +133,8 @@ const deleteLink = asyncWrapper(async (req, res, next) => {
 });
 
 //TODO: Update this to be cleaner, oof
-const updateLink = asyncWrapper(async (req, res) => {
+const updateLink = asyncWrapper(async (req, res, next) => {
+    return updateSingle(Link, req, res, next, "Link", "tags");
     const { id: linkId } = req.params;
     //if we're not removing a tag
     console.log(req.body);
