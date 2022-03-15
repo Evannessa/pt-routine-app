@@ -213,10 +213,14 @@ function LinkNameInput(props) {
             if (!newArray.includes(newTag)) {
                 newArray.push(newTag);
             }
-            let newData = createUpdateData("tags", newTag, "insert", "");
+            // let newData = createUpdateData("tags", newTag, "insert", "");
+            let newData = {
+                ...formData,
+                tags: newArray,
+            };
             let options = {
                 method: "PATCH",
-                pathsArray: ["create", "id"],
+                pathsArray: ["create", id],
                 data: newData,
                 setStateCallback: setFormData,
             };

@@ -1,5 +1,6 @@
 import Avatar from "boring-avatars";
-import React, { useEffect, useState } from "react";
+import debounce from "lodash.debounce";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { Link, Outlet, useLocation, useParams, useSearchParams } from "react-router-dom";
 import styled from "styled-components";
 import { requests } from "../helpers/requests";
@@ -66,6 +67,7 @@ function LinkDisplay(props) {
     const createBase = "http://localhost:9000/links/create";
     const [links, setLinks] = useState();
     const [filteredLinks, setFilteredLinks] = useState();
+
     const [formData, setFormData] = React.useState({
         jsonData: "",
         search: "",
@@ -73,124 +75,13 @@ function LinkDisplay(props) {
     });
     const [allTags, setAllTags] = React.useState([]);
     const [queryTags, setQueryTags] = React.useState([]);
-    const matchFunctions = {
-        name: filterStringProperty,
-        url: filterStringProperty,
-        tags: filterArrayProperty,
-    };
 
-    function filterStringProperty(property, match, matchAll = false) {
-        //match all should return an EXACT match
-        if (matchAll) {
-            return property === match;
-        } else {
-            //match all should return a non-exact, case-insensitive match that includes portions of the word
-            console.log(property);
-            return property.toLowerCase().includes(match.toLowerCase());
-        }
-    }
-    /**
-     *
-     * @param {*} childArray - the nested array of items
-     * @param {*} property -
-     * @param {*} match
-     * @returns
-     */
-    function filterArrayProperty(childArray, match, matchAll, childProperty = "") {
-        let nameArray = [];
-        if (childProperty) {
-            nameArray = childArray.map((item) => item[childProperty].toLowerCase());
-        } else {
-            nameArray = childArray.map((item) => item.toLowerCase()); //get names of items
-        }
-        if (matchAll && match instanceof Array) {
-            let allIncluded = match.every((matchString) =>
-                nameArray.includes(matchString.toLowerCase())
-            );
-            return allIncluded;
-        }
-        //use some to make sure only some of the values in the child array match
-        else {
-            let someIncluded = match.some((matchString) =>
-                nameArray.includes(matchString.toLowerCase())
-            );
-            return someIncluded;
-        }
-    }
-    const getNestedObject = (nestedObject, pathArray) => {
-        return pathArray.reduce(function (obj, key) {
-            if (obj && obj[key] !== undefined) {
-                console.log(obj, key, obj[key]);
-                return obj[key];
-            }
-            return undefined;
-        }, nestedObject);
-    };
-    function breakDownPropertyName(propertyName) {
-        return propertyName.split(".");
-    }
+    // const debouncedSearchFilter = useCallback(
+    //     debounce(() => filterSearch(), 300),
+    //     [formData.search, formData.searchFilters, queryTags, links]
+    // );
 
-    function getMatches(
-        array,
-        property,
-        conditionToMeet,
-        matchAll = false,
-        childProperty = ""
-    ) {
-        //for the strings, match all could be ""
-        // let propertyPathArray = breakDownPropertyName(property);
-        // let propertyName = propertyPathArray[0];
-        // propertyPathArray.push(0);
-        let propertyName = property;
-
-        return array.filter((item, index) => {
-            // let newPathString = property.replace("index", index);
-            // console.log(newPathString);
-            // propertyPathArray = breakDownPropertyName(newPathString);
-            // propertyPathArray = propertyPathArray.map((string) =>
-            //     isNaN(Number(string)) ? string : Number(string)
-            // );
-            // console.log(propertyPathArray);
-            return matchFunctions[propertyName](
-                item[propertyName],
-                conditionToMeet,
-                matchAll,
-                childProperty
-            );
-        });
-    }
-
-    useEffect(() => {
-        let linkOptions = {
-            method: "GET",
-            pathsArray: ["display"],
-            setStateCallback: setLinks,
-        };
-        let tagOptions = {
-            method: "GET",
-            pathsArray: ["display", "tags"],
-            setStateCallback: setAllTags,
-        };
-        requests.axiosRequest(linkOptions);
-        requests.axiosRequest(tagOptions);
-        // requests.getAll(`${urlBase}`, setLinks, "links");
-        // requests.getAll(`${urlBase}/tags`, setAllTags, "tags");
-    }, []);
-
-    /**
-     * When the links or the search data changes, update to see what has been filtered
-     */
-    useEffect(() => {
-        if (!links) {
-            return;
-        }
-        // console.log(any(links, "tags", "gaming"));
-        // console.log(any(links, "tags", ["gaming", "Test", "Action"]));
-        console.log(
-            getMatches(links, "tags", ["gaming", "Test", "Action"], true, "name"),
-            getMatches(links, "name", "Kevin")
-        );
-
+    function filterSearch() {
         let filtered;
         //TODO: refactor to backend later
         // //no form data, so no filters
@@ -240,6 +131,34 @@ function LinkDisplay(props) {
                 setFilteredLinks(filtered);
             }
         }
+    }
+
+    useEffect(() => {
+        let linkOptions = {
+            method: "GET",
+            pathsArray: ["display"],
+            setStateCallback: setLinks,
+        };
+        let tagOptions = {
+            method: "GET",
+            pathsArray: ["display", "tags"],
+            setStateCallback: setAllTags,
+        };
+        requests.axiosRequest(linkOptions);
+        requests.axiosRequest(tagOptions);
+        // requests.getAll(`${urlBase}`, setLinks, "links");
+        // requests.getAll(`${urlBase}/tags`, setAllTags, "tags");
+    }, []);
+
+    /**
+     * When the links or the search data changes, update to see what has been filtered
+     */
+    useEffect(() => {
+        if (!links) {
+            return;
+        }
+        filterSearch();
+        // debouncedSearchFilter();
     }, [links, queryTags, formData.search, formData.searchFilters]);
 
     useEffect(() => {
