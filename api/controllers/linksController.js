@@ -7,6 +7,15 @@ async function create(type, req, res) {
     const document = await type.create({ ...req.body });
     return res.status(201).json({ document });
 }
+async function findOrCreate(type, req, res) {
+    let document = await type.findOne({ ...req.body });
+    //if it doesn't exist, create it, else, return it
+    if (!document) {
+        document = await type.create({ ...req.body });
+        return res.status(201).json({ document });
+    }
+    return res.status(201).json({ document });
+}
 async function createMultiple(type, req, res) {
     const document = await type
         .insertMany(req.body)
@@ -248,8 +257,9 @@ const getLink = asyncWrapper(async (req, res, next) => {
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
 const createTag = asyncWrapper(async (req, res) => {
-    const document = await Tag.create(req.body);
-    res.status(201).send({ document });
+    return findOrCreate(Tag, req, res);
+    // const document = await Tag.create(req.body);
+    // res.status(201).send({ document });
 });
 
 const getAllTags = asyncWrapper(async (req, res, next) => {

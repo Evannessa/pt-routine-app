@@ -203,28 +203,51 @@ function LinkNameInput(props) {
             event.preventDefault();
             event.stopPropagation();
             let tagBox = event.currentTarget;
-            let newTag = tagBox.value;
+            let newTagName = tagBox.value;
             tagBox.value = "";
             setTagsInput({ inputValue: "" });
             //get tags from old formdata
-            let newArray = [...formData.tags];
+            // let newArray = [...formData.tags];
 
-            //push new form data if doesn't exist
-            if (!newArray.includes(newTag)) {
-                newArray.push(newTag);
-            }
+            // //push new form data if doesn't exist
+            // if (!newArray.includes(newTag)) {
+            //     newArray.push(newTag);
+            // }
             // let newData = createUpdateData("tags", newTag, "insert", "");
-            let newData = {
-                ...formData,
-                tags: newArray,
+            function updateLink(responseData) {
+                let oldArray = formData.tags;
+                console.log(responseData);
+                oldArray.push(responseData);
+                setFormData((prevData) => {
+                    return { ...prevData, tags: oldArray };
+                });
+                let options = {
+                    method: "PATCH",
+                    pathsArray: ["create", id],
+                    data: formData,
+                    // setStateCallback: setFormData,
+                };
+                requests.axiosRequest(options);
+            }
+            let tagOptions = {
+                method: "POST",
+                pathsArray: ["create", "tags"],
+                data: { name: newTagName },
+                setStateCallback: updateLink,
             };
-            let options = {
-                method: "PATCH",
-                pathsArray: ["create", id],
-                data: newData,
-                setStateCallback: setFormData,
-            };
-            requests.axiosRequest(options);
+            requests.axiosRequest(tagOptions);
+            //return new tag, then stuff
+            // let newData = {
+            //     ...formData,
+            //     tags: newArray,
+            // };
+            // let options = {
+            //     method: "PATCH",
+            //     pathsArray: ["create", id],
+            //     data: newData,
+            //     setStateCallback: setFormData,
+            // };
+            // requests.axiosRequest(options);
             // requests.updateObject(params.id, newData, urlBase, setFormData, "link");
         }
     }
