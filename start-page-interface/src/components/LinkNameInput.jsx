@@ -155,9 +155,17 @@ function LinkNameInput(props) {
 
     //remove specific tag from this link
     function removeTag(id) {
+        console.log("IS THIS BEING CALLED?", id, formData.tags);
+        let tags = [...formData.tags];
+        tags = tags.filter((tag) => tag._id !== id);
+        setFormData((prevData) => {
+            return { ...prevData, tags: tags };
+        });
+        console.log(formData);
+        patchAndSetState(formData);
         // propertyName, value, action, filter
-        let removalData = createUpdateData("tags", "", "delete", { id: id });
-        patchAndSetState(removalData);
+        // let removalData = createUpdateData("tags", "", "delete", { id: id });
+        // patchAndSetState(removalData);
     }
 
     function setSavedAndUpdate(data) {
@@ -217,17 +225,19 @@ function LinkNameInput(props) {
             function updateLink(responseData) {
                 let oldArray = formData.tags;
                 console.log(responseData);
-                oldArray.push(responseData);
-                setFormData((prevData) => {
-                    return { ...prevData, tags: oldArray };
-                });
-                let options = {
-                    method: "PATCH",
-                    pathsArray: ["create", id],
-                    data: formData,
-                    // setStateCallback: setFormData,
-                };
-                requests.axiosRequest(options);
+                if (!formData.tags.map((tag) => tag._id).includes(responseData._id)) {
+                    oldArray.push(responseData);
+                    setFormData((prevData) => {
+                        return { ...prevData, tags: oldArray };
+                    });
+                    let options = {
+                        method: "PATCH",
+                        pathsArray: ["create", id],
+                        data: formData,
+                        // setStateCallback: setFormData,
+                    };
+                    requests.axiosRequest(options);
+                }
             }
             let tagOptions = {
                 method: "POST",
