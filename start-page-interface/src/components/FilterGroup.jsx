@@ -15,8 +15,8 @@ import { matches } from "lodash";
  */
 function FilterGroup(props) {
     const baseUrl = "http:localhost:9000/links/display/groups";
-    const [filterGroups, setFilterGroups] = useState({
-        subGroups: [],
+    const [filterGroup, setFilterGroup] = useState({
+        filters: [],
         groupSelector: "and",
     });
     const [allGroups, setAllGroups] = useState();
@@ -33,7 +33,7 @@ function FilterGroup(props) {
 
     //filters should be sub-groups
     function updateFilters(propertyName, value) {
-        setFilterGroups({ [propertyName]: value });
+        setFilterGroup({ [propertyName]: value });
     }
 
     let andOrProps = {
@@ -43,13 +43,13 @@ function FilterGroup(props) {
             { name: "or", _id: "or" },
         ],
         setStateFunction: updateFilters,
-        value: filterGroups["relation"],
+        value: filterGroup["relation"],
     };
 
     function addOptions() {
         let groupComponents = [];
         let counter = 1;
-        for (let fg of filterGroups.subGroups) {
+        for (let fg of filterGroup.filters) {
             if (counter > 1) {
                 groupComponents.push(
                     <ConditionalWrapper
@@ -115,17 +115,17 @@ function FilterGroup(props) {
     function crossFilters() {
         let testArray = [];
         //add all matches to a single array
-        if (filterGroups.groupSelector === "and") {
+        if (filterGroup.groupSelector === "and") {
             //we need to include only the ones that match all of them
             //add all match *arrays* to a single array
-            filterGroups.subGroups.forEach(
+            filterGroup.filters.forEach(
                 (group) => group.matches && testArray.push(group.matches)
             );
             console.log(testArray);
             console.log(testMatches(testArray));
-        } else if (filterGroups.groupSelector === "or") {
+        } else if (filterGroup.groupSelector === "or") {
             //add all match array items to the same array
-            filterGroups.subGroups.matches.forEach(
+            filterGroup.filters.matches.forEach(
                 (group) => (testArray = testArray.merge(group.matches))
             );
             console.log(testMatches(testArray));
@@ -137,13 +137,12 @@ function FilterGroup(props) {
 
     function addNewFilterGroup(event) {
         function updateSubgroups(document) {
-            let array =
-                filterGroups.subGroups.length > 0 ? [...filterGroups.subGroups] : [];
+            let array = filterGroup.filters.length > 0 ? [...filterGroup.filters] : [];
             array.push(document);
-            setFilterGroups((prevData) => {
+            setFilterGroup((prevData) => {
                 return {
                     ...prevData,
-                    subGroups: array,
+                    filters: array,
                 };
             });
         }
@@ -156,7 +155,7 @@ function FilterGroup(props) {
         requests.axiosRequest(options);
     }
 
-    if (filterGroups) {
+    if (filterGroup) {
         crossFilters();
     }
 

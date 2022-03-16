@@ -296,8 +296,8 @@ function LinkDisplay(props) {
     return (
         <Layout.StyledOuterMain>
             <Layout.StyledHeader>
-                {/* <CategoryView links={links || []} tags={allTags || []} /> */}
-                <FilterGroup links={links || []} tags={allTags || []} />
+                <CategoryView links={links || []} tags={allTags || []} />
+                {/* <FilterGroup links={links || []} tags={allTags || []} /> */}
 
                 <Form direction="row" justify="center" align="center">
                     <Input

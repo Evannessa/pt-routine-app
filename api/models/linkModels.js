@@ -11,7 +11,7 @@ const TagSchema = new mongoose.Schema({
         default: "#212121",
     },
 });
-const FilterGroupSchema = new mongoose.Schema({
+const FilterSchema = new mongoose.Schema({
     categoryName: {
         type: String,
         default: "New Category",
@@ -36,6 +36,12 @@ const FilterGroupSchema = new mongoose.Schema({
         default: "any",
     },
     match: [String],
+});
+
+const FilterGroupSchema = new mongoose.Schema({
+    categoryName: { type: String, required: true, default: "New Category" },
+    groupSelector: { type: String, enum: ["and", "or"], required: true, default: "and" },
+    subGroups: { type: [FilterSchema], required: true, default: [() => {}] },
 });
 
 const TagGroupSchema = new mongoose.Schema({
@@ -64,6 +70,7 @@ const LinkSchema = new mongoose.Schema({
 module.exports = {
     Link: mongoose.model("Link", LinkSchema),
     Tag: mongoose.model("Tag", TagSchema),
+    Filter: mongoose.model("Filter", FilterSchema),
     FilterGroup: mongoose.model("FilterGroup", FilterGroupSchema),
     TagGroup: mongoose.model("TagGroup", TagGroupSchema),
 };

@@ -38,12 +38,10 @@ export var requests = (function () {
             .then((response) => {
                 // console.log("Hello?", response.status);
                 if (response.status >= 200 && response.status < 300) {
-                    console.log("Our response", response.data.document);
                     if (setStateCallback) {
                         setStateCallback(response.data.document);
                     }
                 } else {
-                    console.log("Response status was", response.status);
                 }
             })
             .catch(handleError);

@@ -13,4 +13,6 @@ completedColumns:
 
 ## In Progress
 
+- [filter-group-creation](tasks/filter-group-creation.md)
+
 ## Done
