@@ -5,10 +5,28 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import * as Btns from "./styled-components/Buttons.Styled";
 import { requests } from "../helpers/requests";
+import { StyledNavLink } from "./styled-components/nav.styled";
 
 const StyledCategorySection = styled.section`
     background-color: rgba(0, 0, 0, 0.25);
     padding: 1rem 2rem;
+    ul {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+        gap: 0.75rem;
+        li {
+            list-style-type: none;
+            a {
+                color: white;
+                text-decoration: none;
+                &:visited {
+                    color: var(--clr-accent);
+                }
+            }
+        }
+    }
 `;
 
 function CategoryView(props) {
@@ -25,7 +43,7 @@ function CategoryView(props) {
     //initial change on first go-through
     useEffect(() => {
         setFilteredLinks(props.links);
-    }, []);
+    }, [props.links]);
 
     // //when the groupId changes/is fetched from local storage
     // useEffect(() => {

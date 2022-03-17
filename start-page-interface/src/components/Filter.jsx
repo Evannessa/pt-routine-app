@@ -5,6 +5,7 @@ import Select from "./input/Select";
 import { ChipButton } from "./styled-components/chips.styled";
 import * as Buttons from "./styled-components/Buttons.Styled";
 import * as Layout from "./styled-components/layout.styled";
+import { isElementOfType } from "react-dom/test-utils";
 
 export function Filter(props) {
     const [names, setNames] = useState(props.links.map((link) => link.name));
@@ -67,6 +68,9 @@ export function Filter(props) {
         );
         findMatches();
     }, [filter, names, tags]);
+    useEffect(() => {
+        props.updateParent(filter._id, filter);
+    }, [filter]);
 
     //the methods associated with each type
     const matchFunctions = {
@@ -159,9 +163,27 @@ export function Filter(props) {
      * @param {*} value - the value we're updating with
      */
     function updateFilter(propertyName, value) {
+        console.log("Filter;: Updating " + propertyName + " with ", value);
+        //TODO: convert even the strings to be arrays to get rid off this fiddly stuff below
+        let updatedMatch = false;
+        let newMatchValue = [...filter.match];
+        if (propertyName === "stringMatch" || propertyName === "arrayMatch") {
+            updatedMatch = true;
+            console.log(typeof value);
+            if (typeof value === "string") {
+                newMatchValue = [value];
+                console.log(newMatchValue);
+            }
+        }
         setFilter((prevFilter) => {
-            return { ...prevFilter, [propertyName]: value };
+            return {
+                ...prevFilter,
+                [propertyName]: value,
+                match: updatedMatch ? newMatchValue : filter.match,
+            };
         });
+
+        // props.updateParent(filter._id, filter);
     }
     let optionsByType = {
         string: [

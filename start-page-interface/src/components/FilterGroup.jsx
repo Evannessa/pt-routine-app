@@ -21,6 +21,7 @@ function FilterGroup(props) {
             categoryName: "New Category Name",
             filters: [],
             groupSelector: "and",
+            matches: [],
         }
     );
     console.log("Default values", props.defaultValues);
@@ -37,8 +38,17 @@ function FilterGroup(props) {
     }, []);
 
     //filters should be sub-groups
-    function updateFilters(propertyName, value) {
-        setFilterGroup({ [propertyName]: value });
+    function updateFilterGroup(propertyName, value) {
+        setFilterGroup((prevState) => {
+            return { ...prevState, [propertyName]: value };
+        });
+    }
+
+    function updateFilterInGroup(id, value) {
+        let newFilters = filterGroup.filters.map((filter) =>
+            filter._id === id ? value : filter
+        );
+        updateFilterGroup("filters", newFilters);
     }
 
     let andOrProps = {
@@ -47,7 +57,7 @@ function FilterGroup(props) {
             { name: "and", _id: "and" },
             { name: "or", _id: "or" },
         ],
-        setStateFunction: updateFilters,
+        setStateFunction: updateFilterGroup,
         value: filterGroup["relation"],
     };
 
@@ -72,7 +82,8 @@ function FilterGroup(props) {
                             defaultValues={fg}
                             displayMode={true}
                             tags={props.tags}
-                            links={props.links}>
+                            links={props.links}
+                            updateParent={updateFilterInGroup}>
                             {/* {fg.name} */}
                         </Filter>
                     </ConditionalWrapper>
@@ -84,7 +95,8 @@ function FilterGroup(props) {
                         defaultValues={fg}
                         displayMode={true}
                         tags={props.tags}
-                        links={props.links}>
+                        links={props.links}
+                        updateParent={updateFilterInGroup}>
                         {/* {fg.name} */}
                     </Filter>
                 );
@@ -100,6 +112,7 @@ function FilterGroup(props) {
     //solution from below
     //?https://stackoverflow.com/questions/11076067/finding-matches-between-multiple-javascript-arrays
     function testMatches(matchesArray) {
+        console.log("Match array is", matchesArray);
         if (matchesArray.length === 0) {
             return;
         }
@@ -124,19 +137,25 @@ function FilterGroup(props) {
         if (filterGroup.groupSelector === "and") {
             //we need to include only the ones that match all of them
             //add all match *arrays* to a single array
-            if (filterGroup.filters && typeof filterGroup.filters == Array) {
-                filterGroup.filters.forEach(
-                    (group) => group.matches && testArray.push(group.matches)
+            if (filterGroup.filters && Array.isArray(filterGroup.filters)) {
+                console.log("Is an array. Testing");
+                filterGroup.filters.forEach((filter) => testArray.concat(filter.match));
+                console.log(
+                    testArray,
+                    filterGroup.filters[0].match,
+                    testArray.concat(filterGroup.filters[0].match),
+                    testMatches(testArray.concat(filterGroup.filters[0].match))
                 );
             }
         } else if (filterGroup.groupSelector === "or") {
             //add all match array items to the same array
-            filterGroup.filters.matches.forEach(
-                (group) => (testArray = testArray.merge(group.matches))
+            filterGroup.filters.forEach(
+                (group) => (testArray = testArray.concat(group.match))
             );
             console.log(testMatches(testArray));
             //we can include all the ones that match some of them
         }
+        console.log("After filter, test array is", testArray);
     }
 
     // let filterGrouptions = allGroups.map(group => {name: group.categoryName, _id: group._id});
@@ -164,6 +183,9 @@ function FilterGroup(props) {
     if (filterGroup) {
         crossFilters();
     }
+    function reapplyFilter() {
+        crossFilters();
+    }
 
     return (
         <Form>
@@ -176,6 +198,9 @@ function FilterGroup(props) {
                 </StyledButtons.StyledButtonIconSpan>
                 Add New Filter
             </StyledButtons.TextButton>
+            <StyledButtons.ContainedButton onClick={reapplyFilter}>
+                Apply Filter
+            </StyledButtons.ContainedButton>
         </Form>
     );
 }
