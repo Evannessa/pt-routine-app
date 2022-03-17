@@ -8,6 +8,7 @@ import { Filter } from "./Filter";
 import { requests } from "../helpers/requests";
 import { ConditionalWrapper } from "./ConditionalWrapper";
 import { matches } from "lodash";
+import { Link } from "react-router-dom";
 /**
  *
  * @param {*} props
@@ -15,10 +16,14 @@ import { matches } from "lodash";
  */
 function FilterGroup(props) {
     const baseUrl = "http:localhost:9000/links/display/groups";
-    const [filterGroup, setFilterGroup] = useState({
-        filters: [],
-        groupSelector: "and",
-    });
+    const [filterGroup, setFilterGroup] = useState(
+        props.defaultValues || {
+            categoryName: "New Category Name",
+            filters: [],
+            groupSelector: "and",
+        }
+    );
+    console.log("Default values", props.defaultValues);
     const [allGroups, setAllGroups] = useState();
 
     useEffect(() => {
@@ -115,14 +120,15 @@ function FilterGroup(props) {
     function crossFilters() {
         let testArray = [];
         //add all matches to a single array
+        console.log("OUR FILTERS", filterGroup, filterGroup.filters);
         if (filterGroup.groupSelector === "and") {
             //we need to include only the ones that match all of them
             //add all match *arrays* to a single array
-            filterGroup.filters.forEach(
-                (group) => group.matches && testArray.push(group.matches)
-            );
-            console.log(testArray);
-            console.log(testMatches(testArray));
+            if (filterGroup.filters && typeof filterGroup.filters == Array) {
+                filterGroup.filters.forEach(
+                    (group) => group.matches && testArray.push(group.matches)
+                );
+            }
         } else if (filterGroup.groupSelector === "or") {
             //add all match array items to the same array
             filterGroup.filters.matches.forEach(
@@ -135,8 +141,8 @@ function FilterGroup(props) {
 
     // let filterGrouptions = allGroups.map(group => {name: group.categoryName, _id: group._id});
 
-    function addNewFilterGroup(event) {
-        function updateSubgroups(document) {
+    function addNewFilter(event) {
+        function updateFilters(document) {
             let array = filterGroup.filters.length > 0 ? [...filterGroup.filters] : [];
             array.push(document);
             setFilterGroup((prevData) => {
@@ -150,7 +156,7 @@ function FilterGroup(props) {
             method: "POST",
             pathsArray: ["display", "groups"],
             data: { name: "New Filter Group" },
-            setStateCallback: updateSubgroups,
+            setStateCallback: updateFilters,
         };
         requests.axiosRequest(options);
     }
@@ -161,13 +167,14 @@ function FilterGroup(props) {
 
     return (
         <Form>
+            <h1>{filterGroup.categoryName}</h1>
             <div style={{ display: "flex", flexDirection: "column" }}>{addOptions()}</div>
 
-            <StyledButtons.TextButton onClick={addNewFilterGroup}>
+            <StyledButtons.TextButton onClick={addNewFilter}>
                 <StyledButtons.StyledButtonIconSpan>
                     add
                 </StyledButtons.StyledButtonIconSpan>
-                Add New Filter Group
+                Add New Filter
             </StyledButtons.TextButton>
         </Form>
     );

@@ -74,6 +74,14 @@ async function updateSingle(type, req, res, next, name, populateWith = "") {
 }
 async function updateSubDocument(type, req, res, next, name) {}
 
+async function deleteMultiple(type, req, res, next, name) {
+    const document = await type.deleteMany(req.body);
+    if (document.deleteCount === 0) {
+        return next(createCustomError(`No documents deleted`), 404);
+    }
+    return res.status(200).json({ document });
+}
+
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 const createNewLink = asyncWrapper(async (req, res) => {
     //pass the body  into the response
@@ -314,17 +322,20 @@ const getAllFilterGroups = asyncWrapper(async (req, res, next) => {
 });
 
 const deleteFilterGroup = asyncWrapper(async (req, res, next) => {
-    return deleteSingle(FilterGroup, req, res, next, "Filter Collection");
+    return deleteSingle(FilterGroup, req, res, next, "Filter Group");
+});
+const deleteMultipleFilterGroups = asyncWrapper(async (req, res, next) => {
+    return deleteMultiple(FilterGroup, req, res, next, "Filter Group");
 });
 /**
  *
  */
 const getFilterGroup = asyncWrapper(async (req, res, next) => {
-    return getSingle(FilterGroup, req, res, next, "Filter Collection");
+    return getSingle(FilterGroup, req, res, next, "Filter Group");
 });
 
 const updateFilterGroup = asyncWrapper(async (req, res, next) => {
-    return updateSingle(FilterGroup, req, res, next, "Filter Collection");
+    return updateSingle(FilterGroup, req, res, next, "Filter Group");
 });
 
 module.exports = {
@@ -342,4 +353,5 @@ module.exports = {
     updateFilterGroup,
     getAllFilterGroups,
     deleteFilterGroup,
+    deleteMultipleFilterGroups,
 };

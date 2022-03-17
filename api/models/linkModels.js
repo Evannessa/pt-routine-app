@@ -41,7 +41,7 @@ const FilterSchema = new mongoose.Schema({
 const FilterGroupSchema = new mongoose.Schema({
     categoryName: { type: String, required: true, default: "New Category" },
     groupSelector: { type: String, enum: ["and", "or"], required: true, default: "and" },
-    subGroups: { type: [FilterSchema], required: true, default: [() => {}] },
+    filters: { type: [FilterSchema], required: true, default: [() => {}] },
 });
 
 const TagGroupSchema = new mongoose.Schema({

@@ -14,13 +14,18 @@ const {
     updateFilterGroup,
     getAllFilterGroups,
     deleteFilterGroup,
+    deleteMultipleFilterGroups,
     deleteTag,
 } = require("../controllers/linksController");
 const { uploadImage } = require("../controllers/uploadsController");
 router.route("/display").get(getAllLinks).post(createMultipleNewLinks);
 router.route("/display/tags").get(getAllTags);
 router.route("/display/tags/:id").delete(deleteTag);
-router.route("/display/groups").post(createFilterGroup).get(getAllFilterGroups);
+router
+    .route("/display/groups")
+    .post(createFilterGroup)
+    .get(getAllFilterGroups)
+    .delete(deleteMultipleFilterGroups);
 router
     .route("/display/groups/:id")
     .get(getFilterGroup)
