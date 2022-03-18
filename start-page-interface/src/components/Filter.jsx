@@ -30,8 +30,8 @@ export var filterOperations = (function () {
      * @returns a boolean saying whether or not the property matches
      */
     function filterStringProperty(property, match, matchAll = false) {
-        if (typeof property !== "string" || !Array.isArray(match)) {
-            console.log(
+        if (typeof property !== "string" || !Array.isArray(match) || match.length === 0) {
+            console.warn(
                 "Property and match not string and array",
                 property,
                 match,
@@ -87,6 +87,11 @@ export var filterOperations = (function () {
     ) {
         //for the strings, match all could be ""
         let propertyName = property;
+        let regex = /(name|url|tags)/g;
+        if (!propertyName || !propertyName.match(regex)) {
+            console.warn("NOT A PROPERTY NAME", propertyName);
+            return [];
+        }
         //filter out items in "links", if name or URL, match the match condition
         // i.e., "name" = "Gaming" "match" = "Gam";
         return array.filter((item, index) => {
@@ -187,11 +192,6 @@ export function Filter(props) {
     }, [filter]);
 
     //the methods associated with each type
-    const matchFunctions = {
-        name: filterStringProperty,
-        url: filterStringProperty,
-        tags: filterArrayProperty,
-    };
 
     /**
      *
@@ -383,7 +383,7 @@ export function Filter(props) {
             matchProps.options = names.map((name) => {
                 return { name: name, _id: name };
             });
-            matchProps.value = filter.stringMatch;
+            matchProps.value = filter.match ? filter.match[0] : "";
 
             //if it's an array
         } else if (propertyType === "array") {
@@ -394,7 +394,7 @@ export function Filter(props) {
                 // console.log("Tags are", name);
                 return { name: name, _id: name };
             });
-            matchProps.value = filter.arrayMatch;
+            matchProps.value = filter.match ? filter.match : [];
         }
         return matchProps;
     }

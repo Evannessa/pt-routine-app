@@ -1,8 +1,15 @@
 import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
+import styled from "styled-components";
 import { requests } from "../helpers/requests";
+import * as Layout from "./styled-components/layout.styled";
 import CategoryView from "./CategoryView";
+const StyledCategoryGrid = styled.section`
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+`;
 
 function Dashboard() {
     const [categories, setCategories] = useState();
@@ -44,7 +51,7 @@ function Dashboard() {
     return (
         <div>
             <h1>Dashboard</h1>
-            <section>{categoryComponents}</section>
+            <StyledCategoryGrid>{categoryComponents}</StyledCategoryGrid>
         </div>
     );
 }

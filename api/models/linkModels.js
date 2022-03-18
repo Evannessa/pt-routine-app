@@ -35,7 +35,7 @@ const FilterSchema = new mongoose.Schema({
         required: true,
         default: "any",
     },
-    match: [String],
+    match: { type: [String], required: true, default: [""] },
 });
 
 const FilterGroupSchema = new mongoose.Schema({

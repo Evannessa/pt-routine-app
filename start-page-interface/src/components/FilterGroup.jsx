@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
+import Input from "./input/Input";
 import styled from "styled-components";
 import * as StyledInputs from "./styled-components/input.styled";
 import * as StyledButtons from "./styled-components/Buttons.Styled";
@@ -8,6 +9,7 @@ import { Filter, filterOperations } from "./Filter";
 import { requests } from "../helpers/requests";
 import { ConditionalWrapper } from "./ConditionalWrapper";
 import { Link } from "react-router-dom";
+import { debounce } from "lodash";
 
 export function testIntersection(array1, array2) {
     // "AND" means it matches every single qualifier
@@ -50,7 +52,19 @@ function FilterGroup(props) {
     const [allGroups, setAllGroups] = useState();
     const [matchingLinks, setMatchingLinks] = useState();
     // const [childFilteredLinks, setChildFilteredLinks] = useState();
-
+    //get ALL tags to suggest when user types
+    const debouncedPatch = useCallback(
+        debounce((newData) => {
+            console.log("debouncing?");
+            let options = {
+                method: "PATCH",
+                pathsArray: ["display", "groups", filterGroup._id],
+                data: newData,
+            };
+            requests.axiosRequest(options);
+        }, 3000),
+        [filterGroup.filters]
+    );
     useEffect(() => {
         let options = {
             method: "GET",
@@ -58,6 +72,10 @@ function FilterGroup(props) {
             setStateCallback: setAllGroups,
         };
         requests.axiosRequest(options);
+
+        if (filterGroup.filters) {
+            crossFilters();
+        }
     }, []);
 
     // //for when a new child is added, or a child's matching links are changed, or any of our child's filters change, or our groupSelector changes from "and" to "or"
@@ -73,9 +91,11 @@ function FilterGroup(props) {
 
     //filters should be sub-groups
     function updateFilterGroup(propertyName, value) {
+        console.log(propertyName, value);
         setFilterGroup((prevState) => {
             return { ...prevState, [propertyName]: value };
         });
+        debouncedPatch({ ...filterGroup, [propertyName]: value });
     }
 
     function updateFilterInGroup(id, value) {
@@ -84,23 +104,6 @@ function FilterGroup(props) {
         );
         updateFilterGroup("filters", newFilters);
     }
-
-    // /**
-    //  * updates the matching links of the parent from the child
-    //  * @param {String} id - the id of the child
-    //  * @param {Array} childMatchingLinks - an array of links that match a child filter's conditions
-    //  */
-    // function updateParentMatchingLinks(id, childMatchingLinks) {
-    //     //update the parent's array of matches
-    //     setChildFilteredLinks((prevArray) =>
-    //         prevArray.map((child) =>
-    //             child._id === id
-    //                 ? { ...child, links: childMatchingLinks } //return the child with the "links" array updated
-    //                 : child
-    //         )
-    //     ); // else just return the child itself
-    //     //this will trigger a useEffect which should reapply all the filters of the children
-    // }
 
     let andOrProps = {
         name: "relation",
@@ -207,10 +210,17 @@ function FilterGroup(props) {
                 };
             });
         }
+
         let options = {
             method: "PATCH",
             pathsArray: ["display", "groups", filterGroup._id],
-            data: { categoryName: "New Filter" },
+            data: {
+                categoryName: "New Filter",
+                propertyChoice: "name",
+                relation: "equals",
+                precision: "any",
+                match: [""],
+            },
             setStateCallback: updateFilters,
         };
         requests.axiosRequest(options);
@@ -222,18 +232,23 @@ function FilterGroup(props) {
 
     return (
         <Form>
-            <h1>{filterGroup.categoryName}</h1>
-            <div style={{ display: "flex", flexDirection: "column" }}>{addOptions()}</div>
-
+            <Input
+                name="categoryName"
+                type="text"
+                value={filterGroup.categoryName}
+                setStateFunction={updateFilterGroup}
+            />
             <StyledButtons.TextButton onClick={addNewFilter}>
                 <StyledButtons.StyledButtonIconSpan>
                     add
                 </StyledButtons.StyledButtonIconSpan>
                 Add New Filter
             </StyledButtons.TextButton>
-            <StyledButtons.ContainedButton onClick={reapplyFilter}>
-                Apply Filter
-            </StyledButtons.ContainedButton>
+            <div style={{ display: "flex", flexDirection: "column" }}>{addOptions()}</div>
+
+            {/* <StyledButtons.ContainedButton onClick={reapplyFilter}> */}
+            {/* Apply Filter */}
+            {/* </StyledButtons.ContainedButton> */}
         </Form>
     );
 }

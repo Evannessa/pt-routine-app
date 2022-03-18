@@ -27,6 +27,18 @@ const StyledCategorySection = styled.section`
             }
         }
     }
+    max-height: 50vh;
+    overflow-y: auto;
+    border-radius: 10px;
+    &::-webkit-scrollbar {
+        width: 1rem;
+        background-color: var(--clr-primary-deep-dark);
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: var(--clr-accent);
+        border-radius: 999px;
+    }
 `;
 
 function CategoryView(props) {
@@ -42,7 +54,9 @@ function CategoryView(props) {
 
     //initial change on first go-through
     useEffect(() => {
-        setFilteredLinks(props.links);
+        if (!filterGroup) {
+            setFilteredLinks(props.links);
+        }
     }, [props.links]);
 
     function updateFilteredLinks(data) {
@@ -112,16 +126,19 @@ function CategoryView(props) {
 
     return (
         <StyledCategorySection>
-            <FilterGroup
-                defaultValues={filterGroup}
-                tags={props.tags || []}
-                links={props.links || []}
-                updateFilteredLinks={updateFilteredLinks}
-            />
-            <Btns.TextButton bgColor="transparent" onClick={handleClick}>
-                <Btns.StyledButtonIconSpan>add</Btns.StyledButtonIconSpan>
-                Add New Filter Group
-            </Btns.TextButton>
+            {filterGroup ? (
+                <FilterGroup
+                    defaultValues={filterGroup}
+                    tags={props.tags || []}
+                    links={props.links || []}
+                    updateFilteredLinks={updateFilteredLinks}
+                />
+            ) : (
+                <Btns.TextButton bgColor="transparent" onClick={handleClick}>
+                    <Btns.StyledButtonIconSpan>add</Btns.StyledButtonIconSpan>
+                    Add New Filter Group
+                </Btns.TextButton>
+            )}
             <ul>{linkComponents}</ul>
         </StyledCategorySection>
     );
