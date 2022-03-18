@@ -7,6 +7,94 @@ import * as Buttons from "./styled-components/Buttons.Styled";
 import * as Layout from "./styled-components/layout.styled";
 import { isElementOfType } from "react-dom/test-utils";
 
+export var filterOperations = (function () {
+    //the methods associated with each type
+    function testIntersection(array1, array2) {
+        // "AND" means it matches every single qualifier
+        // So we're trying to find items from every filter's array of matching links
+        // and find ones that only exist in ALL of them.
+        const filteredArray = array1.filter((value) => array2.includes(value));
+        return filteredArray;
+    }
+    const matchFunctions = {
+        name: filterStringProperty,
+        url: filterStringProperty,
+        tags: filterArrayProperty,
+    };
+
+    /**
+     *
+     * @param {String} property - the name of the property we're testing
+     * @param {String|Array} match - a string or array to match
+     * @param {Boolean} matchAll - if all should match, or just some. For Strings it'll be if the word should match exactly or just partially.
+     * @returns a boolean saying whether or not the property matches
+     */
+    function filterStringProperty(property, match, matchAll = false) {
+        //match all should return an EXACT match
+        if (matchAll) {
+            return property === match;
+        } else {
+            //otherwise  should return a non-exact, case-insensitive match that includes portions of the word
+            return property.toLowerCase().includes(match.toLowerCase());
+        }
+    }
+    /**
+     *
+     * @param {*} childArray - the nested array of items
+     * @param {*} property -
+     * @param {*} match
+     * @returns if all (or some) of the values in the array match
+     */
+    function filterArrayProperty(childArray, match, matchAll, childProperty = "") {
+        let nameArray = [];
+        if (childProperty) {
+            nameArray = childArray.map((item) => item[childProperty].toLowerCase());
+        } else {
+            nameArray = childArray.map((item) => item.toLowerCase()); //get names of items
+        }
+        if (matchAll && match instanceof Array) {
+            let allIncluded = match.every((matchString) =>
+                nameArray.includes(matchString.toLowerCase())
+            );
+            return allIncluded;
+        }
+        //use some to make sure only some of the values in the child array match
+        else {
+            let someIncluded = match.some((matchString) =>
+                nameArray.includes(matchString.toLowerCase())
+            );
+            return someIncluded;
+        }
+    }
+
+    function getMatches(
+        array,
+        property,
+        conditionToMeet,
+        matchAll = false,
+        childProperty = ""
+    ) {
+        //for the strings, match all could be ""
+        let propertyName = property;
+        //filter out items in "links", if name or URL, match the match condition
+        // i.e., "name" = "Gaming" "match" = "Gam";
+        return array.filter((item, index) => {
+            return matchFunctions[propertyName](
+                item[propertyName],
+                conditionToMeet,
+                matchAll,
+                childProperty
+            );
+        });
+    }
+    return {
+        filterStringProperty,
+        filterArrayProperty,
+        matchFunctions,
+        getMatches,
+        testIntersection,
+    };
+})();
 export function Filter(props) {
     const [names, setNames] = useState(props.links.map((link) => link.name));
     const [tags, setTags] = useState(props.tags.map((tag) => tag.name));
@@ -126,7 +214,7 @@ export function Filter(props) {
     const getNestedObject = (nestedObject, pathArray) => {
         return pathArray.reduce(function (obj, key) {
             if (obj && obj[key] !== undefined) {
-                console.log(obj, key, obj[key]);
+                // console.log(obj, key, obj[key]);
                 return obj[key];
             }
             return undefined;
@@ -163,16 +251,16 @@ export function Filter(props) {
      * @param {*} value - the value we're updating with
      */
     function updateFilter(propertyName, value) {
-        console.log("Filter;: Updating " + propertyName + " with ", value);
+        // console.log("Filter;: Updating " + propertyName + " with ", value);
         //TODO: convert even the strings to be arrays to get rid off this fiddly stuff below
         let updatedMatch = false;
         let newMatchValue = [...filter.match];
         if (propertyName === "stringMatch" || propertyName === "arrayMatch") {
             updatedMatch = true;
-            console.log(typeof value);
+            // console.log(typeof value);
             if (typeof value === "string") {
                 newMatchValue = [value];
-                console.log(newMatchValue);
+                // console.log(newMatchValue);
             }
         }
         setFilter((prevFilter) => {
@@ -245,7 +333,7 @@ export function Filter(props) {
      * @returns - an object to be destructured into props
      */
     function getMatchProps(propertyName, propertyType) {
-        console.log("Name and type", propertyName, propertyType);
+        // console.log("Name and type", propertyName, propertyType);
         let matchProps = {
             name: "match",
             id: "match",
@@ -266,9 +354,9 @@ export function Filter(props) {
         } else if (propertyType === "array") {
             matchProps.name = "arrayMatch";
             matchProps.multiple = true;
-            console.log("UPDATING THIS DAMN ARRAY", tags);
+            // console.log("UPDATING THIS DAMN ARRAY", tags);
             matchProps.options = tags.map((name) => {
-                console.log("Tags are", name);
+                // console.log("Tags are", name);
                 return { name: name, _id: name };
             });
             matchProps.value = filter.arrayMatch;

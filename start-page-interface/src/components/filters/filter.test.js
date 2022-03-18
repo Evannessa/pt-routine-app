@@ -57,13 +57,18 @@ describe("It filters links", () => {
             tags: mockTag(["gaming", "art", "stream"]),
         },
     ];
+    let nameFilteredLinks;
+    let tagFilteredLinks;
+    let urlFilteredLinks;
     test("by name", () => {
-        expect(filterOperations.getMatches(fakeLinks, "name", "euro")).toEqual(
+        nameFilteredLinks = filterOperations.getMatches(fakeLinks, "name", "euro");
+        expect(nameFilteredLinks).toEqual(
             expect.arrayContaining([expect.objectContaining({ name: "Eurogamer" })])
         );
     });
     test("by url", () => {
-        expect(filterOperations.getMatches(fakeLinks, "url", "youtube")).toEqual(
+        urlFilteredLinks = filterOperations.getMatches(fakeLinks, "url", "youtube");
+        expect(urlFilteredLinks).toEqual(
             expect.arrayContaining([
                 expect.objectContaining({
                     url: "https://www.youtube.com/c/UnofficialSecretSleepoverSociety",
@@ -72,15 +77,37 @@ describe("It filters links", () => {
         );
     });
     test("by tags", () => {
-        expect(
-            filterOperations.getMatches(fakeLinks, "tags", ["gaming"], false, "name")
-        ).toEqual(
+        tagFilteredLinks = filterOperations.getMatches(
+            fakeLinks,
+            "tags",
+            ["gaming"],
+            false,
+            "name"
+        );
+        expect(tagFilteredLinks).toEqual(
             expect.arrayContaining([
                 expect.objectContaining({ name: "SecretSleepoverSociety" }),
             ])
         );
     });
-
+    let allLinks;
+    test("by name, tags, and url together", () => {
+        allLinks = [...tagFilteredLinks, ...urlFilteredLinks, ...nameFilteredLinks];
+        let _2DArray = [tagFilteredLinks, urlFilteredLinks, nameFilteredLinks];
+        // console.log(
+        //     "All links is",
+        //     allLinks.map((link) => link.name)
+        // );
+        // console.log(
+        //     "Intersection is",
+        //     filterOperations
+        //         .testIntersection(tagFilteredLinks, urlFilteredLinks)
+        //         .map((link) => link.name)
+        // );
+        // console.log(allLinks);
+        // expect
+        console.log("Testing matches is", testMatches(_2DArray));
+    });
     //test all of these filters together
 });
 it("tests filters", async () => {

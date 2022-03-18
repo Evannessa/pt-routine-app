@@ -26,15 +26,14 @@ function Input({
     const WrapperTag = !wrapped ? "div" : Fragment;
 
     function handleChange(event) {
-        console.log("clicked?");
         let { value, checked, type } = event.currentTarget;
         let passValue = type === "checkbox" ? checked : value;
-        console.log("Passing up", name, passValue, parentName);
         setStateFunction(name, passValue, parentName);
     }
     return (
         <WrapperTag>
             <InputTag
+                data-testid="input-component"
                 type={type}
                 name={name}
                 value={value}

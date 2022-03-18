@@ -9,13 +9,37 @@ import { requests } from "../helpers/requests";
 import { ConditionalWrapper } from "./ConditionalWrapper";
 import { matches } from "lodash";
 import { Link } from "react-router-dom";
+
+export function testIntersection(array1, array2) {
+    // "AND" means it matches every single qualifier
+    // So we're trying to find items from every filter's array of matching links
+    // and find ones that only exist in ALL of them.
+    const filteredArray = array1.filter((value) => array2.includes(value));
+    return filteredArray;
+}
+export function testMatches(matchesArray) {
+    if (matchesArray.length === 0) {
+        return;
+    }
+    var finalResult = matchesArray.shift().reduce((totalArray, value) => {
+        //if the value is NOT yet the total array and every array in our group also includes the value,
+        if (
+            !totalArray.includes(value) &&
+            matchesArray.every((array) => array.includes(value))
+        ) {
+            totalArray.push(value);
+        }
+        return totalArray;
+    }, []);
+    return finalResult;
+}
+
 /**
  *
  * @param {*} props
  * @returns - grouped filters
  */
 function FilterGroup(props) {
-    const baseUrl = "http:localhost:9000/links/display/groups";
     const [filterGroup, setFilterGroup] = useState(
         props.defaultValues || {
             categoryName: "New Category Name",
@@ -24,7 +48,6 @@ function FilterGroup(props) {
             matches: [],
         }
     );
-    console.log("Default values", props.defaultValues);
     const [allGroups, setAllGroups] = useState();
 
     useEffect(() => {
@@ -34,7 +57,6 @@ function FilterGroup(props) {
             setStateCallback: setAllGroups,
         };
         requests.axiosRequest(options);
-        // requests.getAll(baseUrl, setAllGroups, "document");
     }, []);
 
     //filters should be sub-groups
@@ -109,53 +131,52 @@ function FilterGroup(props) {
         return groupComponents;
     }
 
-    //solution from below
-    //?https://stackoverflow.com/questions/11076067/finding-matches-between-multiple-javascript-arrays
-    function testMatches(matchesArray) {
-        console.log("Match array is", matchesArray);
-        if (matchesArray.length === 0) {
-            return;
-        }
-        console.log("Length is ", matchesArray, matchesArray.length);
-        var finalResult = matchesArray.shift().reduce((totalArray, value) => {
-            //if the value is NOT yet the total array and every array in our group also includes the value,
-            if (
-                !totalArray.includes(value) &&
-                matchesArray.every((array) => array.includes(value))
-            ) {
-                totalArray.push(value);
-            }
-            return totalArray;
-        }, []);
-        return finalResult;
-    }
+    // //solution from below
+    // //?https://stackoverflow.com/questions/11076067/finding-matches-between-multiple-javascript-arrays
+    // function testMatches(matchesArray) {
+    //     console.log("Match array is", matchesArray);
+    //     if (matchesArray.length === 0) {
+    //         return;
+    //     }
+    //     console.log("Length is ", matchesArray, matchesArray.length);
+    //     var finalResult = matchesArray.shift().reduce((totalArray, value) => {
+    //         //if the value is NOT yet the total array and every array in our group also includes the value,
+    //         if (
+    //             !totalArray.includes(value) &&
+    //             matchesArray.every((array) => array.includes(value))
+    //         ) {
+    //             totalArray.push(value);
+    //         }
+    //         return totalArray;
+    //     }, []);
+    //     return finalResult;
+    // }
 
     function crossFilters() {
         let testArray = [];
         //add all matches to a single array
-        console.log("OUR FILTERS", filterGroup, filterGroup.filters);
         if (filterGroup.groupSelector === "and") {
             //we need to include only the ones that match all of them
             //add all match *arrays* to a single array
             if (filterGroup.filters && Array.isArray(filterGroup.filters)) {
-                console.log("Is an array. Testing");
-                filterGroup.filters.forEach((filter) => testArray.concat(filter.match));
-                console.log(
-                    testArray,
-                    filterGroup.filters[0].match,
-                    testArray.concat(filterGroup.filters[0].match),
-                    testMatches(testArray.concat(filterGroup.filters[0].match))
-                );
+                filterGroup.filters.forEach((filter) => testArray.push(filter.match));
+                // console.log(testArray);
+                // console.log(testMatches(testArray));
+                // console.log(
+                //     testArray,
+                //     filterGroup.filters[0].match,
+                //     testArray.concat(filterGroup.filters[0].match),
+                //     testMatches(testArray.concat(filterGroup.filters[0].match))
+                // );
             }
         } else if (filterGroup.groupSelector === "or") {
             //add all match array items to the same array
             filterGroup.filters.forEach(
                 (group) => (testArray = testArray.concat(group.match))
             );
-            console.log(testMatches(testArray));
+            // console.log(testMatches(testArray));
             //we can include all the ones that match some of them
         }
-        console.log("After filter, test array is", testArray);
     }
 
     // let filterGrouptions = allGroups.map(group => {name: group.categoryName, _id: group._id});
