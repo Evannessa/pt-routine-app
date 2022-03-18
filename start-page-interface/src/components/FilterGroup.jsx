@@ -4,10 +4,9 @@ import * as StyledInputs from "./styled-components/input.styled";
 import * as StyledButtons from "./styled-components/Buttons.Styled";
 import Select from "./input/Select";
 import Form from "./input/Form";
-import { Filter } from "./Filter";
+import { Filter, filterOperations } from "./Filter";
 import { requests } from "../helpers/requests";
 import { ConditionalWrapper } from "./ConditionalWrapper";
-import { matches } from "lodash";
 import { Link } from "react-router-dom";
 
 export function testIntersection(array1, array2) {
@@ -49,6 +48,8 @@ function FilterGroup(props) {
         }
     );
     const [allGroups, setAllGroups] = useState();
+    const [matchingLinks, setMatchingLinks] = useState();
+    // const [childFilteredLinks, setChildFilteredLinks] = useState();
 
     useEffect(() => {
         let options = {
@@ -58,6 +59,17 @@ function FilterGroup(props) {
         };
         requests.axiosRequest(options);
     }, []);
+
+    // //for when a new child is added, or a child's matching links are changed, or any of our child's filters change, or our groupSelector changes from "and" to "or"
+    useEffect(() => {
+        crossFilters();
+    }, [filterGroup.filters, filterGroup.groupSelector]);
+
+    useEffect(() => {
+        if (matchingLinks) {
+            props.updateFilteredLinks(matchingLinks);
+        }
+    }, [matchingLinks]);
 
     //filters should be sub-groups
     function updateFilterGroup(propertyName, value) {
@@ -72,6 +84,23 @@ function FilterGroup(props) {
         );
         updateFilterGroup("filters", newFilters);
     }
+
+    // /**
+    //  * updates the matching links of the parent from the child
+    //  * @param {String} id - the id of the child
+    //  * @param {Array} childMatchingLinks - an array of links that match a child filter's conditions
+    //  */
+    // function updateParentMatchingLinks(id, childMatchingLinks) {
+    //     //update the parent's array of matches
+    //     setChildFilteredLinks((prevArray) =>
+    //         prevArray.map((child) =>
+    //             child._id === id
+    //                 ? { ...child, links: childMatchingLinks } //return the child with the "links" array updated
+    //                 : child
+    //         )
+    //     ); // else just return the child itself
+    //     //this will trigger a useEffect which should reapply all the filters of the children
+    // }
 
     let andOrProps = {
         name: "relation",
@@ -133,48 +162,34 @@ function FilterGroup(props) {
 
     // //solution from below
     // //?https://stackoverflow.com/questions/11076067/finding-matches-between-multiple-javascript-arrays
-    // function testMatches(matchesArray) {
-    //     console.log("Match array is", matchesArray);
-    //     if (matchesArray.length === 0) {
-    //         return;
-    //     }
-    //     console.log("Length is ", matchesArray, matchesArray.length);
-    //     var finalResult = matchesArray.shift().reduce((totalArray, value) => {
-    //         //if the value is NOT yet the total array and every array in our group also includes the value,
-    //         if (
-    //             !totalArray.includes(value) &&
-    //             matchesArray.every((array) => array.includes(value))
-    //         ) {
-    //             totalArray.push(value);
-    //         }
-    //         return totalArray;
-    //     }, []);
-    //     return finalResult;
-    // }
 
     function crossFilters() {
         let testArray = [];
+        filterGroup.filters.forEach((filter) => {
+            testArray.push(
+                filterOperations.getMatches(
+                    props.links,
+                    filter.propertyChoice,
+                    filter.match,
+                    false
+                )
+            );
+        });
+
         //add all matches to a single array
         if (filterGroup.groupSelector === "and") {
             //we need to include only the ones that match all of them
             //add all match *arrays* to a single array
-            if (filterGroup.filters && Array.isArray(filterGroup.filters)) {
-                filterGroup.filters.forEach((filter) => testArray.push(filter.match));
-                // console.log(testArray);
-                // console.log(testMatches(testArray));
-                // console.log(
-                //     testArray,
-                //     filterGroup.filters[0].match,
-                //     testArray.concat(filterGroup.filters[0].match),
-                //     testMatches(testArray.concat(filterGroup.filters[0].match))
-                // );
-            }
+            let matchingLinks = testMatches(testArray);
+            setMatchingLinks(matchingLinks);
+            // if (filterGroup.filters && Array.isArray(filterGroup.filters)) {
+            //     filterGroup.filters.forEach((filter) => testArray.push(filter.match));
+            // }
         } else if (filterGroup.groupSelector === "or") {
             //add all match array items to the same array
             filterGroup.filters.forEach(
                 (group) => (testArray = testArray.concat(group.match))
             );
-            // console.log(testMatches(testArray));
             //we can include all the ones that match some of them
         }
     }
@@ -193,17 +208,14 @@ function FilterGroup(props) {
             });
         }
         let options = {
-            method: "POST",
-            pathsArray: ["display", "groups"],
-            data: { name: "New Filter Group" },
+            method: "PATCH",
+            pathsArray: ["display", "groups", filterGroup._id],
+            data: { categoryName: "New Filter" },
             setStateCallback: updateFilters,
         };
         requests.axiosRequest(options);
     }
 
-    if (filterGroup) {
-        crossFilters();
-    }
     function reapplyFilter() {
         crossFilters();
     }

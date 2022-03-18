@@ -45,6 +45,13 @@ function CategoryView(props) {
         setFilteredLinks(props.links);
     }, [props.links]);
 
+    function updateFilteredLinks(data) {
+        setFilteredLinks(data);
+    }
+    // useEffect(()=> {
+    // 	setFilteredLinks(filterGroup.matches)
+    // }, [filterGroup.matches])
+
     // //when the groupId changes/is fetched from local storage
     // useEffect(() => {
     //     if (groupId) {
@@ -109,6 +116,7 @@ function CategoryView(props) {
                 defaultValues={filterGroup}
                 tags={props.tags || []}
                 links={props.links || []}
+                updateFilteredLinks={updateFilteredLinks}
             />
             <Btns.TextButton bgColor="transparent" onClick={handleClick}>
                 <Btns.StyledButtonIconSpan>add</Btns.StyledButtonIconSpan>

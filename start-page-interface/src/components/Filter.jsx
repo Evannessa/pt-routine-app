@@ -30,12 +30,23 @@ export var filterOperations = (function () {
      * @returns a boolean saying whether or not the property matches
      */
     function filterStringProperty(property, match, matchAll = false) {
+        if (typeof property !== "string" || !Array.isArray(match)) {
+            console.log(
+                "Property and match not string and array",
+                property,
+                match,
+                typeof property,
+                typeof match
+            );
+            //TODO: make this an error
+            return;
+        }
         //match all should return an EXACT match
         if (matchAll) {
             return property === match;
         } else {
             //otherwise  should return a non-exact, case-insensitive match that includes portions of the word
-            return property.toLowerCase().includes(match.toLowerCase());
+            return property.toLowerCase().includes(match[0].toLowerCase());
         }
     }
     /**
@@ -97,9 +108,12 @@ export var filterOperations = (function () {
 })();
 export function Filter(props) {
     const [names, setNames] = useState(props.links.map((link) => link.name));
+    //all of the links mapped to only show their names
+    //TODO: Add url as well
     const [tags, setTags] = useState(props.tags.map((tag) => tag.name));
-    const [matches, setMatches] = useState();
-    const [displayMode, setDisplayMode] = useState(props.displayMode);
+    //all of the tags
+    const [matches, setMatches] = useState(); // matches are the links that match our filter conditions
+    const [displayMode, setDisplayMode] = useState(props.displayMode); //whether we're showing the form details, or just the name. Toggles w/ the button.
 
     const [filter, setFilter] = useState(
         props.defaultValues
@@ -111,7 +125,7 @@ export function Filter(props) {
                   stringMatch: "",
                   arrayMatch: [],
               }
-    );
+    ); //the filter is basically our conditions. What property we're filtering on (name, url, or tags), what we want the relation to be (equal or not equal), and what they need to match (a string or an array of tags)
 
     const [propertyChoiceProps, setPropertyChoiceProps] = useState(
         getPropertyChoiceProps()
@@ -139,23 +153,35 @@ export function Filter(props) {
         setDisplayMode((prevMode) => !prevMode);
     }
     function findMatches() {
-        setMatches(getMatches(props.links, filter.propertyChoice, filter.stringMatch));
+        // console.log(
+        //     "Arguments this way",
+        //     props.links,
+        //     filter.propertyChoice,
+        //     filter.stringMatch
+        // );
+        // setMatches(getMatches(props.links, filter.propertyChoice, filter.stringMatch));
     }
+    //if the links are updated, or our filter object is updated (we change the condition or precision, etc.), find our matching links again
     useEffect(() => {
-        findMatches();
+        if (filter) {
+            findMatches();
+        }
     }, [props.links, filter]);
 
+    //if our filter object changes, or the names of the links, or the tags change, find our matching links again
     useEffect(() => {
-        // setPropertyChoiceProps(getPropertyChoiceProps());
-
         setMatchProps(
             getMatchProps(
                 filter.propertyChoice,
                 filter.propertyChoice === "tags" ? "array" : "string"
             )
         );
-        findMatches();
+        if (filter) {
+            findMatches();
+        }
     }, [filter, names, tags]);
+
+    //if our filter changes, update our parent group to reflect that
     useEffect(() => {
         props.updateParent(filter._id, filter);
     }, [filter]);
@@ -231,12 +257,21 @@ export function Filter(props) {
         matchAll = false,
         childProperty = ""
     ) {
+        console.log(
+            "Parameters",
+            array,
+            property,
+            conditionToMeet,
+            matchAll,
+            childProperty
+        );
         //for the strings, match all could be ""
         let propertyName = property;
         //filter out items in "links", if name or URL, match the match condition
         // i.e., "name" = "Gaming" "match" = "Gam";
+
         return array.filter((item, index) => {
-            return matchFunctions[propertyName](
+            return filterOperations.matchFunctions[propertyName](
                 item[propertyName],
                 conditionToMeet,
                 matchAll,
