@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import Input from "./input/Input";
 import styled from "styled-components";
 import * as StyledInputs from "./styled-components/input.styled";
+import * as Layout from "./styled-components/layout.styled";
 import * as StyledButtons from "./styled-components/Buttons.Styled";
 import Select from "./input/Select";
 import Form from "./input/Form";
@@ -35,6 +36,18 @@ export function testMatches(matchesArray) {
     return finalResult;
 }
 
+const StyledDropdown = styled(Layout.StyledDropdown)`
+    padding: 1rem 2rem;
+    background-color: var(--clr-primary-base);
+    border-radius: 15px;
+`;
+
+const SubCategory = styled.div`
+    padding: 1rem 2rem;
+    border-radius: 5px;
+    background-color: var(--clr-primary-light);
+`;
+
 /**
  *
  * @param {*} props
@@ -51,6 +64,8 @@ function FilterGroup(props) {
     );
     const [allGroups, setAllGroups] = useState();
     const [matchingLinks, setMatchingLinks] = useState();
+
+    const [displayMode, setDisplayMode] = useState(props.displayMode); //whether we're showing the form details, or just the name. Toggles w/ the button.
     // const [childFilteredLinks, setChildFilteredLinks] = useState();
     //get ALL tags to suggest when user types
     const debouncedPatch = useCallback(
@@ -106,13 +121,14 @@ function FilterGroup(props) {
     }
 
     let andOrProps = {
-        name: "relation",
+        name: "groupSelector",
         options: [
             { name: "and", _id: "and" },
             { name: "or", _id: "or" },
         ],
         setStateFunction: updateFilterGroup,
-        value: filterGroup["relation"],
+        value: filterGroup["groupSelector"],
+        isDatalist: false,
     };
 
     function addOptions() {
@@ -169,14 +185,26 @@ function FilterGroup(props) {
     function crossFilters() {
         let testArray = [];
         filterGroup.filters.forEach((filter) => {
-            testArray.push(
-                filterOperations.getMatches(
-                    props.links,
-                    filter.propertyChoice,
-                    filter.match,
-                    false
-                )
-            );
+            if (filter.propertyChoice !== "tags") {
+                testArray.push(
+                    filterOperations.getMatches(
+                        props.links,
+                        filter.propertyChoice,
+                        filter.match,
+                        filter.precision === "all" ? true : false
+                    )
+                );
+            } else {
+                testArray.push(
+                    filterOperations.getMatches(
+                        props.links,
+                        filter.propertyChoice,
+                        filter.match,
+                        filter.precision === "all" ? true : false,
+                        "name"
+                    )
+                );
+            }
         });
 
         //add all matches to a single array
@@ -189,10 +217,8 @@ function FilterGroup(props) {
             //     filterGroup.filters.forEach((filter) => testArray.push(filter.match));
             // }
         } else if (filterGroup.groupSelector === "or") {
-            //add all match array items to the same array
-            filterGroup.filters.forEach(
-                (group) => (testArray = testArray.concat(group.match))
-            );
+            let matchingLinks = testArray.flat();
+            setMatchingLinks(matchingLinks);
             //we can include all the ones that match some of them
         }
     }
@@ -229,27 +255,44 @@ function FilterGroup(props) {
     function reapplyFilter() {
         crossFilters();
     }
+    function toggleDisplayMode(event) {
+        setDisplayMode((prevMode) => !prevMode);
+    }
 
     return (
-        <Form>
-            <Input
-                name="categoryName"
-                type="text"
-                value={filterGroup.categoryName}
-                setStateFunction={updateFilterGroup}
-            />
-            <StyledButtons.TextButton onClick={addNewFilter}>
+        <>
+            <StyledButtons.ContainedButton onClick={toggleDisplayMode}>
                 <StyledButtons.StyledButtonIconSpan>
-                    add
+                    {displayMode ? "expand_more" : "unfold_less"}
                 </StyledButtons.StyledButtonIconSpan>
-                Add New Filter
-            </StyledButtons.TextButton>
-            <div style={{ display: "flex", flexDirection: "column" }}>{addOptions()}</div>
+                {filterGroup.categoryName}
+            </StyledButtons.ContainedButton>
+            {displayMode && (
+                <StyledDropdown>
+                    <Form>
+                        <Input
+                            name="categoryName"
+                            type="text"
+                            value={filterGroup.categoryName}
+                            setStateFunction={updateFilterGroup}
+                        />
 
-            {/* <StyledButtons.ContainedButton onClick={reapplyFilter}> */}
-            {/* Apply Filter */}
-            {/* </StyledButtons.ContainedButton> */}
-        </Form>
+                        <SubCategory style={{ display: "flex", flexDirection: "column" }}>
+                            {addOptions()}
+                        </SubCategory>
+                        <StyledButtons.TextButton onClick={addNewFilter}>
+                            <StyledButtons.StyledButtonIconSpan>
+                                add
+                            </StyledButtons.StyledButtonIconSpan>
+                            Add New Filter
+                        </StyledButtons.TextButton>
+                        {/* <StyledButtons.ContainedButton onClick={reapplyFilter}> */}
+                        {/* Apply Filter */}
+                        {/* </StyledButtons.ContainedButton> */}
+                    </Form>
+                </StyledDropdown>
+            )}
+        </>
     );
 }
 

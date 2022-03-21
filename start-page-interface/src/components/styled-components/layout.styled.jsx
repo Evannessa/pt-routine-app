@@ -78,5 +78,7 @@ export const StyledDropdown = styled.section`
     height: fit-content;
     /* background-color: var(--clr-primary-light); */
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    z-index: 200;
+    border-radius: 10px;
 `;
 StyledDropdown.displayName = "StyledDropdown";

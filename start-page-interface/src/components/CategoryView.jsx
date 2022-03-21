@@ -89,11 +89,21 @@ function CategoryView(props) {
 
     const linkComponents = filteredLinks
         ? filteredLinks.map((link) => (
-              <li key={link._id}>
+              <li key={link._id} role="link">
                   {link.type === "External" ? (
-                      <a href={link.url}>{link.name}</a>
+                      <a href={link.url} data-type={link.type}>
+                          {link.name}
+                      </a>
                   ) : (
-                      <Link to={link.url}>{link.name}</Link>
+                      <Link
+                          to={{
+                              pathname: `/display/internal/${link._id}/`,
+                              //   state: { background: location },
+                          }}
+                          data-type={link.type}
+                          key={link._id}>
+                          {link.name}
+                      </Link>
                   )}
               </li>
           ))
@@ -132,6 +142,7 @@ function CategoryView(props) {
                     tags={props.tags || []}
                     links={props.links || []}
                     updateFilteredLinks={updateFilteredLinks}
+                    displayMode={props.displayMode || false}
                 />
             ) : (
                 <Btns.TextButton bgColor="transparent" onClick={handleClick}>

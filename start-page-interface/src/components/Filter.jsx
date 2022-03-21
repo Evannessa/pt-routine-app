@@ -20,6 +20,7 @@ export var filterOperations = (function () {
         name: filterStringProperty,
         url: filterStringProperty,
         tags: filterArrayProperty,
+        type: filterStringProperty,
     };
 
     /**
@@ -87,7 +88,7 @@ export var filterOperations = (function () {
     ) {
         //for the strings, match all could be ""
         let propertyName = property;
-        let regex = /(name|url|tags)/g;
+        let regex = /(name|url|tags|type)/g;
         if (!propertyName || !propertyName.match(regex)) {
             console.warn("NOT A PROPERTY NAME", propertyName);
             return [];

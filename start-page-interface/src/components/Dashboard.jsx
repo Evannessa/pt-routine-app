@@ -44,7 +44,8 @@ function Dashboard() {
                   key={filterGroup._id}
                   defaultValues={filterGroup}
                   links={links || []}
-                  tags={tags || []}></CategoryView>
+                  tags={tags || []}
+                  displayMode={false}></CategoryView>
           ))
         : [];
 
