@@ -2,6 +2,7 @@ const { createGlobalStyle } = require("styled-components");
 
 export const Global = createGlobalStyle`
 	:root{
+		
   --clr-primary-deep-dark: #171529;
   --clr-primary-dark: #25203f;
   --clr-primary-base: #342E57;
