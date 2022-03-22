@@ -55,6 +55,18 @@
             "tab.activeBackground": "#7886ff44"
         },
         "peacock.color": "#832561",
-        "explorerExclude.backup": null
+        "explorerExclude.backup": null,
+        "favorites.resources": [
+            {
+                "filePath": "start-page-interface\\src",
+                "group": "Default"
+            },
+            {
+                "filePath": "start-page-interface\\src\\components",
+                "group": "Start Page Components"
+            }
+        ],
+        "favorites.groups": ["Default", "Start Page Components"],
+        "favorites.currentGroup": "Start Page Components"
     }
 }

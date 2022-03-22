@@ -7,7 +7,7 @@ const backgroundColorAlt = (props) => {
     return props.bgColorAlt || "var(--clr-accent-green)";
 };
 const color = (props) => {
-    return props.color || "white";
+    return props.color || "var(--clr-primary-deep-dark)";
 };
 
 const colorAlt = (props) => {
@@ -83,6 +83,7 @@ export const ContainedButton = styled(StyledButton)`
     color: var(--clr-text-color);
     padding: 0.25em 1em;
     border-radius: 5px;
+    font-weight: bold;
 `;
 ContainedButton.displayName = "ContainedButton";
 export const OutlinedButton = styled(ContainedButton)`

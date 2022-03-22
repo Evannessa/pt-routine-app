@@ -89,7 +89,7 @@ export const StyledNavLink = styled.li`
         padding: 0.25em 0.25em 0.15em 0.25em;
         text-decoration: none;
         color: white;
-        border-bottom: 3px solid #171529;
+        border-bottom: 3px solid var(--clr-primary-deep-dark);
         box-shadow: 0px 2px 0px 0px var(--clr-underline-color);
         transition: background-color 0.15s ease-in, border-color 0.15s ease-in;
         &:focus,

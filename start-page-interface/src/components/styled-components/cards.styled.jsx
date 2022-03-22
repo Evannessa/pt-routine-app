@@ -65,7 +65,6 @@ export const StyledCardSidebar = styled.div`
     align-items: center;
     justify-content: center;
     /* padding: 0rem 1rem; */
-    /* background-color: #bf2063; */
     /* margin-right: -3rem; */
     margin-top: -2rem;
     margin-bottom: -2rem;
@@ -75,7 +74,7 @@ export const StyledCardSidebar = styled.div`
         transform-origin: right center;
         transform: scaleX(0);
         display: inline-flex;
-        background-color: #bf2063;
+        background-color: var(--clr-accent-pink);
         width: 100%;
         height: 100%;
         justify-content: center;
@@ -160,7 +159,7 @@ export const StyledCard = styled.div`
     flex-direction: row;
     padding: 1rem 2rem;
     color: white;
-    background: #25203f;
+    background: var(--clr-primary-base);
     /* justify-content: space-between; */
     align-items: center;
     justify-content: center;

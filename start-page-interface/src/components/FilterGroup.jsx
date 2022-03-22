@@ -38,15 +38,17 @@ export function testMatches(matchesArray) {
 
 const StyledDropdown = styled(Layout.StyledDropdown)`
     padding: 1rem 2rem;
-    background-color: var(--clr-primary-base);
+    background-color: var(--clr-primary-dark);
     border-radius: 15px;
 `;
 
+StyledDropdown.displayName = "StyledDropdown";
 const SubCategory = styled.div`
     padding: 1rem 2rem;
     border-radius: 5px;
-    background-color: var(--clr-primary-light);
+    background-color: var(--clr-primary-base);
 `;
+SubCategory.displayName = "SubCategory";
 
 /**
  *

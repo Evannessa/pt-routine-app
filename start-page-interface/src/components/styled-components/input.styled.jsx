@@ -2,16 +2,16 @@ import styled, { css } from "styled-components";
 import Form from "../input/Form";
 import Input from "../input/Input";
 export const StyledTextboxSpan = styled.div`
-    background-color: #171529;
+    background-color: var(--clr-primary-deep-dark);
     min-width: 8rem;
     min-height: 2rem;
     border-radius: 4px;
     border: none;
-    border-bottom: 2px solid #6495ed;
+    border-bottom: 2px solid var(--clr-primary-accent);
 
     border-bottom-left-radius: 0px;
     border-bottom-right-radius: 0px;
-    color: #6495ed;
+    color: var(--clr-primary-accent);
     padding: 0.25rem 0.5rem;
     display: flex;
     flex-wrap: wrap;
@@ -20,21 +20,27 @@ export const StyledTextboxSpan = styled.div`
     height: fit-content;
     /* justify-content: center; */
     > span {
-        background-color: #6495ed;
+        background-color: var(--clr-primary-deep-dark);
         color: white;
     }
     input {
         border: 0px;
         height: 100%;
-        background-color: #171529;
-        color: #6495ed;
+        background-color: var(--clr-primary-deep-dark);
+        color: var(--clr-primary-accent);
     }
 `;
 StyledTextboxSpan.displayName = StyledTextboxSpan;
 
 export const StyledSelect = styled.select`
     background-color: var(--clr-primary-dark);
-    color: white;
+    color: var(--clr-accent-lighter) !important;
+    border: none;
+    border-bottom: 2px solid var(--clr-accent);
+    border-radius: 5px;
+    border-bottom-left-radius: 2px;
+    border-bottom-right-radius: 2px;
+    padding: 0.25em 0.5em;
 `;
 StyledSelect.displayName = "StyledSelect";
 
@@ -187,7 +193,7 @@ export const StyledForm = styled.form`
     } */
 
     > button[type="submit"] {
-        background-color: #6495ed;
+        background-color: var(--clr-primary-accent);
         border: none;
         color: white;
         padding: 0.5em 1em;
@@ -195,13 +201,13 @@ export const StyledForm = styled.form`
     }
     input[type="text"],
     textarea {
-        background-color: #171529;
+        background-color: var(--clr-primary-deep-dark);
         min-width: 8rem;
         min-height: 2rem;
         border-radius: 4px;
         border: none;
-        border-bottom: 2px solid #6495ed;
-        color: #6495ed;
+        border-bottom: 2px solid var(--clr-accent);
+        color: var(--clr-accent);
         padding: 0.25rem 0.5rem;
         display: flex;
         border-bottom-left-radius: 0px;

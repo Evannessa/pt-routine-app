@@ -39,7 +39,12 @@ function Select(props) {
         props.setStateFunction(props.name, passValue);
     }
     return (
-        <fieldset style={{ display: "flex", flexDirection: "row" }}>
+        <fieldset
+            style={{
+                display: "flex",
+                flexDirection: "row",
+                backgroundColor: "transparent",
+            }}>
             {props.multiple && (
                 <input
                     type="text"

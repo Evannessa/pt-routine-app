@@ -3,11 +3,15 @@ const { createGlobalStyle } = require("styled-components");
 export const Global = createGlobalStyle`
 	:root{
 		
-  --clr-primary-deep-dark: #171529;
-  --clr-primary-dark: #25203f;
-  --clr-primary-base: #342E57;
-  --clr-primary-light: #6357a6;
-  --clr-accent: #6495ed;
+  --clr-primary-deep-dark: hsl(220, 19%, 10%);
+  --clr-primary-dark: hsl(222, 13%, 15%);
+  --clr-primary-base: hsl(216, 14%, 21%); 
+  --clr-primary-light: hsl(216, 14%, 34%);
+ --clr-primary-lighter: hsl(216, 22%, 60%); 
+ --clr-primary-lightest: hsl(216, 40%, 73%);
+  ${"" /* --clr-accent: #6495ed; */}
+--clr-accent: hsl(197, 84%, 57%);
+--clr-accent-lighter: hsl(197, 94%, 67%);
   --clr-accent-green:#4ab4c7;
 --clr-accent-pink: #bf2063;
   --clr-shadow: rgba(0, 0, 0, 0.25);

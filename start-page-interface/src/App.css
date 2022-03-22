@@ -1,6 +1,6 @@
 html,
 body {
-	background-color: #171529;
+	background-color: var(--clr-primary-deep-dark);
 	width: 100vw;
 	height: 100vh;
 	display: flex;
@@ -34,7 +34,7 @@ body * {
 }
 
 .App-header {
-	background-color: #282c34;
+	background-color: var(--clr-primary-deep-dark);
 	min-height: 100vh;
 	display: flex;
 	flex-direction: column;

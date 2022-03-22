@@ -29,7 +29,7 @@ function ComboBox(props) {
         },
     };
     return (
-        <fieldset>
+        <fieldset style={{ backgroundColor: "transparent" }}>
             <input type="text" {...props} onChange={handleChange} />
             <StyledDatalist id={props.datalistId}>{optionComponents}</StyledDatalist>
         </fieldset>

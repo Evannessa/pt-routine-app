@@ -39,6 +39,9 @@ const StyledCategorySection = styled.section`
         background-color: var(--clr-accent);
         border-radius: 999px;
     }
+    &::-webkit-scrollbar-track {
+        background-color: var(--clr-primary-deep-dark);
+    }
 `;
 
 function CategoryView(props) {

@@ -6,6 +6,7 @@ import { ChipButton } from "./styled-components/chips.styled";
 import * as Buttons from "./styled-components/Buttons.Styled";
 import * as Layout from "./styled-components/layout.styled";
 import { isElementOfType } from "react-dom/test-utils";
+import styled from "styled-components";
 
 export var filterOperations = (function () {
     //the methods associated with each type
@@ -112,6 +113,13 @@ export var filterOperations = (function () {
         testIntersection,
     };
 })();
+
+const FilterDiv = styled.section`
+    /* background-color: var(--clr-primary-light); */
+    border: 1px solid var(--clr-accent);
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+`;
 export function Filter(props) {
     const [names, setNames] = useState(props.links.map((link) => link.name));
     //all of the links mapped to only show their names
@@ -401,7 +409,7 @@ export function Filter(props) {
     }
 
     return (
-        <section>
+        <FilterDiv>
             <Buttons.ContainedButton onClick={toggleDisplayMode}>
                 <Buttons.StyledButtonIconSpan>
                     {displayMode ? "expand_more" : "unfold_less"}
@@ -409,40 +417,43 @@ export function Filter(props) {
                 {filter.categoryName}
             </Buttons.ContainedButton>
             {!displayMode && (
-                <Layout.StyledDropdown>
-                    <fieldset flex-direction="row">
-                        <Input
+                <fieldset
+                    style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        backgroundColor: "transparent",
+                    }}>
+                    {/* <Input
                             type="text"
                             value={filter.categoryName}
                             name="categoryName"
                             setStateFunction={updateFilter}
-                            hasLabel={true}></Input>
-                        <Select
-                            {...propertyChoiceProps}
-                            value={filter.propertyChoice}></Select>
-                        <Select {...getRelationProps()}></Select>
-                        <Select {...precisionProps}></Select>
-                        {filter.propertyChoice && (
-                            <div>
-                                {filter.propertyChoice !== "tags" ? (
-                                    <ComboBox {...matchProps}></ComboBox>
-                                ) : (
-                                    <Select
-                                        {...matchProps}
-                                        options={props.tags.map((tag) => {
-                                            return { name: tag.name, _id: tag.name };
-                                        })}></Select>
-                                )}
-                            </div>
-                        )}
-                        {/* <div>
+                            hasLabel={true}></Input> */}
+                    <Select
+                        {...propertyChoiceProps}
+                        value={filter.propertyChoice}></Select>
+                    <Select {...getRelationProps()}></Select>
+                    <Select {...precisionProps}></Select>
+                    {filter.propertyChoice && (
+                        <div>
+                            {filter.propertyChoice !== "tags" ? (
+                                <ComboBox {...matchProps}></ComboBox>
+                            ) : (
+                                <Select
+                                    {...matchProps}
+                                    options={props.tags.map((tag) => {
+                                        return { name: tag.name, _id: tag.name };
+                                    })}></Select>
+                            )}
+                        </div>
+                    )}
+                    {/* <div>
 					{matches
 						? matches.map((match) => <div key={match._id}>{match.name}</div>)
 						: []}
 								</div> */}
-                    </fieldset>
-                </Layout.StyledDropdown>
+                </fieldset>
             )}
-        </section>
+        </FilterDiv>
     );
 }

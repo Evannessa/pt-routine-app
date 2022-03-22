@@ -13,7 +13,7 @@ import {
     ContainedButton,
 } from "./styled-components/Buttons.Styled";
 const StyledModalContainer = styled.div`
-    background: rgba(106, 90, 205, 0.9);
+    background: var(--clr-primary-base);
     /* width: fit-content; */
     /* height: auto; */
     ${(props) =>
@@ -105,10 +105,10 @@ const StyledHtmlWrapper = styled.div`
             color: white;
         }
         & tr:nth-child(even) {
-            background-color: #292b5f;
+            background-color: var(--clr-primary-base);
         }
-        & tr:nth-child(even) {
-            background-color: #292b5f;
+        & tr:nth-child(odd) {
+            background-color: var(--clr-primary-base);
         }
     }
 `;

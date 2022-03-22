@@ -33,7 +33,7 @@ import { Global } from "./components/styled-components/global.colors";
 
 const StyledContainer = styled.div`
     flex: 1;
-    background-color: var(--clr-primary-base);
+    background-color: var(--clr-primary-deep-dark);
     padding: 0rem 2rem;
     border-radius: 15px;
     display: flex;
