@@ -7,7 +7,10 @@ import * as Buttons from "./styled-components/Buttons.Styled";
 import * as Layout from "./styled-components/layout.styled";
 import { isElementOfType } from "react-dom/test-utils";
 import styled from "styled-components";
+import { CSSTransitionGroup, Transition } from "react-transition-group";
 
+const appearDuration = 500;
+const transitionName = `slide`;
 export var filterOperations = (function () {
     //the methods associated with each type
     function testIntersection(array1, array2) {
@@ -108,9 +111,22 @@ export var filterOperations = (function () {
 
 const FilterSection = styled.section`
     /* background-color: var(--clr-primary-light); */
-    border: ${(props) => (props.displayMode ? "none" : "1px solid var(--clr-accent)")};
+    width: fit-content;
+    height: fit-content;
+    border: 1px solid var(--clr-accent);
+    /* border-color: ${(props) =>
+        props.displayMode ? "transparent" : "var(--clr-accent)"}; */
     padding: 0.5rem 1rem;
     border-radius: 10px;
+    &.${transitionName}-appear {
+        opacity: 0.01;
+    }
+    &.${transitionName}-appear-active {
+        opacity: 1;
+        transition: opacity ${appearDuration}ms ease-out;
+    }
+
+    /* transition: border-color 0.25s; */
 `;
 export function Filter(props) {
     const [names, setNames] = useState(props.links.map((link) => link.name));
@@ -402,54 +418,62 @@ export function Filter(props) {
 
     return (
         <FilterSection displayMode={displayMode}>
-            <Buttons.OutlinedButton
+            <Buttons.TextButton
                 onClick={toggleDisplayMode}
                 style={{
-                    borderColor: displayMode ? "currentcolor" : "transparent",
+                    borderColor: "transparent",
+                    // borderColor: displayMode ? "currentcolor" : "transparent",
+                    // transition: "all 0.25s",
                 }}>
                 <Buttons.StyledButtonIconSpan>
                     {displayMode ? "expand_more" : "unfold_less"}
                 </Buttons.StyledButtonIconSpan>
                 {filter.categoryName}
-            </Buttons.OutlinedButton>
-            {!displayMode && (
-                <fieldset
-                    style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        backgroundColor: "transparent",
-                    }}>
-                    {/* <Input
+            </Buttons.TextButton>
+            <CSSTransitionGroup
+                in={displayMode}
+                transitionName={transitionName}
+                transitionAppear={true}
+                transitionAppearTimeout={appearDuration}>
+                {!displayMode && (
+                    <fieldset
+                        style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            backgroundColor: "transparent",
+                        }}>
+                        {/* <Input
                             type="text"
                             value={filter.categoryName}
                             name="categoryName"
                             setStateFunction={updateFilter}
                             hasLabel={true}></Input> */}
-                    <Select
-                        {...propertyChoiceProps}
-                        value={filter.propertyChoice}></Select>
-                    <Select {...getRelationProps()}></Select>
-                    <Select {...precisionProps}></Select>
-                    {filter.propertyChoice && (
-                        <div>
-                            {filter.propertyChoice !== "tags" ? (
-                                <ComboBox {...matchProps}></ComboBox>
-                            ) : (
-                                <Select
-                                    {...matchProps}
-                                    options={props.tags.map((tag) => {
-                                        return { name: tag.name, _id: tag.name };
-                                    })}></Select>
-                            )}
-                        </div>
-                    )}
-                    {/* <div>
+                        <Select
+                            {...propertyChoiceProps}
+                            value={filter.propertyChoice}></Select>
+                        <Select {...getRelationProps()}></Select>
+                        <Select {...precisionProps}></Select>
+                        {filter.propertyChoice && (
+                            <div>
+                                {filter.propertyChoice !== "tags" ? (
+                                    <ComboBox {...matchProps}></ComboBox>
+                                ) : (
+                                    <Select
+                                        {...matchProps}
+                                        options={props.tags.map((tag) => {
+                                            return { name: tag.name, _id: tag.name };
+                                        })}></Select>
+                                )}
+                            </div>
+                        )}
+                        {/* <div>
 					{matches
 						? matches.map((match) => <div key={match._id}>{match.name}</div>)
 						: []}
 								</div> */}
-                </fieldset>
-            )}
+                    </fieldset>
+                )}
+            </CSSTransitionGroup>
         </FilterSection>
     );
 }

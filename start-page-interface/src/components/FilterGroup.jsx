@@ -1,3 +1,4 @@
+// #region imports
 import React, { useEffect, useState, useCallback } from "react";
 import Input from "./input/Input";
 import styled from "styled-components";
@@ -11,7 +12,11 @@ import { requests } from "../helpers/requests";
 import { ConditionalWrapper } from "./ConditionalWrapper";
 import { Link } from "react-router-dom";
 import { debounce } from "lodash";
+import { CSSTransitionGroup } from "react-transition-group";
+// #endregion
 
+const appearDuration = 500;
+const transitionName = `slide`;
 export function testIntersection(array1, array2) {
     // "AND" means it matches every single qualifier
     // So we're trying to find items from every filter's array of matching links
@@ -40,12 +45,34 @@ const StyledDropdown = styled(Layout.StyledDropdown)`
     padding: 1rem 2rem;
     background-color: var(--clr-primary-dark);
     border-radius: 15px;
+    &.${transitionName}-appear {
+        opacity: 0.01;
+    }
+    &.${transitionName}-appear-active {
+        opacity: 1;
+        transition: opacity ${appearDuration}ms ease-out;
+    }
+
+    &.${transitionName}-enter {
+        opacity: 0.01;
+    }
+    &.${transitionName}-enter-active {
+        opacity: 1;
+        transition: opacity ${appearDuration}ms ease-out;
+    }
+    &.${transitionName}-leave {
+        opacity: 1;
+    }
+    &.${transitionName}-leave-active {
+        opacity: 0.01;
+        transition: opacity ${appearDuration}ms ease-out;
+    }
 `;
 
 StyledDropdown.displayName = "StyledDropdown";
 const SubCategory = styled.div`
     padding: 1rem 2rem;
-    border-radius: 5px;
+    border-radius: 10px;
     background-color: var(--clr-primary-base);
 `;
 SubCategory.displayName = "SubCategory";
@@ -274,6 +301,12 @@ function FilterGroup(props) {
               </li>
           ))
         : [];
+    const startTransitionStyles = {
+        opacity: 0,
+    };
+    const finishTransitionStyles = {
+        opacity: "100%",
+    };
 
     return (
         <>
@@ -283,32 +316,38 @@ function FilterGroup(props) {
                 </StyledButtons.StyledButtonIconSpan>
                 {filterGroup.categoryName}
             </StyledButtons.ContainedButton>
-            {displayMode && (
-                <StyledDropdown>
-                    <Form>
-                        <Input
-                            name="categoryName"
-                            type="text"
-                            value={filterGroup.categoryName}
-                            setStateFunction={updateFilterGroup}
-                        />
-
-                        <SubCategory style={{ display: "flex", flexDirection: "column" }}>
-                            {addOptions()}
-                        </SubCategory>
-                        <StyledButtons.TextButton onClick={addNewFilter}>
-                            <StyledButtons.StyledButtonIconSpan>
-                                add
-                            </StyledButtons.StyledButtonIconSpan>
-                            Add New Filter
-                        </StyledButtons.TextButton>
-                        {/* <StyledButtons.ContainedButton onClick={reapplyFilter}> */}
-                        {/* Apply Filter */}
-                        {/* </StyledButtons.ContainedButton> */}
-                    </Form>
-                </StyledDropdown>
-            )}
-
+            <CSSTransitionGroup
+                transitionName={transitionName}
+                transitionEnterTimeout={200}
+                transitionLeaveTimeout={200}
+                transitionAppear={true}
+                transitionAppearTimeout={appearDuration}>
+                {displayMode && (
+                    <StyledDropdown key="123">
+                        <Form>
+                            <Input
+                                name="categoryName"
+                                type="text"
+                                value={filterGroup.categoryName}
+                                setStateFunction={updateFilterGroup}
+                            />
+                            <SubCategory
+                                style={{ display: "flex", flexDirection: "column" }}>
+                                {addOptions()}
+                            </SubCategory>
+                            <StyledButtons.TextButton onClick={addNewFilter}>
+                                <StyledButtons.StyledButtonIconSpan>
+                                    add
+                                </StyledButtons.StyledButtonIconSpan>
+                                Add New Filter
+                            </StyledButtons.TextButton>
+                            {/* <StyledButtons.ContainedButton onClick={reapplyFilter}> */}
+                            {/* Apply Filter */}
+                            {/* </StyledButtons.ContainedButton> */}
+                        </Form>
+                    </StyledDropdown>
+                )}
+            </CSSTransitionGroup>
             <ul>{linkComponents}</ul>
         </>
     );

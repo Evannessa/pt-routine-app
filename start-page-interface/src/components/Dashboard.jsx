@@ -6,9 +6,11 @@ import { requests } from "../helpers/requests";
 import * as Layout from "./styled-components/layout.styled";
 import CategoryView from "./CategoryView";
 const StyledCategoryGrid = styled.section`
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.45rem;
+    columns: 3 3rem;
+    column-gap: 1rem;
+    /* row-gap: 0.45rem; */
+    /* display: flex; */
+    /* flex-wrap: wrap; */
 `;
 
 const StyledHeading = styled.h1`

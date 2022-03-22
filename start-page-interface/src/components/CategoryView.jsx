@@ -8,8 +8,10 @@ import { requests } from "../helpers/requests";
 import { StyledNavLink } from "./styled-components/nav.styled";
 
 const StyledCategorySection = styled.section`
+    min-height: 10rem;
     background-color: rgba(0, 0, 0, 0.25);
     padding: 1rem 2rem;
+    margin-bottom: 1rem;
     ul {
         display: flex;
         flex-direction: column;
