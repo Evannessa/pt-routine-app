@@ -88,7 +88,8 @@ export const ContainedButton = styled(StyledButton)`
 ContainedButton.displayName = "ContainedButton";
 export const OutlinedButton = styled(ContainedButton)`
     background: transparent;
-    border: 1px solid var(--clr-text-color);
+    border: 1px solid var(--clr-accent);
+    color: var(--clr-accent);
 `;
 
 OutlinedButton.displayName = "OutlinedButton";

@@ -106,9 +106,9 @@ export var filterOperations = (function () {
     };
 })();
 
-const FilterDiv = styled.section`
+const FilterSection = styled.section`
     /* background-color: var(--clr-primary-light); */
-    border: 1px solid var(--clr-accent);
+    border: ${(props) => (props.displayMode ? "none" : "1px solid var(--clr-accent)")};
     padding: 0.5rem 1rem;
     border-radius: 10px;
 `;
@@ -401,13 +401,17 @@ export function Filter(props) {
     }
 
     return (
-        <FilterDiv>
-            <Buttons.ContainedButton onClick={toggleDisplayMode}>
+        <FilterSection displayMode={displayMode}>
+            <Buttons.OutlinedButton
+                onClick={toggleDisplayMode}
+                style={{
+                    borderColor: displayMode ? "currentcolor" : "transparent",
+                }}>
                 <Buttons.StyledButtonIconSpan>
                     {displayMode ? "expand_more" : "unfold_less"}
                 </Buttons.StyledButtonIconSpan>
                 {filter.categoryName}
-            </Buttons.ContainedButton>
+            </Buttons.OutlinedButton>
             {!displayMode && (
                 <fieldset
                     style={{
@@ -446,6 +450,6 @@ export function Filter(props) {
 								</div> */}
                 </fieldset>
             )}
-        </FilterDiv>
+        </FilterSection>
     );
 }

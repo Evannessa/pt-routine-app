@@ -138,7 +138,7 @@ export const StyledForm = styled.form`
     gap: 1rem;
     z-index: 1;
 
-    *:not(input) {
+    *:not(input):not(button):not(.material-icons) {
         color: white;
     }
     fieldset {

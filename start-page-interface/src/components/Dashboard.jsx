@@ -11,6 +11,12 @@ const StyledCategoryGrid = styled.section`
     gap: 0.45rem;
 `;
 
+const StyledHeading = styled.h1`
+    font-size: 3rem;
+    color: var(--clr-accent-pink);
+    letter-spacing: 0.15ch;
+`;
+
 function Dashboard() {
     const [categories, setCategories] = useState();
     const [filteredViews, setFilteredViews] = useState();
@@ -51,11 +57,11 @@ function Dashboard() {
 
     return (
         <div>
-            <h1>Dashboard</h1>
+            <StyledHeading>Dashboard</StyledHeading>
             {links ? (
                 <StyledCategoryGrid>{categoryComponents}</StyledCategoryGrid>
             ) : (
-                <p>Loading...</p>
+                <p style={{ color: "var(--clr-accent)" }}>Loading...</p>
             )}
         </div>
     );
