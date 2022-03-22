@@ -72,7 +72,6 @@ function FilterGroup(props) {
     //get ALL tags to suggest when user types
     const debouncedPatch = useCallback(
         debounce((newData) => {
-            console.log("debouncing?");
             let options = {
                 method: "PATCH",
                 pathsArray: ["display", "groups", filterGroup._id],
@@ -83,6 +82,7 @@ function FilterGroup(props) {
         [filterGroup.filters]
     );
     useEffect(() => {
+        // crossFilters();
         let options = {
             method: "GET",
             pathsArray: ["display", "groups"],
@@ -90,9 +90,9 @@ function FilterGroup(props) {
         };
         requests.axiosRequest(options);
 
-        if (filterGroup.filters) {
-            crossFilters();
-        }
+        // if (filterGroup.filters.length > 0) {
+        //     crossFilters();
+        // }
     }, []);
 
     // //for when a new child is added, or a child's matching links are changed, or any of our child's filters change, or our groupSelector changes from "and" to "or"
@@ -100,15 +100,8 @@ function FilterGroup(props) {
         crossFilters();
     }, [filterGroup.filters, filterGroup.groupSelector]);
 
-    useEffect(() => {
-        if (matchingLinks) {
-            props.updateFilteredLinks(matchingLinks);
-        }
-    }, [matchingLinks]);
-
     //filters should be sub-groups
     function updateFilterGroup(propertyName, value) {
-        console.log(propertyName, value);
         setFilterGroup((prevState) => {
             return { ...prevState, [propertyName]: value };
         });
@@ -184,9 +177,9 @@ function FilterGroup(props) {
     // //solution from below
     // //?https://stackoverflow.com/questions/11076067/finding-matches-between-multiple-javascript-arrays
 
-    function crossFilters() {
+    async function crossFilters() {
         let testArray = [];
-        filterGroup.filters.forEach((filter) => {
+        await filterGroup.filters.forEach((filter) => {
             if (filter.propertyChoice !== "tags") {
                 testArray.push(
                     filterOperations.getMatches(
@@ -214,12 +207,14 @@ function FilterGroup(props) {
             //we need to include only the ones that match all of them
             //add all match *arrays* to a single array
             let matchingLinks = testMatches(testArray);
-            setMatchingLinks(matchingLinks);
+
+            setMatchingLinks(matchingLinks, filterGroup.filters);
             // if (filterGroup.filters && Array.isArray(filterGroup.filters)) {
             //     filterGroup.filters.forEach((filter) => testArray.push(filter.match));
             // }
         } else if (filterGroup.groupSelector === "or") {
             let matchingLinks = testArray.flat();
+
             setMatchingLinks(matchingLinks);
             //we can include all the ones that match some of them
         }
@@ -254,12 +249,31 @@ function FilterGroup(props) {
         requests.axiosRequest(options);
     }
 
-    function reapplyFilter() {
-        crossFilters();
-    }
     function toggleDisplayMode(event) {
         setDisplayMode((prevMode) => !prevMode);
     }
+
+    const linkComponents = matchingLinks
+        ? matchingLinks.map((link) => (
+              <li key={link._id} role="link">
+                  {link.type === "External" ? (
+                      <a href={link.url} data-type={link.type}>
+                          {link.name}
+                      </a>
+                  ) : (
+                      <Link
+                          to={{
+                              pathname: `/display/internal/${link._id}/`,
+                              //   state: { background: location },
+                          }}
+                          data-type={link.type}
+                          key={link._id}>
+                          {link.name}
+                      </Link>
+                  )}
+              </li>
+          ))
+        : [];
 
     return (
         <>
@@ -294,6 +308,8 @@ function FilterGroup(props) {
                     </Form>
                 </StyledDropdown>
             )}
+
+            <ul>{linkComponents}</ul>
         </>
     );
 }

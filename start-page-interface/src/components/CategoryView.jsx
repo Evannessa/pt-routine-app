@@ -18,8 +18,9 @@ const StyledCategorySection = styled.section`
         gap: 0.75rem;
         li {
             list-style-type: none;
-            a {
-                color: white;
+            a,
+            Link {
+                color: var(--clr-accent-lighter);
                 text-decoration: none;
                 &:visited {
                     color: var(--clr-accent);
@@ -61,34 +62,6 @@ function CategoryView(props) {
             setFilteredLinks(props.links);
         }
     }, [props.links]);
-
-    function updateFilteredLinks(data) {
-        setFilteredLinks(data);
-    }
-    // useEffect(()=> {
-    // 	setFilteredLinks(filterGroup.matches)
-    // }, [filterGroup.matches])
-
-    // //when the groupId changes/is fetched from local storage
-    // useEffect(() => {
-    //     if (groupId) {
-    //         let options = {
-    //             method: "GET",
-    //             pathsArray: ["display", "groups", groupId], //get the group w/ the stored id
-    //             setStateCallback: setFilterGroup,
-    //         };
-    //         requests.axiosRequest(options);
-    //         // setFilterGroup
-    //     }
-    // }, [groupId]);
-
-    // //when the filterGroup state changes, save its ID
-    // useEffect(() => {
-    //     //store the id for our filter group
-    //     if (filterGroup) {
-    //         localStorage.setItem("filterGroupId", JSON.stringify(filterGroup._id));
-    //     }
-    // }, [filterGroup]);
 
     const linkComponents = filteredLinks
         ? filteredLinks.map((link) => (
@@ -144,7 +117,6 @@ function CategoryView(props) {
                     defaultValues={filterGroup}
                     tags={props.tags || []}
                     links={props.links || []}
-                    updateFilteredLinks={updateFilteredLinks}
                     displayMode={props.displayMode || false}
                 />
             ) : (
@@ -153,7 +125,7 @@ function CategoryView(props) {
                     Add New Filter Group
                 </Btns.TextButton>
             )}
-            <ul>{linkComponents}</ul>
+            {/* <ul>{linkComponents}</ul> */}
         </StyledCategorySection>
     );
 }

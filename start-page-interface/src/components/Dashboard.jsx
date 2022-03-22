@@ -43,8 +43,8 @@ function Dashboard() {
               <CategoryView
                   key={filterGroup._id}
                   defaultValues={filterGroup}
-                  links={links || []}
-                  tags={tags || []}
+                  links={links}
+                  tags={tags}
                   displayMode={false}></CategoryView>
           ))
         : [];
@@ -52,7 +52,11 @@ function Dashboard() {
     return (
         <div>
             <h1>Dashboard</h1>
-            <StyledCategoryGrid>{categoryComponents}</StyledCategoryGrid>
+            {links ? (
+                <StyledCategoryGrid>{categoryComponents}</StyledCategoryGrid>
+            ) : (
+                <p>Loading...</p>
+            )}
         </div>
     );
 }

@@ -33,14 +33,6 @@ export var filterOperations = (function () {
      */
     function filterStringProperty(property, match, matchAll = false) {
         if (typeof property !== "string" || !Array.isArray(match) || match.length === 0) {
-            console.warn(
-                "Property and match not string and array",
-                property,
-                match,
-                typeof property,
-                typeof match
-            );
-            //TODO: make this an error
             return;
         }
         //match all should return an EXACT match
