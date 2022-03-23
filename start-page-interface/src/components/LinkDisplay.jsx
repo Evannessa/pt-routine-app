@@ -59,12 +59,8 @@ const StyledLinkContainer = styled.section`
 function LinkDisplay(props) {
     const [searchParams, setSearchParams] = useSearchParams();
     // single-time read
-    const sParams = Object.fromEntries([...searchParams]);
     const params = useParams();
-    const location = useLocation();
-    let id = Object.keys(params).length > 0 ? params.id : "new";
     const urlBase = "http://localhost:9000/links/display";
-    const createBase = "http://localhost:9000/links/create";
     const [links, setLinks] = useState();
     const [filteredLinks, setFilteredLinks] = useState();
 
@@ -296,9 +292,6 @@ function LinkDisplay(props) {
     return (
         <Layout.StyledOuterMain>
             <Layout.StyledHeader>
-                <CategoryView links={links || []} tags={allTags || []} />
-                {/* <FilterGroup links={links || []} tags={allTags || []} /> */}
-
                 <Form direction="row" justify="center" align="center">
                     <Input
                         name="search"

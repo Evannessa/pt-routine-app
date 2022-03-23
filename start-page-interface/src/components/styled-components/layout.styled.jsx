@@ -69,6 +69,16 @@ export const StyledSidebar = styled.section`
     gap: 0.5rem;
     overflow: scroll;
     scrollbar-width: thin;
+    &::-webkit-scrollbar {
+        background-color: var(--clr-primary-deep-dark);
+    }
+    &::-webkit-scrollbar-thumb {
+        background: linear-gradient(to bottom, var(--gradient-color));
+        background-size: cover;
+    }
+    &::-webkit-scrollbar-track {
+        background-color: hsl(var(--clr-primary-base-hsl) / 50);
+    }
 `;
 StyledSidebar.displayName = "StyledSidebar";
 

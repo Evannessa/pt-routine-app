@@ -41,6 +41,30 @@ export function testMatches(matchesArray) {
     return finalResult;
 }
 
+const StyledListItem = styled.li`
+    display: flex;
+    padding: 0.5rem 2rem;
+    justify-content: space-between;
+    width: 100%;
+    ${StyledButtons.ButtonGroup} {
+        opacity: 0;
+        pointer-events: none;
+    }
+    &:hover {
+        ${StyledButtons.ButtonGroup} {
+            opacity: 1;
+            pointer-events: auto;
+            cursor: pointer;
+            color: var(--clr-accent);
+            ${StyledButtons.IconButton} {
+                color: inherit;
+            }
+        }
+        background-color: var(--clr-primary-deep-dark);
+        cursor: pointer;
+    }
+`;
+
 const StyledDropdown = styled(Layout.StyledDropdown)`
     z-index: 200;
     padding: 1rem 2rem;
@@ -283,7 +307,7 @@ function FilterGroup(props) {
 
     const linkComponents = matchingLinks
         ? matchingLinks.map((link) => (
-              <li key={link._id} role="link">
+              <StyledListItem key={link._id} role="link">
                   {link.type === "External" ? (
                       <a href={link.url} data-type={link.type}>
                           {link.name}
@@ -299,7 +323,11 @@ function FilterGroup(props) {
                           {link.name}
                       </Link>
                   )}
-              </li>
+                  <StyledButtons.ButtonGroup>
+                      <StyledButtons.IconButton>edit</StyledButtons.IconButton>
+                      <StyledButtons.IconButton>launch</StyledButtons.IconButton>
+                  </StyledButtons.ButtonGroup>
+              </StyledListItem>
           ))
         : [];
 
