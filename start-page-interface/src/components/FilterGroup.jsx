@@ -42,6 +42,7 @@ export function testMatches(matchesArray) {
 }
 
 const StyledDropdown = styled(Layout.StyledDropdown)`
+    z-index: 200;
     padding: 1rem 2rem;
     background-color: var(--clr-primary-dark);
     border-radius: 15px;
@@ -301,21 +302,21 @@ function FilterGroup(props) {
               </li>
           ))
         : [];
-    const startTransitionStyles = {
-        opacity: 0,
-    };
-    const finishTransitionStyles = {
-        opacity: "100%",
-    };
 
     return (
         <>
-            <StyledButtons.ContainedButton onClick={toggleDisplayMode}>
-                <StyledButtons.StyledButtonIconSpan>
-                    {displayMode ? "expand_more" : "unfold_less"}
-                </StyledButtons.StyledButtonIconSpan>
-                {filterGroup.categoryName}
-            </StyledButtons.ContainedButton>
+            <header>
+                <StyledButtons.TextButton
+                    textColor="white"
+                    style={{ fontSize: "1.25rem", color: "var(--clr-accent-pink)" }}
+                    onClick={toggleDisplayMode}>
+                    <StyledButtons.StyledButtonIconSpan
+                        style={{ fontSize: "1.25rem", color: "inherit" }}>
+                        {displayMode ? "expand_more" : "unfold_less"}
+                    </StyledButtons.StyledButtonIconSpan>
+                    {filterGroup.categoryName}
+                </StyledButtons.TextButton>
+            </header>
             <CSSTransitionGroup
                 transitionName={transitionName}
                 transitionEnterTimeout={200}
@@ -348,7 +349,9 @@ function FilterGroup(props) {
                     </StyledDropdown>
                 )}
             </CSSTransitionGroup>
-            <ul>{linkComponents}</ul>
+            <div>
+                <ul>{linkComponents}</ul>
+            </div>
         </>
     );
 }

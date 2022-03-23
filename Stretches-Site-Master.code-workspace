@@ -34,6 +34,7 @@
             "statusBar.debuggingBackground": "#005f5f",
             "editor.lineHighlightBackground": "#1073cf2d",
             "editor.lineHighlightBorder": "#9fced11f",
+            "editor.foldBackground": "rgba(250, 240, 170, 0.5)",
             "activityBar.activeBackground": "#ab307e",
             "activityBar.activeBorder": "#25320e",
             "activityBar.background": "#ab307e",

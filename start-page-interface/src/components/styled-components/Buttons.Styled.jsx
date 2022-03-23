@@ -15,7 +15,9 @@ const colorAlt = (props) => {
 };
 export const StyledButtonIconSpan = styled.span.attrs(({ className }) => ({
     className: className || "material-icons",
-}))``;
+}))`
+    font-weight: bold;
+`;
 export const StyledButton = styled.button`
     --clr-background-color: ${backgroundColor};
     --clr-bg-hover-color: ${backgroundColorAlt};

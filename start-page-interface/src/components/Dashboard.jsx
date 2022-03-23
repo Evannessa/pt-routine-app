@@ -10,6 +10,7 @@ import CategoryView from "./CategoryView";
 const StyledColumn = styled.div`
     display: flex;
     flex-direction: column;
+    gap: 0.75rem;
 `;
 
 const StyledCategoryGrid = styled.section`

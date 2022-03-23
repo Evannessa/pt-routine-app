@@ -1,6 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=Titan+One&display=swap');
+
 html,
 body {
 	background-color: var(--clr-primary-deep-dark);
+	/* background-image: url("../public/layered-waves-haikei.svg"), url("../public/blurry-gradient-haikei 2.svg"); */
+	background-size: 100%, cover;
+	background-repeat: no-repeat;
+	background-position: bottom;
+	background-blend-mode: overlay, normal;
 	width: 100vw;
 	height: 100vh;
 	display: flex;

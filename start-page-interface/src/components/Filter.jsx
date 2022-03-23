@@ -1,13 +1,9 @@
 import React, { useState, useEffect } from "react";
 import ComboBox from "./input/ComboBox";
-import Input from "./input/Input";
 import Select from "./input/Select";
-import { ChipButton } from "./styled-components/chips.styled";
 import * as Buttons from "./styled-components/Buttons.Styled";
-import * as Layout from "./styled-components/layout.styled";
-import { isElementOfType } from "react-dom/test-utils";
 import styled from "styled-components";
-import { CSSTransitionGroup, Transition } from "react-transition-group";
+import { CSSTransitionGroup } from "react-transition-group";
 
 const appearDuration = 500;
 const transitionName = `slide`;
