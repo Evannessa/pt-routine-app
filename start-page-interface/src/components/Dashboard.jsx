@@ -2,25 +2,102 @@ import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 import styled from "styled-components";
+import * as Buttons from "./styled-components/Buttons.Styled";
 import { requests } from "../helpers/requests";
-import * as Layout from "./styled-components/layout.styled";
+// import * as Layout from "./styled-components/layout.styled";
 import CategoryView from "./CategoryView";
+
+const StyledColumn = styled.div`
+    display: flex;
+    flex-direction: column;
+`;
+
 const StyledCategoryGrid = styled.section`
-    columns: 3 3rem;
-    column-gap: 1rem;
+    /* columns: 3 3rem; */
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    max-height: 90vh;
+    overflow: hidden;
+    padding: 1rem;
     /* row-gap: 0.45rem; */
     /* display: flex; */
-    /* flex-wrap: wrap; */
+    flex-wrap: wrap;
 `;
 
 const StyledHeading = styled.h1`
+    position: relative;
     font-size: 3rem;
-    color: var(--clr-accent-pink);
-    letter-spacing: 0.15ch;
+    background: linear-gradient(
+        to right,
+        var(--clr-accent),
+        var(--clr-accent-indigo),
+        var(--clr-accent-violet),
+        var(--clr-accent-pink),
+        var(--clr-accent-red),
+        var(--clr-accent-orange)
+    );
+    font-family: "Titan One", cursive;
+    text-transform: uppercase;
+    background-size: 20%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    /* color: var(--clr-accent-pink); */
+    /* letter-spacing: 0.15ch; */
+    &:after {
+        content: "DASHBOARD";
+        position: absolute;
+        background: inherit;
+        width: 100%;
+        height: 100%;
+        top: 50%;
+        left: 50%;
+        -webkit-background-clip: text;
+        background-clip: text;
+        transform: translate(-50%, -50%);
+        filter: blur(5px);
+        z-index: 0;
+    }
+    &:before {
+        content: "DASHBOARD";
+        position: absolute;
+        background: linear-gradient(
+                to top,
+                transparent 40%,
+                var(--clr-primary-dark-translucent) 45%,
+                var(--clr-primary-dark) 100%
+            ),
+            linear-gradient(
+                to right,
+                var(--clr-accent),
+                var(--clr-accent-indigo),
+                var(--clr-accent-violet),
+                var(--clr-accent-pink),
+                var(--clr-accent-red),
+                var(--clr-accent-orange)
+            );
+        background-size: 20% 200%;
+        perspective-origin: center;
+        /* perspective: 500px; */
+        -webkit-background-clip: text;
+        background-clip: text;
+        width: 100%;
+        height: 100%;
+        top: 50%;
+        left: 50%;
+        perspective-origin: center;
+        transform: perspective(3500px) translate(-50%, 25%) rotateZ(180deg)
+            rotateY(180deg) rotateX(55deg);
+        filter: blur(5px);
+        z-index: 0;
+    }
 `;
 
 function Dashboard() {
-    const [categories, setCategories] = useState();
     const [filteredViews, setFilteredViews] = useState();
     const [links, setLinks] = useState();
     const [tags, setAllTags] = useState();
@@ -57,11 +134,52 @@ function Dashboard() {
           ))
         : [];
 
+    /**
+     *
+     * @param {*} numberOfColumns - the number of columns
+     * @param {Array} elements - the array of elements
+     */
+    function generateColumns(_elements, numberOfColumns = 3, maxPerColumn = 1) {
+        let columnArray = [];
+        let elements = [..._elements]; //copy array
+        for (let n = numberOfColumns; n > 0; n--) {
+            //splice modifies and returns original array
+            //Math.ceil rounds up
+            //cut the array from 0 to tne length of the array divided by number of columns, return the original array
+            let chunk = elements.splice(0, Math.ceil(elements.length / n));
+            //push that chunk into this
+            columnArray.push(<StyledColumn key={n}>{chunk}</StyledColumn>);
+        }
+        return columnArray;
+    }
+
+    if (categoryComponents.length > 0) {
+        console.log(generateColumns(categoryComponents));
+    }
+
     return (
         <div>
-            <StyledHeading>Dashboard</StyledHeading>
+            <header
+                style={{
+                    padding: "1.45rem 2rem",
+                    backgroundColor: "var(--clr-primary-dark)",
+                    marginLeft: "-8rem",
+                    marginRight: "-8rem",
+                    marginBottom: "3rem",
+                    marginTop: "-3rem",
+                }}>
+                <StyledHeading>Dashboard</StyledHeading>
+                <Buttons.ButtonGroup style={{ justifyContent: "flex-end" }}>
+                    <Buttons.ContainedButton bgColor="var(--clr-accent-pink)">
+                        <Buttons.StyledButtonIconSpan>add</Buttons.StyledButtonIconSpan>
+                        Add New Category
+                    </Buttons.ContainedButton>
+                </Buttons.ButtonGroup>
+            </header>
             {links ? (
-                <StyledCategoryGrid>{categoryComponents}</StyledCategoryGrid>
+                <StyledCategoryGrid>
+                    {generateColumns(categoryComponents)}
+                </StyledCategoryGrid>
             ) : (
                 <p style={{ color: "var(--clr-accent)" }}>Loading...</p>
             )}
