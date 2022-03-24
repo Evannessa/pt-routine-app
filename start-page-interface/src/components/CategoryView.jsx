@@ -5,6 +5,7 @@ import styled from "styled-components";
 import * as Btns from "./styled-components/Buttons.Styled";
 import { requests } from "../helpers/requests";
 
+//wrapper without hidden overlay to have background border
 const OuterWrapper = styled.section`
     overflow: visible;
     min-height: 10rem;
@@ -65,8 +66,9 @@ const StyledCategorySection = styled.section`
         justify-content: center;
         border-top-left-radius: 10px;
         border-top-right-radius: 10px;
-        box-shadow: 0px 7px 9px rgba(0, 0, 0, 0.15);
-        background-color: var(--clr-primary-base);
+        /* box-shadow: 0px 7px 9px rgba(0, 0, 0, 0.15);/ */
+        border-bottom: 2px solid hsla(100, 00%, 50%, 0.15);
+        background-color: var(--clr-primary-deep-dark);
         position: relative;
         z-index: 200;
         /* min-height: 3.75rem; */
@@ -74,6 +76,19 @@ const StyledCategorySection = styled.section`
         max-height: 4em;
         * {
             z-index: inherit;
+        }
+        button {
+            font-family: "Titan One", cursive;
+            background-image: linear-gradient(45deg, var(--gradient-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200%;
+            width: fit-content;
+            transition: background-position 125ms ease-in;
+            &:hover {
+                background-position: right;
+            }
         }
     }
     ul {
@@ -87,6 +102,7 @@ const StyledCategorySection = styled.section`
         text-align: left;
         gap: 0.85rem;
         overflow-y: auto;
+        overflow-x: hidden;
         background-color: var(--clr-primary-deep-dark);
         /* background-color: hsl(var(--clr-primary-base-hsl) / 25%); */
         height: 100%;

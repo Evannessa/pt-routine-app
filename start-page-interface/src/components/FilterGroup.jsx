@@ -46,9 +46,20 @@ const StyledListItem = styled.li`
     padding: 0.5rem 2rem;
     justify-content: space-between;
     width: 100%;
-    transition: background-color 120ms ease-in;
+    background-image: linear-gradient(
+        to right,
+        transparent 50%,
+        var(--clr-gradient-warm) 100%
+    );
+    background-size: 200%;
+    background-position: 0%;
+    a {
+        color: hsla(230, 80%, 72%, 0.81) !important;
+        font-weight: normal;
+    }
+    transition: background-position 120ms ease-in;
     * {
-        transition: color 120ms ease-in;
+        transition: color 120ms ease-in, font-weight 120ms ease-in;
     }
     ${StyledButtons.ButtonGroup} {
         opacity: 0;
@@ -65,10 +76,15 @@ const StyledListItem = styled.li`
                 color: inherit;
             }
         }
-        background-color: var(--clr-accent-pink);
-        * {
-            color: var(--clr-primary-deep-dark) !important;
+        background-position: 100%;
+
+        a {
         }
+        * {
+            color: hsla(330, 100%, 90%, 0.95) !important;
+            font-weight: bold;
+        }
+
         cursor: pointer;
     }
 `;
