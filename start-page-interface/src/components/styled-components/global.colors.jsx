@@ -25,7 +25,12 @@ ${"" /* --clr-accent: hsl(197, 84%, 57%); */}
   --clr-accent-green:#4ab4c7;
   --clr-shadow: rgba(0, 0, 0, 0.25);
   --gradient-color: var(--clr-accent), var(--clr-accent-indigo), var(--clr-accent-violet), var(--clr-accent-pink), var(--clr-accent-red), var(--clr-accent-orange);
+--clr-gradient-cool: var(--clr-accent), var(--clr-accent-indigo), var(--clr-accent-violet);
+
+--clr-gradient-warm: var(--clr-accent-pink), var(--clr-accent-red), var(--clr-accent-orange);
 	}
+	
+
 	html, body{
 		scrollbar-width: thin;
 	}

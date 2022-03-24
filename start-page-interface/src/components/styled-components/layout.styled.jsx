@@ -1,5 +1,26 @@
 const { default: styled } = require("styled-components");
 
+//https://levelup.gitconnected.com/building-a-reusable-component-system-with-react-js-and-styled-components-4e9f1018a31c
+export const Container = styled.div`
+    padding-left: ${(props) => {
+        if (props.full) return 0;
+        return "calc((100vw - 960px) / 2)";
+    }};
+    padding-right: ${(props) => {
+        if (props.full) return 0;
+        return "calc((100vw - 960px) / 2)";
+    }};
+    padding-top: ${(props) => {
+        if (props.fullVertical) return 0;
+        if (props.small) return "15px";
+        return "25px";
+    }};
+    padding-bottom: ${(props) => {
+        if (props.fullVertical) return 0;
+        if (props.small) return "15px";
+        return "25px";
+    }};
+`;
 export const StyledHeader = styled.header`
     grid-area: hd;
     position: sticky;
@@ -71,13 +92,19 @@ export const StyledSidebar = styled.section`
     scrollbar-width: thin;
     &::-webkit-scrollbar {
         background-color: var(--clr-primary-deep-dark);
+        width: 1.25rem;
     }
     &::-webkit-scrollbar-thumb {
-        background: linear-gradient(to bottom, var(--gradient-color));
-        background-size: cover;
+        background: linear-gradient(to bottom, var(--clr-gradient-warm));
+        border-radius: 999px;
+        width: 0.55rem;
+        border: 5px solid var(--clr-primary-deep-dark);
+        background-clip: padding-box;
+        cursor: pointer;
     }
     &::-webkit-scrollbar-track {
         background-color: hsl(var(--clr-primary-base-hsl) / 50);
+        /* width: 1rem; */
     }
 `;
 StyledSidebar.displayName = "StyledSidebar";

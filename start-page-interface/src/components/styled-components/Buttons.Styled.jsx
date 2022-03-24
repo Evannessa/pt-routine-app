@@ -139,9 +139,11 @@ export const StyledSplitButtonWrapper = styled.span`
     gap: 0.1rem;
 `;
 StyledSplitButtonWrapper.displayName = "StyledSplitButtonWrapper";
-export const StyledSplitButtonPrimary = styled(ContainedButton).attrs((props) => ({
-    className: props.className || "material-icons",
-}))`
+export const StyledSplitButtonPrimary = styled(ContainedButton).attrs(
+    (props) => ({
+        className: props.className || "material-icons",
+    })
+)`
     border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;
     border-top-right-radius: 0px;
@@ -150,9 +152,11 @@ export const StyledSplitButtonPrimary = styled(ContainedButton).attrs((props) =>
     padding: 0.35rem 0.65rem;
 `;
 StyledSplitButtonPrimary.displayName = "StyledSplitButtonPrimary";
-export const StyledSplitButtonOverflow = styled(ContainedButton).attrs((props) => ({
-    className: props.className || "material-icons",
-}))`
+export const StyledSplitButtonOverflow = styled(ContainedButton).attrs(
+    (props) => ({
+        className: props.className || "material-icons",
+    })
+)`
     border-top-left-radius: 0px;
     border-bottom-left-radius: 0px;
     border-top-right-radius: 10px;
@@ -180,3 +184,24 @@ TabButton.displayName = "TabButton";
 export const StyledSplitButtonDropdown = styled.div``;
 
 StyledSplitButtonDropdown.displayName = "ButtonDropdown";
+
+export const Button = ({
+    secondary,
+    big,
+    outlined,
+    children,
+    icon,
+    ...props
+}) => {
+    return (
+        <StyledButton
+            secondary={secondary}
+            big={big}
+            outlined={outlined}
+            {...props}
+        >
+            {icon && <StyledButtonIconSpan>{icon}</StyledButtonIconSpan>}
+            {children}
+        </StyledButton>
+    );
+};

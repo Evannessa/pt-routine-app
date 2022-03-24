@@ -29,6 +29,8 @@ const StyledCategoryGrid = styled.section`
 const StyledHeading = styled.h1`
     position: relative;
     font-size: 3rem;
+    width: fit-content;
+    margin: 0;
     background: linear-gradient(
         to right,
         var(--clr-accent),
@@ -40,19 +42,22 @@ const StyledHeading = styled.h1`
     );
     font-family: "Titan One", cursive;
     text-transform: uppercase;
-    background-size: 20%;
+    background-size: 100%;
     background-position: center;
     background-repeat: no-repeat;
     background-attachment: fixed;
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
+
     /* color: var(--clr-accent-pink); */
     /* letter-spacing: 0.15ch; */
     &:after {
         content: "DASHBOARD";
         position: absolute;
         background: inherit;
+        background-size: inherit;
+        background-position: inherit;
         width: 100%;
         height: 100%;
         top: 50%;
@@ -60,7 +65,7 @@ const StyledHeading = styled.h1`
         -webkit-background-clip: text;
         background-clip: text;
         transform: translate(-50%, -50%);
-        filter: blur(5px);
+        filter: blur(8px);
         z-index: 0;
     }
     &:before {
@@ -81,7 +86,7 @@ const StyledHeading = styled.h1`
                 var(--clr-accent-red),
                 var(--clr-accent-orange)
             );
-        background-size: 20% 200%;
+        background-size: 100% 200%;
         perspective-origin: center;
         /* perspective: 500px; */
         -webkit-background-clip: text;
@@ -131,7 +136,8 @@ function Dashboard() {
                   defaultValues={filterGroup}
                   links={links}
                   tags={tags}
-                  displayMode={false}></CategoryView>
+                  displayMode={false}
+              ></CategoryView>
           ))
         : [];
 
@@ -162,20 +168,26 @@ function Dashboard() {
         <div>
             <header
                 style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
                     padding: "1.45rem 2rem",
                     backgroundColor: "var(--clr-primary-dark)",
                     marginLeft: "-8rem",
                     marginRight: "-8rem",
                     marginBottom: "3rem",
                     marginTop: "-3rem",
-                }}>
+                }}
+            >
                 <StyledHeading>Dashboard</StyledHeading>
-                <Buttons.ButtonGroup style={{ justifyContent: "flex-end" }}>
+                {/* <Buttons.ButtonGroup style={{ justifyContent: "flex-end" }}>
                     <Buttons.ContainedButton bgColor="var(--clr-accent-pink)">
-                        <Buttons.StyledButtonIconSpan>add</Buttons.StyledButtonIconSpan>
+                        <Buttons.StyledButtonIconSpan>
+                            add
+                        </Buttons.StyledButtonIconSpan>
                         Add New Category
                     </Buttons.ContainedButton>
-                </Buttons.ButtonGroup>
+                </Buttons.ButtonGroup> */}
             </header>
             {links ? (
                 <StyledCategoryGrid>

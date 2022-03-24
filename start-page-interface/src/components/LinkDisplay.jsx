@@ -1,7 +1,13 @@
 import Avatar from "boring-avatars";
 import debounce from "lodash.debounce";
 import React, { useEffect, useState, useCallback, useMemo } from "react";
-import { Link, Outlet, useLocation, useParams, useSearchParams } from "react-router-dom";
+import {
+    Link,
+    Outlet,
+    useLocation,
+    useParams,
+    useSearchParams,
+} from "react-router-dom";
 import styled from "styled-components";
 import { requests } from "../helpers/requests";
 import ChipGroup from "./ChipGroup";
@@ -207,7 +213,10 @@ function LinkDisplay(props) {
             if (parentName) {
                 let property = { ...formData[parentName] };
                 property[name] = value;
-                console.log("Update?", { ...prevFormData, [parentName]: property });
+                console.log("Update?", {
+                    ...prevFormData,
+                    [parentName]: property,
+                });
                 return {
                     ...prevFormData,
                     [parentName]: property,
@@ -232,14 +241,16 @@ function LinkDisplay(props) {
         ? filteredLinks.map((link) => (
               <StyledCardHorizontal
                   key={link._id}
-                  highlighted={link._id === params.id ? true : false}>
+                  highlighted={link._id === params.id ? true : false}
+              >
                   <StyledCardHeader>
                       <h2>
                           {link.name}
                           <StyledNav.StyledRouterLink
                               color="white"
                               to={`/display/${link._id}`}
-                              className="material-icons">
+                              className="material-icons"
+                          >
                               edit
                           </StyledNav.StyledRouterLink>
                       </h2>
@@ -248,7 +259,13 @@ function LinkDisplay(props) {
                       <Avatar
                           size="3rem"
                           variant="marble"
-                          colors={["#02797E", "#FFA689", "#D62B58", "#BF2063", "#572F4F"]}
+                          colors={[
+                              "#02797E",
+                              "#FFA689",
+                              "#D62B58",
+                              "#BF2063",
+                              "#572F4F",
+                          ]}
                       />
                   </StyledCardSidebarLeft>
                   <StyledCardBody></StyledCardBody>
@@ -259,7 +276,8 @@ function LinkDisplay(props) {
                                   <TagChips
                                       key={tag._id}
                                       tag={tag}
-                                      tagName={tag.name}></TagChips>
+                                      tagName={tag.name}
+                                  ></TagChips>
                               );
                           })}
                       </CardComponent>
@@ -275,7 +293,8 @@ function LinkDisplay(props) {
                               to={{
                                   pathname: `/display/internal/${link._id}/`,
                                   //   state: { background: location },
-                              }}>
+                              }}
+                          >
                               arrow_forward
                           </Link>
                       )}
@@ -299,17 +318,21 @@ function LinkDisplay(props) {
                         value={formData.search}
                         checked={formData.search}
                         setStateFunction={updateFormData}
-                        hasLabel={true}></Input>
+                        hasLabel={true}
+                    ></Input>
                     <ChipGroup
                         chips={formData.searchFilters}
                         setStateFunction={updateFormData}
-                        parentName="searchFilters"></ChipGroup>
+                        parentName="searchFilters"
+                    ></ChipGroup>
                 </Form>
                 <StyledSplitButtonWrapper>
                     <StyledSplitButtonPrimary bgColor="cornflowerblue">
                         add
                     </StyledSplitButtonPrimary>
-                    <StyledSplitButtonOverflow>arrow_drop_down</StyledSplitButtonOverflow>
+                    <StyledSplitButtonOverflow>
+                        arrow_drop_down
+                    </StyledSplitButtonOverflow>
                 </StyledSplitButtonWrapper>
                 <StyledNav.StyledRouterLink to="/create/new">
                     Create New <span className="material-icons">add</span>
@@ -348,7 +371,8 @@ function LinkDisplay(props) {
                             active={(state) => state.isActive}
                             bgColor="cornflowerblue"
                             color="white"
-                            bgColorAlt="var(--clr-accent-green)">
+                            bgColorAlt="var(--clr-accent-green)"
+                        >
                             Edit
                         </StyledNav.TabLink>
                         <StyledNav.TabLink
@@ -357,16 +381,18 @@ function LinkDisplay(props) {
                             active={(state) => state.isActive}
                             bgColor="cornflowerblue"
                             color="white"
-                            bgColorAlt="var(--clr-accent-green)">
+                            bgColorAlt="var(--clr-accent-green)"
+                        >
                             Modal View
                         </StyledNav.TabLink>
                         <StyledNav.TabLink
                             to={`/display/internal/${params.id}/inset`}
                             className={(state) => console.log(state)}
                             active={(state) => state.isActive}
-                            bgColor="cornflowerblue"
+                            bgColor="var(--clr-accent)"
                             color="white"
-                            bgColorAlt="var(--clr-accent-green)">
+                            bgColorAlt="var(--clr-accent-pink)"
+                        >
                             In Place View
                         </StyledNav.TabLink>
                     </ButtonGroup>

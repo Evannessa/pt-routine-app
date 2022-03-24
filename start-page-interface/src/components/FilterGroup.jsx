@@ -46,9 +46,14 @@ const StyledListItem = styled.li`
     padding: 0.5rem 2rem;
     justify-content: space-between;
     width: 100%;
+    transition: background-color 120ms ease-in;
+    * {
+        transition: color 120ms ease-in;
+    }
     ${StyledButtons.ButtonGroup} {
         opacity: 0;
         pointer-events: none;
+        justify-content: flex-end;
     }
     &:hover {
         ${StyledButtons.ButtonGroup} {
@@ -60,7 +65,10 @@ const StyledListItem = styled.li`
                 color: inherit;
             }
         }
-        background-color: var(--clr-primary-deep-dark);
+        background-color: var(--clr-accent-pink);
+        * {
+            color: var(--clr-primary-deep-dark) !important;
+        }
         cursor: pointer;
     }
 `;
@@ -189,18 +197,27 @@ function FilterGroup(props) {
                         condition={counter > 1}
                         wrapper={(children) => (
                             <span
-                                style={{ display: "inline-flex", alignItems: "center" }}>
+                                style={{
+                                    display: "inline-flex",
+                                    alignItems: "center",
+                                }}
+                            >
                                 {children}
                             </span>
-                        )}>
-                        <Select {...andOrProps} disabled={counter > 2 ? true : false} />
+                        )}
+                    >
+                        <Select
+                            {...andOrProps}
+                            disabled={counter > 2 ? true : false}
+                        />
                         <Filter
                             key={fg._id}
                             defaultValues={fg}
                             displayMode={true}
                             tags={props.tags}
                             links={props.links}
-                            updateParent={updateFilterInGroup}>
+                            updateParent={updateFilterInGroup}
+                        >
                             {/* {fg.name} */}
                         </Filter>
                     </ConditionalWrapper>
@@ -213,7 +230,8 @@ function FilterGroup(props) {
                         displayMode={true}
                         tags={props.tags}
                         links={props.links}
-                        updateParent={updateFilterInGroup}>
+                        updateParent={updateFilterInGroup}
+                    >
                         {/* {fg.name} */}
                     </Filter>
                 );
@@ -276,7 +294,8 @@ function FilterGroup(props) {
 
     function addNewFilter(event) {
         function updateFilters(document) {
-            let array = filterGroup.filters.length > 0 ? [...filterGroup.filters] : [];
+            let array =
+                filterGroup.filters.length > 0 ? [...filterGroup.filters] : [];
             array.push(document);
             setFilterGroup((prevData) => {
                 return {
@@ -319,13 +338,16 @@ function FilterGroup(props) {
                               //   state: { background: location },
                           }}
                           data-type={link.type}
-                          key={link._id}>
+                          key={link._id}
+                      >
                           {link.name}
                       </Link>
                   )}
                   <StyledButtons.ButtonGroup>
                       <StyledButtons.IconButton>edit</StyledButtons.IconButton>
-                      <StyledButtons.IconButton>launch</StyledButtons.IconButton>
+                      <StyledButtons.IconButton>
+                          launch
+                      </StyledButtons.IconButton>
                   </StyledButtons.ButtonGroup>
               </StyledListItem>
           ))
@@ -336,10 +358,15 @@ function FilterGroup(props) {
             <header>
                 <StyledButtons.TextButton
                     textColor="white"
-                    style={{ fontSize: "1.25rem", color: "var(--clr-accent-pink)" }}
-                    onClick={toggleDisplayMode}>
+                    style={{
+                        fontSize: "1.25rem",
+                        color: "var(--clr-accent-pink)",
+                    }}
+                    onClick={toggleDisplayMode}
+                >
                     <StyledButtons.StyledButtonIconSpan
-                        style={{ fontSize: "1.25rem", color: "inherit" }}>
+                        style={{ fontSize: "1.25rem", color: "inherit" }}
+                    >
                         {displayMode ? "expand_more" : "unfold_less"}
                     </StyledButtons.StyledButtonIconSpan>
                     {filterGroup.categoryName}
@@ -350,7 +377,8 @@ function FilterGroup(props) {
                 transitionEnterTimeout={200}
                 transitionLeaveTimeout={200}
                 transitionAppear={true}
-                transitionAppearTimeout={appearDuration}>
+                transitionAppearTimeout={appearDuration}
+            >
                 {displayMode && (
                     <StyledDropdown key="123">
                         <Form>
@@ -361,7 +389,11 @@ function FilterGroup(props) {
                                 setStateFunction={updateFilterGroup}
                             />
                             <SubCategory
-                                style={{ display: "flex", flexDirection: "column" }}>
+                                style={{
+                                    display: "flex",
+                                    flexDirection: "column",
+                                }}
+                            >
                                 {addOptions()}
                             </SubCategory>
                             <StyledButtons.TextButton onClick={addNewFilter}>

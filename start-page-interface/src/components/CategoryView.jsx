@@ -24,7 +24,12 @@ const OuterWrapper = styled.section`
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        background: linear-gradient(45deg, var(--gradient-color));
+        background: ${(props) =>
+            props.expand
+                ? "linear-gradient(45deg, var(--gradient-color))"
+                : "repeating-linear-gradient(45deg, var(--gradient-color))"};
+        background-repeat: ${(props) =>
+            props.expand ? "repeat" : "no-repeat"};
         z-index: -1;
     }
 `;
@@ -61,7 +66,7 @@ const StyledCategorySection = styled.section`
         border-top-left-radius: 10px;
         border-top-right-radius: 10px;
         box-shadow: 0px 7px 9px rgba(0, 0, 0, 0.15);
-        background-color: var(--clr-primary-light);
+        background-color: var(--clr-primary-base);
         position: relative;
         z-index: 200;
         /* min-height: 3.75rem; */
@@ -82,7 +87,7 @@ const StyledCategorySection = styled.section`
         text-align: left;
         gap: 0.85rem;
         overflow-y: auto;
-        background-color: var(--clr-primary-base);
+        background-color: var(--clr-primary-deep-dark);
         /* background-color: hsl(var(--clr-primary-base-hsl) / 25%); */
         height: 100%;
         /* overflow-x: auto; */
@@ -145,7 +150,8 @@ function CategoryView(props) {
                               //   state: { background: location },
                           }}
                           data-type={link.type}
-                          key={link._id}>
+                          key={link._id}
+                      >
                           {link.name}
                       </Link>
                   )}
@@ -180,7 +186,8 @@ function CategoryView(props) {
         <OuterWrapper expand={expand}>
             <Btns.IconButton
                 style={{ position: "absolute", zIndex: 10 }}
-                onClick={toggleExpand}>
+                onClick={toggleExpand}
+            >
                 expand_more
             </Btns.IconButton>
             <StyledCategorySection expand={expand}>
@@ -192,8 +199,13 @@ function CategoryView(props) {
                         displayMode={props.displayMode || false}
                     />
                 ) : (
-                    <Btns.TextButton bgColor="transparent" onClick={handleClick}>
-                        <Btns.StyledButtonIconSpan>add</Btns.StyledButtonIconSpan>
+                    <Btns.TextButton
+                        bgColor="transparent"
+                        onClick={handleClick}
+                    >
+                        <Btns.StyledButtonIconSpan>
+                            add
+                        </Btns.StyledButtonIconSpan>
                         Add New Filter Group
                     </Btns.TextButton>
                 )}
