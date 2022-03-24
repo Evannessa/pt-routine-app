@@ -31,7 +31,34 @@ ${"" /* --clr-accent: hsl(197, 84%, 57%); */}
 	}
 	
 
-	html, body{
+	html, body, *{
 		scrollbar-width: thin;
+		 &::-webkit-scrollbar {
+        background-color: var(--clr-primary-deep-dark);
+        width: 1.25rem;
+		border: none;
+    }
+    &::-webkit-scrollbar-thumb {
+        background: linear-gradient(45deg, var(--clr-gradient-warm));
+        border-radius: 999px;
+        width: 0.55rem;
+        border: 5px solid var(--clr-primary-deep-dark);
+        background-clip: padding-box;
+        cursor: pointer;
+    }
+    &::-webkit-scrollbar-track, &::-webkit-scrollbar-track-piece, &::-webkit-scrollbar-thumb {
+        background-color: inherit;
+		border: 2px solid var(--clr-primary-deep-dark);
+        /* width: 1rem; */
+    }
+	&::-webkit-scrollbar-button{
+		background-color: var(--clr-primary-deep-dark);
+        border: 2px solid var(--clr-primary-deep-dark);
+	}
+	&::-webkit-scrollbar-corner{
+        border: 5px solid var(--clr-primary-deep-dark);
+		background-color: var(--clr-primary-deep-dark);
+	}
+	
 	}
 `;

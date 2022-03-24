@@ -1,5 +1,5 @@
-import React from "react";
 import styled from "styled-components";
+import { device } from "./devices";
 const Flex = styled.div`
     display: flex;
     flex-wrap: ${(props) => {
@@ -25,7 +25,11 @@ const Flex = styled.div`
     }};
     flex-direction: ${(props) => (props.column ? "column" : "row")};
 `;
-
+const StyledColumn = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+`;
 export const Column = styled.div`
     width: ${(props) => {
         if (props.three) return "33.33%";
@@ -35,5 +39,29 @@ export const Column = styled.div`
     padding: ${(props) => (props.noPadding ? 0 : "15px")};
 `;
 Flex.displayName = "FlexContainer";
+/**
+ *
+ * @param {*} numberOfColumns - the number of columns
+ * @param {Array} _elements - the array of elements
+ */
+function generateColumns(_elements, numberOfColumns = 3, maxPerColumn = 1) {
+    let columnArray = [];
+    let elements = [..._elements]; //copy array
+    for (let n = numberOfColumns; n > 0; n--) {
+        //splice modifies and returns original array
+        //Math.ceil rounds up
+        //cut the array from 0 to tne length of the array divided by number of columns, return the original array
+        let chunk = elements.splice(0, Math.ceil(elements.length / n));
+        //push that chunk into this
+        columnArray.push(<StyledColumn key={n}>{chunk}</StyledColumn>);
+    }
+    return columnArray;
+}
 
+// export const FlexContainer = () => {
+// 	return(<Flex>
+
+// 	</Flex>)
+
+// }
 export default Flex;

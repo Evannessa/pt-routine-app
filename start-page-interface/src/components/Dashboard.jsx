@@ -2,10 +2,13 @@ import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 import styled from "styled-components";
+import { Container } from "./styled-components/layout.styled";
+import Flex from "./styled-components/flex.styled";
 import * as Buttons from "./styled-components/Buttons.Styled";
 import { requests } from "../helpers/requests";
 // import * as Layout from "./styled-components/layout.styled";
 import CategoryView from "./CategoryView";
+import { device } from "./styled-components/devices";
 
 const StyledColumn = styled.div`
     display: flex;
@@ -16,15 +19,20 @@ const StyledColumn = styled.div`
 const StyledCategoryGrid = styled.section`
     /* columns: 3 3rem; */
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    /* grid-template-columns: repeat(3, 1fr); */
+    /* grid-template-rows: repeat(3, minmax(0, 1fr)); */
+    @media ${device.tablet} {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-template-rows: unset;
+    }
     gap: 1rem;
-    max-height: 90vh;
     overflow: hidden;
     padding: 1rem;
     /* row-gap: 0.45rem; */
     /* display: flex; */
     flex-wrap: wrap;
 `;
+StyledCategoryGrid.displayName = "StyledCategoryGrid";
 
 const StyledHeading = styled.h1`
     position: relative;
@@ -45,7 +53,6 @@ const StyledHeading = styled.h1`
     background-size: 100%;
     background-position: center;
     background-repeat: no-repeat;
-    background-attachment: fixed;
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -165,18 +172,17 @@ function Dashboard() {
     }
 
     return (
-        <div>
+        <Container full={true} fullVertical={true}>
             <header
                 style={{
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
-                    padding: "1.45rem 2rem",
+                    padding: "2rem 2rem",
                     backgroundColor: "var(--clr-primary-dark)",
                     marginLeft: "-8rem",
                     marginRight: "-8rem",
                     marginBottom: "3rem",
-                    marginTop: "-3rem",
                 }}
             >
                 <StyledHeading>Dashboard</StyledHeading>
@@ -196,7 +202,7 @@ function Dashboard() {
             ) : (
                 <p style={{ color: "var(--clr-accent)" }}>Loading...</p>
             )}
-        </div>
+        </Container>
     );
 }
 

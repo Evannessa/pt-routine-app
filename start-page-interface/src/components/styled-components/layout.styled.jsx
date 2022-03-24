@@ -37,6 +37,7 @@ export const StyledHeader = styled.header`
     align-items: center;
     box-shadow: 0px 6px 10px 5px rgba(0, 0, 0, 0.5);
 `;
+Container.displayName = "Container";
 
 StyledHeader.displayName = "StyledHeader";
 export const StyledMain = styled.main`

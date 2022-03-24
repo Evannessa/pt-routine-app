@@ -11,7 +11,8 @@ const OuterWrapper = styled.section`
     position: relative;
     z-index: 10;
     border-radius: 10px;
-    padding: 5px;
+    padding: 3px;
+    background-color: var(--clr-primary-deep-dark);
     /* max-height: 30vh; */
     /* height: fit-content; */
     max-height: ${(props) => (props.expand ? "fit-content" : "30vh")};
@@ -35,21 +36,20 @@ const OuterWrapper = styled.section`
 `;
 const StyledCategorySection = styled.section`
     min-height: 10rem;
-    background-color: var(--clr-primary-base-translucent);
+    background-color: var(--clr-primary-deep-dark);
     margin-bottom: 1rem;
     height: 100%;
-    /* max-height: calc(20vh); */
-    /* overflow-y: visible; */
     overflow: visible;
     border-radius: 10px;
-    /* position: relative; */
     z-index: 10;
     opacity: 0.99;
     div {
-        border-top-left-radius: 10px;
-        border-top-right-radius: 10px;
+        border-radius: 10px;
+        /* border-top-left-radius: 10px; */
+        /* border-top-right-radius: 10px; */
         height: 75%;
         overflow: ${(props) => (props.expand ? "visible" : "hidden")};
+        background-color: var(--clr-primary-deep-dark);
     }
     header,
     ul {
@@ -116,6 +116,7 @@ const StyledCategorySection = styled.section`
         }
     }
 `;
+StyledCategorySection.displayName = "StyledCategorySection";
 
 function CategoryView(props) {
     // const [groupId, setGroupId] = useState(() => {

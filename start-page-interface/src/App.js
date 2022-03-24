@@ -4,32 +4,11 @@ import Dashboard from "./components/Dashboard";
 
 import ModalContainer from "./components/ModalContainer";
 import "./App.css";
-import styled, { createGlobalStyle } from "styled-components";
-import TagChips from "./components/TagChips";
-import { useParams, useLocation, Route, Routes, Link, Outlet } from "react-router-dom";
-import {
-    StyledInlineLink,
-    StyledNavBar,
-    StyledNavLink,
-} from "./components/styled-components/nav.styled";
-import axios from "axios";
-import IndividualLink from "./components/IndividualLink";
+import { useLocation, Route, Routes, Outlet } from "react-router-dom";
+import { StyledNavBar } from "./components/styled-components/nav.styled";
 import { Global } from "./components/styled-components/global.colors";
-// const Global = createGlobalStyle`
-// 	:root{
-//   --clr-primary-deep-dark: #171529;
-//   --clr-primary-dark: #25203f;
-//   --clr-primary-base: #342E57;
-//   --clr-accent: #6495ed;
-//   --clr-accent-green:#4ab4c7;
-// --clr-accent-pink: #bf2063;
-//   --clr-shadow: rgba(0, 0, 0, 0.25);
-// 	}
-// 	html, body{
-// 		scrollbar-width: thin;
-// 	}
-
-// `;
+import styled from "styled-components";
+import { Container } from "./components/styled-components/layout.styled";
 
 const StyledContainer = styled.div`
     flex: 1;
@@ -69,7 +48,7 @@ function App() {
         console.log(event.target);
     }
     return (
-        <StyledContainer className="App" onClick={determineClickedElement}>
+        <Container className="App" full={true} fullVertical={true}>
             <Global></Global>
             <Routes location={background || location}>
                 <Route path="/" element={<Layout />}>
@@ -94,19 +73,23 @@ function App() {
             </Routes>
             {background && (
                 <Routes>
-                    <Route path="create/:id" element={<LinkNameInput modal={true} />} />
+                    <Route
+                        path="create/:id"
+                        element={<LinkNameInput modal={true} />}
+                    />
                     <Route
                         path="display/internal/:id"
-                        element={<ModalContainer />}></Route>
+                        element={<ModalContainer />}
+                    ></Route>
                 </Routes>
             )}
-        </StyledContainer>
+        </Container>
     );
 }
 
 function Layout() {
     return (
-        <ThickerContainer>
+        <Container full={true} fullVertical={true}>
             <nav>
                 <StyledNavBar>
                     {/* <StyledNavLink underlineColor="#8e7eef">
@@ -119,7 +102,7 @@ function Layout() {
             </nav>
 
             <Outlet />
-        </ThickerContainer>
+        </Container>
     );
 }
 

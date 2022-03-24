@@ -8,11 +8,11 @@ body {
 	background-repeat: no-repeat;
 	background-position: bottom;
 	background-blend-mode: overlay, normal;
-	width: 100vw;
+	/* width: 100vw;
 	height: 100vh;
 	display: flex;
 	flex-direction: column;
-	justify-content: center;
+	justify-content: center; */
 }
 
 *,
@@ -31,6 +31,7 @@ body * {
 
 .App {
 	text-align: center;
+	overflow-x: hidden;
 }
 
 .App-logo {
