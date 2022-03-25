@@ -31,6 +31,7 @@ const TimerSetSchema = new mongoose.Schema({
         type: String,
         trim: true,
         required: true,
+        default: "New Timer Set",
     },
     timers: [TimerSchema],
     youtubeLink: {
@@ -41,6 +42,7 @@ const TimerSetSchema = new mongoose.Schema({
         type: String,
         default: "",
     },
+    repeatNumber: { type: Number, required: true, default: 0 },
 });
 
 //? model is wrapper around schema
