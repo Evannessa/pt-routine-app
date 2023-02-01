@@ -32,7 +32,6 @@
         "workbench.colorCustomizations": {
             "editorRuler.foreground": "#ff6a9b94",
             "statusBar.noFolderBackground": "#005f5f",
-            "statusBar.debuggingBackground": "#005f5f",
             "editor.lineHighlightBackground": "#1073cf2d",
             "editor.lineHighlightBorder": "#9fced11f",
             "editor.foldBackground": "rgba(250, 240, 170, 0.5)",
@@ -43,10 +42,7 @@
             "activityBar.inactiveForeground": "#e7e7e799",
             "activityBarBadge.background": "#ee90bb",
             "activityBarBadge.foreground": "#15202b",
-            "editorGroup.border": "#3399ff",
-            "panel.border": "#3399ff",
             "sash.hoverBorder": "#1f6fd0",
-            "sideBar.border": "#3399ff",
             "statusBarItem.hoverBackground": "#1f6fd0",
             "statusBarItem.remoteBackground": "#1857a4",
             "statusBarItem.remoteForeground": "#e7e7e7",
@@ -54,7 +50,11 @@
             "titleBar.activeForeground": "#e7e7e7",
             "titleBar.inactiveBackground": "#1857a499",
             "titleBar.inactiveForeground": "#e7e7e799",
-            "tab.activeBackground": "#7886ff44"
+            "tab.activeBackground": "#7886ff44",
+            "statusBar.background": "#1857a4",
+            "statusBar.foreground": "#e7e7e7",
+            "commandCenter.border": "#e7e7e799",
+            "tab.activeBorder": "#1f6fd0"
         },
         "peacock.color": "#1857a4",
         "explorerExclude.backup": null,
@@ -69,6 +69,9 @@
             }
         ],
         "favorites.groups": ["Default", "Start Page Components"],
-        "favorites.currentGroup": "Start Page Components"
+        "favorites.currentGroup": "Start Page Components",
+        "gotoSymbolStack.currentStackPosition": 0,
+        "gotoSymbolStack.maxStackPosition": 0,
+        "gotoSymbolStack.filePositionInfo": []
     }
 }

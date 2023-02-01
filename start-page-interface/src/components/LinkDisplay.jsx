@@ -1,13 +1,7 @@
 import Avatar from "boring-avatars";
 import debounce from "lodash.debounce";
 import React, { useEffect, useState, useCallback, useMemo } from "react";
-import {
-    Link,
-    Outlet,
-    useLocation,
-    useParams,
-    useSearchParams,
-} from "react-router-dom";
+import { Link, Outlet, useLocation, useParams, useSearchParams } from "react-router-dom";
 import styled from "styled-components";
 import { requests } from "../helpers/requests";
 import ChipGroup from "./ChipGroup";
@@ -34,11 +28,7 @@ import {
     StyledCardSidebarLeft,
 } from "./styled-components/cards.styled";
 import * as Layout from "./styled-components/layout.styled";
-import {
-    StyledContent,
-    StyledMain,
-    StyledSidebar,
-} from "./styled-components/layout.styled";
+import { StyledContent, StyledMain, StyledSidebar } from "./styled-components/layout.styled";
 import * as StyledNav from "./styled-components/nav.styled";
 import TagChips from "./TagChips";
 
@@ -100,27 +90,21 @@ function LinkDisplay(props) {
                       return link.tags.some((tag) => {
                           //where this specific link's tags names include
                           //the stuff in the search
-                          return queryTags.some((el) =>
-                              tag.name.toLowerCase().includes(el.toLowerCase())
-                          );
+                          return queryTags.some((el) => tag.name.toLowerCase().includes(el.toLowerCase()));
                       });
                   })
                 : [];
             //if the name filter is selected
             let filteredNames = formData.searchFilters.titles
                 ? links.filter((link) => {
-                      return queryTags.some((el) =>
-                          link.name.toLowerCase().includes(el.toLowerCase())
-                      );
+                      return queryTags.some((el) => link.name.toLowerCase().includes(el.toLowerCase()));
                   })
                 : [];
 
             //if the url filter is selected
             let filteredUrls = formData.searchFilters.urls
                 ? links.filter((link) => {
-                      return queryTags.some((el) =>
-                          link.url.toLowerCase().includes(el.toLowerCase())
-                      );
+                      return queryTags.some((el) => link.url.toLowerCase().includes(el.toLowerCase()));
                   })
                 : [];
             filtered = [...filtered, ...filteredNames, ...filteredUrls];
@@ -239,10 +223,7 @@ function LinkDisplay(props) {
 
     const linkComponents = filteredLinks
         ? filteredLinks.map((link) => (
-              <StyledCardHorizontal
-                  key={link._id}
-                  highlighted={link._id === params.id ? true : false}
-              >
+              <StyledCardHorizontal key={link._id} highlighted={link._id === params.id ? true : false}>
                   <StyledCardHeader>
                       <h2>
                           {link.name}
@@ -259,26 +240,14 @@ function LinkDisplay(props) {
                       <Avatar
                           size="3rem"
                           variant="marble"
-                          colors={[
-                              "#02797E",
-                              "#FFA689",
-                              "#D62B58",
-                              "#BF2063",
-                              "#572F4F",
-                          ]}
+                          colors={["#02797E", "#FFA689", "#D62B58", "#BF2063", "#572F4F"]}
                       />
                   </StyledCardSidebarLeft>
                   <StyledCardBody></StyledCardBody>
                   <StyledCardFooter>
                       <CardComponent>
                           {link.tags.map((tag) => {
-                              return (
-                                  <TagChips
-                                      key={tag._id}
-                                      tag={tag}
-                                      tagName={tag.name}
-                                  ></TagChips>
-                              );
+                              return <TagChips key={tag._id} tag={tag} tagName={tag.name}></TagChips>;
                           })}
                       </CardComponent>
                   </StyledCardFooter>
@@ -327,12 +296,8 @@ function LinkDisplay(props) {
                     ></ChipGroup>
                 </Form>
                 <StyledSplitButtonWrapper>
-                    <StyledSplitButtonPrimary bgColor="cornflowerblue">
-                        add
-                    </StyledSplitButtonPrimary>
-                    <StyledSplitButtonOverflow>
-                        arrow_drop_down
-                    </StyledSplitButtonOverflow>
+                    <StyledSplitButtonPrimary bgColor="cornflowerblue">add</StyledSplitButtonPrimary>
+                    <StyledSplitButtonOverflow>arrow_drop_down</StyledSplitButtonOverflow>
                 </StyledSplitButtonWrapper>
                 <StyledNav.StyledRouterLink to="/create/new">
                     Create New <span className="material-icons">add</span>

@@ -68,6 +68,9 @@
             }
         ],
         "favorites.groups": ["Default", "Start Page Components"],
-        "favorites.currentGroup": "Start Page Components"
+        "favorites.currentGroup": "Start Page Components",
+        "gotoSymbolStack.currentStackPosition": 0,
+        "gotoSymbolStack.maxStackPosition": 0,
+        "gotoSymbolStack.filePositionInfo": []
     }
 }

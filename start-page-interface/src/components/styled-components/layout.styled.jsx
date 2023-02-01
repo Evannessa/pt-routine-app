@@ -91,6 +91,7 @@ export const StyledSidebar = styled.section`
     gap: 0.5rem;
     overflow: scroll;
     scrollbar-width: thin;
+    max-height: 100vh;
     &::-webkit-scrollbar {
         background-color: var(--clr-primary-deep-dark);
         width: 1.25rem;

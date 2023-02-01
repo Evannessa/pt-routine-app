@@ -33,7 +33,34 @@ const TimerSetSchema = new mongoose.Schema({
         required: true,
         default: "New Timer Set",
     },
-    timers: [TimerSchema],
+    timers: [new mongoose.Schema({
+        time: {
+            type: Map,
+            of: Number,
+            default: {
+                hours: 0,
+                minutes: 0,
+                seconds: 0,
+            },
+        },
+        label: {
+            type: String,
+            trim: true,
+        },
+        slideImagePath: {
+            type: String,
+        },
+        description: {
+            type: String,
+        },
+        autostart: {
+            type: Boolean,
+            required: true,
+            default: false,
+        },
+        isBreak: { type: Boolean, required: true, default: false },
+        repeatNumber: { type: Number, required: true, default: 0 },
+    })],
     youtubeLink: {
         type: String,
         default: "",

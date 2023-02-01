@@ -1,19 +1,21 @@
-var createError = require("http-errors");
-var express = require("express");
-var path = require("path");
-var cookieParser = require("cookie-parser");
-var logger = require("morgan");
-var cors = require("cors");
+const createError = require("http-errors");
+const express = require("express");
+
+const serverless = require('serverless-http');
+const path = require("path");
+const cookieParser = require("cookie-parser");
+const logger = require("morgan");
+const cors = require("cors");
 // var indexRouter = require("./routes/index");
-var factoryRouter = require("./routes/factoryRoutes");
-var displayRouter = require("./routes/displayRoutes");
-var linkInterfaceRouter = require("./routes/linkInterfaceRoutes");
+const factoryRouter = require("./routes/factoryRoutes");
+const displayRouter = require("./routes/displayRoutes");
+const linkInterfaceRouter = require("./routes/linkInterfaceRoutes");
 const connectDB = require("./db/connect");
 require("dotenv").config();
 const notFound = require("./middleware/not-found");
 const errorHandlerMiddleware = require("./middleware/error-handler");
 const fileUpload = require("express-fileupload");
-var app = express();
+const app = express();
 
 const port = process.env.PORT || 9000;
 
@@ -29,6 +31,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use(fileUpload()); //! HAD TO PUT THIS BEFORE THE APP.USE() ROUTER
+app.use('/.netlify/functions/api', ro)
 app.use("/factory", factoryRouter);
 app.use("/display", displayRouter);
 app.use("/links", linkInterfaceRouter);
@@ -65,3 +68,4 @@ const start = async () => {
 start();
 
 module.exports = app;
+module.exports.handler = serverless(app)

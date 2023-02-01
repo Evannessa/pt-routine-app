@@ -109,6 +109,14 @@ const StyledHeading = styled.h1`
         z-index: 0;
     }
 `;
+const MaskedImage = styled.img`
+    mask-image: url("./mask.png");
+    object-fit: contain;
+    object-position: center;
+    mask-repeat: no-repeat;
+    mask-origin: border-box;
+    mask-position: center;
+`;
 
 function Dashboard() {
     const [filteredViews, setFilteredViews] = useState();
@@ -195,6 +203,7 @@ function Dashboard() {
                     </Buttons.ContainedButton>
                 </Buttons.ButtonGroup> */}
             </header>
+
             {links ? (
                 <StyledCategoryGrid>
                     {generateColumns(categoryComponents)}

@@ -36,8 +36,7 @@ const StyledModalContainer = styled.div`
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
-        rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
 
     iFrame {
         width: 70%;
@@ -139,7 +138,8 @@ function ModalContainer({ children, isModal }, props) {
             <StyledHtmlWrapper
                 dangerouslySetInnerHTML={{
                     __html: md.render(linkData.text),
-                }}></StyledHtmlWrapper>
+                }}
+            ></StyledHtmlWrapper>
         );
     }
     function returnImage() {
@@ -180,18 +180,9 @@ function ModalContainer({ children, isModal }, props) {
     return (
         <StyledModalContainer isModal={isModal}>
             <StyledModalHeader>
-                {linkData && (
-                    <h2 className="modal__title>">
-                        {tf.camelCaseToWords(linkData.name)}
-                    </h2>
-                )}
+                {linkData && <h2 className="modal__title>">{tf.camelCaseToWords(linkData.name)}</h2>}
 
-                <IconButton
-                    className="material-icons"
-                    btnStyle=""
-                    color="white"
-                    colorAlt="red"
-                    onClick={closeModal}>
+                <IconButton className="material-icons" btnStyle="" color="white" colorAlt="red" onClick={closeModal}>
                     close
                 </IconButton>
             </StyledModalHeader>
