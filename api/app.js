@@ -31,7 +31,9 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use(fileUpload()); //! HAD TO PUT THIS BEFORE THE APP.USE() ROUTER
-app.use('/.netlify/functions/api', ro)
+app.use('/.netlify/functions/api', factoryRouter)
+app.use('/.netlify/functions/api', displayRouter)
+app.use('/.netlify/functions/api', linkInterfaceRouter)
 app.use("/factory", factoryRouter);
 app.use("/display", displayRouter);
 app.use("/links", linkInterfaceRouter);

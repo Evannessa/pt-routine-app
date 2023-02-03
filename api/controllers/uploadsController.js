@@ -1,5 +1,6 @@
 const path = require("path");
-var mongoose = require("mongoose");
+const fs = require('fs')
+let mongoose = require("mongoose");
 
 const uploadImage = async (req, res) => {
     console.log("Our files are", req.files);
@@ -16,6 +17,28 @@ const uploadImage = async (req, res) => {
     return res.status(200).json({ image: { src: `/uploads/${slideImage.name}` } });
 };
 
+const getAllUploads = async (req, res) => {
+    try {
+        const folder = path.join(__dirname, "../public/uploads/")
+        fs.readdir(folder, (err, files) => {
+            const imgFiles = files.filter((file) => {
+                const extensions = [".png", ".jpg", ".webp", ".jpeg"]
+                return extensions.includes(path.extname(file).toLowerCase())
+            })
+            res.status(200).json({ document: imgFiles });
+        })
+
+    } catch (err) {
+        console.error(err)
+
+        res.status(500).json({ msg: "Something went wrong" });
+    }
+
+
+
+}
+
 module.exports = {
     uploadImage,
+    getAllUploads
 };
