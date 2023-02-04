@@ -22,14 +22,13 @@ const getAllUploads = async (req, res) => {
         const folder = path.join(__dirname, "../public/uploads/")
         fs.readdir(folder, (err, files) => {
             const imgFiles = files.filter((file) => {
-                const extensions = [".png", ".jpg", ".webp", ".jpeg"]
+                const extensions = [".png", ".jpg", ".webp", ".jpeg", ".gif"]
                 return extensions.includes(path.extname(file).toLowerCase())
             })
             res.status(200).json({ document: imgFiles });
         })
 
     } catch (err) {
-        console.error(err)
 
         res.status(500).json({ msg: "Something went wrong" });
     }
