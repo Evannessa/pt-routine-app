@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import FormData from "form-data";
-import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { useParams } from "react-router-dom";
 import { requests } from "../helpers/requests";
 
@@ -26,12 +25,7 @@ function DropArea(props) {
         function updateImage(response) {
             let src = response.data.image;
 
-            let updateObj = requests.compileUpdateData(
-                params.id,
-                "imagePath",
-                src,
-                "update"
-            );
+            let updateObj = requests.compileUpdateData(params.id, "imagePath", src, "update");
             let options = {
                 method: "PATCH",
                 pathsArray: ["create", params.id],
@@ -185,7 +179,8 @@ function DropArea(props) {
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
             onPaste={handlePaste}
-            ref={dropRef}>
+            ref={dropRef}
+        >
             <img
                 className="slide__preview"
                 src={props.imagePath ? `${uploadsUrl}/${props.imagePath}` : ""}

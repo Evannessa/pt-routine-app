@@ -1,20 +1,21 @@
 {
-  "name": "stretches-site-master",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/EvanesceExotica/stretches-site-master.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/EvanesceExotica/stretches-site-master/issues"
-  },
-  "homepage": "https://github.com/EvanesceExotica/stretches-site-master#readme"
+    "name": "stretches-site-master",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "build": "netlify-lambda build express",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/EvanesceExotica/stretches-site-master.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/EvanesceExotica/stretches-site-master/issues"
+    },
+    "homepage": "https://github.com/EvanesceExotica/stretches-site-master#readme"
 }
