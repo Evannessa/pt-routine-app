@@ -1,0 +1,45 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@100;300;400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Lato:wght@100;300;400;700&display=swap');
+
+
+:root {
+	/* base text size values*/
+	--text-base-size: 1em;
+	--text-scale-ratio: 1.2;
+
+	/* type scale */
+	--text-xs: calc(1em / var(--text-scale-ratio) * var(--text-scale-ratio));
+	--text-sm: calc(1em / var(--text-scale-ratio));
+	--text-md: calc(1em * var(--text-scale-ratio));
+	--text-lg: calc(1em * var(--text-scale-ratio) * var(--text-scale-ratio));
+	--text-xl: calc(1em * var(--text-scale-ratio) * var(--text-scale-ratio) * var(--text-scale-ratio));
+	--text-xxl: calc(1em * var(--text-scale-ratio) * var(--text-scale-ratio) * var(--text-scale-ratio) * var(--text-scale-ratio));
+	--text-xxxl: calc(1em * var(--text-scale-ratio) * var(--text-scale-ratio) * var(--text-scale-ratio) * var(--text-scale-ratio) * var(--text-scale-ratio));
+
+	/* line- height */
+	--heading-line-height: 1.2;
+	--body-line-height: 1.4;
+
+	/* font-weight */
+	--fw-thin: 100;
+	--fw-light: 300;
+	--fw-regular: 400;
+	--fw-medium: 500;
+	--fw-semi-bold: 600;
+	--fw-bold: 700;
+	--fw-extra-bold: 800;
+
+	// @include breakpoint(md) {
+	// 	:root {
+	// 		--text-base-size: 1.25em;
+	// 		--text-scale-ratio: 1.25;
+	// 	}
+	// }
+
+}
+
+html {
+	font-family: 'Lato', sans-serif;
+	// font-family: 'Open Sans', sans-serif;
+}

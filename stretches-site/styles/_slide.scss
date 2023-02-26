@@ -1,0 +1,21 @@
+.slide {
+	margin: 2rem;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	border-radius: 12px;
+	overflow: hidden;
+
+	img {
+		object-fit: contain;
+		max-width: 50%;
+		border-radius: 15px;
+
+	}
+}
+
+.slide__preview {
+	object-fit: contain;
+	max-width: 100%;
+}

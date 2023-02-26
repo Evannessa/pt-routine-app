@@ -2,5 +2,6 @@
 /api/node_modules
 .env
 api/public/uploads/
-stretches-site
 functions
+stretches-site/.gitold
+stretches-site/OLD

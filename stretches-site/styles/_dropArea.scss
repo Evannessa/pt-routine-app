@@ -1,0 +1,24 @@
+.dropArea {
+	border: 2px dotted white;
+	border-radius: 20px;
+	width: 50%;
+	margin: 2rem auto;
+	padding: 1rem;
+	background-color: transparent;
+
+
+	.dropForm {
+		background: transparent;
+
+		input[type="file"] {
+			width: 5rem;
+			min-height: 5rem;
+			flex: 1 0;
+			background-color: purple;
+		}
+	}
+
+	&.highlight {
+		border-color: purple;
+	}
+}

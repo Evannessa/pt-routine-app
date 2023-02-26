@@ -1,0 +1,68 @@
+@use "./mixins";
+@use "./typography";
+@use "./reset";
+@use "./timer";
+@use "./slide";
+@use "./progressCircle";
+@use "./utility/chipbox";
+@use "./timerFactory";
+@use "./dropArea";
+@use "./variables";
+@use "./globals";
+
+body,
+#root {
+	background-color: #212121;
+	height: 100vh;
+	font-family: 'Open Sans', sans-serif;
+}
+
+
+.App {
+	display: grid;
+	place-content: stretch center;
+	align-items: center;
+	justify-items: center;
+	height: 100%;
+	background: var(--clr-primary-pink);
+	/* fallback for old browsers */
+	background: -webkit-linear-gradient(to bottom, var(--clr-primary-orange), var(--clr-primary-pink));
+	/* Chrome 10-25, Safari 5.1-6 */
+	background: linear-gradient(to bottom, var(--clr-primary-orange), var(--clr-primary-pink));
+
+	/* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+	&.break {
+		background: #24C6DC;
+		/* fallback for old browsers */
+		background: -webkit-linear-gradient(to top, #514A9D, #24C6DC);
+		/* Chrome 10-25, Safari 5.1-6 */
+		background: linear-gradient(to top, #514A9D, #24C6DC);
+		/* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+	}
+}
+
+.active-timer-display {
+	display: grid;
+	place-content: stretch center;
+	align-items: center;
+	justify-items: center;
+	height: 100%;
+	padding: 3rem;
+	background: var(--clr-primary-pink);
+	/* fallback for old browsers */
+	background: -webkit-linear-gradient(to bottom, var(--clr-primary-orange), var(--clr-primary-pink));
+	/* Chrome 10-25, Safari 5.1-6 */
+	background: linear-gradient(to bottom, var(--clr-primary-orange), var(--clr-primary-pink));
+
+	/* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+	&.break {
+		background: #24C6DC;
+		/* fallback for old browsers */
+		background: -webkit-linear-gradient(to top, #514A9D, #24C6DC);
+		/* Chrome 10-25, Safari 5.1-6 */
+		background: linear-gradient(to top, #514A9D, #24C6DC);
+		/* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+	}
+}
