@@ -1,7 +1,7 @@
 const createError = require("http-errors");
 const express = require("express");
 
-const serverless = require('serverless-http');
+// const serverless = require('serverless-http');
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
@@ -28,12 +28,17 @@ app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(express.static(path.join(__dirname, "..", "build")));
 app.use(express.static(path.join(__dirname, "public")));
 
+app.use((req, res, next) => {
+    res.sendFile(path.join(__dirname, "..", "build", "index.html"));
+});
+
 app.use(fileUpload()); //! HAD TO PUT THIS BEFORE THE APP.USE() ROUTER
-app.use('/.netlify/functions/api', factoryRouter)
-app.use('/.netlify/functions/api', displayRouter)
-app.use('/.netlify/functions/api', linkInterfaceRouter)
+// app.use('/.netlify/functions/api', factoryRouter)
+// app.use('/.netlify/functions/api', displayRouter)
+// app.use('/.netlify/functions/api', linkInterfaceRouter)
 app.use("/factory", factoryRouter);
 app.use("/display", displayRouter);
 app.use("/links", linkInterfaceRouter);
@@ -65,9 +70,10 @@ const start = async () => {
     } catch (error) {
         console.log(error);
     }
+
 };
 
 start();
 
 module.exports = app;
-module.exports.handler = serverless(app)
+// module.exports.handler = serverless(app)

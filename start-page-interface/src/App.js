@@ -47,6 +47,7 @@ function App() {
     function determineClickedElement(event) {
         console.log(event.target);
     }
+
     return (
         <Container className="App" full={true} fullVertical={true}>
             <Global></Global>

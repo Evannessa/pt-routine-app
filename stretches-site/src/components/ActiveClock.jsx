@@ -194,6 +194,7 @@ export default function ActiveClock(props) {
                 <div className="time-value">
                     <h3 className="value">{String(parseInt(time.minutes)).padStart(2, 0)}:</h3>
                 </div>
+
                 <div className="time-value">
                     <h3 className="value">{String(parseInt(time.seconds)).padStart(2, 0)}</h3>
                 </div>
