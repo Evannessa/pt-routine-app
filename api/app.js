@@ -23,7 +23,11 @@ const port = process.env.PORT || 9000;
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "jade");
 
-app.use(cors());
+var corsOptions = {
+    origin: "http://localhost:9001"
+
+}
+app.use(cors(corsOptions));
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -48,9 +52,7 @@ app.use(function (req, res, next) {
     next(createError(404));
 });
 
-app.use((req, res, next) => {
-    res.sendFile(path.join(__dirname, "..", "build", "index.html"));
-});
+
 
 
 // // error handler
@@ -68,6 +70,9 @@ const start = async () => {
     try {
         await connectDB(process.env.MONGO_URI);
         app.listen(9000, console.log(`Server is listening on port ${port}...`));
+        app.use((req, res, next) => {
+    res.sendFile(path.join(__dirname, "..", "build", "index.html"));
+});
     } catch (error) {
         console.log(error);
     }
