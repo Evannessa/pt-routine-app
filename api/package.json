@@ -2,8 +2,9 @@
     "name": "stretches-site-master",
     "version": "0.0.0",
     "private": true,
+    "main": "app.js",
     "scripts": {
-        "start": "nodemon app.js"
+        "start": "nodemon ./app.js localhost 9000"
     },
     "dependencies": {
         "cookie-parser": "~1.4.4",

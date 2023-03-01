@@ -28,12 +28,12 @@ app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, "..", "build")));
+app.use(express.static(path.join(__dirname, "../stretches-site/build")));
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use((req, res, next) => {
-    res.sendFile(path.join(__dirname, "..", "build", "index.html"));
-});
+// app.use((req, res, next) => {
+//     res.sendFile(path.join(__dirname, "..", "build", "index.html"));
+// });
 
 app.use(fileUpload()); //! HAD TO PUT THIS BEFORE THE APP.USE() ROUTER
 // app.use('/.netlify/functions/api', factoryRouter)
@@ -51,6 +51,11 @@ app.use(errorHandlerMiddleware);
 app.use(function (req, res, next) {
     next(createError(404));
 });
+
+app.get('/', (req,res) => {
+  res.sendFile(path.join(__dirname, '../stretches-site/build/index.html'));
+});
+
 
 // // error handler
 // app.use(function (err, req, res, next) {
