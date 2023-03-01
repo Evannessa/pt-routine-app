@@ -12,21 +12,21 @@
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "build": "react-scripts build",
-        "dev": "NODE_ENV=development nodemon ./api/app.js",
+        "dev": "NODE_ENV=development npm run build && nodemon ./api/app.js",
         "start": "NODE_ENV=production node dist/app.js",
         "start-client": "react-scripts start"
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/EvanesceExotica/stretches-site-master.git"
+        "url": "git+https://github.com/Evannessa/stretches-site-master.git"
     },
     "keywords": [],
     "author": "",
     "license": "ISC",
     "bugs": {
-        "url": "https://github.com/EvanesceExotica/stretches-site-master/issues"
+        "url": "https://github.com/Evannessa/stretches-site-master/issues"
     },
-    "homepage": "https://github.com/EvanesceExotica/stretches-site-master#readme",
+    "homepage": "/",
     "dependencies": {
         "@testing-library/jest-dom": "^5.16.1",
         "axios": "^0.25.0",
@@ -44,6 +44,7 @@
         "nanoid": "^3.2.0",
         "react": "^17.0.2",
         "react-dom": "^17.0.2",
+        "react-draggable": "^4.4.5",
         "react-router-dom": "^6.2.1",
         "react-scripts": "^5.0.1",
         "react-transition-group": "^4.4.5",

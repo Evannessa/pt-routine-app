@@ -1,0 +1,98 @@
+.timerSet-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 800;
+
+    .timerSet__drawer-toggle-btn {
+        position: fixed;
+        z-index: 30;
+        border-radius: 50%;
+        width: 3rem;
+        height: 3rem;
+        top: 1rem;
+        right: 1rem;
+        // margin-left: 1rem;
+        // margin-top: 1rem;
+        background-color: var(--clr-primary-pink);
+        color: white;
+
+        &.open {
+            border: 2px solid var(--color-primary-pink);
+            background-color: white;
+            color: var(--clr-primary-pink);
+        }
+    }
+}
+
+.timerSet__container {
+    background-color: #212121e0;
+    padding: 1rem;
+    padding-top: 5rem;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: -50vw;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    gap: 1rem;
+    width: min(40vw, 500px);
+    transition: left 200ms ease-in;
+
+    &.open {
+        left: 0;
+    }
+
+
+
+
+    @supports(backdrop-filter: blur(12px)) {
+        background-color: #2121217a;
+        backdrop-filter: blur(12px);
+    }
+
+    @at-root .App {
+        display: flex;
+    }
+
+    .timerSet {
+        border: none;
+        box-shadow: 2px 2px 2px 2px #21212194;
+        border-radius: 5px;
+        padding: 1em 2em;
+        cursor: pointer;
+        background-color: rgba(255, 228, 196, 0);
+        transition: background-color 100ms ease-in;
+        display: flex;
+        flex-direction: row;
+
+        &.selected {
+            background-color: var(--clr-primary-pink);
+            color: white;
+        }
+
+        &__content {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            .button-wrapper {
+                flex: 0;
+            }
+
+            .btn {
+                &:hover {
+                    color: red;
+                    border-color: currentColor;
+                }
+            }
+        }
+
+        &:hover {
+            background-color: rgba(255, 228, 196, 0.363);
+            // box-shadow: 2px 2px 2px 2px #21212194;
+        }
+    }
+}
