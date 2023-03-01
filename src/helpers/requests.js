@@ -6,7 +6,7 @@ import axios from "axios";
 
 export const requests = (function () {
     // const urlBase = "http://localhost:9000";
-    const urlBase = "http://localhost:9000/factory";
+    const urlBase = "http://localhost:9000/api/factory";
 
     /**
      *

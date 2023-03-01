@@ -4,8 +4,8 @@ import FormData from "form-data";
 import { useParams } from "react-router-dom";
 import { requests } from "../helpers/requests";
 
-const url = "http://localhost:9000/factory";
-const uploadsUrl = "http://localhost:9000";
+const url = "http://localhost:9000/api/factory";
+const uploadsUrl = "http://localhost:9000/api";
 // const url = "localhost:9000/factory";
 function DropArea(props) {
     const params = useParams();

@@ -5,7 +5,7 @@ import { TooltipWrapper } from "../portal-components/TooltipPopover";
 import FloatingToolbar from "./FloatingToolbar";
 import { StyledToolbar } from "./FloatingToolbar";
 import Portal from "./Portal";
-const baseURL = "http://localhost:9000";
+const baseURL = "http://localhost:9000/api";
 
 /* #region Styled Components  */
 const grow = keyframes`

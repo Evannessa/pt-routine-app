@@ -12,7 +12,7 @@
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "build": "react-scripts build",
-        "dev": "NODE_ENV=development npm run build && nodemon ./api/app.js",
+        "dev": "NODE_ENV=development npm run build && (cd api && npm start)",
         "start": "NODE_ENV=production node dist/app.js",
         "start-client": "react-scripts start"
     },

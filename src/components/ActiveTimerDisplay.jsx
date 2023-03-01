@@ -150,7 +150,7 @@ const ActiveTimerSetContainer = styled.div`
 /* #endregion */
 export default function ActiveTimerDisplay() {
     const { theme, updateTheme } = React.useContext(ThemeContext);
-    const urlBase = "http://localhost:9000";
+    const urlBase = "http://localhost:9000/api";
 
     const params = useParams();
     // const resolvePath = useResolvedPath();
@@ -191,7 +191,7 @@ export default function ActiveTimerDisplay() {
         let options = {
             method: "GET",
             pathsArray: ["display", params.setId],
-            baseURL: "http://localhost:9000",
+            baseURL: "http://localhost:9000/api",
             setStateCallback: populateActiveTimerSet,
         };
         requests.axiosRequest(options);

@@ -79,7 +79,6 @@ function App() {
             method: "POST",
             pathsArray: ["new"],
             setStateCallback: (info) => {
-                console.log("Info is", info)
                 const newId = info._id
                 navigateToFactory(newId)
                 getTimerSets()
