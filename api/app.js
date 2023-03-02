@@ -39,9 +39,9 @@ app.use(fileUpload()); //! HAD TO PUT THIS BEFORE THE APP.USE() ROUTER
 // app.use('/.netlify/functions/api', factoryRouter)
 // app.use('/.netlify/functions/api', displayRouter)
 // app.use('/.netlify/functions/api', linkInterfaceRouter)
-app.use("/api/factory", factoryRouter);
-app.use("/api/display", displayRouter);
-app.use("/api/links", linkInterfaceRouter);
+app.use("/factory", factoryRouter);
+app.use("/display", displayRouter);
+app.use("/links", linkInterfaceRouter);
 app.use(notFound);
 app.use(errorHandlerMiddleware);
 // app.use("/users", usersRouter);
