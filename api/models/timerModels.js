@@ -18,7 +18,9 @@ const TimerSchema = new mongoose.Schema({
     slideImagePath: {
         type: String,
     },
-    description: "",
+    description: {
+        type: String,
+    },
     autostart: {
         type: Boolean,
         required: true,

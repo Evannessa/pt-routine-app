@@ -6,12 +6,16 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const cors = require("cors");
+const dotenv = require("dotenv")
 // var indexRouter = require("./routes/index");
 const factoryRouter = require("./routes/factoryRoutes");
 const displayRouter = require("./routes/displayRoutes");
 const linkInterfaceRouter = require("./routes/linkInterfaceRoutes");
+
+dotenv.config();
+
 const connectDB = require("./db/connect");
-require("dotenv").config();
+
 const notFound = require("./middleware/not-found");
 const errorHandlerMiddleware = require("./middleware/error-handler");
 const fileUpload = require("express-fileupload");
@@ -55,9 +59,12 @@ app.get('/', (req, res) => {
 
 
 
+
+
 const start = async () => {
     try {
-        await connectDB(process.env.MONGO_URI);
+        connectDB()
+        // await connectDB(process.env.MONGO_URI);
         app.listen(9000, console.log(`Server is listening on port ${port}...`));
     } catch (error) {
         console.log(error);
