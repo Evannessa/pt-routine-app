@@ -4,7 +4,8 @@
     "private": true,
     "main": "app.js",
     "scripts": {
-        "start": "nodemon ./app.js localhost 9080"
+        "start": "node app.js",
+        "dev": "nodemon app.js"
     },
     "dependencies": {
         "cookie-parser": "~1.4.4",
