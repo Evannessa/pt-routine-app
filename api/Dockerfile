@@ -1,16 +1,39 @@
-FROM node:13.13.0-stretch-slim
-#Argument that is passed from docer-compose.yaml file
-ARG NODE_PORT
-#Echo the argument to check passed argument loaded here correctly
-RUN echo "Argument port is : $NODE_PORT"
+# syntax=docker/dockerfile:1.4
+
+# Create image based on the official Node image from dockerhub
+FROM node:lts-buster-slim AS development
+
 # Create app directory
 WORKDIR /usr/src/app
-#COPY . .
-COPY . .
-# Install app dependencies
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
-# where available (npm@5+)
-RUN npm install
-#In my case my app binds to port NODE_PORT so you'll use the EXPOSE instruction to have it mapped by the docker daemon:
-EXPOSE ${NODE_PORT}
-CMD npm run dev
+
+# Copy dependency definitions
+COPY package.json /usr/src/app/package.json
+COPY yarn.lock /usr/src/app/yarn.lock
+
+# Install dependecies
+
+RUN yarn config set depth 0 \
+    && yarn install
+# RUN npm ci
+
+# Get all the code needed to run the app
+COPY . /usr/src/app
+
+# Expose the port the app runs in
+EXPOSE 9000
+
+# Serve the app
+CMD ["yarn", "run", "dev"]
+
+FROM development as dev-envs
+RUN apt-get update \
+&& apt-get install -y --no-install-recommends git
+
+
+RUN useradd -s /bin/bash -m vscode \
+&& groupadd docker \
+&& usermod -aG docker vscode
+
+# install Docker tools (cli, buildx, compose)
+COPY --from=gloursdocker/docker / /
+CMD [ "yarn", "run", "dev" ]

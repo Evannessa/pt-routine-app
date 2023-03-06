@@ -1,27 +1,27 @@
 services:
     frontend:
         build:
-            context: stretches-site
+            context: ./stretches-site
             target: development
         ports:
             - 9000:9000
         stdin_open: true
         volumes:
-            - ./frontend:/usr/src/app
+            - ./stretches-site:/usr/src/app
             - /usr/src/app/node_modules
-        restart: always
+        restart: "no"
         networks:
             - react-express
         depends_on:
             - backend
 
     backend:
-        restart: always
+        restart: "no"
         build:
-            context: api
+            context: ./api
             target: development
         volumes:
-            - ./backend:/usr/src/app
+            - ./api:/usr/src/app
             - /usr/src/app/node_modules
         depends_on:
             - mongo

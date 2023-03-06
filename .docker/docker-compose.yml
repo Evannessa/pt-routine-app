@@ -8,13 +8,13 @@ services:
             - /var/run/docker.sock:/var/run/docker.sock
         ports:
             - 9000:9000
-        restart: always
+        restart: "no"
         networks:
             - react-express
         depends_on:
             - backend
     backend:
-        restart: always
+        restart: "no"
         build:
             context: api
             target: dev-envs
