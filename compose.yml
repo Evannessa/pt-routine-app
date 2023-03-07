@@ -4,19 +4,19 @@ services:
             context: ./stretches-site
             target: development
         ports:
-            - 9000:9000
+            - 3000:3000
         stdin_open: true
         volumes:
             - ./stretches-site:/usr/src/app
             - /usr/src/app/node_modules
-        restart: "no"
+        restart: always
         networks:
             - react-express
         depends_on:
             - backend
 
     backend:
-        restart: "no"
+        restart: always
         build:
             context: ./api
             target: development
@@ -29,7 +29,7 @@ services:
             - express-mongo
             - react-express
         expose:
-            - 9000
+            - 3000
     mongo:
         restart: always
         image: mongo:4.2.0

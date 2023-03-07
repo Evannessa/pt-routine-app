@@ -1,12 +1,7 @@
 import axios from "axios";
 
-// export const instance = axios.create({
-// 	baseURL: `http://localhost:9000/links`,
-// })
-
 export const requests = (function () {
-    // const urlBase = "http://localhost:9000";
-    const urlBase = "http://localhost:9000/factory";
+    const urlBase = "http://localhost:3000/factory";
 
     /**
      *

@@ -21,7 +21,7 @@ const errorHandlerMiddleware = require("./middleware/error-handler");
 const fileUpload = require("express-fileupload");
 const app = express();
 
-const port = process.env.PORT || 9000;
+const port = process.env.PORT || 3000;
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
@@ -33,7 +33,7 @@ app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, "../stretches-site/build")));
+// app.use(express.static(path.join(__dirname, "../stretches-site/build")));
 app.use(express.static(path.join(__dirname, "public")));
 
 // app.use((req, res, next) => {
@@ -53,26 +53,23 @@ app.use(function (req, res, next) {
     next(createError(404));
 });
 
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '../stretches-site/build/index.html'));
-});
-
-
-
 
 
 const start = async () => {
     try {
         connectDB()
         // await connectDB(process.env.MONGO_URI);
-        app.listen(9000, console.log(`Server is listening on port ${port}...`));
+        app.listen(port, () => {
+            console.log(`Server is listening on port ${port}...`)
+        })
+        // app.listen(port, "0.0.0.0", () => console.log(`Server is listening on port ${port}...`));
     } catch (error) {
         console.log(error);
     }
 
 };
+start()
 
-start();
 
 module.exports = app;
 // module.exports.handler = serverless(app)

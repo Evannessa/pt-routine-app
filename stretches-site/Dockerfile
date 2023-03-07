@@ -20,7 +20,7 @@ RUN yarn config set depth 0 \
 COPY . /usr/src/app
 
 # Expose the port the app runs in
-EXPOSE 9000
+EXPOSE 3000
 
 # Serve the app
 CMD ["yarn", "run", "start"]

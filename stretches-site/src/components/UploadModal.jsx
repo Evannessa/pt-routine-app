@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { requests } from "../helpers/requests";
 import styled from "styled-components";
 import { StyledModal } from "./styled-components/modal.styled";
-const uploadsUrl = "http://localhost:9000/uploads/";
+const uploadsUrl = "http://localhost:3000/uploads/";
 
 const StyledImgThumbnail = styled.img`
     max-width: 4rem;

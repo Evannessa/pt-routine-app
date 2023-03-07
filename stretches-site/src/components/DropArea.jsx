@@ -5,8 +5,8 @@ import { useParams } from "react-router-dom";
 import { Container } from "./styled-components/layout.styled";
 import styled from "styled-components";
 
-const url = "http://localhost:9000/factory";
-const uploadsUrl = "http://localhost:9000";
+const url = "http://localhost:3000/factory";
+const uploadsUrl = "http://localhost:3000";
 
 // #region Styled Components
 const StyledDropArea = styled(Container)`
