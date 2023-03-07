@@ -83,7 +83,6 @@ export default function TimerGallery(props) {
     function updateTimerSet(response) {
         console.log("Response was", response);
         if (response) {
-            // setTimerSet(response);
             setFormData(response);
             label.current = response.label;
         } else {
@@ -98,7 +97,7 @@ export default function TimerGallery(props) {
         const getTimerSet = async () => {
             let options = {
                 method: "GET",
-                pathsArray: [id],
+                pathsArray: ["factory", id],
                 setStateCallback: updateTimerSet,
             };
             await requests.axiosRequest(options);
@@ -109,12 +108,10 @@ export default function TimerGallery(props) {
 
     //when timer data changes, update the entire set of timers timer
     React.useEffect(() => {
-        console.log("Formdata changed", formData);
         if (formData) {
             let options = {
                 method: "PATCH",
-                pathsArray: [id],
-                // setStateCallback: getTimerSets,
+                pathsArray: ["factory", id],
                 data: {
                     label: formData.label,
                     youtubeLink: formData.youtubeLink,
@@ -303,11 +300,10 @@ export default function TimerGallery(props) {
     }
 
     async function saveNewTimer() {
-        console.log(formData);
         if (formData.label) {
             const options = {
                 method: "POST",
-                pathsArray: ["new"],
+                pathsArray: ["factory", "new"],
                 setStateCallback: (data) => {
                     console.log("Saving?", data);
                     if (data) setSaved(true);

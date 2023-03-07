@@ -77,7 +77,7 @@ function App() {
     async function createNewSet() {
         let options = {
             method: "POST",
-            pathsArray: ["new"],
+            pathsArray: ["factory", "new"],
             setStateCallback: (info) => {
                 console.log("Info is", info)
                 const newId = info._id
@@ -92,7 +92,7 @@ function App() {
     function getTimerSets() {
         let options = {
             method: "GET",
-            pathsArray: ["/"],
+            pathsArray: ["factory", "/"],
             setStateCallback: updateTimerSets,
         };
         requests.axiosRequest(options);
@@ -120,7 +120,7 @@ function App() {
         navigate(`/factory/${newId}`);
     }
     const updateSets = async function updateSets(action, id) {
-        console.log("Doing " + action + " to " + id);
+        // console.log("Doing " + action + " to " + id);
         switch (action) {
             case "create":
                 await createNewSet();
@@ -129,7 +129,7 @@ function App() {
             case "delete":
                 let options = {
                     method: "DELETE",
-                    pathsArray: [id],
+                    pathsArray: ["factory", id],
                     setStateCallback: getTimerSets,
                 };
                 requests.axiosRequest(options);

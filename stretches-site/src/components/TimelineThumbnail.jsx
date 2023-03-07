@@ -1,11 +1,12 @@
 import { nanoid } from "nanoid";
 import React, { useRef, useState, useEffect, forwardRef } from "react";
 import styled, { css, keyframes } from "styled-components";
+import { urls } from "../helpers/requests";
 import { TooltipWrapper } from "../portal-components/TooltipPopover";
 import FloatingToolbar from "./FloatingToolbar";
 import { StyledToolbar } from "./FloatingToolbar";
 import Portal from "./Portal";
-const baseURL = "http://localhost:3000";
+const { urlBase } = urls;
 
 /* #region Styled Components  */
 const grow = keyframes`
@@ -230,7 +231,7 @@ const TimelineThumbnail = forwardRef(
                             </span>
                         </Hoverable>
                         <section>
-                            <img src={baseURL + slideImagePath} alt="Exercise Slide" />
+                            <img src={urlBase + slideImagePath} alt="Exercise Slide" />
                             <p>{description}</p>
                             <FloatingToolbar actions={actions} timerId={dataKey} coords={coords}></FloatingToolbar>
                         </section>

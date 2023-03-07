@@ -1,6 +1,8 @@
 const createError = require("http-errors");
 const express = require("express");
 
+const { createProxyMiddleware } = require("http-proxy-middleware")
+
 // const serverless = require('serverless-http');
 const path = require("path");
 const cookieParser = require("cookie-parser");
@@ -10,7 +12,7 @@ const dotenv = require("dotenv")
 // var indexRouter = require("./routes/index");
 const factoryRouter = require("./routes/factoryRoutes");
 const displayRouter = require("./routes/displayRoutes");
-const linkInterfaceRouter = require("./routes/linkInterfaceRoutes");
+// const linkInterfaceRouter = require("./routes/linkInterfaceRoutes");
 
 dotenv.config();
 
@@ -35,16 +37,18 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 // app.use(express.static(path.join(__dirname, "../stretches-site/build")));
 app.use(express.static(path.join(__dirname, "public")));
-
+app.use(express.static(path.join(__dirname, "public/uploads")));
+// app.use("/api", createProxyMiddleware({}))
+console.log("Directory name is", __dirname)
 // app.use((req, res, next) => {
 //     res.sendFile(path.join(__dirname, "..", "build", "index.html"));
 // });
 
 app.use(fileUpload()); //! HAD TO PUT THIS BEFORE THE APP.USE() ROUTER
 
-app.use("/factory", factoryRouter);
-app.use("/display", displayRouter);
-app.use("/links", linkInterfaceRouter);
+app.use("/api/factory", factoryRouter);
+app.use("/api/display", displayRouter);
+// app.use("/links", linkInterfaceRouter);
 app.use(notFound);
 app.use(errorHandlerMiddleware);
 

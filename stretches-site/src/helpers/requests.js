@@ -1,7 +1,41 @@
 import axios from "axios";
 
+export const URLS = {
+    urlBase: "http://localhost:3000/api",
+    displayRoute: "/display",
+    factoryRoute: "/factory",
+    uploadsRoute: "/uploads"
+}
+export const urls = (() => {
+    const urlBase = "http://localhost:3000/api"
+    const displayRoute = "/display"
+    const factoryRoute = "/factory"
+    const uploadsRoute = "/uploads"
+
+    const getUploadsUrl = () => {
+        return urlBase + uploadsRoute
+    }
+
+
+    return {
+        urlBase: urlBase,
+        displayRoute: displayRoute,
+        factoryRoute: factoryRoute,
+        uploadsRoute: uploadsRoute,
+        uploadsUrl: getUploadsUrl()
+    }
+})()
+
+export const combineUrlFragments = (base, fragments = []) => {
+    let url = base
+    fragments.forEach((el) => {
+        url += el
+    })
+    return url
+
+}
 export const requests = (function () {
-    const urlBase = "http://localhost:3000/factory";
+    const { urlBase } = urls
 
     /**
      *
@@ -19,6 +53,7 @@ export const requests = (function () {
     async function axiosRequest(options) {
         if (!options.baseURL)
             options.baseURL = urlBase;
+
 
         //destructure the pathsArray and setStateCallback to be used elsewhere
         let { pathsArray, setStateCallback } = options;
@@ -53,7 +88,7 @@ export const requests = (function () {
             .catch(handleError);
     }
 
-    //join together an array of commponents for a path
+    //join together an array of components for a path
     function appendPath(pathsArray) {
         return pathsArray.join("/");
     }

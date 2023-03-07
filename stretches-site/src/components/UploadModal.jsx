@@ -1,9 +1,9 @@
 import { nanoid } from "nanoid";
 import React, { useEffect, useState } from "react";
-import { requests } from "../helpers/requests";
+import { requests, urls } from "../helpers/requests";
 import styled from "styled-components";
 import { StyledModal } from "./styled-components/modal.styled";
-const uploadsUrl = "http://localhost:3000/uploads/";
+const { uploadsUrl } = urls.uploadsUrl;
 
 const StyledImgThumbnail = styled.img`
     max-width: 4rem;
@@ -28,6 +28,12 @@ const ImageList = styled.div`
     gap: 0.25rem;
     flex-wrap: wrap;
 `;
+/**
+ * This displays the various images we've uploaded by fetching image files from the uploads folder
+ * and allows to switch which image belongs to a timer by clicking
+ * @param {*} props
+ * @returns ReactComponent
+ */
 function UploadModal(props) {
     const [imagePaths, setImagePaths] = useState(null);
 

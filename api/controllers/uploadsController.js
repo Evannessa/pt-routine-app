@@ -17,6 +17,26 @@ const uploadImage = async (req, res) => {
     return res.status(200).json({ image: { src: `/uploads/${slideImage.name}` } });
 };
 
+const getImage = async (req, res) => {
+    try {
+        const slideImageName = req.imageName
+        const folder = path.join(__dirname, "../public/uploads/")
+        fs.readdir(folder, (err, files) => {
+            const imgFiles = files.filter((file) => {
+                const extensions = [".png", ".jpg", ".webp", ".jpeg", ".gif"]
+                return extensions.includes(path.extname(file).toLowerCase())
+            })
+            res.status(200).json({ document: imgFiles });
+        })
+
+    } catch (err) {
+
+        res.status(500).json({ msg: "Something went wrong" });
+    }
+
+
+}
+
 const getAllUploads = async (req, res) => {
     try {
         const folder = path.join(__dirname, "../public/uploads/")

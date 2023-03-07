@@ -1,6 +1,6 @@
 import React from "react";
 import ActiveClock from "./ActiveClock";
-import { requests } from "../helpers/requests";
+import { requests, urls } from "../helpers/requests";
 import ProgressCircle from "./ProgressCircle";
 import Slide from "./Slide";
 import { useParams, useNavigate, Link } from "react-router-dom";
@@ -150,7 +150,7 @@ const ActiveTimerSetContainer = styled.div`
 /* #endregion */
 export default function ActiveTimerDisplay() {
     const { theme, updateTheme } = React.useContext(ThemeContext);
-    const urlBase = "http://localhost:3000";
+    const { urlBase } = urls;
 
     const params = useParams();
     // const resolvePath = useResolvedPath();
@@ -191,7 +191,6 @@ export default function ActiveTimerDisplay() {
         let options = {
             method: "GET",
             pathsArray: ["display", params.setId],
-            baseURL: "http://localhost:3000",
             setStateCallback: populateActiveTimerSet,
         };
         requests.axiosRequest(options);
@@ -234,7 +233,7 @@ export default function ActiveTimerDisplay() {
     //map all the images associated w/ each timer to the slide component
     let slideComponents = timers
         ? timers.map((timer) => {
-              return <Slide key={timer._id + "TimerSlide"} image={`${urlBase}${timer.slideImagePath}`} />;
+              return <Slide key={timer._id + "TimerSlide"} image={`${urlBase}/${timer.slideImagePath}`} />;
           })
         : [];
     let descriptionComponents = timers

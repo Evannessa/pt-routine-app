@@ -4,9 +4,7 @@ import FormData from "form-data";
 import { useParams } from "react-router-dom";
 import { Container } from "./styled-components/layout.styled";
 import styled from "styled-components";
-
-const url = "http://localhost:3000/factory";
-const uploadsUrl = "http://localhost:3000";
+import { urls, combineUrlFragments } from "../helpers/requests";
 
 // #region Styled Components
 const StyledDropArea = styled(Container)`
@@ -50,6 +48,8 @@ StyledDropArea.displayName = "StyledDropArea";
 // #endregion
 /* -------------------------------------------------------------------------- */
 function DropArea(props) {
+    const { urlBase, uploadsUrl, factoryRoute, uploadsRoute } = urls;
+    // const uploadsUrl = combineUrlFragments(urlBase, [factoryRoute, uploadsRoute]);
     /* ---------------------------- States and Hooks ---------------------------- */
     // #region States and hooks
     const params = useParams();
@@ -72,11 +72,13 @@ function DropArea(props) {
 
         try {
             //upload image
+            const specificUrl = combineUrlFragments(urlBase, [factoryRoute, "/", params.setId, uploadsRoute]);
+            // `${url}/${params.setId}/uploads`
             const {
                 data: {
                     image: { src },
                 },
-            } = await axios.post(`${url}/${params.setId}/uploads`, formData, {
+            } = await axios.post(specificUrl, formData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 },
