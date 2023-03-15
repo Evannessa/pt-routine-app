@@ -10,7 +10,7 @@ const {
     updateAllSets,
 } = require("../controllers/timersController");
 
-const { uploadImage, getAllUploads } = require("../controllers/uploadsController");
+const { uploadImage, getAllUploads, getImage } = require("../controllers/uploadsController");
 
 // router.route("/").get(getAllSets).post(createNewSet);
 //NOTE - the order of these matters

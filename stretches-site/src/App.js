@@ -8,6 +8,7 @@ import ActiveTimerDisplay from "./components/ActiveTimerDisplay";
 import TimerGallery from "./components/TimerGallery";
 import styled, { createGlobalStyle, ThemeConsumer } from "styled-components";
 import GlobalStyle from "./components/styled-components/globalStyles";
+import Dashboard from "./components/Dashboard";
 
 // #region Styled Components & Themes
 export const themes = {
@@ -163,6 +164,7 @@ function App() {
                 <GlobalStyle />
                 <TimerSets timerSets={timerSets} updateSets={updateSets} />
                 <Routes>
+                    <Route path="/" element={<Dashboard timerSets={timerSets} />}></Route>
                     <Route path="factory" element={<TimerFactory />}>
                         <Route
                             path=":setId"

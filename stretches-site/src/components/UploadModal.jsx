@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { requests, urls } from "../helpers/requests";
 import styled from "styled-components";
 import { StyledModal } from "./styled-components/modal.styled";
-const { uploadsUrl } = urls.uploadsUrl;
+const { urlBase, uploadsUrl } = urls;
 
 const StyledImgThumbnail = styled.img`
     max-width: 4rem;
@@ -37,14 +37,18 @@ const ImageList = styled.div`
 function UploadModal(props) {
     const [imagePaths, setImagePaths] = useState(null);
 
+    /**
+     * Get the array of images and map them, then set the state of our upload modal to be them
+     * @param {Array} response - the response which should be an array of images within our uploads folder
+     */
     function populatePaths(response) {
-        const fileNames = response.map((imageValue) => `${uploadsUrl}/${imageValue}`);
+        const fileNames = response.map((imageValue) => `/${imageValue}`);
         setImagePaths(fileNames);
     }
     useEffect(() => {
         const options = {
             method: "GET",
-            pathsArray: ["uploads"],
+            pathsArray: ["factory", "uploads"],
             setStateCallback: populatePaths,
         };
         requests.axiosRequest(options);

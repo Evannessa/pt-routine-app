@@ -1,17 +1,29 @@
 const { CustomAPIError } = require("../errors/custom-error");
 
+const { StatusCodes } = require("http-status-codes")
+
 const errorHandlerMiddleware = (error, req, res, next) => {
-    if (error instanceof CustomAPIError) {
-        return res.status(error.statusCode).json({ msg: error.message });
+    console.log(error)
+
+    let customError = {
+
+        statusCode: err.statusCode || StatusCodes.INTERNAL_SERVER_ERROR,
+        msg: err.message || "Something went wrong try again later"
     }
-    // res.locals.error = error;
-    // console.log("Error is", error, res.locals.error);
-    // if (error.statusCode >= 100 && error.statusCode < 600) {
-    //     return res.status(error.statusCode).json({ msg: error.message });
-    // } else {
-    //     return res.status(500);
-    // }
-    return res.status(500).json({ msg: error.message });
+    if (err.name === 'ValidationError') {
+        customError.msg = Object.values(err.errors).map((item) => item.message).join(",")
+        customError.statusCode = 400
+    }
+    if (error.code && error.code === 11000) {
+        customError.msg = `Duplicate value entered for ${Object.keys(error.keyValue)} field, please choose another value`
+        customError.statusCode = 400
+    }
+    if (err.name === 'CastError') {
+        customError.msg = `No item found with id : ${error.value}`;
+        customError.statusCode = 404
+    }
+    return res.status(customError.statusCode).json({ msg: customError.msg })
+
 };
 
 module.exports = errorHandlerMiddleware;

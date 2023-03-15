@@ -143,6 +143,7 @@ const ActiveTimerSetContainer = styled.div`
             grid-row: 1/2;
             grid-column: 1/2;
             padding: 0.5em;
+            z-index: 20;
         }
     }
 `;
@@ -233,7 +234,10 @@ export default function ActiveTimerDisplay() {
     //map all the images associated w/ each timer to the slide component
     let slideComponents = timers
         ? timers.map((timer) => {
-              return <Slide key={timer._id + "TimerSlide"} image={`${urlBase}/${timer.slideImagePath}`} />;
+              //   return <Slide key={timer._id + "TimerSlide"} image={`${urlBase}/${timer.slideImagePath}`} />;
+              let path = timer.slideImagePath.split("/").pop();
+              //   return <Slide key={timer._id + "TimerSlide"} image={`/${path}`} />;
+              return <Slide key={timer._id + "TimerSlide"} image={`https://i.imgur.com/Zjk88Uz.jpg/`} />;
           })
         : [];
     let descriptionComponents = timers

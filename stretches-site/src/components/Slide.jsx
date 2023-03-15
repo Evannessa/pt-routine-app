@@ -8,6 +8,7 @@ const StyledSlide = styled.div`
     align-items: center;
     border-radius: 12px;
     overflow: hidden;
+    z-index: 10;
 
     img {
         object-fit: contain;

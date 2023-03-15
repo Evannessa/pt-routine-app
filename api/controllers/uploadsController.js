@@ -59,5 +59,6 @@ const getAllUploads = async (req, res) => {
 
 module.exports = {
     uploadImage,
-    getAllUploads
+    getAllUploads,
+    getImage
 };

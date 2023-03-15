@@ -1,14 +1,8 @@
 const mongoose = require("mongoose");
 
-// const connectDB = async (url) => {
-//     //returning a promise
-//     console.log(url)
-//     return mongoose.connect(url, {
-//         useUnifiedTopology: true,
-//         useNewUrlParser: true,
-//         useCreateIndex: true
-//     });
-// };
+
+
+
 
 const connectDB = async () => {
     try {
