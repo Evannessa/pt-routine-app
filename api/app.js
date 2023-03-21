@@ -1,42 +1,64 @@
+require('express-async-errors');
+
 const createError = require("http-errors");
+
+
+
 const express = require("express");
 
-const db = require("../models")
-const Role = db.role
-
-const { createProxyMiddleware } = require("http-proxy-middleware")
 
 const path = require("path");
 const cookieParser = require("cookie-parser");
-const logger = require("morgan");
+const morgan = require("morgan");
 const cors = require("cors");
 const dotenv = require("dotenv")
+dotenv.config();
+
+const mongoSanitize = require('express-mongo-sanitize')
+const xss = require('xss-clean')
+const helmet = require('helmet')
+const rateLimiter = require('express-rate-limit');
+
+
 // const session = require('express-session')
 // var indexRouter = require("./routes/index");
+const authRouter = require("./routes/authRoutes")
+const userRouter = require("./routes/userRoutes")
 const factoryRouter = require("./routes/factoryRoutes");
 const displayRouter = require("./routes/displayRoutes");
 // const authRouter = require("./routes/authRoutes");
 
-dotenv.config();
 
 const connectDB = require("./db/connect");
 
 const notFound = require("./middleware/not-found");
 const errorHandlerMiddleware = require("./middleware/error-handler");
+
 const fileUpload = require("express-fileupload");
 const app = express();
+
+app.set('trust proxy', 1)
+app.use(rateLimiter,)
 
 const port = process.env.PORT || 3000;
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
 app.set('view engine', 'pug')
-// app.set("view engine", "jade");
+
+app.use(helmet());
 app.use(cors());
-app.use(logger("dev"));
+app.use(xss());
+app.use(mongoSanitize());
+
+app.use(cors());
+app.use(morgan("dev"));
 app.use(express.json());
+app.use(cookieParser(process.env.JWT_SECRET))
+
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+
 // Asynchronous
 
 
@@ -64,6 +86,7 @@ app.use(fileUpload()); //! HAD TO PUT THIS BEFORE THE APP.USE() ROUTER
 
 app.use("/api/factory", factoryRouter);
 app.use("/api/display", displayRouter);
+app.use("/api/auth", authRouter)
 // app.use("/links", linkInterfaceRouter);
 app.use(notFound);
 app.use(errorHandlerMiddleware);

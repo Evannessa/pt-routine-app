@@ -1,124 +1,70 @@
-const config = require("../config/auth.config")
-const db = require("../models")
-const User = db.user
-const Role = db.role
+const User = require('../models/User')
+const { StatusCodes } = require('http-status-codes')
+const CustomError = require('../errors')
 
-let jwt = require("jsonwebtoken")
-let bcrypt = require("bcryptjs")
+const { attachCookiesToResponse, createTokenUser } = require('../utils')
 
+const register = async (req, res) => {
+    const { email, name, password } = req.body
 
-const signUp = (res, req) => {
-    const user = new User({
-        username: req.body.username,
-        email: req.body.email,
-        password: bcrypt.hashSync(req.body.password, 8),
-    })
-    user.save((err, user) => {
-        if (err) {
-            res.status(500).send({ message: err });
-            return;
-        }
-
-        if (req.body.roles) {
-            Role.find(
-                {
-                    name: { $in: req.body.roles },
-                },
-                (err, roles) => {
-                    if (err) {
-                        res.status(500).send({ message: err });
-                        return;
-                    }
-
-                    user.roles = roles.map((role) => role._id);
-                    user.save((err) => {
-                        if (err) {
-                            res.status(500).send({ message: err });
-                            return;
-                        }
-
-                        res.send({ message: "User was registered successfully!" });
-                    });
-                }
-            );
-        } else {
-            Role.findOne({ name: "user" }, (err, role) => {
-                if (err) {
-                    res.status(500).send({ message: err });
-                    return;
-                }
-
-                user.roles = [role._id];
-                user.save((err) => {
-                    if (err) {
-                        res.status(500).send({ message: err });
-                        return;
-                    }
-
-                    res.send({ message: "User was registered successfully!" });
-                });
-            });
-        }
-    });
-    console.log(res)
-}
-const signIn = (res, req) => {
-    User.findOne({
-        username: req.body.username,
-    })
-        .populate("roles", "-__v")
-        .exec((err, user) => {
-            if (err) {
-                res.status(500).send({ message: err });
-                return;
-            }
-
-            if (!user) {
-                return res.status(404).send({ message: "User Not found." });
-            }
-
-            let passwordIsValid = bcrypt.compareSync(
-                req.body.password,
-                user.password
-            );
-
-            if (!passwordIsValid) {
-                return res.status(401).send({ message: "Invalid Password!" });
-            }
-
-            let token = jwt.sign({ id: user.id }, config.secret, {
-                expiresIn: 86400, // 24 hours
-            });
-
-            let authorities = [];
-
-            for (let role in user.roles) {
-                authorities.push("ROLE_" + role.name.toUpperCase());
-            }
-
-            req.session.token = token;
-
-            res.status(200).send({
-                id: user._id,
-                username: user.username,
-                email: user.email,
-                roles: authorities,
-            });
-        });
-}
-
-const signOut = async (req, res) => {
-    try {
-        req.session = null;
-        return res.status(200).send({ message: "You've been signed out!" });
-    } catch (err) {
-        this.next(err);
+    const emailAlreadyExists = await User.findOne({ email })
+    if (emailAlreadyExists) {
+        throw new CustomError.BadRequestError('Email already exists')
     }
+
+    const isFirstAccount = (await User.countDocuments({})) === 0
+    const role = isFirstAccount ? 'admin' : 'user'
+
+    const user = await User.create({ name, email, password, role })
+
+    const tokenUser = createTokenUser(user)
+
+    attachCookiesToResponse({ res, user: tokenUser })
+
+    res.status(StatusCodes.CREATED).json({ user: tokenUser })
 }
 
+const login = async (req, res) => {
+    const { email, password } = req.body
 
+    if (!email || !password) {
+        throw new CustomError.BadRequestError('Please provide email and password')
+    }
+
+    const user = await User.findOne({ email })
+
+    if (!user) {
+        throw new CustomError.UnauthenticatedError('Invalid Credentials')
+    }
+
+    const isPasswordCorrect = await user.comparePassword(password)
+
+    if (!isPasswordCorrect) {
+        throw new CustomError.UnauthenticatedError('Invalid Credentials')
+    }
+
+    const tokenUser = createTokenUser(user)
+
+    attachCookiesToResponse({ res, user: tokenUser })
+
+    res.status(StatusCodes.OK).json({ user: tokenUser })
+
+}
+
+const logout = async (req, res) => {
+    res.cookie('token', 'logout', {
+        httpOnly: true,
+        expires: new Date(Date.now() + 1000)
+    })
+    res.status(StatusCodes.OK).json({ msg: 'user logged out' })
+
+
+}
 module.exports = {
-    signIn,
-    signUp,
-    signOut
+    register,
+    login,
+    logout
 }
+
+
+
