@@ -1,14 +1,26 @@
 import "./styles/App.css";
-import { Route, Routes, Outlet, useNavigate } from "react-router-dom";
+import { Route, Routes, Outlet, useNavigate, Switch } from "react-router-dom";
+import {
+    Home,
+    Error,
+    Register,
+    Login,
+    Verify,
+    Dashboard,
+    ProtectedRoute,
+    ForgotPassword,
+    ResetPassword,
+} from './pages';
 import { requests } from "./helpers/requests";
 import TimerSets from "./components/TimerSets";
-import React, { useCallback, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import TimerFactory from "./components/TimerFactory";
 import ActiveTimerDisplay from "./components/ActiveTimerDisplay";
 import TimerGallery from "./components/TimerGallery";
-import styled, { createGlobalStyle, ThemeConsumer } from "styled-components";
+import styled from "styled-components";
 import GlobalStyle from "./components/styled-components/globalStyles";
-import Dashboard from "./components/Dashboard";
+import { useGlobalContext } from "./context"
+import Navbar from "./components/Navbar";
 
 // #region Styled Components & Themes
 export const themes = {
@@ -57,6 +69,10 @@ const StyledApp = styled.div`
 // #endregion;
 
 function App() {
+    const { user } = useGlobalContext()
+    const { name, userId, role } = user
+    const { isLoading } = useGlobalContext
+
     /* ---------------------- React Hooks, State and Effect --------------------- */
     // #region Hooks, State and Effect
     const navigate = useNavigate();
@@ -67,6 +83,11 @@ function App() {
         themeName: "primary",
     });
 
+    useEffect(() => {
+        localStorage.setItem("timerSets", JSON.stringify(timerSets))
+    }, [timerSets])
+
+
     function updateTimerSets(response) {
         if (response != null) {
             setTimerSets(response);
@@ -76,27 +97,34 @@ function App() {
      * Create a new timer set
      */
     async function createNewSet() {
-        let options = {
-            method: "POST",
-            pathsArray: ["factory", "new"],
-            setStateCallback: (info) => {
-                console.log("Info is", info)
-                const newId = info._id
-                navigateToFactory(newId)
-                getTimerSets()
-            },
-        };
-        await requests.axiosRequest(options);
+        if (user && role === "admin") {
+            let options = {
+                method: "POST",
+                pathsArray: ["factory", "new"],
+                setStateCallback: (info) => {
+                    const newId = info._id
+                    navigateToFactory(newId)
+                    getTimerSets()
+                },
+            };
+            await requests.axiosRequest(options);
+        } else {
+            console.log("Not admin")
+        }
 
     }
 
     function getTimerSets() {
-        let options = {
-            method: "GET",
-            pathsArray: ["factory", "/"],
-            setStateCallback: updateTimerSets,
-        };
-        requests.axiosRequest(options);
+        if (user && role === "admin") {
+            let options = {
+                method: "GET",
+                pathsArray: ["factory", "/"],
+                setStateCallback: updateTimerSets,
+            };
+            requests.axiosRequest(options);
+        } else {
+            console.log("Can't get sets -- not admin")
+        }
     }
 
     /**
@@ -142,10 +170,14 @@ function App() {
                 console.warn("Not a valid action");
         }
     }
-    const style = {
-        backgroundImage: `linear-gradient(to bottom, ${themeState.theme.color1}, ${themeState.theme.color2})`,
-        transition: "backgroundImage 0.25s linear",
-    };
+
+    if (isLoading) {
+        return (
+            <section className='page page-center'>
+                <div className='loading'></div>
+            </section>
+        );
+    }
     // #endregion
 
     return (
@@ -156,14 +188,40 @@ function App() {
                 themeName={themeState.themeName}
                 primaryGradient={themes.primary.gradient}
                 secondaryGradient={themes.secondary.gradient}
-                // style={style}
-                onClick={(e) => {
-                    console.log(e.target);
-                }}
+
             >
                 <GlobalStyle />
-                <TimerSets timerSets={timerSets} updateSets={updateSets} />
+
+                {/* <TimerSets timerSets={timerSets} updateSets={updateSets} /> */}
+                <Navbar />
                 <Routes>
+                    <Route path="/" exact>
+                        <Home />
+                    </Route>
+                    <Route path='/login' exact>
+                        <Login />
+                    </Route>
+                    <Route path='/register' exact>
+                        <Register />
+                    </Route>
+                    <ProtectedRoute path='/dashboard' exact>
+                        <Dashboard />
+                    </ProtectedRoute>
+                    <Route path='/forgot-password' exact>
+                        <ForgotPassword />
+                    </Route>
+                    <Route path='/user/verify-email' exact>
+                        <Verify />
+                    </Route>
+                    <Route path='/user/reset-password' exact>
+                        <ResetPassword />
+                    </Route>
+                    <Route path='*'>
+                        <Error />
+                    </Route>
+                </Routes>
+
+                {/* <Routes>
                     <Route path="/" element={<Dashboard timerSets={timerSets} />}></Route>
                     <Route path="factory" element={<TimerFactory />}>
                         <Route
@@ -181,7 +239,7 @@ function App() {
                         path="display/:setId"
                         element={<ActiveTimerDisplay />}
                     ></Route>
-                </Routes>
+                </Routes> */}
                 <Outlet />
             </StyledApp>
         </ThemeContext.Provider>

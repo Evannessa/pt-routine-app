@@ -103,6 +103,7 @@ export const requests = (function () {
         };
     };
 
+
     //create
     const safeCreate = makeSafe(createObject, handleError);
     const safeCreateMultiple = makeSafe(createMultiple, handleError);

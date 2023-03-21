@@ -65,29 +65,17 @@ app.use(cookieParser());
 // //https://www.section.io/engineering-education/session-management-in-nodejs-using-expressjs-and-express-session/
 const oneDay = 1000 * 60 * 60 * 24;
 
-app.use(sessions({
-    secret: "SECRETKEY0239402asijofij9384029348938402adsa93840928304",
-    saveUninitialized: true,
-    cooke: { maxAge: oneDay },
-    resave: false,
 
-
-}))
-// app.use(express.static(path.join(__dirname, "../stretches-site/build")));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.static(path.join(__dirname, "public/uploads")));
-// app.use("/api", createProxyMiddleware({}))
-console.log("Directory name is", __dirname)
-// app.use((req, res, next) => {
-//     res.sendFile(path.join(__dirname, "..", "build", "index.html"));
-// });
 
 app.use(fileUpload()); //! HAD TO PUT THIS BEFORE THE APP.USE() ROUTER
 
 app.use("/api/factory", factoryRouter);
 app.use("/api/display", displayRouter);
 app.use("/api/auth", authRouter)
-// app.use("/links", linkInterfaceRouter);
+app.use("/api/users", userRouter)
+
 app.use(notFound);
 app.use(errorHandlerMiddleware);
 
