@@ -34,7 +34,7 @@ function Register() {
 
         try {
             const { data } = await axios.post(
-                `/api/v1/auth/register`,
+                `http://localhost:3000/api/auth/register`,
                 registerNewUser
             );
 
@@ -42,6 +42,7 @@ function Register() {
             setValues({ name: '', email: '', password: '' });
             showAlert({ text: data.msg, type: 'success' });
         } catch (error) {
+            console.log(error)
             const { msg } = error.response.data;
             showAlert({ text: msg || 'there was an error' });
         }
@@ -101,6 +102,12 @@ function Register() {
 }
 
 const Wrapper = styled.section`
+    background-color: white;
+    p,h2,h3, h4, span{
+        color: black;
+
+    }
+
   .alert {
     margin-top: 3rem;
     margin-bottom: -1.5rem;

@@ -69,74 +69,14 @@ const StyledApp = styled.div`
 // #endregion;
 
 function App() {
-    const { user } = useGlobalContext()
-    const { name, userId, role } = user
-    const { isLoading } = useGlobalContext
-
-    /* ---------------------- React Hooks, State and Effect --------------------- */
-    // #region Hooks, State and Effect
-    const navigate = useNavigate();
-    const [timerSets, setTimerSets] = useState();
     const [themeState, setThemeState] = useState({
         theme: themes.primary,
         updateTheme: updateTheme,
         themeName: "primary",
     });
 
-    useEffect(() => {
-        localStorage.setItem("timerSets", JSON.stringify(timerSets))
-    }, [timerSets])
-
-
-    function updateTimerSets(response) {
-        if (response != null) {
-            setTimerSets(response);
-        }
-    }
-    /**
-     * Create a new timer set
-     */
-    async function createNewSet() {
-        if (user && role === "admin") {
-            let options = {
-                method: "POST",
-                pathsArray: ["factory", "new"],
-                setStateCallback: (info) => {
-                    const newId = info._id
-                    navigateToFactory(newId)
-                    getTimerSets()
-                },
-            };
-            await requests.axiosRequest(options);
-        } else {
-            console.log("Not admin")
-        }
-
-    }
-
-    function getTimerSets() {
-        if (user && role === "admin") {
-            let options = {
-                method: "GET",
-                pathsArray: ["factory", "/"],
-                setStateCallback: updateTimerSets,
-            };
-            requests.axiosRequest(options);
-        } else {
-            console.log("Can't get sets -- not admin")
-        }
-    }
-
-    /**
-     * get all of the timer sets
-     */
-    useEffect(getTimerSets, []);
-    // #endregion
-
-    /* -------------------------------- functions ------------------------------- */
-    // #region Functions
-
     function updateTheme(themeName) {
+
         setThemeState((previousThemeState) => {
             return {
                 ...previousThemeState,
@@ -145,40 +85,7 @@ function App() {
             };
         });
     }
-    function navigateToFactory(newId) {
-        navigate(`/factory/${newId}`);
-    }
-    const updateSets = async function updateSets(action, id) {
-        // console.log("Doing " + action + " to " + id);
-        switch (action) {
-            case "create":
-                await createNewSet();
-                // navigate(`/factory/${newId}`);
-                break;
-            case "delete":
-                let options = {
-                    method: "DELETE",
-                    pathsArray: ["factory", id],
-                    setStateCallback: getTimerSets,
-                };
-                requests.axiosRequest(options);
-                break;
-            case "edit":
-                navigate(`/factory/${id}`);
-                break;
-            default:
-                console.warn("Not a valid action");
-        }
-    }
 
-    if (isLoading) {
-        return (
-            <section className='page page-center'>
-                <div className='loading'></div>
-            </section>
-        );
-    }
-    // #endregion
 
     return (
         <ThemeContext.Provider value={themeState}>
@@ -195,51 +102,19 @@ function App() {
                 {/* <TimerSets timerSets={timerSets} updateSets={updateSets} /> */}
                 <Navbar />
                 <Routes>
-                    <Route path="/" exact>
-                        <Home />
+                    <Route path="/" exact element={<Home />} />
+                    <Route path='/login' exact element={<Login />} />
+                    <Route path='/register' exact element={<Register />} />
+                    <Route exact path="/dashboard" element={<ProtectedRoute />}>
+                        <Route path='/dashboard' exact element={<Dashboard />} />
                     </Route>
-                    <Route path='/login' exact>
-                        <Login />
-                    </Route>
-                    <Route path='/register' exact>
-                        <Register />
-                    </Route>
-                    <ProtectedRoute path='/dashboard' exact>
-                        <Dashboard />
-                    </ProtectedRoute>
-                    <Route path='/forgot-password' exact>
-                        <ForgotPassword />
-                    </Route>
-                    <Route path='/user/verify-email' exact>
-                        <Verify />
-                    </Route>
-                    <Route path='/user/reset-password' exact>
-                        <ResetPassword />
-                    </Route>
-                    <Route path='*'>
-                        <Error />
-                    </Route>
+                    <Route path='/forgot-password' exact element={<ForgotPassword />} />
+                    <Route path='/user/verify-email' exact element={<Verify />} />
+                    <Route path='/user/reset-password' exact element={<ResetPassword />} />
+                    <Route path='*' element={<Error />} />
                 </Routes>
 
-                {/* <Routes>
-                    <Route path="/" element={<Dashboard timerSets={timerSets} />}></Route>
-                    <Route path="factory" element={<TimerFactory />}>
-                        <Route
-                            path=":setId"
-                            element={
-                                <TimerGallery
-                                    timerSets={timerSets}
-                                    getTimerSets={getTimerSets}
-                                    saved={true}
-                                />
-                            }
-                        ></Route>
-                    </Route>
-                    <Route
-                        path="display/:setId"
-                        element={<ActiveTimerDisplay />}
-                    ></Route>
-                </Routes> */}
+
                 <Outlet />
             </StyledApp>
         </ThemeContext.Provider>

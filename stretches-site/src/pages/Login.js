@@ -26,7 +26,7 @@ function Login() {
         const { email, password } = values;
         const loginUser = { email, password };
         try {
-            const { data } = await axios.post(`/api/auth/login`, loginUser);
+            const { data } = await axios.post(`http://localhost:3000/api/auth/login`, loginUser);
             setValues({ name: '', email: '', password: '' });
             showAlert({
                 text: `Welcome, ${data.user.name}. Redirecting to dashboard...`,
@@ -89,6 +89,7 @@ function Login() {
 }
 
 const Wrapper = styled.section`
+    background-color: white;
   .alert {
     margin-top: 3rem;
   }
@@ -99,6 +100,10 @@ const Wrapper = styled.section`
     margin: 0;
     text-align: center;
   }
+    p,h2,h3, h4, span{
+        color: black;
+
+    }
   .btn {
     margin-bottom: 1.5rem;
   }

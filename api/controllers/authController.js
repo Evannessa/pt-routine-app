@@ -1,16 +1,20 @@
 const User = require('../models/userModels')
+const Token = require('../models/tokenModels')
 const { StatusCodes } = require('http-status-codes')
 const CustomError = require('../errors')
 
-const { attachCookiesToResponse, createTokenUser } = require('../utils')
+const { attachCookiesToResponse, createTokenUser, sendVerificationEmail, sendResetPasswordEmail, createHash } = require('../utils')
 const crypto = require('crypto')
 
 const register = async (req, res) => {
     const { email, name, password } = req.body
-
+    console.log(email, name, password)
+    let allUsers = await User.find({})
+    console.log(allUsers)
     const emailAlreadyExists = await User.findOne({ email })
     if (emailAlreadyExists) {
         throw new CustomError.BadRequestError('Email already exists')
+
     }
     //first registered user is admin
     const isFirstAccount = (await User.countDocuments({})) === 0
@@ -18,16 +22,34 @@ const register = async (req, res) => {
 
     const verificationToken = crypto.randomBytes(40).toString('hex')
 
-    const user = await User.create({ name, email, password, role, verificationToken })
+    const user = await User.create({
+        name,
+        email,
+        password,
+        role,
+        verificationToken
+    })
+    const origin = 'http://localhost:3000'
 
-    const tokenUser = createTokenUser(user)
+    await sendVerificationEmail({
+        name: user.name,
+        email: user.email,
+        verificationToken: user.verificationToken,
+        origin
+    })
+    // send verification token back only while testing in postman!!!
+    res.status(StatusCodes.CREATED).json({
+        msg: 'Success! Please check your email to verify account',
+    });
 
-    attachCookiesToResponse({ res, user: tokenUser })
+    // const tokenUser = createTokenUser(user)
 
-    res.status(StatusCodes.CREATED).json({ user: tokenUser })
+    // attachCookiesToResponse({ res, user: tokenUser })
+
+    // res.status(StatusCodes.CREATED).json({ user: tokenUser })
 }
 
-const verifyEmail = async (req, res) => {
+const sendVerificationEmail = async (req, res) => {
     const { verificationToken, email } = req.body
     const user = await User.findOne({ email })
 

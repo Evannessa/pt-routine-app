@@ -1,5 +1,7 @@
-require('express-async-errors');
+const dotenv = require("dotenv")
+dotenv.config();
 
+require('express-async-errors');
 const createError = require("http-errors");
 
 
@@ -11,8 +13,6 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
 const cors = require("cors");
-const dotenv = require("dotenv")
-dotenv.config();
 
 const mongoSanitize = require('express-mongo-sanitize')
 const xss = require('xss-clean')
@@ -38,7 +38,12 @@ const fileUpload = require("express-fileupload");
 const app = express();
 
 app.set('trust proxy', 1)
-app.use(rateLimiter,)
+app.use(
+    rateLimiter({
+        windowMs: 15 * 60 * 1000,
+        max: 60,
+    })
+);
 
 const port = process.env.PORT || 3000;
 

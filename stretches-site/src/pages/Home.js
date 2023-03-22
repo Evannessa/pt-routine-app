@@ -3,7 +3,16 @@ import styled from 'styled-components';
 import { Navigate } from 'react-router-dom';
 import { useGlobalContext } from '../context';
 function Home() {
-    const { user } = useGlobalContext();
+    const { user, isLoading } = useGlobalContext();
+
+    if (isLoading) {
+        return (
+            <section className='page page-center'>
+                <div className='loading'></div>
+            </section>
+        );
+    }
+    // #endregion
     return (
         <>
             {user && <Navigate to='/dashboard' />}
@@ -37,6 +46,10 @@ function Home() {
 }
 
 const Wrapper = styled.div`
+    background-color: white;
+    h2, p{
+        color: black;
+    }
   display: grid;
   align-items: center;
   h2 {
