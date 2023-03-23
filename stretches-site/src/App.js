@@ -105,9 +105,9 @@ function App() {
                     <Route path="/" exact element={<Home />} />
                     <Route path='/login' exact element={<Login />} />
                     <Route path='/register' exact element={<Register />} />
-                    <Route exact path="/dashboard" element={<ProtectedRoute />}>
-                        <Route path='/dashboard' exact element={<Dashboard />} />
-                    </Route>
+                    <Route path='/dashboard' exact element={<Dashboard />} />
+                    {/* <Route exact path="user" element={<ProtectedRoute />}> */}
+                    {/* </Route> */}
                     <Route path='/forgot-password' exact element={<ForgotPassword />} />
                     <Route path='/user/verify-email' exact element={<Verify />} />
                     <Route path='/user/reset-password' exact element={<ResetPassword />} />

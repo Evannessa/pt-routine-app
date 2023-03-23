@@ -1,6 +1,5 @@
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { Navigate } from 'react-router-dom';
 import { useGlobalContext } from '../context';
 function Home() {
     const { user, isLoading } = useGlobalContext();

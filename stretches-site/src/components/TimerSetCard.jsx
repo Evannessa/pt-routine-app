@@ -2,7 +2,16 @@ import React from "react";
 import { Outlet, NavLink } from "react-router-dom";
 import styled from "styled-components";
 
-const StyledNavLink = styled(NavLink)``;
+const StyledNavLink = styled(NavLink)`
+    background-color: white;
+    border-radius: 10px;
+    padding: 1rem;
+    color: ${(props) => props.themeColor1 || "black"};
+    p,
+    button {
+        color: ${(props) => props.themeColor1 || "black"};
+    }
+`;
 
 function TimerSetCard({ timerSet, updateSets, timerSetStyle = "link" }) {
     const cardImagePath = timerSet.timers[0].slideImagePath;
@@ -20,7 +29,7 @@ function TimerSetCard({ timerSet, updateSets, timerSetStyle = "link" }) {
         updateSets(action, id);
     }
     return (
-        <NavLink
+        <StyledNavLink
             to={`display/${timerSet._id}`}
             className={(isActive) => "timerSet nav-link" + (isActive ? " selected" : "")}
             data-id={timerSet._id}
@@ -49,7 +58,7 @@ function TimerSetCard({ timerSet, updateSets, timerSetStyle = "link" }) {
                     </div>
                 </div>
             )}
-        </NavLink>
+        </StyledNavLink>
     );
 }
 

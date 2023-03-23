@@ -8,10 +8,9 @@ const ProtectedRoute = ({ children, ...rest }) => {
     return (
         <Route
             {...rest}
-            render={() => {
-                return user ? children : <Navigate to='/'></Navigate>
-            }}
-        ></Route>
+        >
+            {user ? children : <Navigate to='/'></Navigate>}
+        </Route>
     );
 };
 

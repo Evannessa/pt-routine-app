@@ -8,9 +8,7 @@ const crypto = require('crypto')
 
 const register = async (req, res) => {
     const { email, name, password } = req.body
-    console.log(email, name, password)
-    let allUsers = await User.find({})
-    console.log(allUsers)
+
     const emailAlreadyExists = await User.findOne({ email })
     if (emailAlreadyExists) {
         throw new CustomError.BadRequestError('Email already exists')
@@ -29,7 +27,8 @@ const register = async (req, res) => {
         role,
         verificationToken
     })
-    const origin = 'http://localhost:3000'
+    //TODO: This is the origin only currently while testing
+    const origin = 'http://localhost:3001'
 
     await sendVerificationEmail({
         name: user.name,
@@ -37,6 +36,7 @@ const register = async (req, res) => {
         verificationToken: user.verificationToken,
         origin
     })
+    console.log(verificationToken, user.verificationToken)
     // send verification token back only while testing in postman!!!
     res.status(StatusCodes.CREATED).json({
         msg: 'Success! Please check your email to verify account',
@@ -49,7 +49,7 @@ const register = async (req, res) => {
     // res.status(StatusCodes.CREATED).json({ user: tokenUser })
 }
 
-const sendVerificationEmail = async (req, res) => {
+const verifyEmail = async (req, res) => {
     const { verificationToken, email } = req.body
     const user = await User.findOne({ email })
 
@@ -83,7 +83,6 @@ const login = async (req, res) => {
     if (!user) {
         throw new CustomError.UnauthenticatedError('Invalid Credentials')
     }
-
     const isPasswordCorrect = await user.comparePassword(password)
 
     if (!isPasswordCorrect) {
@@ -112,10 +111,12 @@ const login = async (req, res) => {
         return;
     }
 
+
     refreshToken = crypto.randomBytes(40).toString('hex');
     const userAgent = req.headers['user-agent'];
     const ip = req.ip;
     const userToken = { refreshToken, ip, userAgent, user: user._id };
+    console.log({ userToken, refreshToken })
 
     await Token.create(userToken);
 
