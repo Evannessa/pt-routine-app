@@ -9,8 +9,8 @@ import TimerFactory from "./TimerFactory";
 import ActiveTimerDisplay from "./ActiveTimerDisplay";
 import TimerGallery from "./TimerGallery";
 import { useGlobalContext } from "../context";
-
 import TimerSetCard from "./TimerSetCard";
+import { mockTimerSets } from "../mockData/MockTimers";
 
 const DashboardGrid = styled.section`
     display: grid;
@@ -20,16 +20,32 @@ const DashboardGrid = styled.section`
 
 function Dashboard(props) {
     const { user } = useGlobalContext();
-    const { name, userId, role } = user;
+    // const { name, userId, role } = user;
 
     /* ---------------------- React Hooks, State and Effect --------------------- */
     // #region Hooks, State and Effect
     const navigate = useNavigate();
     const [timerSets, setTimerSets] = useState();
+
     useEffect(() => {
-        localStorage.setItem("timerSets", JSON.stringify(timerSets));
+        let storedData = localStorage.getItem("timerSets");
+        if (storedData && storedData !== "undefined") {
+            setTimerSets(JSON.parse(storedData));
+        } else {
+            setTimerSets(mockTimerSets);
+        }
+    }, []);
+    useEffect(() => {
+        //if we have saved our timer sets before, save them again
+        let storedData = localStorage.getItem("timerSets");
+        if (storedData && storedData !== "undefined") {
+            localStorage.setItem("timerSets", JSON.stringify(timerSets));
+        }
     }, [timerSets]);
 
+    function onSave() {
+        localStorage.setItem("timerSets", JSON.stringify(timerSets));
+    }
     function updateTimerSets(response) {
         if (response != null) {
             setTimerSets(response);
@@ -39,7 +55,7 @@ function Dashboard(props) {
      * Create a new timer set
      */
     async function createNewSet() {
-        if (user && role === "admin") {
+        if (user && user.role === "admin") {
             let options = {
                 method: "POST",
                 pathsArray: ["factory", "new"],
@@ -56,7 +72,7 @@ function Dashboard(props) {
     }
 
     function getTimerSets() {
-        if (user && role === "admin") {
+        if (user && user.role === "admin") {
             let options = {
                 method: "GET",
                 pathsArray: ["factory", "/"],
@@ -110,6 +126,7 @@ function Dashboard(props) {
         : [];
     return (
         <div>
+            <h1>At-Home Exercise App</h1>
             <ButtonWithIcon type="contained" icon="play_circle" title="set default YouTube playlist or video">
                 Set YouTube Playlist
             </ButtonWithIcon>
@@ -119,12 +136,16 @@ function Dashboard(props) {
             <ButtonWithIcon type="contained" icon="image">
                 Set Imgur Gallery
             </ButtonWithIcon>
-            <h1>At-Home Exercise App</h1>
+            {(!user || user.role !== "admin") && (
+                <ButtonWithIcon type="contained" icon="save" onClick={onSave}>
+                    Save Timer Sets Local Storage
+                </ButtonWithIcon>
+            )}
             <Container>
                 <DashboardGrid>{timerSetCards}</DashboardGrid>
             </Container>
             <Routes>
-                <Route path="/" element={<Dashboard timerSets={timerSets} />}></Route>
+                {/* <Route path="/" element={<Dashboard timerSets={timerSets} />}></Route> */}
                 <Route path="factory" element={<TimerFactory />}>
                     <Route
                         path=":setId"

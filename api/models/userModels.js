@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const validator = require('validator')
-const bcrypt = require('bcryptjs')
+const bcrypt = require('bcrypt')
 
 const UserSchema = new mongoose.Schema({
     name: {
@@ -17,17 +17,29 @@ const UserSchema = new mongoose.Schema({
             validator: validator.isEmail,
             message: 'Please provide valid email'
         },
-        password: {
-            type: String,
-            required: [true, 'Please provide password'],
-            minlength: 6
-        },
-        role: {
-            type: String,
-            enum: ['admin', 'user'],
-            default: 'user'
-        }
-    }
+    },
+    password: {
+        type: String,
+        required: [true, 'Please provide password'],
+        minlength: 6
+    },
+    role: {
+        type: String,
+        enum: ['admin', 'user'],
+        default: 'user'
+    },
+    verificationToken: String,
+    isVerified: {
+        type: Boolean,
+        default: false,
+    },
+    verified: Date,
+    passwordToken: {
+        type: String,
+    },
+    passwordTokenExpirationDate: {
+        type: Date,
+    },
 })
 
 UserSchema.pre('save', async function () {

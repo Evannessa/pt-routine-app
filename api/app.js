@@ -2,19 +2,21 @@ const dotenv = require("dotenv")
 dotenv.config();
 
 require('express-async-errors');
-const createError = require("http-errors");
 
 
 
 const express = require("express");
 
+const app = express();
 
-const path = require("path");
-const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
+const cookieParser = require("cookie-parser");
 const cors = require("cors");
 
+const path = require("path");
 const mongoSanitize = require('express-mongo-sanitize')
+
+const createError = require("http-errors");
 const xss = require('xss-clean')
 const helmet = require('helmet')
 const rateLimiter = require('express-rate-limit');
@@ -35,7 +37,6 @@ const notFound = require("./middleware/not-found");
 const errorHandlerMiddleware = require("./middleware/error-handler");
 
 const fileUpload = require("express-fileupload");
-const app = express();
 
 app.set('trust proxy', 1)
 app.use(
@@ -56,19 +57,13 @@ app.use(cors());
 app.use(xss());
 app.use(mongoSanitize());
 
-app.use(cors());
+app.use(cookieParser(process.env.JWT_SECRET))
 app.use(morgan("dev"));
 app.use(express.json());
-app.use(cookieParser(process.env.JWT_SECRET))
 
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
+
 
 // Asynchronous
-
-
-// //https://www.section.io/engineering-education/session-management-in-nodejs-using-expressjs-and-express-session/
-const oneDay = 1000 * 60 * 60 * 24;
 
 
 app.use(express.static(path.join(__dirname, "public")));
@@ -104,25 +99,6 @@ const start = async () => {
 
 };
 
-function initialize() {
-    Role.estimatedDocumentCount((err, count) => {
-        if (!err && count === 0) {
-            addNewRole('user')
-            addNewRole('admin')
-        }
-    })
-}
-function addNewRole(name) {
-    new Role({
-        name: name
-    }).save(err => {
-        if (err) {
-            console.log("error", err)
-        }
-        console.log(`Added '${name}' to roles collection`)
-    })
-
-}
 
 start()
 

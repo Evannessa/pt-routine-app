@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { Link, useNavigate, Redirect } from 'react-router-dom';
+import { Link, useNavigate, redirect } from 'react-router-dom';
 import FormRow from '../components/FormRow';
 import { useGlobalContext } from '../context';
 import useLocalState from '../helpers/localState';
@@ -34,9 +34,11 @@ function Login() {
             });
             setLoading(false);
             saveUser(data.user);
-            history.push('/dashboard');
+            history('/dashboard')
+            // return redirect('/dashboard')
+            // history.push('/dashboard');
         } catch (error) {
-            showAlert({ text: error.response.data.msg });
+            showAlert({ text: error.response?.data.msg });
             setLoading(false);
         }
     };
