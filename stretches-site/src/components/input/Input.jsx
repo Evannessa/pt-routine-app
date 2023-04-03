@@ -32,7 +32,7 @@ const StyledInputWrapper = styled.div`
 StyledInputWrapper.displayName = "StyledInputWrapper";
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
-const StyledInput = styled.input.attrs((props) => ({
+export const StyledInput = styled.input.attrs((props) => ({
     type: props.type,
     id: props.id,
 }))`
@@ -69,7 +69,6 @@ StyledInput.displayName = "StyledInput";
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 // #endregion
 function Input(props) {
-    // @blocksort desc
     let {
         // wrapped = true,
         warningText = "",
