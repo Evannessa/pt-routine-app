@@ -31,8 +31,8 @@ const Navbar = () => {
 };
 
 const Wrapper = styled.nav`
-    background: var(--white);
-    height: 6rem;
+    background: var(--white, white);
+    height: 2rem;
     display: flex;
     align-items: center;
     justify-content: center;

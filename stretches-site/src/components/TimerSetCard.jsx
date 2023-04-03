@@ -6,10 +6,16 @@ const StyledNavLink = styled(NavLink)`
     background-color: white;
     border-radius: 10px;
     padding: 1rem;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
     color: ${(props) => props.themeColor1 || "black"};
     p,
     button {
         color: ${(props) => props.themeColor1 || "black"};
+    }
+    transform: scale(1);
+    transition: transform 200ms ease-in;
+    &:hover {
+        transform: scale(1.25);
     }
 `;
 
