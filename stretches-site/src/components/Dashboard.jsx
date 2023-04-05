@@ -19,6 +19,7 @@ const DashboardGrid = styled.section`
 `;
 
 function Dashboard(props) {
+    const saved = true;
     const { user } = useGlobalContext();
     // const { name, userId, role } = user;
 
@@ -27,6 +28,7 @@ function Dashboard(props) {
     const navigate = useNavigate();
     const [timerSets, setTimerSets] = useState();
 
+    //get timer sets from local storage, or from the mock timer data
     useEffect(() => {
         let storedData = localStorage.getItem("timerSets");
         if (storedData && storedData !== "undefined") {
@@ -35,6 +37,8 @@ function Dashboard(props) {
             setTimerSets(mockTimerSets);
         }
     }, []);
+
+    // save our timer sets if we have saved them before
     useEffect(() => {
         //if we have saved our timer sets before, save them again
         let storedData = localStorage.getItem("timerSets");
@@ -118,7 +122,7 @@ function Dashboard(props) {
                 console.warn("Not a valid action");
         }
     };
-    // const { timerSets } = props;
+
     const timerSetCards = timerSets
         ? timerSets.map((timerSet) => {
               return <TimerSetCard timerSet={timerSet} key={timerSet._id} timerSetStyle="card"></TimerSetCard>;
@@ -127,33 +131,26 @@ function Dashboard(props) {
     return (
         <div>
             <h1>At-Home Exercise App</h1>
-            <ButtonWithIcon type="contained" icon="play_circle" title="set default YouTube playlist or video">
-                Set YouTube Playlist
-            </ButtonWithIcon>
-            <ButtonWithIcon type="contained" icon="music_note" title="set default Spotify playlist or video">
-                Set Spotify Playlist
-            </ButtonWithIcon>
-            <ButtonWithIcon type="contained" icon="image">
-                Set Imgur Gallery
-            </ButtonWithIcon>
-            {(!user || user.role !== "admin") && (
-                <ButtonWithIcon type="contained" icon="save" onClick={onSave}>
-                    Save Timer Sets Local Storage
+            <div>
+                <ButtonWithIcon type="contained" icon="play_circle" title="set default YouTube playlist or video">
+                    Set YouTube Playlist
                 </ButtonWithIcon>
-            )}
+                <ButtonWithIcon type="contained" icon="music_note" title="set default Spotify playlist or video">
+                    Set Spotify Playlist
+                </ButtonWithIcon>
+                <ButtonWithIcon type="contained" icon="image">
+                    Set Imgur Gallery
+                </ButtonWithIcon>
+                {(!user || user.role !== "admin") && (
+                    <ButtonWithIcon type="contained" icon="save" onClick={onSave}>
+                        Save Timer Sets Local Storage
+                    </ButtonWithIcon>
+                )}
+            </div>
             <Container>
                 <DashboardGrid>{timerSetCards}</DashboardGrid>
             </Container>
-            <Routes>
-                {/* <Route path="/" element={<Dashboard timerSets={timerSets} />}></Route> */}
-                <Route path="factory" element={<TimerFactory />}>
-                    <Route
-                        path=":setId"
-                        element={<TimerGallery timerSets={timerSets} getTimerSets={getTimerSets} saved={true} />}
-                    ></Route>
-                </Route>
-                <Route path="display/:setId" element={<ActiveTimerDisplay />}></Route>
-            </Routes>
+            <Outlet context={[timerSets, getTimerSets, saved]} />
         </div>
     );
 }

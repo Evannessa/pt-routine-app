@@ -1,17 +1,17 @@
 import React from "react";
 import ActiveClock from "./ActiveClock";
 import { requests, urls } from "../helpers/requests";
-import ProgressCircle from "./ProgressCircle";
+// import ProgressCircle from "./ProgressCircle";
 import Slide from "./Slide";
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { useParams, useNavigate, Link, useOutletContext } from "react-router-dom";
 import SpotifyEmbed from "../IFrames/SpotifyEmbed";
 import YoutubeEmbed from "../IFrames/YoutubeEmbed";
-import styled from "styled-components";
-import { ThemeProvider } from "styled-components";
+import styled, { ThemeProvider } from "styled-components";
 
+import { useGlobalContext } from "../context";
 import { ThemeContext } from "../App";
 import { TooltipWrapper } from "../portal-components/TooltipPopover";
-import Draggable from "react-draggable";
+// import Draggable from "react-draggable";
 import DraggableEmbedModal from "./display/DraggableEmbedModal";
 /* #region   Styled Components */
 
@@ -150,6 +150,9 @@ const ActiveTimerSetContainer = styled.div`
 
 /* #endregion */
 export default function ActiveTimerDisplay() {
+    const [timerSets, getTimerSets, saved] = useOutletContext();
+
+    const { user } = useGlobalContext();
     const { theme, updateTheme } = React.useContext(ThemeContext);
     const { urlBase } = urls;
 
@@ -170,7 +173,8 @@ export default function ActiveTimerDisplay() {
 
     /**Get the timers stored in the database when the component mounts */
     function populateActiveTimerSet(result) {
-        console.log("Our link is", result.youtubeLink);
+        console.log("Result is", result, result.timers);
+        if (!result) return;
         const { _id, timers, label, youtubeLink, spotifyLink, repeatNumber } = result;
         const newTimerObjects = timers.map((timer) => {
             return {
@@ -189,13 +193,20 @@ export default function ActiveTimerDisplay() {
         id.current = _id;
     }
     React.useEffect(() => {
-        let options = {
-            method: "GET",
-            pathsArray: ["display", params.setId],
-            setStateCallback: populateActiveTimerSet,
-        };
-        requests.axiosRequest(options);
-    }, [params.setId]);
+        if (user && user.admin) {
+            const options = {
+                method: "GET",
+                pathsArray: ["display", params.setId],
+                setStateCallback: populateActiveTimerSet,
+            };
+            requests.axiosRequest(options);
+        } else {
+            let currentSet = timerSets.find((set) => {
+                return set._id === params.setId;
+            });
+            populateActiveTimerSet(currentSet);
+        }
+    }, [params.setId, user, timerSets]);
 
     /**
      * callback that reacts to currentClock and timers
@@ -234,10 +245,10 @@ export default function ActiveTimerDisplay() {
     //map all the images associated w/ each timer to the slide component
     let slideComponents = timers
         ? timers.map((timer) => {
-              //   return <Slide key={timer._id + "TimerSlide"} image={`${urlBase}/${timer.slideImagePath}`} />;
-              let path = timer.slideImagePath.split("/").pop();
+              return <Slide key={timer._id + "TimerSlide"} image={`${urlBase}/${timer.slideImagePath}`} />;
+              //   let path = timer.slideImagePath.split("/").pop();
               //   return <Slide key={timer._id + "TimerSlide"} image={`/${path}`} />;
-              return <Slide key={timer._id + "TimerSlide"} image={`https://i.imgur.com/Zjk88Uz.jpg/`} />;
+              //   return <Slide key={timer._id + "TimerSlide"} image={`https://i.imgur.com/Zjk88Uz.jpg/`} />;
           })
         : [];
     let descriptionComponents = timers

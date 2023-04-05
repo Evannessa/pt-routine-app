@@ -5,9 +5,9 @@ import { Link, useNavigate } from "react-router-dom";
 import FormRow from "../components/FormRow";
 import { useGlobalContext } from "../context";
 import useLocalState from "../helpers/localState";
-
 import axios from "axios";
 import { device } from "../components/styled-components/devices";
+import Alert from "../components/Alert";
 
 function Login() {
     const { theme } = React.useContext(ThemeContext);
@@ -50,7 +50,11 @@ function Login() {
         <>
             <ThemeProvider theme={theme}>
                 <Wrapper className="page">
-                    {alert.show && <div className={`alert alert-${alert.type}`}>{alert.text}</div>}
+                    {alert.show && (
+                        <Alert type={alert.type} className={`alert alert-${alert.type}`}>
+                            {alert.text}
+                        </Alert>
+                    )}
                     <form className={loading ? "form form-loading" : "form"} onSubmit={onSubmit}>
                         <h1>Login</h1>
                         {/* single form row */}
