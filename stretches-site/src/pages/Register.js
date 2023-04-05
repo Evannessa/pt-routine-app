@@ -6,6 +6,7 @@ import FormRow from "../components/FormRow";
 import axios from "axios";
 import useLocalState from "../helpers/localState";
 import { Wrapper } from "./Login";
+import Alert from "../components/Alert";
 
 function Register() {
     const { theme } = React.useContext(ThemeContext);
@@ -45,7 +46,11 @@ function Register() {
         <>
             <ThemeProvider theme={theme}>
                 <Wrapper className="page">
-                    {alert.show && <div className={`alert alert-${alert.type}`}>{alert.text}</div>}
+                    {alert.show && (
+                        <Alert type={alert.type} className={`alert alert-${alert.type}`}>
+                            {alert.text}
+                        </Alert>
+                    )}
                     {!success && (
                         <form className={loading ? "form form-loading" : "form"} onSubmit={onSubmit}>
                             {/* single form row */}

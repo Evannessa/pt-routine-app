@@ -10,7 +10,7 @@ import {
     ProtectedRoute,
     ForgotPassword,
     ResetPassword,
-} from './pages';
+} from "./pages";
 import { requests } from "./helpers/requests";
 import TimerSets from "./components/TimerSets";
 import React, { useState, useEffect } from "react";
@@ -19,7 +19,7 @@ import ActiveTimerDisplay from "./components/ActiveTimerDisplay";
 import TimerGallery from "./components/TimerGallery";
 import styled from "styled-components";
 import GlobalStyle from "./components/styled-components/globalStyles";
-import { useGlobalContext } from "./context"
+import { useGlobalContext } from "./context";
 import Navbar from "./components/Navbar";
 
 // #region Styled Components & Themes
@@ -45,9 +45,9 @@ export const ThemeContext = React.createContext({
 });
 //can't transition gradients, so doing workaround with pseudo element
 const StyledApp = styled.div`
-* {
-    scrollbar-width: thin !important;
-}
+    * {
+        scrollbar-width: thin !important;
+    }
     color: ${(props) => props.theme.color1};
     /* background-image: ${({ theme }) => theme.gradient}; */
     background-image: ${(props) => props.primaryGradient};
@@ -76,7 +76,6 @@ function App() {
     });
 
     function updateTheme(themeName) {
-
         setThemeState((previousThemeState) => {
             return {
                 ...previousThemeState,
@@ -86,7 +85,6 @@ function App() {
         });
     }
 
-
     return (
         <ThemeContext.Provider value={themeState}>
             <StyledApp
@@ -95,7 +93,6 @@ function App() {
                 themeName={themeState.themeName}
                 primaryGradient={themes.primary.gradient}
                 secondaryGradient={themes.secondary.gradient}
-
             >
                 <GlobalStyle />
 
@@ -103,18 +100,21 @@ function App() {
                 <Navbar />
                 <Routes>
                     <Route path="/" exact element={<Home />} />
-                    <Route path='/login' exact element={<Login />} />
-                    <Route path='/register' exact element={<Register />} />
-                    <Route path='/dashboard' exact element={<Dashboard />} />
+                    <Route path="/login" exact element={<Login />} />
+                    <Route path="/register" exact element={<Register />} />
+                    <Route path="/dashboard" element={<Dashboard />}>
+                        <Route path="factory" element={<TimerFactory />}>
+                            <Route path=":setId" element={<TimerGallery />}></Route>
+                        </Route>
+                        <Route path="display/:setId" element={<ActiveTimerDisplay />}></Route>
+                    </Route>
                     {/* <Route exact path="user" element={<ProtectedRoute />}> */}
                     {/* </Route> */}
-                    <Route path='/forgot-password' exact element={<ForgotPassword />} />
-                    <Route path='/user/verify-email' exact element={<Verify />} />
-                    <Route path='/user/reset-password' exact element={<ResetPassword />} />
-                    <Route path='*' element={<Error />} />
+                    <Route path="/forgot-password" exact element={<ForgotPassword />} />
+                    <Route path="/user/verify-email" exact element={<Verify />} />
+                    <Route path="/user/reset-password" exact element={<ResetPassword />} />
+                    <Route path="*" element={<Error />} />
                 </Routes>
-
-
                 <Outlet />
             </StyledApp>
         </ThemeContext.Provider>

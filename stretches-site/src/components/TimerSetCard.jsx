@@ -22,10 +22,7 @@ const StyledNavLink = styled(NavLink)`
 function TimerSetCard({ timerSet, updateSets, timerSetStyle = "link" }) {
     const cardImagePath = timerSet.timers[0].slideImagePath;
     const cardImageLabel = timerSet.timers[0].label;
-    async function handleBlur(event) {
-        console.log("Blur now");
-        // setOpen((prevState) => !prevState);
-    }
+
     async function handleClick(event) {
         event.stopPropagation();
         event.preventDefault();
@@ -37,7 +34,7 @@ function TimerSetCard({ timerSet, updateSets, timerSetStyle = "link" }) {
     return (
         <StyledNavLink
             to={`display/${timerSet._id}`}
-            className={(isActive) => "timerSet nav-link" + (isActive ? " selected" : "")}
+            // className={`timerSet nav-link ${isActive ? " selected" : ""}`}
             data-id={timerSet._id}
         >
             {timerSet && (
