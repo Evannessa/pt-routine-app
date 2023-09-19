@@ -86,6 +86,9 @@ app.use(function (req, res, next) {
 
 
 
+
+
+
 const start = async () => {
     try {
         connectDB()
@@ -99,8 +102,9 @@ const start = async () => {
 
 };
 
-
 start()
+
+
 
 
 module.exports = app;
