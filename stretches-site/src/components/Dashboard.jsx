@@ -1,6 +1,7 @@
 import { Route, Routes, Outlet, useNavigate, Switch } from "react-router-dom";
+import InputButtonGroup from "./input/InputButtonGroup";
 import Input from "./input/Input";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Container } from "./styled-components/layout.styled";
 import MediaEmbedHandler from "./MediaEmbedHandler";
 import styled from "styled-components";
@@ -15,20 +16,40 @@ import { useGlobalContext } from "../context";
 import TimerSetCard from "./TimerSetCard";
 import { mockTimerSets } from "../mockData/MockTimers";
 import { nanoid } from "nanoid";
+import { ThemeContext } from "../App";
+import { ThemeProvider } from "styled-components";
 
 const DashboardHeader = styled(Container)`
     padding: 1rem;
+    input[type="text"]{
+        border-color: var(--clr-primary-orange);
+        &:hover{
+            border-color: var(--clr-primary-pink);
+            + label{
+                color: var(--clr-primary-pink);
+            }
+        }
+    }
+    label{
+        
+
+    }
 
 `
 const ButtonWrapper = styled.div`
     display: flex;
     width: 100%;
-    background-color: white;
+    background-color: transparent;
     justify-content: center;
     gap: 1rem;
     button {
+        color: hsla(0, 0%, 100%, 0.668);
+        &:hover{
+            color: hsla(0, 0%, 100%, 1);
+        }
         span.material-icons {
             margin: unset;
+            color: white;
         }
     }
 `;
@@ -42,6 +63,7 @@ const DashboardGrid = styled.section`
 
 function Dashboard(props) {
     const { user } = useGlobalContext();
+    const theme = useContext(ThemeContext)
     // const { name, userId, role } = user;
 
     /* ---------------------- React Hooks, State and Effect --------------------- */
@@ -180,30 +202,32 @@ function Dashboard(props) {
     return (
         <div>
 
-            <DashboardHeader>
-                <h1>At-Home Exercise App</h1>
-                <ButtonWrapper>
-                    <ButtonWithIcon type="contained" icon="play_circle" title="set default YouTube playlist or video" onClick={setDefaultMediaUrl}>
-                        Set YouTube Playlist
-                    </ButtonWithIcon>
-                    <ButtonWithIcon type="contained" icon="music_note" title="set default Spotify playlist">
-                        Set Spotify Playlist
-                    </ButtonWithIcon>
-                    <ButtonWithIcon type="contained" icon="image" title="set imgur gallery">
-                        Set Imgur Gallery
-                    </ButtonWithIcon>
-                    {(!user || user.role !== "admin") && (
-                        <ButtonWithIcon type="contained" icon="save" onClick={onSave} title="Save Timer Sets to local storage">
-                            Save Timer Sets Local Storage
+            <ThemeProvider theme={theme}>
+                <DashboardHeader>
+                    <h1>At-Home Exercise App</h1>
+                    <ButtonWrapper>
+                        <ButtonWithIcon type="contained" icon="play_circle" title="set default YouTube playlist or video" onClick={setDefaultMediaUrl}>
+                            Set YouTube Playlist
                         </ButtonWithIcon>
-                    )}
-                </ButtonWrapper>
-                {showEmbed && <div>
-                    <Input type="text" name="youtubeEmbed" inputStyle="floatingLabel" label="Youtube Embed" hasLabel={true} setStateFunction={setEmbeds}></Input>
-                    <ButtonWithIcon type="contained" icon="save" onClick={saveDefaultEmbeds} title="Save Timer Sets to local storage">
-                    </ButtonWithIcon>
-                </div>}
-            </DashboardHeader>
+                        <ButtonWithIcon type="contained" icon="music_note" title="set default Spotify playlist">
+                            Set Spotify Playlist
+                        </ButtonWithIcon>
+                        <ButtonWithIcon type="contained" icon="image" title="set imgur gallery">
+                            Set Imgur Gallery
+                        </ButtonWithIcon>
+                        {(!user || user.role !== "admin") && (
+                            <ButtonWithIcon type="contained" icon="save" onClick={onSave} title="Save Timer Sets to local storage">
+                                Save Timer Sets Local Storage
+                            </ButtonWithIcon>
+                        )}
+                    </ButtonWrapper>
+                    {showEmbed && <InputButtonGroup>
+                        <Input type="text" name="youtubeEmbed" inputStyle="floatingLabel" label="Youtube Embed" hasLabel={true} setStateFunction={setEmbeds} style={{borderColor: theme.color1}}></Input>
+                        <ButtonWithIcon type="contained" icon="save" onClick={saveDefaultEmbeds} title="Save Timer Sets to local storage">
+                        </ButtonWithIcon>
+                    </InputButtonGroup>}
+                </DashboardHeader>
+            </ThemeProvider>
             <Container>
                 <DashboardGrid>{timerSetCards}</DashboardGrid>
             </Container>

@@ -6,7 +6,7 @@ import tf from "../../helpers/formatText";
 // #region Styled Components
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
-const StyledInputWrapper = styled.div`
+export const StyledInputWrapper = styled.div`
     display: flex;
     flex-direction: column;
     position: relative;
@@ -30,6 +30,7 @@ const StyledInputWrapper = styled.div`
     }
 `;
 StyledInputWrapper.displayName = "StyledInputWrapper";
+
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 export const StyledInput = styled.input.attrs((props) => ({
