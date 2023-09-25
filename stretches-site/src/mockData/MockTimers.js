@@ -1,3 +1,7 @@
+export const mockEmbedUrls = {
+    youtubeEmbed: "https://youtu.be/rN89z5LqFH8?si=-sm_D_sFwgwCBFWP",
+    spotifyEmbed: ""
+}
 export const mockTimerSets = [
     {
         _id: "back-flex",
