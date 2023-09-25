@@ -1,10 +1,10 @@
-import { Route, Routes, Outlet, useNavigate, Switch } from "react-router-dom";
+import { Route, Routes, Outlet, useNavigate, Switch, useParams, useLocation } from "react-router-dom";
 import InputButtonGroup from "./input/InputButtonGroup";
 import Input, { StyledInputWrapper } from "./input/Input";
 import React, { useState, useEffect, useContext } from "react";
 import { Container } from "./styled-components/layout.styled";
 import MediaEmbedHandler from "./MediaEmbedHandler";
-import styled from "styled-components";
+import styled, {css} from "styled-components";
 import { ButtonWithIcon } from "./styled-components/Buttons.Styled";
 import { requests } from "../helpers/requests";
 import TimerSets from "./TimerSets";
@@ -18,6 +18,7 @@ import { mockTimerSets, mockEmbedUrls } from "../mockData/MockTimers";
 import { nanoid } from "nanoid";
 import { ThemeContext } from "../App";
 import { ThemeProvider } from "styled-components";
+import { device } from "./styled-components/devices";
 
 const DashboardHeader = styled(Container)`
     padding: 1rem;
@@ -68,10 +69,42 @@ const DashboardGrid = styled.section`
     display: grid;
     grid-gap: 1rem;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    ${props => props.displayMode && css`   
+        display: flex;
+        flex-direction: column;
+        /* grid-template-rows: repeat(auto-fit, minmax(10px, 80px)); */
+        overflow-y: scroll;
+    `};
+`;
+
+const DashboardWrapper = styled.section`
+    position: ${props => props.displayMode ? 'absolute' : 'auto'};
+    ${props => props.displayMode && css`   
+
+        @media ${device.tablet}{
+            width: 30vw;
+        }
+        @media ${device.laptop}{
+            width: 25vw; 
+        }
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        overflow-y: scroll;
+        backdrop-filter: blur(20px);
+        max-height: 100vh;
+        top: 0;
+        left: 0;
+        border-right: 1px solid hsla(0, 0%, 100%, 0.506);
+        z-index: 900;
+      
+    `};
 `;
 
 function Dashboard(props) {
     const saved = true;
+    const params = useParams();
+    const location = useLocation(); //location in url
     const { user } = useGlobalContext();
     const theme = useContext(ThemeContext)
     // const { name, userId, role } = user;
@@ -153,7 +186,9 @@ function Dashboard(props) {
             console.log("Can't get sets -- not admin");
         }
     }
-
+    useEffect(() => {
+        console.log(location.pathname)
+    }, [location.pathname]);
     /**
      * get all of the timer sets
      */
@@ -238,35 +273,40 @@ function Dashboard(props) {
     return (
         <div>
 
-            <ThemeProvider theme={theme}>
-                <DashboardHeader>
-                    <h1>At-Home Exercise App</h1>
-                    <ButtonWrapper>
-                        <ButtonWithIcon type="contained" icon="play_circle" title="set default YouTube playlist or video" onClick={setShowMediaEmbedPopover}>
-                            Set YouTube Playlist
-                        </ButtonWithIcon>
-                        <ButtonWithIcon type="contained" icon="music_note" title="set default Spotify playlist">
-                            Set Spotify Playlist
-                        </ButtonWithIcon>
-                        <ButtonWithIcon type="contained" icon="image" title="set imgur gallery">
-                            Set Imgur Gallery
-                        </ButtonWithIcon>
-                        {(!user || user.role !== "admin") && (
-                            <ButtonWithIcon type="contained" icon="save" onClick={onSave} title="Save Timer Sets to local storage">
-                                Save Timer Sets Local Storage
+            <DashboardWrapper
+                displayMode={location.pathname.includes("display")? true : false}
+            >
+                <ThemeProvider theme={theme}>
+                    <DashboardHeader >
+                        <h1>At-Home Exercise App</h1>
+                        <ButtonWrapper>
+                            <ButtonWithIcon type="contained" icon="play_circle" title="set default YouTube playlist or video" onClick={setShowMediaEmbedPopover}>
+                                Set YouTube Playlist
                             </ButtonWithIcon>
-                        )}
-                    </ButtonWrapper>
-                    {showEmbed && <InputButtonGroup>
-                        <Input type="text" name="youtubeEmbed" inputStyle="floatingLabel" label="Youtube Embed" hasLabel={true} setStateFunction={setEmbeds} style={{borderColor: theme.color1}}></Input>
-                        <ButtonWithIcon type="contained" icon="save" onClick={(event)=> saveDefaultEmbeds("youtubeEmbed")} title="Save Timer Sets to local storage">
-                        </ButtonWithIcon>
-                    </InputButtonGroup>}
-                </DashboardHeader>
-            </ThemeProvider>
-            <Container>
-                <DashboardGrid>{timerSetCards}</DashboardGrid>
-            </Container>
+                            <ButtonWithIcon type="contained" icon="music_note" title="set default Spotify playlist">
+                                Set Spotify Playlist
+                            </ButtonWithIcon>
+                            <ButtonWithIcon type="contained" icon="image" title="set imgur gallery">
+                                Set Imgur Gallery
+                            </ButtonWithIcon>
+                            {(!user || user.role !== "admin") && (
+                                <ButtonWithIcon type="contained" icon="save" onClick={onSave} title="Save Timer Sets to local storage">
+                                    Save Timer Sets Local Storage
+                                </ButtonWithIcon>
+                            )}
+                        </ButtonWrapper>
+                        {showEmbed && <InputButtonGroup>
+                            <Input type="text" name="youtubeEmbed" inputStyle="floatingLabel" label="Youtube Embed" hasLabel={true} setStateFunction={setEmbeds} style={{borderColor: theme.color1}}></Input>
+                            <ButtonWithIcon type="contained" icon="save" onClick={(event)=> saveDefaultEmbeds("youtubeEmbed")} title="Save Timer Sets to local storage">
+                            </ButtonWithIcon>
+                        </InputButtonGroup>}
+                    </DashboardHeader>
+                </ThemeProvider>
+                    <DashboardGrid
+                        displayMode={location.pathname.includes("display")? true : false}>
+                            {timerSetCards}
+                    </DashboardGrid>
+            </DashboardWrapper>
             <Outlet context={[timerSets, getTimerSets, saved]} />
         </div>
     );

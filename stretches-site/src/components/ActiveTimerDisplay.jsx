@@ -1,4 +1,5 @@
 import React from "react";
+import { mockTimerSets } from "../mockData/MockTimers";
 import ActiveClock from "./ActiveClock";
 import { requests, urls } from "../helpers/requests";
 // import ProgressCircle from "./ProgressCircle";
@@ -7,6 +8,7 @@ import { useParams, useNavigate, Link, useOutletContext } from "react-router-dom
 import SpotifyEmbed from "../IFrames/SpotifyEmbed";
 import YoutubeEmbed from "../IFrames/YoutubeEmbed";
 import styled, { ThemeProvider } from "styled-components";
+import Bow from "../images/uploads/Back Flexibility/Bow.webp"
 
 import { useGlobalContext } from "../context";
 import { ThemeContext } from "../App";
@@ -201,9 +203,10 @@ export default function ActiveTimerDisplay() {
             };
             requests.axiosRequest(options);
         } else {
-            let currentSet = timerSets.find((set) => {
+            let sets = timerSets ? timerSets : mockTimerSets
+            let currentSet = sets.find((set) => {
                 return set._id === params.setId;
-            });
+            }) 
             populateActiveTimerSet(currentSet);
         }
     }, [params.setId, user, timerSets]);
@@ -245,7 +248,10 @@ export default function ActiveTimerDisplay() {
     //map all the images associated w/ each timer to the slide component
     let slideComponents = timers
         ? timers.map((timer) => {
-              return <Slide key={timer._id + "TimerSlide"} image={`${urlBase}/${timer.slideImagePath}`} />;
+            // let prePath = "http://localhost:3001"
+            return <Slide key={timer._id + "TimerSlide"} 
+                image={Bow}/>
+                // image={`${urlBase}/${timer.slideImagePath}`} />;
               //   let path = timer.slideImagePath.split("/").pop();
               //   return <Slide key={timer._id + "TimerSlide"} image={`/${path}`} />;
               //   return <Slide key={timer._id + "TimerSlide"} image={`https://i.imgur.com/Zjk88Uz.jpg/`} />;
