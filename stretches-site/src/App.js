@@ -45,9 +45,10 @@ export const ThemeContext = React.createContext({
 });
 //can't transition gradients, so doing workaround with pseudo element
 const StyledApp = styled.div`
-    * {
-        scrollbar-width: thin !important;
-    }
+* {
+    scrollbar-width: thin !important;
+}
+    grid-template-rows: minmax(10px, 32px) 1fr;
     color: ${(props) => props.theme.color1};
     /* background-image: ${({ theme }) => theme.gradient}; */
     background-image: ${(props) => props.primaryGradient};
