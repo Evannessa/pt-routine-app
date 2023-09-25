@@ -1,3 +1,7 @@
+export const mockEmbedUrls = {
+    youtubeEmbed: "https://youtu.be/rN89z5LqFH8?si=-sm_D_sFwgwCBFWP",
+    spotifyEmbed: ""
+}
 export const mockTimerSets = [
     {
         "label": "Back Flexibility",
@@ -47,9 +51,7 @@ export const mockTimerSets = [
                 "isBreak": false,
                 "isAutoBreak": false,
                 "repeatNumber": 0,
-                "_id": {
-                    "$oid": "63d8040ccb6579e3293e8b47"
-                }
+                "_id": "63d8040ccb6579e3293e8b47"
             },
             {
                 "time": {
@@ -64,9 +66,7 @@ export const mockTimerSets = [
                 "isBreak": false,
                 "isAutoBreak": false,
                 "repeatNumber": 1,
-                "_id": {
-                    "$oid": "63d95f69bf5b92fa1b3af174"
-                }
+                _id: "63d95f69bf5b92fa1b3af174",
             },
             {
                 "time": {
@@ -81,9 +81,7 @@ export const mockTimerSets = [
                 "isBreak": false,
                 "isAutoBreak": false,
                 "repeatNumber": 0,
-                "_id": {
-                    "$oid": "63d96726bf5b92fa1b3af752"
-                }
+                "_id":  "63d96726bf5b92fa1b3af752"
             },
             {
                 "time": {
