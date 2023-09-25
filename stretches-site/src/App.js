@@ -53,6 +53,8 @@ const StyledApp = styled.div`
     /* background-image: ${({ theme }) => theme.gradient}; */
     background-image: ${(props) => props.primaryGradient};
     transition: all 0.45s linear;
+    overflow-y: hidden;
+    max-height: 100vh;
     &:before {
         content: "";
         position: absolute;
