@@ -26,6 +26,7 @@ async function getSingle(type, req, res, next, name, populateWith) {
     const { id } = req.params;
     const document = await type.findOne({ _id: id }).populate(populateWith);
     if (!document) {
+        console.log("No document found with that id")
         return next(createCustomError(`No ${name} found with id ${id}`, 404));
     }
     return res.status(200).json({ document });
