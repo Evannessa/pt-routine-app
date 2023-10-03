@@ -34,7 +34,7 @@ function YoutubeEmbed(props) {
             console.log(url.replace(find, replaceWith));
             if (url.search(find) > 0) convertedUrl = url.replace(find, replaceWith);
         }
-
+        console.log({convertedUrl})
         return convertedUrl;
     }
     return (

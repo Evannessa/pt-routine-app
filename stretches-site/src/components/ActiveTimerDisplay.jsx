@@ -8,7 +8,6 @@ import { useParams, useNavigate, Link, useOutletContext } from "react-router-dom
 import SpotifyEmbed from "../IFrames/SpotifyEmbed";
 import YoutubeEmbed from "../IFrames/YoutubeEmbed";
 import styled, { ThemeProvider } from "styled-components";
-import Bow from "../images/uploads/Back Flexibility/Bow.webp"
 
 import { useGlobalContext } from "../context";
 import { ThemeContext } from "../App";
@@ -152,7 +151,7 @@ const ActiveTimerSetContainer = styled.div`
 
 /* #endregion */
 export default function ActiveTimerDisplay() {
-    const [timerSets, getTimerSets, saved] = useOutletContext();
+    const [timerSets, getTimerSets, saved, embedUrls] = useOutletContext();
 
     const { user } = useGlobalContext();
     const { theme, updateTheme } = React.useContext(ThemeContext);
@@ -187,9 +186,11 @@ export default function ActiveTimerDisplay() {
         initialState.current = newTimerObjects;
         setTimers(newTimerObjects);
         setTimerSetName(label);
+
+        console.log({youtubeLink, "embed mock link": embedUrls.youtubeEmbed})
         setLinks({
-            youtubeLink: youtubeLink,
-            spotifyLink: spotifyLink,
+            youtubeLink: youtubeLink ? youtubeLink : embedUrls.youtubeEmbed,
+            spotifyLink: spotifyLink ? spotifyLink : embedUrls.spotifyEmbed,
         });
         setRepeat(repeatNumber || 0);
         id.current = _id;
