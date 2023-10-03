@@ -175,7 +175,7 @@ export default function ActiveTimerDisplay() {
 
     /**Get the timers stored in the database when the component mounts */
     function populateActiveTimerSet(result) {
-        console.log("Result is", result, result.timers);
+        // console.log("Result is", result, result.timers);
         if (!result) return;
         const { _id, timers, label, youtubeLink, spotifyLink, repeatNumber } = result;
         const newTimerObjects = timers.map((timer) => {
@@ -250,8 +250,8 @@ export default function ActiveTimerDisplay() {
         ? timers.map((timer) => {
             // let prePath = "http://localhost:3001"
             return <Slide key={timer._id + "TimerSlide"} 
-                image={Bow}/>
-                // image={`${urlBase}/${timer.slideImagePath}`} />;
+                // image={Bow}/>
+                 image={`${timer.slideImagePath}`} />;
               //   let path = timer.slideImagePath.split("/").pop();
               //   return <Slide key={timer._id + "TimerSlide"} image={`/${path}`} />;
               //   return <Slide key={timer._id + "TimerSlide"} image={`https://i.imgur.com/Zjk88Uz.jpg/`} />;

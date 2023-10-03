@@ -69,18 +69,15 @@ const DashboardGrid = styled.section`
     display: grid;
     grid-gap: 1rem;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    ${props => props.displayMode && css`   
-        display: flex;
-        flex-direction: column;
-        /* grid-template-rows: repeat(auto-fit, minmax(10px, 80px)); */
-        overflow-y: scroll;
-    `};
+    display: ${props => props.displayMode ? "flex" : "grid"};
+    ${props => props.displayMode && "flex-direction: column"};
+    ${props => props.displayMode && "overflow-y: scroll"};
 `;
+
 
 const DashboardWrapper = styled.section`
     position: ${props => props.displayMode ? 'absolute' : 'auto'};
     ${props => props.displayMode && css`   
-
         @media ${device.tablet}{
             width: 30vw;
         }
@@ -96,10 +93,10 @@ const DashboardWrapper = styled.section`
         top: 0;
         left: 0;
         border-right: 1px solid hsla(0, 0%, 100%, 0.506);
-        z-index: 900;
-      
-    `};
+        z-index: 900;`
+    };
 `;
+
 
 function Dashboard(props) {
     const saved = true;
