@@ -46,7 +46,7 @@ const StyledNavLink = styled(NavLink)`
 `;
 
 function TimerSetCard({ timerSet, updateSets, timerSetStyle = "link", isMockData=false }) {
-    const cardImagePath = guitarPhoto //timerSet.timers[0].slideImagePath;
+    const cardImagePath = timerSet.timers[0].slideImagePath;
     const cardImageLabel = timerSet.timers[0].label;
 
     async function handleClick(event) {
