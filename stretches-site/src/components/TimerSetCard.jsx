@@ -13,7 +13,8 @@ const StyledNavLink = styled(NavLink)`
     color: ${(props) => props.themeColor1 || "white"};
     p,
     button {
-        color: ${(props) => props.themeColor1 || "white"};
+        color: hsl(348.7, 100%, 55.1%);
+        /* color: ${(props) => props.themeColor1 || "white"}; */
     }
     transform: scale(1);
     transition: transform 200ms ease-in;

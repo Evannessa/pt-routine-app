@@ -1,6 +1,6 @@
 
 export const mockEmbedUrls = {
-    youtubeEmbed: "https://youtu.be/rN89z5LqFH8?si=-sm_D_sFwgwCBFWP",
+    youtubeEmbed: "https://www.youtube.com/watch?v=rN89z5LqFH8",
     spotifyEmbed: ""
 }
 export const mockTimerSets = [
@@ -277,7 +277,7 @@ export const mockTimerSets = [
                     hours: 0,
                 },
                 label: "New Timer",
-                slideImagePath: "/uploads/Hamstring-Flexibility/Arm-Side-Horizontal.png",
+                slideImagePath: "/uploads/Hamstring-Flexibility/Pyramid.webp",
                 autostart: false,
                 isBreak: false,
                 repeatNumber: 0,

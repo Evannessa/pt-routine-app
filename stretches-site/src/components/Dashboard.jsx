@@ -52,16 +52,31 @@ const ButtonWrapper = styled.div`
     background-color: transparent;
     justify-content: center;
     gap: 1rem;
-    button {
-        color: hsla(0, 0%, 100%, 0.668);
-        &:hover{
-            color: hsla(0, 0%, 100%, 1);
-        }
+
+    ${props => props.displayMode ? css`
+        color: var(--clr-primary-pink);
+        button{
+            &:hover{
+                color: var(--clr-primary-orange);
+            }
         span.material-icons {
             margin: unset;
-            color: white;
+            color: var(--clr-primary-orange);
+            /* color: white; */
         }
-    }
+        } 
+    ` : css`
+            button {
+            color: hsla(0, 0%, 100%, 0.668);
+            &:hover{
+                color: hsla(0, 0%, 100%, 1);
+            }
+            span.material-icons {
+                margin: unset;
+                color: white;
+            }
+        }
+    `}
 `;
 
 const DashboardGrid = styled.section`
@@ -276,7 +291,7 @@ function Dashboard(props) {
                 <ThemeProvider theme={theme}>
                     <DashboardHeader >
                         <h1>At-Home Exercise App</h1>
-                        <ButtonWrapper>
+                        <ButtonWrapper  displayMode={location.pathname.includes("display")}>
                             <ButtonWithIcon type="contained" icon="play_circle" title="set default YouTube playlist or video" onClick={setShowMediaEmbedPopover}>
                                 Set YouTube Playlist
                             </ButtonWithIcon>
@@ -304,7 +319,7 @@ function Dashboard(props) {
                             {timerSetCards}
                     </DashboardGrid>
             </DashboardWrapper>
-            <Outlet context={[timerSets, getTimerSets, saved]} />
+            <Outlet context={[timerSets, getTimerSets, saved, embedUrls]} />
         </div>
     );
 }
