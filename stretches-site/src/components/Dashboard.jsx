@@ -19,6 +19,8 @@ import { nanoid } from "nanoid";
 import { ThemeContext } from "../App";
 import { ThemeProvider } from "styled-components";
 import { device } from "./styled-components/devices";
+// import SidebarToggle from "./SidebarToggle";
+import Drawer from "./Drawer";
 
 const DashboardHeader = styled(Container)`
     padding: 1rem;
@@ -282,43 +284,49 @@ function Dashboard(props) {
             return <TimerSetCard timerSet={timerSet} key={id} timerSetStyle="card" isMockData={isMockData}></TimerSetCard>;
         })
         : [];
+    const ConditionalWrapper = ({ condition, wrapper, children }) => 
+        condition ? wrapper(children) : children;
+
     return (
         <div>
 
-            <DashboardWrapper
-                displayMode={location.pathname.includes("display")? true : false}
-            >
-                <ThemeProvider theme={theme}>
-                    <DashboardHeader >
-                        <h1>At-Home Exercise App</h1>
-                        <ButtonWrapper  displayMode={location.pathname.includes("display")}>
-                            <ButtonWithIcon type="contained" icon="play_circle" title="set default YouTube playlist or video" onClick={setShowMediaEmbedPopover}>
-                                Set YouTube Playlist
-                            </ButtonWithIcon>
-                            <ButtonWithIcon type="contained" icon="music_note" title="set default Spotify playlist">
-                                Set Spotify Playlist
-                            </ButtonWithIcon>
-                            <ButtonWithIcon type="contained" icon="image" title="set imgur gallery">
-                                Set Imgur Gallery
-                            </ButtonWithIcon>
-                            {(!user || user.role !== "admin") && (
-                                <ButtonWithIcon type="contained" icon="save" onClick={onSave} title="Save Timer Sets to local storage">
-                                    Save Timer Sets Local Storage
+            <ConditionalWrapper condition={location.pathname.includes("display")} wrapper={children=> <Drawer>{children}</Drawer>}>
+                <DashboardWrapper
+                    displayMode={location.pathname.includes("display")? true : false}
+                >
+                    <ThemeProvider theme={theme}>
+                        <DashboardHeader >
+                            <h1>At-Home Exercise App</h1>
+                            <ButtonWrapper  displayMode={location.pathname.includes("display")}>
+                                <ButtonWithIcon type="contained" icon="play_circle" title="set default YouTube playlist or video" onClick={setShowMediaEmbedPopover}>
+                                    Set YouTube Playlist
                                 </ButtonWithIcon>
-                            )}
-                        </ButtonWrapper>
-                        {showEmbed && <InputButtonGroup>
-                            <Input type="text" name="youtubeEmbed" inputStyle="floatingLabel" label="Youtube Embed" hasLabel={true} setStateFunction={setEmbeds} style={{borderColor: theme.color1}}></Input>
-                            <ButtonWithIcon type="contained" icon="save" onClick={(event)=> saveDefaultEmbeds("youtubeEmbed")} title="Save Timer Sets to local storage">
-                            </ButtonWithIcon>
-                        </InputButtonGroup>}
-                    </DashboardHeader>
-                </ThemeProvider>
-                    <DashboardGrid
-                        displayMode={location.pathname.includes("display")? true : false}>
-                            {timerSetCards}
-                    </DashboardGrid>
-            </DashboardWrapper>
+                                <ButtonWithIcon type="contained" icon="music_note" title="set default Spotify playlist">
+                                    Set Spotify Playlist
+                                </ButtonWithIcon>
+                                <ButtonWithIcon type="contained" icon="image" title="set imgur gallery">
+                                    Set Imgur Gallery
+                                </ButtonWithIcon>
+                                {(!user || user.role !== "admin") && (
+                                    <ButtonWithIcon type="contained" icon="save" onClick={onSave} title="Save Timer Sets to local storage">
+                                        Save Timer Sets Local Storage
+                                    </ButtonWithIcon>
+                                )}
+                            </ButtonWrapper>
+                            {showEmbed && <InputButtonGroup>
+                                <Input type="text" name="youtubeEmbed" inputStyle="floatingLabel" label="Youtube Embed" hasLabel={true} setStateFunction={setEmbeds} style={{borderColor: theme.color1}}></Input>
+                                <ButtonWithIcon type="contained" icon="save" onClick={(event)=> saveDefaultEmbeds("youtubeEmbed")} title="Save Timer Sets to local storage">
+                                </ButtonWithIcon>
+                            </InputButtonGroup>}
+                        </DashboardHeader>
+                    </ThemeProvider>
+                        <DashboardGrid
+                            displayMode={location.pathname.includes("display")? true : false}>
+                                {timerSetCards}
+                        </DashboardGrid>
+                    {/* {location.pathname.includes("display") && <SidebarToggle></SidebarToggle>} */}
+                </DashboardWrapper>
+            </ConditionalWrapper>
             <Outlet context={[timerSets, getTimerSets, saved, embedUrls]} />
         </div>
     );
