@@ -11,23 +11,24 @@ const handleDrawerPosition = (position, isClosed)=> {
                 top: 0; 
                 left: 0;
                 transform: ${isClosed ? "translate(-100%)" : "translate(0)"};
-                /* left: ${isClosed ? "unset" : "0"}; */
-                /* right: ${isClosed ? "100%" : "unset"}; */
             ` 
         case "right":
             return css`
                 top: 0;
                 right: 0;
+                transform: ${isClosed ? "translate(100%)" : "translate(0%)"};
             `
         case "bottom":
             return css`
                 bottom: 0; 
                 left: 0;
+                transform: ${isClosed ? "translateY(100%)" : "translateY(0%)"};
             `
         default:
             return css`
                 top: 0;
                 left: 0;
+                transform: ${isClosed ? "translateY(-100%)" : "translateY(0%)"};
             `
     }
 
@@ -35,6 +36,7 @@ const handleDrawerPosition = (position, isClosed)=> {
 }
 
 const StyledDrawer = styled.section`
+    z-index: 1000;
     position: absolute;
     overflow-x: visible;
     @media ${device.tablet}{
@@ -44,12 +46,7 @@ const StyledDrawer = styled.section`
     @media ${device.laptop}{
         width: ${props => props.position == "left" || props.position == "right" ? "25vw" : "100%"};
     }
-    /* top: 0; */
-        /* left: 0; */
     border-right: 1px solid hsla(0, 0%, 100%, 0.506);
-    z-index: 900;
-    /* height: 100%; */
-    /* position: a; */
     ${({ position, isClosed }) => handleDrawerPosition(position, isClosed)}
     transition: transform 200ms ease-in-out;
 `
