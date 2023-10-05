@@ -15,7 +15,7 @@ export const mockTimerSets = [
                     hours: 0,
                 },
                 label: "Bow Pose",
-                slideImagePath: "/uploads/Back/Bow.webp",
+                slideImagePath: "/uploads/Back/Cobra-Pose.webp",
                 description: "Bow Pose",
                 autostart: false,
                 isBreak: false,

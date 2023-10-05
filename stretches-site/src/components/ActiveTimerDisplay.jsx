@@ -172,6 +172,7 @@ export default function ActiveTimerDisplay() {
 
     const [completed, setCompleted] = React.useState(false);
 
+
     /**Get the timers stored in the database when the component mounts */
     function populateActiveTimerSet(result) {
         // console.log("Result is", result, result.timers);
@@ -187,7 +188,6 @@ export default function ActiveTimerDisplay() {
         setTimers(newTimerObjects);
         setTimerSetName(label);
 
-        console.log({youtubeLink, "embed mock link": embedUrls.youtubeEmbed})
         setLinks({
             youtubeLink: youtubeLink ? youtubeLink : embedUrls.youtubeEmbed,
             spotifyLink: spotifyLink ? spotifyLink : embedUrls.spotifyEmbed,
@@ -195,6 +195,11 @@ export default function ActiveTimerDisplay() {
         setRepeat(repeatNumber || 0);
         id.current = _id;
     }
+ /**
+     * callback that reacts to setId changing
+     * Will request an axious request with the proper options
+     * Then use the "populateActiveTimerSet" callback
+     */
     React.useEffect(() => {
         if (user && user.admin) {
             const options = {

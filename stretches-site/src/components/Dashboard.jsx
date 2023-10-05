@@ -95,22 +95,14 @@ const DashboardGrid = styled.section`
 const DashboardWrapper = styled.section`
     position: ${props => props.displayMode ? 'absolute' : 'auto'};
     ${props => props.displayMode && css`   
-        @media ${device.tablet}{
-            width: 30vw;
-        }
-        @media ${device.laptop}{
-            width: 25vw; 
-        }
         display: flex;
         flex-direction: column;
         height: 100%;
         overflow-y: scroll;
         backdrop-filter: blur(20px);
         max-height: 100vh;
-        top: 0;
-        left: 0;
-        border-right: 1px solid hsla(0, 0%, 100%, 0.506);
-        z-index: 900;`
+
+        `
     };
 `;
 
@@ -121,6 +113,7 @@ function Dashboard(props) {
     const location = useLocation(); //location in url
     const { user } = useGlobalContext();
     const theme = useContext(ThemeContext)
+    const inDisplayMode = location.pathname.includes("display") || location.pathname.includes("factory")
     // const { name, userId, role } = user;
 
     /* ---------------------- React Hooks, State and Effect --------------------- */
@@ -290,14 +283,14 @@ function Dashboard(props) {
     return (
         <div>
 
-            <ConditionalWrapper condition={location.pathname.includes("display")} wrapper={children=> <Drawer>{children}</Drawer>}>
+            <ConditionalWrapper condition={inDisplayMode} wrapper={children=> <Drawer>{children}</Drawer>}>
                 <DashboardWrapper
-                    displayMode={location.pathname.includes("display")? true : false}
+                    displayMode={inDisplayMode}
                 >
                     <ThemeProvider theme={theme}>
                         <DashboardHeader >
                             <h1>At-Home Exercise App</h1>
-                            <ButtonWrapper  displayMode={location.pathname.includes("display")}>
+                            <ButtonWrapper  displayMode={inDisplayMode}>
                                 <ButtonWithIcon type="contained" icon="play_circle" title="set default YouTube playlist or video" onClick={setShowMediaEmbedPopover}>
                                     Set YouTube Playlist
                                 </ButtonWithIcon>
@@ -321,7 +314,7 @@ function Dashboard(props) {
                         </DashboardHeader>
                     </ThemeProvider>
                         <DashboardGrid
-                            displayMode={location.pathname.includes("display")? true : false}>
+                            displayMode={inDisplayMode}>
                                 {timerSetCards}
                         </DashboardGrid>
                     {/* {location.pathname.includes("display") && <SidebarToggle></SidebarToggle>} */}

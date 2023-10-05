@@ -1,5 +1,6 @@
 import React, { useCallback } from "react";
 import PreviewTimer from "./PreviewTimer";
+import { mockTimerSets } from "../mockData/MockTimers";
 import ActionModal from "./ActionModal";
 import SetTimeline from "./SetTimeline";
 import { useParams, useLocation, Navigate, useNavigate } from "react-router-dom";
@@ -8,6 +9,7 @@ import { ThemeProvider } from "styled-components";
 import { ThemeContext } from "../App";
 import GalleryHeader from "./GalleryHeader";
 import { requests } from "../helpers/requests";
+import { useGlobalContext } from "../context";
 /* ---------------------------- Styled Components --------------------------- */
 
 // #region Styled Components
@@ -42,6 +44,7 @@ export default function TimerGallery(props) {
     /* ------------------------------- React Hooks ------------------------------ */
     // #region States and hooks
 
+    const { user } = useGlobalContext();
     let { timerSets, getTimerSets } = props;
     const { theme, updateTheme } = React.useContext(ThemeContext);
     const observer = React.useRef(); //intersection Observer
@@ -95,16 +98,25 @@ export default function TimerGallery(props) {
      */
     React.useEffect(() => {
         const getTimerSet = async () => {
-            let options = {
-                method: "GET",
-                pathsArray: ["factory", id],
-                setStateCallback: updateTimerSet,
-            };
+            if(user && user.admin){
+                let options = {
+                    method: "GET",
+                    pathsArray: ["factory", id],
+                    setStateCallback: updateTimerSet,
+                };
             await requests.axiosRequest(options);
+            }else{
+                let sets = timerSets ? timerSets : mockTimerSets
+                let currentSet = sets.find((set) => {
+                    return set._id === params.setId;
+                }) 
+                updateTimerSet(currentSet);
+        }
         };
         getTimerSet();
         return () => {};
     }, [id]);
+   
 
     //when timer data changes, update the entire set of timers timer
     React.useEffect(() => {
