@@ -15,6 +15,9 @@ export const StyledInputWrapper = styled.div`
         order: 2;
         border-color: ${(props) => props.borderColor || "white"};
     }
+    input[type="text"], textarea{
+        height: 100%;
+    }
     label {
         order: 1;
         z-index: 100;
@@ -72,6 +75,7 @@ StyledInput.displayName = "StyledInput";
 function Input(props) {
     let {
         // wrapped = true,
+        className="",
         warningText = "",
         value,
         type,
@@ -104,7 +108,7 @@ function Input(props) {
         setStateFunction(name, passValue, parentName);
     }
     return (
-        <StyledInputWrapper inputStyle={inputStyle} style={{ ...style }}>
+        <StyledInputWrapper inputStyle={inputStyle} style={{ ...style }} className={className}>
             <StyledInput
                 as={type === "textarea" ? "textarea" : "input"}
                 className="input-label-overlay"

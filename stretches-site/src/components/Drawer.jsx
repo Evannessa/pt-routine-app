@@ -1,7 +1,10 @@
-import React, {useState} from 'react';
-import SidebarToggle from './SidebarToggle';
+import React, {useContext, useState} from 'react';
+import SidebarToggle, { StyledSidebarButton } from './SidebarToggle';
 import styled, { css } from 'styled-components';
 import { device } from './styled-components/devices';
+import { ThemeContext } from "../App";
+import { ThemeProvider } from "styled-components";
+import { StyledSidebar } from './styled-components/layout.styled';
 
 const handleDrawerPosition = (position, isClosed)=> {
 
@@ -50,11 +53,15 @@ const StyledDrawer = styled.section`
     border-right: 1px solid hsla(0, 0%, 100%, 0.506);
     ${({ position, isClosed }) => handleDrawerPosition(position, isClosed)}
     transition: transform 200ms ease-in-out;
+    ${StyledSidebarButton}, button{
+        box-shadow: ${({ theme }) => theme.shadow};
+    }
 `
 
 
 const Drawer = (props, {position="left"}) => {
     const [isClosed, setIsClosed] = useState(true);
+    const theme = useContext(ThemeContext)
 
     function setToggleClosed(){
         setIsClosed(!isClosed)
@@ -62,10 +69,12 @@ const Drawer = (props, {position="left"}) => {
 
 
     return (
-        <StyledDrawer isClosed={isClosed} position={position}>
-            {props.children}
-            <SidebarToggle isClosed={isClosed} toggleParentClosed={setToggleClosed} position={position}></SidebarToggle>
-        </StyledDrawer>
+        <ThemeProvider theme={theme}>
+            <StyledDrawer isClosed={isClosed} position={position} theme={theme}>
+                {props.children}
+                <SidebarToggle isClosed={isClosed} toggleParentClosed={setToggleClosed} position={position} theme={theme}></SidebarToggle>
+            </StyledDrawer>
+        </ThemeProvider>
     );
 }
 

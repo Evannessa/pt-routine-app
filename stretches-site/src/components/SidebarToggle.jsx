@@ -26,10 +26,13 @@ const handleTogglePosition = position => {
       `;
   }
 };
-const StyledSidebarButton = styled(ButtonWithIcon)`
+export const StyledSidebarButton = styled(ButtonWithIcon)`
     position: absolute;
     border-right: 1px solid hsla(0, 0%, 100%, 0.506);
     backdrop-filter: blur(20px);
+    .material-symbols-outlined{
+      color: white;
+    }
     ${({position}) => position == "left" || position == "right" ? css`
         height: 100%;
         width: 2rem;
@@ -38,13 +41,15 @@ const StyledSidebarButton = styled(ButtonWithIcon)`
         width: 100%;
     `}
     ${({position}) => handleTogglePosition(position)};
+    box-shadow: ${({ theme }) => theme.shadow};
 `
 
-const SidebarToggle = ({isClosed, toggleParentClosed, position="left"}) => {
+const SidebarToggle = ({isClosed, toggleParentClosed, position="left", theme}) => {
 
 
     return (
         <StyledSidebarButton position={position}
+            theme={theme}
             onClick={()=> toggleParentClosed()} icon={isClosed ? "chevron_right" : "chevron_left"}>
         </StyledSidebarButton>
     );
