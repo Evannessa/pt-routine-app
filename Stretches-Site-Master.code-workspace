@@ -65,6 +65,10 @@
             {
                 "filePath": "start-page-interface\\src\\components",
                 "group": "Start Page Components"
+            },
+            {
+                "filePath": "api\\public\\uploads",
+                "group": "Start Page Components"
             }
         ],
         "favorites.groups": ["Default", "Start Page Components"],

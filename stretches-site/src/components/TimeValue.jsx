@@ -9,6 +9,7 @@ const StyledChangeButtonWrapper = styled.div`
     flex-direction: column;
     overflow: hidden;
     border-radius: 5px;
+    backdrop-filter: blur(5px);
 `;
 StyledChangeButtonWrapper.displayName = "StyledChangeButtonWrapper";
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
@@ -19,18 +20,30 @@ const StyledTimeValue = styled.div`
     justify-content: center;
     h3 {
         font-weight: 200;
-    }
-    /* ${StyledChangeButtonWrapper} {
-        display: ${(props) => (props.showChangeButtons ? "block" : "none")};
-    } */
-    &:hover,
-    &:focus {
-        ${StyledChangeButtonWrapper} {
+        order: 2;
+        &:hover,
+        &:focus {
+        ~ ${StyledChangeButtonWrapper} {
             display: flex;
             opacity: 100%;
             pointer-events: auto;
         }
     }
+    }
+    ${StyledChangeButtonWrapper} {
+        order: 3;
+        transition: opacity 200ms ease-in-out;
+        &:first-of-type{
+            order: 1;
+        }
+        &:hover, &:focus{
+            display: flex;
+            opacity: 100%;
+            pointer-events: auto;
+        }
+        /* display: ${(props) => (props.showChangeButtons ? "block" : "none")}; */
+    }
+    
 `;
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
@@ -76,21 +89,24 @@ export default function TimeValue(props) {
     /* --------------------------------- return --------------------------------- */
     return (
         <StyledTimeValue
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
+            // onMouseEnter={handleMouseEnter}
+            // onMouseLeave={handleMouseLeave}
             data-testid={props.unit}
         >
             {/* <Portal className="portal" props={{ className: "portal" }}> */}
-            <StyledChangeButtonWrapper showChangeButtons={showChangeButtons}>
-                {increaseButtons}
-            </StyledChangeButtonWrapper>
+       
             <h3
                 className="value"
                 contentEditable={true}
                 suppressContentEditableWarning={true}
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
             >
                 {String(props.value).padStart(2, "0")}
             </h3>
+            <StyledChangeButtonWrapper showChangeButtons={showChangeButtons}>
+                {increaseButtons}
+            </StyledChangeButtonWrapper>
             <StyledChangeButtonWrapper showChangeButtons={showChangeButtons}>
                 {decreaseButtons}
             </StyledChangeButtonWrapper>

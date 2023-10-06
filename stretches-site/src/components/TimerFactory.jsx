@@ -2,9 +2,10 @@ import React from "react";
 import InputLabelOverlay from "./InputLabelOverlay";
 import TimerGallery from "./TimerGallery";
 import axios from "axios";
-import { Routes, Route, Outlet } from "react-router-dom";
+import { Routes, Route, Outlet, useOutletContext } from "react-router-dom";
 
 export default function TimerFactory(props) {
+    const [timerSets, getTimerSets, embedUrls, user] = useOutletContext();
     const [formData, setFormData] = React.useState({
         setLabel: "",
         type: "alternating",
@@ -68,7 +69,7 @@ export default function TimerFactory(props) {
 
     return (
         <div className="timer-factory ">
-            <Outlet />
+            <Outlet context={[timerSets, getTimerSets, saved, embedUrls, user]}/>
         </div>
     );
 }

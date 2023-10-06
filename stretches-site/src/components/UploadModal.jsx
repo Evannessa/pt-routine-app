@@ -45,6 +45,7 @@ function UploadModal(props) {
         const fileNames = response.map((imageValue) => `/${imageValue}`);
         setImagePaths(fileNames);
     }
+
     useEffect(() => {
         const options = {
             method: "GET",

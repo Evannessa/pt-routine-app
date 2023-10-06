@@ -1,6 +1,6 @@
 import React from "react";
 import TimeValue from "./TimeValue";
-import DropArea from "./DropArea";
+import DropArea, { StyledDropArea } from "./DropArea";
 import { useParams } from "react-router-dom";
 import { BackgroundWrapper } from "./styled-components/BackgroundWrapper.styled";
 import styled from "styled-components";
@@ -74,12 +74,13 @@ const StyledWrapper = styled(Container)`
             color: white;
             align-self:end;
             margin-bottom: 1rem;
+            
             ${IconButton} {
                 vertical-align: middle;
                 max-width: 2rem;
             }
         }
-        .textarea{
+        .textarea, ${StyledDropArea}{
             height: 80%;
         }
     }

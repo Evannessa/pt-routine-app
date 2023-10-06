@@ -160,8 +160,6 @@ function Dashboard(props) {
      * Create a new timer set
      */
     async function createNewSet() {
-
-        const user = {role: "admin"}
         if (user && user.role === "admin") {
             let options = {
                 method: "POST",
@@ -315,7 +313,7 @@ function Dashboard(props) {
                     {/* {location.pathname.includes("display") && <SidebarToggle></SidebarToggle>} */}
                 </DashboardWrapper>
             </ConditionalWrapper>
-            <Outlet context={[timerSets, getTimerSets, saved, embedUrls]} />
+            <Outlet context={[timerSets, getTimerSets, saved, embedUrls, user]} />
         </div>
     );
 }

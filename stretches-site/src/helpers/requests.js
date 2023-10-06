@@ -8,17 +8,21 @@ export const URLS = {
 }
 export const urls = (() => {
     const urlBase = "http://localhost:3000/api"
+    const urlBaseNoApi = "http://localhost:3000"
+    // const urlBase = "http://localhost:3000/"
     const displayRoute = "/display"
     const factoryRoute = "/factory"
     const uploadsRoute = "/uploads"
 
     const getUploadsUrl = () => {
-        return urlBase + uploadsRoute
+        // return urlBase + uploadsRoute
+        return urlBase 
     }
 
 
     return {
         urlBase: urlBase,
+        urlBaseNoApi: urlBaseNoApi,
         displayRoute: displayRoute,
         factoryRoute: factoryRoute,
         uploadsRoute: uploadsRoute,

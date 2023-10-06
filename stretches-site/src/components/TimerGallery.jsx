@@ -3,7 +3,7 @@ import PreviewTimer from "./PreviewTimer";
 import { mockTimerSets } from "../mockData/MockTimers";
 import ActionModal from "./ActionModal";
 import SetTimeline from "./SetTimeline";
-import { useParams, useLocation, Navigate, useNavigate } from "react-router-dom";
+import { useParams, useLocation, Navigate, useNavigate, useOutletContext } from "react-router-dom";
 import styled from "styled-components";
 import { ThemeProvider } from "styled-components";
 import { ThemeContext } from "../App";
@@ -46,8 +46,9 @@ export default function TimerGallery(props) {
 
     // const { user } = useGlobalContext();
 
-    const user = {role: ""}
-    let { timerSets, getTimerSets } = props;
+    const [timerSets, getTimerSets, embedUrls, user] = useOutletContext();
+    // const user = {role: "admin"}
+    // let { timerSets, getTimerSets } = props;
     const { theme, updateTheme } = React.useContext(ThemeContext);
     const observer = React.useRef(); //intersection Observer
     const childRefs = React.useRef([]); //the references to all timer objects
