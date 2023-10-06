@@ -231,7 +231,8 @@ const TimelineThumbnail = forwardRef(
                             </span>
                         </Hoverable>
                         <section>
-                            <img src={urlBase + slideImagePath} alt="Exercise Slide" />
+                            {/* <img src={urlBase + slideImagePath} alt="Exercise Slide" /> */}
+                            <img src={slideImagePath} alt="Exercise Slide" />
                             <p>{description}</p>
                             <FloatingToolbar actions={actions} timerId={dataKey} coords={coords}></FloatingToolbar>
                         </section>

@@ -2,6 +2,7 @@
 /api/node_modules
 .env
 api/public/uploads/
+stretches-site/public/uploads/Personal
 functions
 stretches-site/.gitold
 stretches-site/OLD

@@ -9,11 +9,13 @@ import { urls, combineUrlFragments } from "../helpers/requests";
 // #region Styled Components
 const StyledDropArea = styled(Container)`
     border-radius: 20px;
-    width: 50%;
-    margin: 2% auto;
+    /* width: 50%; */
+    /* margin: 2% auto; */
     padding: 1rem;
     background-color: transparent;
-    max-height: 5rem;
+    /* max-height: 5rem; */
+    height: 100%;
+    width: 80%;
     max-width: 100%;
     display: flex;
     align-items: center;
@@ -183,7 +185,8 @@ function DropArea(props) {
                 className="slide__preview"
                 src={
                     props.slideImagePath && props.slideImagePath.length > 0
-                        ? `${uploadsUrl}/${props.slideImagePath}`
+                        // ? `${uploadsUrl}/${props.slideImagePath}`
+                        ? `${props.slideImagePath}`
                         : "/insert_photo_white_24dp.svg"
                 }
                 alt="preview"

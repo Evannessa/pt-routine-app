@@ -436,8 +436,7 @@ Form for setting settings of the group of timers
   width: 100%;
   overflow-x: auto;
   overscroll-behavior-inline: contain;
-  -ms-scroll-snap-type: inline mandatory;
-      scroll-snap-type: inline mandatory;
+  scroll-snap-type: inline mandatory;
   flex: 1;
 }
 

@@ -31,10 +31,8 @@ function YoutubeEmbed(props) {
         for (let item of replacementMap) {
             const find = item.find;
             const replaceWith = item.replaceWith;
-            console.log(url.replace(find, replaceWith));
             if (url.search(find) > 0) convertedUrl = url.replace(find, replaceWith);
         }
-        console.log({convertedUrl})
         return convertedUrl;
     }
     return (

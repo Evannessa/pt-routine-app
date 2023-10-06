@@ -8,6 +8,8 @@ const StyledNavLink = styled(NavLink)`
     border-radius: 10px;
     overflow: hidden;
     /* aspect-ratio: 1/1; */
+    display: inline-flex;
+   
  
     box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
     color: ${(props) => props.themeColor1 || "white"};
@@ -24,12 +26,17 @@ const StyledNavLink = styled(NavLink)`
     img{
         max-width: 100%;
         object-fit: cover;
+        max-height: 100%;
+        object-position: center;
     }
     > div{
         max-height: 100%;
         max-width: 100%;
         /* padding: 1rem; */
         display: grid;
+        grid-template-rows: 100%;
+        grid-template-columns: 100%;
+        justify-items: center;
     }
     section{
         padding: 1rem;

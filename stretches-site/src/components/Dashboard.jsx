@@ -7,11 +7,6 @@ import MediaEmbedHandler from "./MediaEmbedHandler";
 import styled, {css} from "styled-components";
 import { ButtonWithIcon } from "./styled-components/Buttons.Styled";
 import { requests } from "../helpers/requests";
-import TimerSets from "./TimerSets";
-import ActionModal from "./ActionModal";
-import TimerFactory from "./TimerFactory";
-import ActiveTimerDisplay from "./ActiveTimerDisplay";
-import TimerGallery from "./TimerGallery";
 import { useGlobalContext } from "../context";
 import TimerSetCard from "./TimerSetCard";
 import { mockTimerSets, mockEmbedUrls } from "../mockData/MockTimers";
@@ -99,7 +94,6 @@ const DashboardWrapper = styled.section`
         flex-direction: column;
         height: 100%;
         overflow-y: scroll;
-        backdrop-filter: blur(20px);
         max-height: 100vh;
 
         `
@@ -111,7 +105,8 @@ function Dashboard(props) {
     const saved = true;
     const params = useParams();
     const location = useLocation(); //location in url
-    const { user } = useGlobalContext();
+    const user = {role: ""}
+    // const { user } = useGlobalContext();
     const theme = useContext(ThemeContext)
     const inDisplayMode = location.pathname.includes("display") || location.pathname.includes("factory")
     // const { name, userId, role } = user;
@@ -121,7 +116,7 @@ function Dashboard(props) {
     const navigate = useNavigate();
     const [timerSets, setTimerSets] = useState();
     const [showEmbed, setShowEmbed] = useState(false)
-    const [embedUrls, setembedUrls] = useState(
+    const [embedUrls, setEmbedUrls] = useState(
         {
             spotifyEmbed: "",
             youtubeEmbed: ""
@@ -133,10 +128,10 @@ function Dashboard(props) {
         // let storedData = localStorage.getItem("timerSets");
         if (storedData && storedData !== "undefined") {
             setTimerSets(JSON.parse(storedData.timerSets));
-            setembedUrls(JSON.parse(storedData.embedUrls))
+            setEmbedUrls(JSON.parse(storedData.embedUrls))
         } else {
             setTimerSets(mockTimerSets);
-            setembedUrls(mockEmbedUrls)
+            setEmbedUrls(mockEmbedUrls)
         }
     }, []);
 
@@ -165,6 +160,8 @@ function Dashboard(props) {
      * Create a new timer set
      */
     async function createNewSet() {
+
+        const user = {role: "admin"}
         if (user && user.role === "admin") {
             let options = {
                 method: "POST",
@@ -185,7 +182,7 @@ function Dashboard(props) {
         if (user && user.role === "admin") {
             let options = {
                 method: "GET",
-                pathsArray: ["factory", "/"],
+                pathsArray: ["factory"],
                 setStateCallback: updateTimerSets,
             };
             requests.axiosRequest(options);
@@ -193,9 +190,7 @@ function Dashboard(props) {
             console.log("Can't get sets -- not admin");
         }
     }
-    useEffect(() => {
-        console.log(location.pathname)
-    }, [location.pathname]);
+
     /**
      * get all of the timer sets
      */
@@ -212,7 +207,7 @@ function Dashboard(props) {
      */
     function setEmbeds(name, value, parentName){
         console.log({name, value})
-        setembedUrls({
+        setEmbedUrls({
                 ...embedUrls,
                 [name]: value
         })

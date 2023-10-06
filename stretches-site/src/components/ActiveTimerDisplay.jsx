@@ -140,7 +140,7 @@ const ActiveTimerSetContainer = styled.div`
             align-self: end;
             width: 100%;
             text-align: center;
-            background-color: #21212177;
+            background-color: hsla(323, 72.3%, 12.7%, 0.64);
             grid-row: 1/2;
             grid-column: 1/2;
             padding: 0.5em;
@@ -153,7 +153,8 @@ const ActiveTimerSetContainer = styled.div`
 export default function ActiveTimerDisplay() {
     const [timerSets, getTimerSets, saved, embedUrls] = useOutletContext();
 
-    const { user } = useGlobalContext();
+    // const { user } = useGlobalContext();
+    const user = {role: ""}
     const { theme, updateTheme } = React.useContext(ThemeContext);
     const { urlBase } = urls;
 
@@ -201,7 +202,7 @@ export default function ActiveTimerDisplay() {
      * Then use the "populateActiveTimerSet" callback
      */
     React.useEffect(() => {
-        if (user && user.admin) {
+        if (user && user.role=="admin") {
             const options = {
                 method: "GET",
                 pathsArray: ["display", params.setId],
@@ -215,7 +216,7 @@ export default function ActiveTimerDisplay() {
             }) 
             populateActiveTimerSet(currentSet);
         }
-    }, [params.setId, user, timerSets]);
+    }, [params.setId]);
 
     /**
      * callback that reacts to currentClock and timers
@@ -313,7 +314,7 @@ export default function ActiveTimerDisplay() {
             setCompleted(false);
             setTimers(initialState.current);
         } else if (action === "edit") {
-            navigate(`${urlBase}/factory/${id.current}`);
+            navigate(`${urlBase}/dashboard/factory/${id.current}`);
         }
     }
     return (
@@ -324,7 +325,7 @@ export default function ActiveTimerDisplay() {
                     <h1 className="activeSet__name">{timerSetName}</h1>
                     <TooltipWrapper>
                         <div>
-                            <Link to={`/factory/${params.setId}`}>
+                            <Link to={`/dashboard/factory/${params.setId}`}>
                                 <span className="material-icons">edit</span>
                             </Link>
                         </div>

@@ -44,7 +44,9 @@ export default function TimerGallery(props) {
     /* ------------------------------- React Hooks ------------------------------ */
     // #region States and hooks
 
-    const { user } = useGlobalContext();
+    // const { user } = useGlobalContext();
+
+    const user = {role: ""}
     let { timerSets, getTimerSets } = props;
     const { theme, updateTheme } = React.useContext(ThemeContext);
     const observer = React.useRef(); //intersection Observer
@@ -98,7 +100,7 @@ export default function TimerGallery(props) {
      */
     React.useEffect(() => {
         const getTimerSet = async () => {
-            if(user && user.admin){
+            if(user && user.role == "admin"){
                 let options = {
                     method: "GET",
                     pathsArray: ["factory", id],
