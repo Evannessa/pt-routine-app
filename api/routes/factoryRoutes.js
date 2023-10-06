@@ -18,7 +18,7 @@ router.route("/").get(getAllSets); //.patch(updateAllSets);
 router.route("/new").get(getBlankSet).post(createNewSet);
 router.route("/uploads").get(getAllUploads);
 router.route("/:id").get(getSingleSet).patch(updateSet).delete(deleteSet);
-router.route("/:id/uploads").post(uploadImage)
+router.route("/:id/uploads").get(getImage).post(uploadImage)
 // router.route("/").get(getAllTimers).post(createTimer);
 // router.route("/:id").get(getSingleTimer).patch(updateTimer).delete(deleteTimer);
 

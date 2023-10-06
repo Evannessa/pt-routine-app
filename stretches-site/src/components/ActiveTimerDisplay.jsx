@@ -151,10 +151,10 @@ const ActiveTimerSetContainer = styled.div`
 
 /* #endregion */
 export default function ActiveTimerDisplay() {
-    const [timerSets, getTimerSets, saved, embedUrls] = useOutletContext();
+    const [timerSets, getTimerSets, saved, embedUrls, user] = useOutletContext();
 
     // const { user } = useGlobalContext();
-    const user = {role: ""}
+    // const user = {role: "admin"}
     const { theme, updateTheme } = React.useContext(ThemeContext);
     const { urlBase } = urls;
 

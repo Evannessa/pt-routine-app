@@ -7,7 +7,7 @@ import styled from "styled-components";
 import { urls, combineUrlFragments } from "../helpers/requests";
 
 // #region Styled Components
-const StyledDropArea = styled(Container)`
+export const StyledDropArea = styled(Container)`
     border-radius: 20px;
     /* width: 50%; */
     /* margin: 2% auto; */
@@ -21,8 +21,30 @@ const StyledDropArea = styled(Container)`
     align-items: center;
     justify-content: center;
     border: 1px solid white;
-    /* box-shadow: inset 0px 2px 0px 2px #21212150; */
+    box-shadow: inset 0px 2px 0px 2px #21212150;
     /* border-bottom: 3px solid rgba(255, 255, 255, 0.342); */
+
+
+	img {
+		max-width: 100%;
+		max-height: 100%;
+	}
+
+
+	.dropForm {
+		background: transparent;
+
+		input[type="file"] {
+			width: 5rem;
+			min-height: 5rem;
+			flex: 1 0;
+			background-color: purple;
+		}
+	}
+
+	&.highlight {
+		background-color: rgba(255, 255, 255, 0.342);
+	}
 
     img {
         min-width: 4rem;
@@ -50,7 +72,7 @@ StyledDropArea.displayName = "StyledDropArea";
 // #endregion
 /* -------------------------------------------------------------------------- */
 function DropArea(props) {
-    const { urlBase, uploadsUrl, factoryRoute, uploadsRoute } = urls;
+    const { urlBase, urlBaseNoApi, uploadsUrl, factoryRoute, uploadsRoute } = urls;
     // const uploadsUrl = combineUrlFragments(urlBase, [factoryRoute, uploadsRoute]);
     /* ---------------------------- States and Hooks ---------------------------- */
     // #region States and hooks
@@ -185,8 +207,8 @@ function DropArea(props) {
                 className="slide__preview"
                 src={
                     props.slideImagePath && props.slideImagePath.length > 0
-                        // ? `${uploadsUrl}/${props.slideImagePath}`
-                        ? `${props.slideImagePath}`
+                        ? `${urlBaseNoApi}${props.slideImagePath}`
+                        // ? `${props.slideImagePath}`
                         : "/insert_photo_white_24dp.svg"
                 }
                 alt="preview"

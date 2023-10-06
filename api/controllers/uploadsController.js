@@ -3,7 +3,7 @@ const fs = require('fs')
 let mongoose = require("mongoose");
 
 const uploadImage = async (req, res) => {
-    console.log("Our files are", req.files);
+    // console.log("Our files are", req.files);
     const slideImage = req.files.image; //get the image data from the upload
     const imagePath = path.join(__dirname, "../public/uploads/" + `${slideImage.name}`);
     //get the path we want to move it to in tue public folder
@@ -21,6 +21,8 @@ const getImage = async (req, res) => {
     try {
         const slideImageName = req.imageName
         const folder = path.join(__dirname, "../public/uploads/")
+        const slideImage = req.files.image; //get the image data from the upload
+        const imagePath = path.join(__dirname, "../public/uploads/" + `${slideImage.name}`);
         fs.readdir(folder, (err, files) => {
             const imgFiles = files.filter((file) => {
                 const extensions = [".png", ".jpg", ".webp", ".jpeg", ".gif"]
@@ -33,6 +35,8 @@ const getImage = async (req, res) => {
 
         res.status(500).json({ msg: "Something went wrong" });
     }
+
+    return res.status(200).json({ image: { src: `/uploads/${slideImage.name}` } });
 
 
 }
