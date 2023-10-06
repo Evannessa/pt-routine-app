@@ -15,7 +15,7 @@ export const mockTimerSets = [
                     hours: 0,
                 },
                 label: "Bow Pose",
-                slideImagePath: "/uploads/Back/Cobra-Pose.webp",
+                slideImagePath: "/uploads/Back-Flexibility/Bow.webp",
                 description: "Bow Pose",
                 autostart: false,
                 isBreak: false,
@@ -144,9 +144,7 @@ export const mockTimerSets = [
                 isBreak: true,
                 isAutoBreak: false,
                 repeatNumber: 0,
-                _id: {
-                    $oid: "63d81e6cf164a6f75cf9ddf6",
-                },
+                _id: "child-pose",
             },
             {
                 time: {
@@ -160,9 +158,7 @@ export const mockTimerSets = [
                 isBreak: false,
                 isAutoBreak: false,
                 repeatNumber: 0,
-                _id: {
-                    $oid: "63d81e6cf164a6f75cf9ddf8",
-                },
+                _id: "cobra"
             },
             {
                 time: {
@@ -175,10 +171,8 @@ export const mockTimerSets = [
                 autostart: false,
                 isBreak: false,
                 isAutoBreak: false,
+                _id: "downward-dog",
                 repeatNumber: 0,
-                _id: {
-                    $oid: "63d81e6cf164a6f75cf9ddf8",
-                },
             },
             {
                 time: {
@@ -192,9 +186,7 @@ export const mockTimerSets = [
                 isBreak: false,
                 isAutoBreak: false,
                 repeatNumber: 0,
-                _id: {
-                    $oid: "63d81e6cf164a6f75cf9ddf8",
-                },
+                _id: "fish-pose"
             },
             {
                 time: {
@@ -208,9 +200,7 @@ export const mockTimerSets = [
                 isBreak: false,
                 isAutoBreak: false,
                 repeatNumber: 0,
-                _id: {
-                    $oid: "63d81e6cf164a6f75cf9ddf8",
-                },
+                _id: "monkey-pose"
             },
             {
                 time: {
@@ -224,9 +214,7 @@ export const mockTimerSets = [
                 isBreak: false,
                 isAutoBreak: false,
                 repeatNumber: 0,
-                _id: {
-                    $oid: "63d81e6cf164a6f75cf9ddf8",
-                },
+                _id: "mountain-pose"
             },
             {
                 time: {
@@ -240,9 +228,7 @@ export const mockTimerSets = [
                 isBreak: false,
                 isAutoBreak: false,
                 repeatNumber: 0,
-                _id: {
-                    $oid: "63d81e6cf164a6f75cf9ddf8",
-                },
+                _id: "pigeon-pose"
             },
             {
                 time: {
@@ -256,9 +242,7 @@ export const mockTimerSets = [
                 isBreak: false,
                 isAutoBreak: false,
                 repeatNumber: 0,
-                _id: {
-                    $oid: "63d81e6cf164a6f75cf9ddf8",
-                },
+                _id: "forward-pose"
             },
         ],
         youtubeLink: "",
@@ -276,14 +260,12 @@ export const mockTimerSets = [
                     minutes: 1,
                     hours: 0,
                 },
-                label: "New Timer",
+                label: "Pyramid Pose",
                 slideImagePath: "/uploads/Hamstring-Flexibility/Pyramid.webp",
                 autostart: false,
                 isBreak: false,
                 repeatNumber: 0,
-                _id: {
-                    $oid: "63d820d675111c3e9a6d2214",
-                },
+                _id: "63d820d675111c3e9a6d2214",
             },
             {
                 time: {
@@ -296,9 +278,7 @@ export const mockTimerSets = [
                 autostart: false,
                 isBreak: false,
                 repeatNumber: 0,
-                _id: {
-                    $oid: "63d820d675111c3e9a6d2216",
-                },
+                _id: "63d820d675111c3e9a6d2216",
             },
             {
                 time: {
@@ -311,9 +291,7 @@ export const mockTimerSets = [
                 autostart: false,
                 isBreak: false,
                 repeatNumber: 0,
-                _id: {
-                    $oid: "63d820d675111c3e9a6d2218",
-                },
+                _id: "63d820d675111c3e9a6d2218",
             },
             {
                 time: {
@@ -327,9 +305,7 @@ export const mockTimerSets = [
                 autostart: false,
                 isBreak: false,
                 repeatNumber: 0,
-                _id: {
-                    $oid: "63ddbb6e6b0b8efa92fb1314",
-                },
+                _id: "63ddbb6e6b0b8efa92fb1314"
             },
             {
                 time: {
@@ -343,57 +319,7 @@ export const mockTimerSets = [
                 autostart: false,
                 isBreak: false,
                 repeatNumber: 0,
-                _id: {
-                    $oid: "63ddbb6e6b0b8efa92fb1315",
-                },
-            },
-            {
-                time: {
-                    hours: 0,
-                    seconds: 0,
-                    minutes: 1,
-                },
-                label: "New Timer",
-                slideImagePath: "/uploads/Prone-T.png",
-                description: "",
-                autostart: false,
-                isBreak: false,
-                repeatNumber: 0,
-                _id: {
-                    $oid: "63ddbb976b0b8efa92fb13a2",
-                },
-            },
-            {
-                time: {
-                    hours: 0,
-                    seconds: 0,
-                    minutes: 2,
-                },
-                label: "New Timer",
-                slideImagePath: "/uploads/Foam Roller Thing.gif",
-                description: "2 minutes, hold up for 10",
-                autostart: false,
-                isBreak: false,
-                repeatNumber: 0,
-                _id: {
-                    $oid: "63ddc465975e3e1ff39b690f",
-                },
-            },
-            {
-                time: {
-                    hours: 0,
-                    seconds: 0,
-                    minutes: 2,
-                },
-                label: "New Timer",
-                slideImagePath: "/uploads/FloorAngelsOnRoll.gif",
-                description: "",
-                autostart: false,
-                isBreak: false,
-                repeatNumber: 0,
-                _id: {
-                    $oid: "63ddc465975e3e1ff39b6910",
-                },
+                _id: "63ddbb6e6b0b8efa92fb1315"
             },
         ],
         youtubeLink: "",

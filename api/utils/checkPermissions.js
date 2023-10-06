@@ -4,6 +4,7 @@ const chechPermissions = (requestUser, resourceUserId) => {
   // console.log(requestUser);
   // console.log(resourceUserId);
   // console.log(typeof resourceUserId);
+  return;
   if (requestUser.role === 'admin') return;
   if (requestUser.userId === resourceUserId.toString()) return;
   throw new CustomError.UnauthorizedError(

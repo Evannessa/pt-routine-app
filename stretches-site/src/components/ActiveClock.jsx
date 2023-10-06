@@ -1,5 +1,6 @@
 import React, { useRef } from "react";
 import styled from "styled-components";
+import repeatIcon from "../images/refresh-symbol.png"
 
 const ButtonWrapper = styled.div`
     display: flex;
@@ -18,6 +19,35 @@ const StyledTimer = styled.div`
     justify-content: space-around;
     height: 100%;
     padding: 1rem;
+    .timer__values{
+        position: relative;
+    }
+    .repeat-wrapper{
+        font-size: small;
+        position: absolute;
+        top: 100%;
+        left: 100%;
+        /* transform: translateY(-100%); */
+        display: grid;
+        grid-template-columns: 100%;
+        grid-template-rows: 100%;
+        align-items: center;
+        justify-items: center;
+        width: 1.5rem;
+        height: 1.5rem;
+        img, span{
+            grid-row: 1/2;
+            grid-column: 1/2;
+        }
+        img{
+            object-fit:contain;
+            width: 100%;
+            height: 100%;
+        }
+        span{
+            color:white;
+        }
+    }
 `;
 
 export default function ActiveClock(props) {
@@ -184,8 +214,13 @@ export default function ActiveClock(props) {
 
     return (
         <StyledTimer className="timer">
-            <p>Loops Remaining: {loopsRemaining}</p>
             <div className="timer__values">
+                {loopsRemaining > 0 && 
+                    <div className="repeat-wrapper">
+                        <span>{loopsRemaining}</span>
+                        <img src={repeatIcon}></img>
+                    </div>
+                }
                 {props.hours > 0 && (
                     <div className="time-value">
                         <h3 className="value">{String(parseInt(time.hours)).padStart(2, 0)}</h3>

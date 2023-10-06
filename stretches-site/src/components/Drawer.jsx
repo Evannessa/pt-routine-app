@@ -39,6 +39,7 @@ const StyledDrawer = styled.section`
     z-index: 1000;
     position: absolute;
     overflow-x: visible;
+    backdrop-filter: blur(20px);
     @media ${device.tablet}{
         width: ${props => props.position == "left" || props.position == "right" ? "30vw" : "100%"};
         height: ${props => props.position == "top" || props.position == "bottom" ? "20vh" : "100%"};
@@ -53,7 +54,7 @@ const StyledDrawer = styled.section`
 
 
 const Drawer = (props, {position="left"}) => {
-    const [isClosed, setIsClosed] = useState(false);
+    const [isClosed, setIsClosed] = useState(true);
 
     function setToggleClosed(){
         setIsClosed(!isClosed)

@@ -65,8 +65,10 @@ app.use(fileUpload()); //! HAD TO PUT THIS BEFORE THE APP.USE() ROUTER
 
 app.use("/api/factory", factoryRouter);
 app.use("/api/display", displayRouter);
-app.use("/api/auth", authRouter);
-app.use("/api/users", userRouter);
+
+// TODO: To be replaced when authentication is added
+// app.use("/api/auth", authRouter);
+// app.use("/api/users", userRouter);
 
 app.use(notFound);
 app.use(errorHandlerMiddleware);

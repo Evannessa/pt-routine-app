@@ -33,7 +33,9 @@ const AppProvider = ({ children }) => {
     };
 
     useEffect(() => {
-        fetchUser();
+        // TODO: To be repimplemented when we add in authentication
+        setIsLoading(false)
+        // fetchUser();
     }, []);
 
     return (

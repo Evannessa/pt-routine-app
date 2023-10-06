@@ -79,6 +79,7 @@ function Input(props) {
         parentName = "",
         name,
         id,
+        label,
         icon = null,
         hasLabel = false,
         extraProps = {},
@@ -86,6 +87,7 @@ function Input(props) {
         inputStyle,
         style,
     } = props;
+    label = hasLabel && label ? label : name
     const [isChecked, setIsChecked] = useState(checked);
 
     useEffect(() => {
@@ -123,7 +125,7 @@ function Input(props) {
                     {icon && <span className="material-icons">{icon}</span>}
                     {type === "radio"
                         ? tf.capitalizeFirstLetter(tf.camelCaseToWords(value))
-                        : tf.capitalizeFirstLetter(tf.camelCaseToWords(name))}
+                        : tf.capitalizeFirstLetter(tf.camelCaseToWords(label))}
                 </label>
             )}
             <span className="validation warning" style={{ position: "absolute", left: "110%", color: "red" }}>

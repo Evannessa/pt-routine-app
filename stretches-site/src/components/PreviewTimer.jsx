@@ -27,6 +27,8 @@ ExtraButtons.displayName = "ExtraButtons";
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 const StyledWrapper = styled(Container)`
     --padding-top: clamp(1rem, 1vw + 1rem, 2rem);
+
+
     display: ${(props) => (props.showModal ? "flex" : "none")};
     justify-content: center;
     align-items: center;
@@ -56,19 +58,29 @@ const StyledWrapper = styled(Container)`
     @media ${device.tablet} {
         background-color: transparent;
         position: relative;
-        display: flex;
+        /* display: flex; */
         height: 100%;
-
+        display: grid;
+        grid-template-columns: 100%;
+        grid-template-rows: 1fr 60%;
+        align-items: center;
+        justify-items: center;
         h3 {
+            grid-row: 1/2;
             display: flex;
             justify-content: center;
             align-items: center;
             gap: 0.25rem;
             color: white;
+            align-self:end;
+            margin-bottom: 1rem;
             ${IconButton} {
                 vertical-align: middle;
                 max-width: 2rem;
             }
+        }
+        .textarea{
+            height: 80%;
         }
     }
 `;

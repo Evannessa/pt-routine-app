@@ -177,7 +177,7 @@ export default function GalleryHeader(props) {
                         type="text"
                         name="label"
                         id="label"
-                        label="Name"
+                        label="Routine Name"
                         value={formData && formData.label ? formData.label : "New Timer Set"}
                         setStateFunction={updateFormData}
                         hasLabel={true}

@@ -8,15 +8,17 @@
 	// border: 1px dotted white;
 
 	&__values {
-		font-size: 3rem;
+		font-size: 5rem;
 		color: white;
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		
 
 		&.time-value {
 			justify-content: stretch;
 			align-items: stretch;
+			font-size: 4.25rem;
 		}
 	}
 
