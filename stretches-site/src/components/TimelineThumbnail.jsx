@@ -104,10 +104,15 @@ const ThumbnailContainer = styled.div`
         pointer-events: ${(props) => (props.hover ? "auto" : "none")};
     }
     ${(props) =>
-        props.viewed &&
+        props.viewed ?
         css`
             .time-wrapper {
                 background-color: white;
+                color: var(--clr-primary-pink);
+            }
+        ` : css`
+            .time-wrapper{
+                /* color: hsl(270.2, 87.1%, 33.5%);// var(--clr-primary-pink-darker); */
             }
         `};
     ${(props) =>

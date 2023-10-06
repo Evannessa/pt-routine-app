@@ -275,12 +275,11 @@ function Dashboard(props) {
 
     return (
         <div>
-
+            <ThemeProvider theme={theme}>
             <ConditionalWrapper condition={inDisplayMode} wrapper={children=> <Drawer>{children}</Drawer>}>
                 <DashboardWrapper
                     displayMode={inDisplayMode}
                 >
-                    <ThemeProvider theme={theme}>
                         <DashboardHeader >
                             <h1>At-Home Exercise App</h1>
                             <ButtonWrapper  displayMode={inDisplayMode}>
@@ -305,7 +304,6 @@ function Dashboard(props) {
                                 </ButtonWithIcon>
                             </InputButtonGroup>}
                         </DashboardHeader>
-                    </ThemeProvider>
                         <DashboardGrid
                             displayMode={inDisplayMode}>
                                 {timerSetCards}
@@ -313,6 +311,7 @@ function Dashboard(props) {
                     {/* {location.pathname.includes("display") && <SidebarToggle></SidebarToggle>} */}
                 </DashboardWrapper>
             </ConditionalWrapper>
+            </ThemeProvider>
             <Outlet context={[timerSets, getTimerSets, saved, embedUrls, user]} />
         </div>
     );

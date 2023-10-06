@@ -6,7 +6,7 @@ import { BackgroundWrapper } from "./styled-components/BackgroundWrapper.styled"
 import styled from "styled-components";
 import { Container } from "./styled-components/layout.styled";
 import { IconButton, CircleIconButton, ButtonWithIcon } from "./styled-components/Buttons.Styled";
-import Input from "./input/Input";
+import Input, {StyledInputWrapper} from "./input/Input";
 import { device } from "./styled-components/devices";
 import UploadModal from "./UploadModal";
 
@@ -80,8 +80,22 @@ const StyledWrapper = styled(Container)`
                 max-width: 2rem;
             }
         }
-        .textarea, ${StyledDropArea}{
+
+        
+        .task-description, ${StyledDropArea}{
             height: 80%;
+	        /* box-shadow: rgba(33, 33, 33, 0.314) 0px 2px 0px 2px inset, rgba(255, 255, 255, 0.342) 0 -2px 0 -2px inset; */
+            /* border-bottom: 3px solid rgba(255, 255, 255, 0.342);  */
+            input[type="text"],textarea{
+                border-radius: 20px;
+                border-width: 1px;
+            }
+        }
+
+        .task-description{
+            color: white;
+            border-radius: 20px;
+            border-width: 1px;
         }
     }
 `;
@@ -92,10 +106,16 @@ const BottomDrawer = styled(Container)`
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: white;
+    background-color: transparent;
     width: 100%;
     z-index: -4;
     height: 30%;
+    fieldset.chip-group{
+        ${StyledInputWrapper} label{
+            border-color: white;
+            color: white;
+        }
+    }
     ${ExtraButtons} {
         display: flex;
     }
@@ -316,8 +336,9 @@ export default function PreviewTimer(props) {
                                 close
                             </IconButton>
                         )}
-                        <h3>Enter Description</h3>
+                        <h3>Enter a Description</h3>
                         <Input
+                            className="task-description"
                             type="text"
                             name="description"
                             id={`${props.id}task`}

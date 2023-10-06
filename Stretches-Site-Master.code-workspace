@@ -69,6 +69,10 @@
             {
                 "filePath": "api\\public\\uploads",
                 "group": "Start Page Components"
+            },
+            {
+                "filePath": "stretches-site\\src\\images",
+                "group": "Start Page Components"
             }
         ],
         "favorites.groups": ["Default", "Start Page Components"],

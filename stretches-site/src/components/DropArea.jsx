@@ -5,7 +5,8 @@ import { useParams } from "react-router-dom";
 import { Container } from "./styled-components/layout.styled";
 import styled from "styled-components";
 import { urls, combineUrlFragments } from "../helpers/requests";
-
+import cannotLoad from "../images/cannot_load.jpg"
+import dragDropImage from "../images/drag_drop_image.webp"
 // #region Styled Components
 export const StyledDropArea = styled(Container)`
     border-radius: 20px;
@@ -20,14 +21,15 @@ export const StyledDropArea = styled(Container)`
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid white;
-    box-shadow: inset 0px 2px 0px 2px #21212150;
+    border: 1px dashed white;
+    /* box-shadow: inset 0px 2px 0px 2px #21212150; */
     /* border-bottom: 3px solid rgba(255, 255, 255, 0.342); */
 
 
 	img {
 		max-width: 100%;
 		max-height: 100%;
+        border-radius: 5px;
 	}
 
 
@@ -51,6 +53,8 @@ export const StyledDropArea = styled(Container)`
         min-height: 4rem;
         max-width: 100%;
         max-height: 100%;
+	    transform: rotate(15deg) scale(0.8);
+        box-shadow: 0px 2px 4px 2px #21212150;
     }
 
     .dropForm {
@@ -209,8 +213,12 @@ function DropArea(props) {
                     props.slideImagePath && props.slideImagePath.length > 0
                         ? `${urlBaseNoApi}${props.slideImagePath}`
                         // ? `${props.slideImagePath}`
-                        : "/insert_photo_white_24dp.svg"
+                        : {dragDropImage}
                 }
+                onError={({ currentTarget }) => {
+                    currentTarget.onerror = null; // prevents looping
+                    currentTarget.src= cannotLoad;
+                }}
                 alt="preview"
                 ref={previewRef}
             />

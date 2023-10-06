@@ -28,11 +28,13 @@ export const themes = {
         color1: "#fd6e2b",
         color2: "#f02e5f",
         gradient: "linear-gradient(#fd6e2b, #f02e5f)",
+        shadow: "2px 2px 3px hsla(0, 62%, 39.2%, 0.43)"
     },
     secondary: {
         color1: "#25C6DC",
         color2: "#514A9D",
         gradient: "linear-gradient(#25C6DC, #514A9D)",
+        shadow: "2px 2px 3px hsla(244, 62%, 39%, 0.43)"
     },
 };
 
