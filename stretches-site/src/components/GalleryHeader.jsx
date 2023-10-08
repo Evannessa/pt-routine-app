@@ -89,7 +89,7 @@ const StyledGalleryHeader = styled.div`
                     flex-direction: row;
                 }
                 * {
-                    background-color: ${(props) => props.theme.color1};
+                    background-color: ${(props) => props.theme.color2};
                     color: white;
                     border: none;
                     font-weight: bold !important;
@@ -103,12 +103,12 @@ const StyledGalleryHeader = styled.div`
             input[type="text"],
             input[type="number"] {
                 min-width: fit-content;
-                border-color: ${(props) => props.theme.color1} !important;
+                border-color: ${(props) => props.theme.color2} !important;
 
                 transition: background-color 0.25s linear;
             }
             label {
-                color: ${(props) => props.theme.color1};
+                color: ${(props) => props.theme.color2};
 
                 transition: color 0.25s linear;
             }

@@ -112,6 +112,7 @@ const ThumbnailContainer = styled.div`
             }
         ` : css`
             .time-wrapper{
+                color: var(--clr-clr1);
                 /* color: hsl(270.2, 87.1%, 33.5%);// var(--clr-primary-pink-darker); */
             }
         `};
@@ -199,7 +200,6 @@ const TimelineThumbnail = forwardRef(
         const [hover, setHover] = useState(false);
         const [isOn, setIsOn] = useState();
         const newRef = useRef();
-        console.log(slideImagePath);
 
         return (
             <ThumbnailContainer

@@ -31,6 +31,46 @@ export const StyledInputWrapper = styled.div`
                 bottom: 80%;
             `};
     }
+    ${props => props.inputStyle === "numberSpinner" && css`
+        border-radius: 999px;
+        /* height: 3rem; */
+        display: flex;
+        flex-direction: row;
+        width: 5rem;
+        justify-content: space-between;
+        /* aspect-ratio: 1/1; */
+            .number__prev, .number__next{
+                background-color: transparent;
+                border: unset;
+                appearance: unset;
+                color: white;
+                width: 1rem;
+                height: 1rem;
+            } 
+        }
+        border: 2px solid white;
+        color: white;
+        align-items: center;
+        padding: 0rem 0.5rem;
+        input{
+            clip: rect(0 0 0 0);
+            clip-path: inset(50%);
+            height: 1px;
+            overflow: hidden;
+            position: absolute;
+            white-space: nowrap;
+            width: 1px;
+        }
+        .number__prev{
+            order: 1;
+        }
+        .number-box{
+            order: 2;
+        }
+        .number__next{
+            order: 3;
+        }
+    `};
 `;
 StyledInputWrapper.displayName = "StyledInputWrapper";
 
@@ -58,7 +98,6 @@ export const StyledInput = styled.input.attrs((props) => ({
                 position: absolute;
             }
         `};
-
     ${(props) =>
         props.disabled &&
         css`
@@ -101,7 +140,15 @@ function Input(props) {
     // const InputTag = `${type === "textarea" ? "textarea" : "input"}`;
 
     // const WrapperTag = !wrapped ? "div" : Fragment;
-
+   function handleClick(event){
+        let target = event.currentTarget
+        let adjust = 1
+        if(target.id == "number__decrement"){
+            adjust = -1
+        }
+        let passValue = value + adjust
+        setStateFunction(name, passValue, parentName)
+    }
     function handleChange(event) {
         let { value, checked, type } = event.currentTarget;
         let passValue = type === "checkbox" ? checked : value;
@@ -124,6 +171,17 @@ function Input(props) {
                 onChange={handleChange}
                 style={{ ...style }}
             ></StyledInput>
+            {(type == "number" && !hasLabel) && <>
+                <div className="number-box">
+                    <span>{value}</span>
+                </div>
+                <button type="button" className="number__next" onClick={handleClick} id="number__increment">
+                  <span className="material-symbols-outlined">add</span>
+                </button>
+                <button type="button" className="number__prev" onClick={handleClick} id="number__decrement">
+                  <span className="material-symbols-outlined">remove</span>
+                </button>
+            </>}
             {hasLabel && (
                 <label htmlFor={type === "radio" ? value : id}>
                     {icon && <span className="material-icons">{icon}</span>}
