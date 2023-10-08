@@ -15,7 +15,9 @@ const mongoSanitize = require("express-mongo-sanitize");
 
 const createError = require("http-errors");
 const xss = require("xss-clean");
-const helmet = require("helmet");
+
+//TODO: Add this back inlate
+// const helmet = require("helmet");
 const rateLimiter = require("express-rate-limit");
 
 // const session = require('express-session')
@@ -47,8 +49,11 @@ const port = process.env.PORT || 3000;
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "pug");
 
-app.use(helmet());
 app.use(cors());
+// app.use(helmet({ crossOriginEmbedderPolicy: false}));
+
+
+
 app.use(xss());
 app.use(mongoSanitize());
 
@@ -56,15 +61,21 @@ app.use(cookieParser(process.env.JWT_SECRET));
 app.use(morgan("dev"));
 app.use(express.json());
 
-// Asynchronous
 
-app.use(express.static(path.join(__dirname, "public")));
-app.use(express.static(path.join(__dirname, "public/uploads")));
+
+// app.use('/uploads', express.static(path.join(__dirname, 'public')))
 
 app.use(fileUpload()); //! HAD TO PUT THIS BEFORE THE APP.USE() ROUTER
 
+app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "public/uploads")));
 app.use("/api/factory", factoryRouter);
 app.use("/api/display", displayRouter);
+app.use('/uploads', (_, res, next) => {
+    res.set('Cross-Origin-Resource-Policy', 'cross-origin');
+    next();
+  })
+
 
 // TODO: To be replaced when authentication is added
 // app.use("/api/auth", authRouter);

@@ -29,16 +29,19 @@ export const StyledInputWrapper = styled.div`
                 padding: 0 clamp(0.25rem, 0.5vw + 0.25rem, 0.5rem);
                 left: 5%;
                 bottom: 80%;
+                white-space:nowrap;
             `};
     }
     ${props => props.inputStyle === "numberSpinner" && css`
+        align-items: center;
         border-radius: 999px;
-        /* height: 3rem; */
+        border: 1px solid white;
+        color: white;
         display: flex;
         flex-direction: row;
-        width: 5rem;
         justify-content: space-between;
-        /* aspect-ratio: 1/1; */
+        padding: 0.5em;
+        width: 6rem;
             .number__prev, .number__next{
                 background-color: transparent;
                 border: unset;
@@ -48,10 +51,7 @@ export const StyledInputWrapper = styled.div`
                 height: 1rem;
             } 
         }
-        border: 2px solid white;
-        color: white;
-        align-items: center;
-        padding: 0rem 0.5rem;
+      
         input{
             clip: rect(0 0 0 0);
             clip-path: inset(50%);
@@ -61,16 +61,77 @@ export const StyledInputWrapper = styled.div`
             white-space: nowrap;
             width: 1px;
         }
-        .number__prev{
-            order: 1;
+        .number{
+            &__prev{
+                order: 1;
+            }
+            &-box{
+                order: 2;
+            }
+            &__next{
+                order: 3;
+            }
         }
-        .number-box{
-            order: 2;
-        }
-        .number__next{
-            order: 3;
+        label{
+            white-space: nowrap;
+            font-size: small;
+            opacity: 70%;
+            margin-top: 0.45em;
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translate(-50%);
         }
     `};
+    
+	input[type="radio"],
+	input[type="checkbox"] {
+		display: none;
+		position: absolute;
+		overflow: hidden;
+		clip: rect(0 0 0 0);
+		height: 1px;
+		width: 1px;
+		margin: -1px;
+		padding: 0;
+		border: 0;
+
+		&+label {
+			background-color: transparent;
+			border: 1px solid white;
+			padding: 0.5em 1em;
+			text-align: center;
+			border-radius: 9999px;
+			z-index: 10;
+			display: inline-block;
+			vertical-align: middle;
+			display: flex;
+			align-items: center;
+			gap: 0.45rem;
+
+			&:hover {
+				cursor: pointer;
+			}
+
+
+		}
+
+		&:checked {
+			&+label {
+				background-color: hsla(0, 0%, 100%, 0.53);
+				color: hsl(343.4, 79.9%, 29.2%);
+				font-weight: bold;
+				// color: var(--clr-primary-pink)
+			}
+		}
+	}
+
+	.chip.chip-radio {
+		position: relative;
+	}
+
+
+
 `;
 StyledInputWrapper.displayName = "StyledInputWrapper";
 
@@ -83,6 +144,7 @@ export const StyledInput = styled.input.attrs((props) => ({
     ${(props) =>
         props.inputStyle === "chip" &&
         css`
+
             & + label {
                 background-color: ${(props) => (props.checked ? "cornflowerblue" : "transparent")};
                 color: ${(props) => (props.checked ? "white" : "cornflowerblue")};
@@ -129,6 +191,7 @@ function Input(props) {
         checked,
         inputStyle,
         style,
+        tooltip
     } = props;
     label = hasLabel && label ? label : name
     const [isChecked, setIsChecked] = useState(checked);
@@ -142,9 +205,9 @@ function Input(props) {
     // const WrapperTag = !wrapped ? "div" : Fragment;
    function handleClick(event){
         let target = event.currentTarget
-        let adjust = 1
+        let adjust = event.ctrlKey ? 10 : 1
         if(target.id == "number__decrement"){
-            adjust = -1
+            adjust *= -1 
         }
         let passValue = value + adjust
         setStateFunction(name, passValue, parentName)
@@ -155,7 +218,7 @@ function Input(props) {
         setStateFunction(name, passValue, parentName);
     }
     return (
-        <StyledInputWrapper inputStyle={inputStyle} style={{ ...style }} className={className}>
+        <StyledInputWrapper inputStyle={inputStyle} style={{ ...style }} className={className} title={tooltip}>
             <StyledInput
                 as={type === "textarea" ? "textarea" : "input"}
                 className="input-label-overlay"
@@ -170,8 +233,9 @@ function Input(props) {
                 disabled={props.disabled}
                 onChange={handleChange}
                 style={{ ...style }}
+                title={tooltip}
             ></StyledInput>
-            {(type == "number" && !hasLabel) && <>
+            {(type == "number" && inputStyle == "numberSpinner") && <>
                 <div className="number-box">
                     <span>{value}</span>
                 </div>

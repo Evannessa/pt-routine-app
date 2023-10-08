@@ -3,7 +3,8 @@ import React, { useEffect, useState } from "react";
 import { requests, urls } from "../helpers/requests";
 import styled from "styled-components";
 import { StyledModal } from "./styled-components/modal.styled";
-const { urlBase, uploadsUrl } = urls;
+import { ButtonWithIcon } from "./styled-components/Buttons.Styled";
+const { urlBase, urlBaseNoApi, uploadsUrl } = urls;
 
 const StyledImgThumbnail = styled.img`
     max-width: 4rem;
@@ -55,6 +56,7 @@ function UploadModal(props) {
         requests.axiosRequest(options);
     }, []);
 
+
     function selectImage(event) {
         const src = event.currentTarget.getAttribute("src");
         const baseName = "/uploads/" + src.split("/").pop();
@@ -64,10 +66,23 @@ function UploadModal(props) {
     }
 
     const imageElements = imagePaths
-        ? imagePaths.map((str) => <StyledImgThumbnail key={nanoid()} onClick={selectImage} src={str} alt={str} />)
+        ? imagePaths.map((str) => <StyledImgThumbnail 
+            key={nanoid()} 
+            onClick={selectImage} 
+            alt={str} 
+            src={`${urlBaseNoApi}/uploads${str}`} />)
         : [];
 
-    return <StyledModal>{imagePaths && <ImageList>{imageElements}</ImageList>}</StyledModal>;
+    return <StyledModal>
+                    <ButtonWithIcon
+                                color="slategray"
+                                onClick={() => {
+                                    props.closeCallback();
+                                }}
+                                icon="close"
+                            >
+                            </ButtonWithIcon>
+            {imagePaths && <ImageList>{imageElements}</ImageList>}</StyledModal>;
 }
 
 export default UploadModal;

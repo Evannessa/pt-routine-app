@@ -219,9 +219,11 @@ function DropArea(props) {
                     currentTarget.onerror = null; // prevents looping
                     currentTarget.src= cannotLoad;
                 }}
+                crossOrigin="true"
                 alt="preview"
                 ref={previewRef}
             />
+
         </StyledDropArea>
     );
 }
