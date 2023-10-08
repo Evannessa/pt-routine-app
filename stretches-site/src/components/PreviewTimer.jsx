@@ -1,4 +1,5 @@
 import React from "react";
+import InputNumber from "./InputNumber";
 import TimeValue from "./TimeValue";
 import DropArea, { StyledDropArea } from "./DropArea";
 import { useParams } from "react-router-dom";
@@ -18,7 +19,7 @@ const ExtraButtons = styled(Container)`
     align-items: center;
     gap: 1rem;
     justify-content: center;
-    background-color: white;
+    background-color: transparent;
     width: 60%;
     padding: 0;
 `;
@@ -355,7 +356,7 @@ export default function PreviewTimer(props) {
                         <ButtonWithIcon
                             color="white"
                             type="circle"
-                            bgColor="cornflowerblue"
+                            bgColor="transparent"
                             icon="image"
                             onClick={() => {
                                 setShowDropModal((prevState) => !prevState);
@@ -365,7 +366,7 @@ export default function PreviewTimer(props) {
                         <ButtonWithIcon
                             color="white"
                             type="circle"
-                            bgColor="cornflowerblue"
+                            bgColor="transparent"
                             icon="edit_note"
                             onClick={() => {
                                 setShowTextModal((prevState) => !prevState);
@@ -408,17 +409,17 @@ export default function PreviewTimer(props) {
                                 hasLabel={true}
                                 inputStyle="chip"
                             ></Input>
+                            {/* <InputNumber value={parseInt(props.repeatNumber) || 0}></InputNumber> */}
                             <Input
                                 type="number"
                                 name="repeatNumber"
                                 id={`${props.id}repeatNumber`}
                                 value={parseInt(props.repeatNumber) || 0}
                                 setStateFunction={updateTimerData}
-                                hasLabel={true}
-                                inputStyle="floatingLabel"
+                                hasLabel={false}
+                                inputStyle="numberSpinner"
                                 style={{
-                                    borderColor: "cornflowerblue",
-                                    color: "cornflowerblue",
+                                    color: "white",
                                 }}
                             ></Input>
                         </fieldset>
