@@ -28,7 +28,7 @@ const AppProvider = ({ children }) => {
             await axios.delete('/api/auth/logout');
             removeUser();
         } catch (error) {
-            console.log(error);
+            console.log("There was an authorization error");
         }
     };
 

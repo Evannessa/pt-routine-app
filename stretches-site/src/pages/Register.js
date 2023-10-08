@@ -35,7 +35,7 @@ function Register() {
             setValues({ name: "", email: "", password: "" });
             showAlert({ text: data.msg, type: "success" });
         } catch (error) {
-            console.log(error);
+            // console.log(error);
             const { msg } = error.response.data;
             showAlert({ text: msg || "there was an error" });
         }
