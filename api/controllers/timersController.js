@@ -193,7 +193,7 @@ const createNewSet = async (req, res) => {
         console.log("Set is", { ...set })
         res.status(201).send({ document: set });
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         res.status(500).json({ msg: error });
     }
 };

@@ -161,7 +161,7 @@ export const requests = (function () {
                 setStateCallback(result.data.document);
             });
         } catch (error) {
-            console.log(error);
+            console.log("An error happened getting all timers");
         }
     }
 
@@ -180,7 +180,7 @@ export const requests = (function () {
                 responseData = result.data.link;
             });
         } catch (error) {
-            console.log(error);
+            console.log("An error happened while creating an object");
         } finally {
             setStateCallback(responseData);
         }
@@ -205,7 +205,7 @@ export const requests = (function () {
                     setStateCallback(response.data[propertyName])
                 );
         } catch (error) {
-            console.log(error);
+            console.log("An error happened while updating an object");
         }
     }
 
@@ -224,7 +224,7 @@ export const requests = (function () {
                 );
             });
         } catch (error) {
-            console.log(error);
+            console.log("An error happned while deleting an object");
         }
     }
 
@@ -263,7 +263,7 @@ export const requests = (function () {
                 console.log(response);
             });
         } catch (error) {
-            console.log(error);
+            console.log("An error happened while creating multiple objects");
         }
     }
     /**

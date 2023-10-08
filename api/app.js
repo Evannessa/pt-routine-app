@@ -98,7 +98,8 @@ const start = async () => {
             //
         });
     } catch (error) {
-        console.log(error);
+        console.error("There was an error")
+        // console.log(error);
     }
 };
 start();

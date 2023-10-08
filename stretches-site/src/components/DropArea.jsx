@@ -116,9 +116,9 @@ function DropArea(props) {
             props.updateTimerData("slideImagePath", src);
         } catch (error) {
             imageValue = null;
-            console.log(error);
+            console.log("An error happened while uploading an image");
         }
-        previewRef.current.src = `${uploadsUrl}/${imageValue}`;
+        previewRef.current.src = `${uploadsUrl}/uploads${imageValue}`;
     }
 
     function handlePaste(event) {

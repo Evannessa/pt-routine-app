@@ -7,7 +7,7 @@ import FloatingToolbar from "./FloatingToolbar";
 import { StyledToolbar } from "./FloatingToolbar";
 import cannotLoad from "../images/cannot_load.jpg"
 import Portal from "./Portal";
-const { urlBase } = urls;
+const { urlBase, urlBaseNoApi } = urls;
 
 /* #region Styled Components  */
 const grow = keyframes`
@@ -239,7 +239,7 @@ const TimelineThumbnail = forwardRef(
                         </Hoverable>
                         <section>
                             {/* <img src={urlBase + slideImagePath} alt="Exercise Slide" /> */}
-                            <img src={slideImagePath} alt="Exercise Slide" crossOrigin="true" onError={({ currentTarget }) => {
+                            <img src={`${urlBaseNoApi}${slideImagePath}`} alt="Exercise Slide" crossOrigin="true" onError={({ currentTarget }) => {
                     currentTarget.onerror = null; // prevents looping
                     currentTarget.src= cannotLoad;
                 }}/>

@@ -3,7 +3,7 @@ const { CustomAPIError } = require("../errors/custom-error");
 const { StatusCodes } = require("http-status-codes")
 
 const errorHandlerMiddleware = (error, req, res, next) => {
-    console.log(error)
+    // console.log(error)
 
     let customError = {
 
