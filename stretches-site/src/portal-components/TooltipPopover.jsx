@@ -48,7 +48,7 @@ export function TooltipWrapper({ children, toggleAction = "hover", _actionElemen
     };
     useEffect(() => {
         const rect = ref.current.getBoundingClientRect();
-        console.log(rect.x, rect.y);
+        // console.log(rect.x, rect.y);
         setCoords({
             left: rect.x + rect.width / 2,
             top: rect.y + window.scrollY + rect.height,
@@ -112,7 +112,7 @@ const StyledTooltipPopover = styled.div`
     }
 `;
 function TooltipPopover({ coords, updateTooltipCoords, children, setHoverTargets }) {
-    console.log(coords);
+    // console.log(coords);
     const updateCoords = debounce(() => {
         updateTooltipCoords();
         console.log("Delay");
@@ -144,7 +144,7 @@ function TooltipPopover({ coords, updateTooltipCoords, children, setHoverTargets
         zIndex: 1000,
         transform: "translateX(-50%)",
     };
-    console.log(style);
+    // console.log(style);
     return (
         <StyledTooltipPopover style={style} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} onClick={onClick}>
             {children}

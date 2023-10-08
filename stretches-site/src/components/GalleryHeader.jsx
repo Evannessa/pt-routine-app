@@ -2,10 +2,11 @@ import React from "react";
 import styled, { css } from "styled-components";
 import { device } from "./styled-components/devices";
 import { Container } from "./styled-components/layout.styled";
-import Input from "./input/Input";
+import Input, {StyledInputWrapper} from "./input/Input";
 import * as Buttons from "./styled-components/Buttons.Styled";
 import { ButtonWithIcon } from "./styled-components/Buttons.Styled";
 import Select from "./input/Select";
+// import { StyledInputWrapper } from "./input/Input";
 const ButtonWrapper = styled.div`
     display: flex;
     justify-content: space-evenly;
@@ -53,13 +54,14 @@ const StyledGalleryHeader = styled.div`
         padding: clamp(1rem, 1rem + 1vh, 2rem);
         /* margin-bottom: 2rem; */
         background-color: white;
+
         box-shadow: 0px 3px 8px 5px rgba(0, 0, 0, 0.05);
 
         // the inner grid container for the content
         > ${Container} {
             display: grid;
             justify-content: stretch;
-            align-items: stretch;
+            align-items: center;
             align-content: stretch;
             grid-template-columns: 1fr 1fr;
             grid-template-rows: 1fr 1fr;
@@ -71,6 +73,9 @@ const StyledGalleryHeader = styled.div`
             div:nth-child(2) {
                 grid-row: 2/3;
                 grid-column: 1/2;
+            }
+            ${StyledInputWrapper}{
+                flex: 1;
             }
 
             @media ${device.tablet} {
@@ -88,13 +93,18 @@ const StyledGalleryHeader = styled.div`
                 @media ${device.tablet} {
                     flex-direction: row;
                 }
-                * {
+                button {
                     background-color: ${(props) => props.theme.color2};
                     color: white;
                     border: none;
                     font-weight: bold !important;
                     /* border-color: ${(props) => props.theme.color2}; */
                     transition: background-color 0.25s linear;
+                    aspect-ratio: 1/1;
+                    flex: 1;
+                    padding: unset;
+                    span{
+                    }
                 }
             }
             > .input-label-overlay {
@@ -117,7 +127,7 @@ const StyledGalleryHeader = styled.div`
     }
 
     //if our height is over 600 px, show full
-    @media (min-height: 600px) {
+    @media (min-height: 600px) and  (min-width: 600px) {
         .expand {
             display: none;
         }

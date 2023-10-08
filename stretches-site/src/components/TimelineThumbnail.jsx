@@ -5,6 +5,7 @@ import { urls } from "../helpers/requests";
 import { TooltipWrapper } from "../portal-components/TooltipPopover";
 import FloatingToolbar from "./FloatingToolbar";
 import { StyledToolbar } from "./FloatingToolbar";
+import cannotLoad from "../images/cannot_load.jpg"
 import Portal from "./Portal";
 const { urlBase } = urls;
 
@@ -92,6 +93,7 @@ const ThumbnailContainer = styled.div`
     border-radius: 12px;
     width: 4rem;
     height: 4rem;
+    min-width: 4rem;
     .time-wrapper {
         border-radius: 12px;
         width: 4rem;
@@ -237,7 +239,10 @@ const TimelineThumbnail = forwardRef(
                         </Hoverable>
                         <section>
                             {/* <img src={urlBase + slideImagePath} alt="Exercise Slide" /> */}
-                            <img src={slideImagePath} alt="Exercise Slide" />
+                            <img src={slideImagePath} alt="Exercise Slide" crossOrigin="true" onError={({ currentTarget }) => {
+                    currentTarget.onerror = null; // prevents looping
+                    currentTarget.src= cannotLoad;
+                }}/>
                             <p>{description}</p>
                             <FloatingToolbar actions={actions} timerId={dataKey} coords={coords}></FloatingToolbar>
                         </section>

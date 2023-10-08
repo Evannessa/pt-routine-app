@@ -512,53 +512,6 @@ input[type=number]:hover, input[type=number]:focus, input[type=text]:hover, inpu
   position: absolute;
 }
 
-.chip-group {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  margin: 1rem 0;
-}
-.chip-group input[type=radio],
-.chip-group input[type=checkbox] {
-  display: none;
-  position: absolute;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  height: 1px;
-  width: 1px;
-  margin: -1px;
-  padding: 0;
-  border: 0;
-}
-.chip-group input[type=radio] + label,
-.chip-group input[type=checkbox] + label {
-  background-color: transparent;
-  border: 1px solid cornflowerblue;
-  color: cornflowerblue;
-  padding: 0.5em 1em;
-  text-align: center;
-  border-radius: 9999px;
-  z-index: 10;
-  display: inline-block;
-  vertical-align: middle;
-  display: flex;
-  align-items: center;
-  gap: 0.45rem;
-}
-.chip-group input[type=radio] + label:hover,
-.chip-group input[type=checkbox] + label:hover {
-  cursor: pointer;
-}
-.chip-group input[type=radio]:checked + label,
-.chip-group input[type=checkbox]:checked + label {
-  background-color: cornflowerblue;
-  color: white;
-  font-weight: bold;
-}
-.chip-group .chip.chip-radio {
-  position: relative;
-}
-
 /**
 Form for setting settings of the group of timers
 */

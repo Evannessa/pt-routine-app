@@ -12,6 +12,7 @@ const {
 
 const { uploadImage, getAllUploads, getImage } = require("../controllers/uploadsController");
 
+
 // router.route("/").get(getAllSets).post(createNewSet);
 //NOTE - the order of these matters
 router.route("/").get(getAllSets); //.patch(updateAllSets);
