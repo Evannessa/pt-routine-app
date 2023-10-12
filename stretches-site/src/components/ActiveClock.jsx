@@ -33,8 +33,8 @@ const StyledTimer = styled.div`
         grid-template-rows: 100%;
         align-items: center;
         justify-items: center;
-        width: 1.5rem;
-        height: 1.5rem;
+        width: 2rem;
+        height: 2rem;
         img, span{
             grid-row: 1/2;
             grid-column: 1/2;
@@ -46,6 +46,7 @@ const StyledTimer = styled.div`
         }
         span{
             color:white;
+	        transform: translateY(0.1rem);
         }
     }
 `;
