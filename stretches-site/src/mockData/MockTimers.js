@@ -4,6 +4,153 @@ export const mockEmbedUrls = {
     spotifyEmbed: ""
 }
 export const mockTimerSets = [
+{
+  "_id": "any-stretch", 
+  "label": "PT Timer - Anywhere",
+  "timers": [
+    {
+      "time": {
+        "seconds": 30,
+        "minutes": 0,
+        "hours": 0
+      },
+      "label": "Upper Trap Stretch",
+      "slideImagePath": "/uploads/PT/upper-trap-stretch.jpg",
+      "description": "Upper trap stretch",
+      "autostart": false,
+      "isBreak": false,
+      "isAutoBreak": false,
+      "repeatNumber": 2,
+      "_id": "Upper Trap Stretch"
+    },
+    {
+      "time": {
+        "seconds": 30,
+        "minutes": 0,
+        "hours": 0
+      },
+      "label": "Levator Scapulae Stretch",
+      "slideImagePath": "/uploads/PT/levator-scapulae-stretch.jpg",
+      "autostart": true,
+      "isBreak": false,
+      "isAutoBreak": false,
+      "repeatNumber": 2,
+      "_id": "levator-scapulae"
+    },
+    {
+      "time": {
+        "seconds": 3,
+        "minutes": 0,
+        "hours": 0
+      },
+      "label": "Chin Tuck",
+      "slideImagePath": "/uploads/PT/chin-tuck.jpg",
+      "autostart": true,
+      "isBreak": false,
+      "isAutoBreak": false,
+      "repeatNumber": 20,
+      "_id": "chin-tuck"
+    },
+    {
+      "time": {
+        "hours": 0,
+        "seconds": 3,
+        "minutes": 0
+      },
+      "label": "Overhead Pulldown",
+      "slideImagePath": "/uploads/PT/overhead-pulldown.jpg",
+      "description": "",
+      "autostart": true,
+      "isBreak": false,
+      "isAutoBreak": false,
+      "repeatNumber": 20,
+      "_id": "overhead-pulldown"
+    },
+    {
+      "time": {
+        "hours": 0,
+        "seconds": 3,
+        "minutes": 0
+      },
+      "label": "Overhead Press",
+      "slideImagePath": "/uploads/PT/overhead-press.jpg",
+      "description": "overhead press, 20 times",
+      "autostart": true,
+      "isBreak": false,
+      "isAutoBreak": false,
+      "repeatNumber": 20,
+      "_id": "overhead-press"
+    },
+    {
+      "time": {
+        "hours": 0,
+        "seconds": 3,
+        "minutes": 0
+      },
+      "label": "Head Turn/Neck Rotation",
+      "slideImagePath": "/uploads/PT/neck-rotation.jpg",
+      "description": "head turn x20",
+      "autostart": true,
+      "isBreak": false,
+      "isAutoBreak": false,
+      "repeatNumber": 20,
+      "_id": "neck-rotation"
+    },
+    {
+      "time": {
+        "hours": 0,
+        "seconds": 3,
+        "minutes": 0
+      },
+      "label": "Neck Side Flexion",
+      "slideImagePath": "/uploads/PT/neck-side-flexion.jpg",
+      "description": "neck side flexion, x20",
+      "autostart": true,
+      "isBreak": false,
+      "isAutoBreak": false,
+      "repeatNumber": 30,
+      _id: "neck-flexion",
+    },
+    {
+      "time": {
+        "hours": 0,
+        "seconds": 3,
+        "minutes": 0
+      },
+      "label": "Shoulder rolls back",
+      "slideImagePath": "/uploads/PT/shoulder-rolls-back.jpg",
+      "description": "shoulder circles x20",
+      "autostart": true,
+      "isBreak": false,
+      "isAutoBreak": false,
+      "repeatNumber": 20,
+      _id: "shoulder-circles"
+    },
+    {
+      "time": {
+        "hours": 0,
+        "seconds": 3,
+        "minutes": 0
+      },
+      "label": "Shoulder rolls back",
+      "slideImagePath": "/uploads/PT/arm-shoulder-rotation.jpg",
+      "description": "arm circles x20",
+      "autostart": true,
+      "isBreak": false,
+      "isAutoBreak": false,
+      "repeatNumber": 20,
+      _id: "arm-circles"
+    }
+  ],
+  "youtubeLink": "https://youtube.com/playlist?list=PL6gFRhlwsm9yIBXVp5rlOzOcuuNrPU8Qb",
+  "spotifyLink": "",
+  "repeatNumber": 1,
+  "__v": 0
+}
+
+
+]
+export const _mockTimerSets = [
     {
         _id: "back-flex",
         label: "Back Flexibility",

@@ -255,10 +255,10 @@ export default function ActiveTimerDisplay() {
     //map all the images associated w/ each timer to the slide component
     let slideComponents = timers
         ? timers.map((timer) => {
-            // let prePath = "http://localhost:3001"
+            let prePath = "http://localhost:3000"
             return <Slide key={timer._id + "TimerSlide"} 
                 // image={Bow}/>
-                 image={`${timer.slideImagePath}`} />;
+                 image={`${prePath}${timer.slideImagePath}`} />;
               //   let path = timer.slideImagePath.split("/").pop();
               //   return <Slide key={timer._id + "TimerSlide"} image={`/${path}`} />;
               //   return <Slide key={timer._id + "TimerSlide"} image={`https://i.imgur.com/Zjk88Uz.jpg/`} />;
