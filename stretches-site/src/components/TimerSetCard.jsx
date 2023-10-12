@@ -56,6 +56,7 @@ const StyledNavLink = styled(NavLink)`
 function TimerSetCard({ timerSet, updateSets, timerSetStyle = "link", isMockData=false }) {
     const cardImagePath = timerSet.timers[0].slideImagePath;
     const cardImageLabel = timerSet.timers[0].label;
+    
 
     async function handleClick(event) {
         event.stopPropagation();
@@ -76,6 +77,7 @@ function TimerSetCard({ timerSet, updateSets, timerSetStyle = "link", isMockData
                     {timerSetStyle === "card" && <img src={cardImagePath} alt={cardImageLabel} />}
                     <section>
                         {timerSet.label ? <p>{timerSet.label}</p> : ""}
+                        {<p> - {timerSet.timers.length} Exercises</p>}
                         <div className="button-wrapper">
                             <button
                                 className="btn icon__btn"
