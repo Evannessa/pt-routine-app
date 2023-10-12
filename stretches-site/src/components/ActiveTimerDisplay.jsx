@@ -323,6 +323,9 @@ export default function ActiveTimerDisplay() {
                 {/* HEADER W/ TIMER NAME */}
                 <StyledHeader className="activeSet__header" theme={theme}>
                     <h1 className="activeSet__name">{timerSetName}</h1>
+                    <button className="button" onClick={handleClick} data-action="resetAll">
+                            <span className="material-icons">restart_alt</span>
+                    </button>
                     <TooltipWrapper>
                         <div>
                             <Link to={`/dashboard/factory/${params.setId}`}>

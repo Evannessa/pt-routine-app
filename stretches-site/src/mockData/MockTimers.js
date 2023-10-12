@@ -3,8 +3,7 @@ export const mockEmbedUrls = {
     youtubeEmbed: "https://www.youtube.com/watch?v=rN89z5LqFH8",
     spotifyEmbed: ""
 }
-export const mockTimerSets = [
-{
+const anywhereExercises = {
   "_id": "any-stretch", 
   "label": "PT Timer - Anywhere",
   "timers": [
@@ -114,6 +113,36 @@ export const mockTimerSets = [
     {
       "time": {
         "hours": 0,
+        "seconds": 4,
+        "minutes": 0
+      },
+      "label": "Bent over Rows",
+      "slideImagePath": "/uploads/PT/bent-over-row.jpg",
+      "description": "benter over rows x20",
+      "autostart": true,
+      "isBreak": false,
+      "isAutoBreak": false,
+      "repeatNumber": 20,
+      _id: "bent-over-rows"
+    },
+    {
+      "time": {
+        "hours": 0,
+        "seconds": 3,
+        "minutes": 0
+      },
+      "label": "Shoulder rolls back",
+      "slideImagePath": "/uploads/PT/arm-shoulder-rotation.jpg",
+      "description": "arm circles x20",
+      "autostart": true,
+      "isBreak": false,
+      "isAutoBreak": false,
+      "repeatNumber": 20,
+      _id: "arm-circles"
+    },
+    {
+      "time": {
+        "hours": 0,
         "seconds": 3,
         "minutes": 0
       },
@@ -140,16 +169,342 @@ export const mockTimerSets = [
       "isAutoBreak": false,
       "repeatNumber": 20,
       _id: "arm-circles"
-    }
+    },
+ 
   ],
-  "youtubeLink": "https://youtube.com/playlist?list=PL6gFRhlwsm9yIBXVp5rlOzOcuuNrPU8Qb",
+  "youtubeLink": "",
   "spotifyLink": "",
   "repeatNumber": 1,
   "__v": 0
 }
 
+const floorExercises = {
+  "_id": "floor-exercises", 
+  "label": "PT Timer - Floor",
+  "timers": [
+    {
+      "time": {
+        "seconds": 30,
+        "minutes": 0,
+        "hours": 0
+      },
+      "label": "Prone I",
+      "slideImagePath": "/uploads/PT/prone-i.jpg",
+      "description": "Prone Retraction Extension",
+      "autostart": true,
+      "isBreak": false,
+      "isAutoBreak": false,
+      "repeatNumber": 2,
+      "_id": "prone-i"
+    },
+   {
+      "time": {
+        "seconds": 30,
+        "minutes": 0,
+        "hours": 0
+      },
+      "label": "Prone Superman",
+      "slideImagePath": "/uploads/PT/prone_i_superman.jpg",
+      "description": "Prone Superman",
+      "autostart": true,
+      "isBreak": false,
+      "isAutoBreak": false,
+      "repeatNumber": 2,
+      "_id": "prone-superman"
+    },
+ {
+      "time": {
+        "seconds": 30,
+        "minutes": 0,
+        "hours": 0
+      },
+      "label": "Prone T",
+      "slideImagePath": "/uploads/PT/prone-t-raises.jpg",
+      "description": "Prone T Raises - Thumbs Up",
+      "autostart": true,
+      "isBreak": false,
+      "isAutoBreak": false,
+      "repeatNumber": 2,
+      "_id": "prone-t"
+    },
+    {
+      "time": {
+        "seconds": 30,
+        "minutes": 0,
+        "hours": 0
+      },
+      "label": "Firelog Pose",
+      "slideImagePath": "/uploads/PT/firelog-pose.jpg",
+      "description": "Firelog Pose",
+      "autostart": true,
+      "isBreak": false,
+      "isAutoBreak": false,
+      "repeatNumber": 2,
+      "_id": "prone-y"
+    },
+   {
+      "time": {
+        "seconds": 5,
+        "minutes": 0,
+        "hours": 0
+      },
+      "label": "Snow Angels",
+      "slideImagePath": "/uploads/PT/snow-angels.jpg",
+      "description": "Snow Angels",
+      "autostart": true,
+      "isBreak": false,
+      "isAutoBreak": false,
+      "repeatNumber": 20,
+      "_id": "snow-angels"
+    },
+   {
+      "time": {
+        "seconds": 2,
+        "minutes": 0,
+        "hours": 0
+      },
+      "label": "Laying Internal Shoulder Rotation",
+      "slideImagePath": "/uploads/PT/internal-shoulder-rotation.jpg",
+      "description": "Laying Internal Shouldr Rotation",
+      "autostart": true,
+      "isBreak": false,
+      "isAutoBreak": false,
+      "repeatNumber": 20,
+      "_id": "internal-shoulder-rot"
+    },
+   {
+      "time": {
+        "seconds": 2,
+        "minutes": 0,
+        "hours": 0
+      },
+      "label": "Laying External Shoulder Rotation",
+      "slideImagePath": "/uploads/PT/external-shoulder-rotation.jpg",
+      "description": "Laying External Shoulder Rotation",
+      "autostart": true,
+      "isBreak": false,
+      "isAutoBreak": false,
+      "repeatNumber": 20,
+      "_id": "external-shoulder-rot"
+    },
+    {
+      "time": {
+        "hours": 0,
+        "seconds": 0,
+        "minutes": 1
+      },
+      "label": "Thread the Needle",
+      "slideImagePath": "/uploads/PT/thread-the-needle.jpg",
+      "description": "thread the needle",
+      "autostart": true,
+      "isBreak": false,
+      "isAutoBreak": false,
+      "repeatNumber": 0,
+      _id: "thread-needle"
+    },
+    {
+      "time": {
+        "seconds": 10,
+        "minutes": 0,
+        "hours": 0
+      },
+      "label": "Cat Cow",
+      "slideImagePath": "/uploads/PT/cat_cow_2.jpg",
+      "description": "Cat Cow",
+      "autostart": true,
+      "isBreak": false,
+      "isAutoBreak": false,
+      "repeatNumber": 4,
+      "_id": "cat-cow"
+   },
+  {
+      "time": {
+        "seconds": 0,
+        "minutes": 1,
+        "hours": 0
+      },
+      "label": "Cat Cow",
+      "slideImagePath": "/uploads/PT/cat_cow_2.jpg",
+      "description": "Cat Cow",
+      "autostart": true,
+      "isBreak": false,
+      "isAutoBreak": false,
+      "repeatNumber": 2,
+      "_id": "cat-cow"
+    }
+] , 
+"youtubeLink": "",
+  "spotifyLink": "",
+  "repeatNumber": 1,
+  "__v": 0  
+}
 
+const seatedExercises = {
+  "_id": "seated-exercises", 
+  "label": "PT Timer - Seated",
+  "timers": [
+    {
+      "time": {
+        "seconds": 30,
+        "minutes": 0,
+        "hours": 0
+      },
+      "label": "Prone I",
+      "slideImagePath": "/uploads/PT/prone-i.jpg",
+      "description": "Prone Retraction Extension",
+      "autostart": true,
+      "isBreak": false,
+      "isAutoBreak": false,
+      "repeatNumber": 2,
+      "_id": "prone-i"
+    },
+   {
+      "time": {
+        "seconds": 30,
+        "minutes": 0,
+        "hours": 0
+      },
+      "label": "Prone Superman",
+      "slideImagePath": "/uploads/PT/prone_i_superman.jpg",
+      "description": "Prone Superman",
+      "autostart": true,
+      "isBreak": false,
+      "isAutoBreak": false,
+      "repeatNumber": 2,
+      "_id": "prone-superman"
+    },
+ {
+      "time": {
+        "seconds": 30,
+        "minutes": 0,
+        "hours": 0
+      },
+      "label": "Prone T",
+      "slideImagePath": "/uploads/PT/prone-t-raises.jpg",
+      "description": "Prone T Raises - Thumbs Up",
+      "autostart": true,
+      "isBreak": false,
+      "isAutoBreak": false,
+      "repeatNumber": 2,
+      "_id": "prone-t"
+    },
+    {
+      "time": {
+        "seconds": 30,
+        "minutes": 0,
+        "hours": 0
+      },
+      "label": "Prone Y",
+      "slideImagePath": "/uploads/PT/prone-y.jpg",
+      "description": "Prone Y",
+      "autostart": true,
+      "isBreak": false,
+      "isAutoBreak": false,
+      "repeatNumber": 2,
+      "_id": "prone-y"
+    },
+   {
+      "time": {
+        "seconds": 5,
+        "minutes": 0,
+        "hours": 0
+      },
+      "label": "Snow Angels",
+      "slideImagePath": "/uploads/PT/snow-angels.jpg",
+      "description": "Snow Angels",
+      "autostart": true,
+      "isBreak": false,
+      "isAutoBreak": false,
+      "repeatNumber": 20,
+      "_id": "snow-angels"
+    },
+    {
+      "time": {
+        "seconds": 0,
+        "minutes": 1,
+        "hours": 0
+      },
+      "label": "Cat Cow",
+      "slideImagePath": "/uploads/PT/cat_cow_2.jpg",
+      "description": "Cat Cow",
+      "autostart": true,
+      "isBreak": false,
+      "isAutoBreak": false,
+      "repeatNumber": 2,
+      "_id": "cat-cow"
+    }
+] , 
+"youtubeLink": "",
+  "spotifyLink": "",
+  "repeatNumber": 1,
+  "__v": 0  
+
+}
+
+const wallExercises = {
+  "_id": "wall-exercises", 
+  "label": "PT Timer - Wall",
+  "timers": [
+    {
+    "time": {
+        "seconds": 5,
+        "minutes": 0,
+        "hours": 0
+      },
+      "label": "Wall Pushups",
+      "slideImagePath": "/uploads/PT/wall-pushups.jpg",
+      "description": "Wall pushups",
+      "autostart": true,
+      "isBreak": false,
+      "isAutoBreak": false,
+      "repeatNumber": 20,
+      "_id": "wall-push"
+    },
+    {
+    "time": {
+        "seconds": 30,
+        "minutes": 0,
+        "hours": 0
+      },
+      "label": "Wall Chest Stretch",
+      "slideImagePath": "/uploads/PT/wall-chest-stretch.jpg",
+      "description": "Wall Chest Stretch",
+      "autostart": true,
+      "isBreak": false,
+      "isAutoBreak": false,
+      "repeatNumber": 2,
+      "_id": "wall-chest-stretch"
+    },
+ {
+    "time": {
+        "seconds": 1,
+        "minutes": 0,
+        "hours": 0
+      },
+      "label": "Resistance Band Rows",
+      "slideImagePath": "/uploads/PT/resistance-band-rows.jpg",
+      "description": "Resistance Band Rows",
+      "autostart": true,
+      "isBreak": false,
+      "isAutoBreak": false,
+      "repeatNumber": 25,
+      "_id": "resistance-band-rows"
+    },
+    ],
+    "youtubeLink": "",
+  "spotifyLink": "",
+  "repeatNumber": 1,
+  "__v": 0  
+}
+
+export const mockTimerSets = [
+    anywhereExercises,
+    floorExercises,
+    wallExercises
 ]
+
+
+
 export const _mockTimerSets = [
     {
         _id: "back-flex",
