@@ -10,6 +10,7 @@ import { IconButton, CircleIconButton, ButtonWithIcon } from "./styled-component
 import Input, {StyledInputWrapper} from "./input/Input";
 import { device } from "./styled-components/devices";
 import UploadModal from "./UploadModal";
+import TimeValueGroup from "./TimeValueGroup";
 
 /* ---------------------------- Styled Components --------------------------- */
 // #region Styled Components
@@ -292,6 +293,7 @@ export default function PreviewTimer(props) {
             value = parseInt(value);
         }
         let updateObject = { [property]: value };
+
         props.updateTimerData(updateObject, props.id);
     }
 
@@ -348,13 +350,14 @@ export default function PreviewTimer(props) {
                             />
                         )}
                     </StyledWrapper>
-                    <div className="value-wrapper">
+                    <TimeValueGroup time={props.time} updateTimerData={updateTimerData}></TimeValueGroup>
+                    {/* <div className="value-wrapper">
                         <TimeValue value={props.time.hours} unit={"hours"} updateValue={updateValue}></TimeValue>
                         <span className="timer__separator">:</span>
                         <TimeValue value={props.time.minutes} unit={"minutes"} updateValue={updateValue}></TimeValue>
                         <span className="timer__separator">:</span>
                         <TimeValue value={props.time.seconds} unit={"seconds"} updateValue={updateValue}></TimeValue>
-                    </div>
+                    </div> */}
 
                     {/* only show drop area if we've saved the timer */}
                     <StyledWrapper showModal={showTextModal}>

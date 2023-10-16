@@ -105,7 +105,7 @@ function Dashboard(props) {
     const saved = true;
     const params = useParams();
     const location = useLocation(); //location in url
-    const user = {role: ""}
+    const user = {role: "admin"}
     // const { user } = useGlobalContext();
     const theme = useContext(ThemeContext)
     const inDisplayMode = location.pathname.includes("display") || location.pathname.includes("factory")
