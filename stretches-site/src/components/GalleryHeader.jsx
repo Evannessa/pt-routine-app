@@ -146,14 +146,17 @@ export default function GalleryHeader(props) {
         startTimer: {
             icon: "play_circle",
             action: "start-timer",
+            tooltip: "Start the Routine"
         },
         addSpotifyLink: {
             icon: "music_note",
             action: "add-spotify-link",
+            tooltip: "Add a link to a Spotify playlist"
         },
         addYoutubeLink: {
             icon: "youtube_activity",
             action: "add-youtube-link",
+            tooltip: "Add a link to a YouTube video or playlist"
         },
     };
 
@@ -167,6 +170,7 @@ export default function GalleryHeader(props) {
                 onClick={handleClick}
                 data-action={data.action}
                 icon={data.icon}
+                title={data.tooltip}
             ></ButtonWithIcon>
         );
     }
