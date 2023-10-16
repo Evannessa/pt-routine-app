@@ -132,21 +132,6 @@ const anywhereExercises = {
         "minutes": 0
       },
       "label": "Shoulder rolls back",
-      "slideImagePath": "/uploads/PT/arm-shoulder-rotation.jpg",
-      "description": "arm circles x20",
-      "autostart": true,
-      "isBreak": false,
-      "isAutoBreak": false,
-      "repeatNumber": 20,
-      _id: "arm-circles"
-    },
-    {
-      "time": {
-        "hours": 0,
-        "seconds": 3,
-        "minutes": 0
-      },
-      "label": "Shoulder rolls back",
       "slideImagePath": "/uploads/PT/shoulder-rolls-back.jpg",
       "description": "shoulder circles x20",
       "autostart": true,
@@ -161,7 +146,7 @@ const anywhereExercises = {
         "seconds": 3,
         "minutes": 0
       },
-      "label": "Shoulder rolls back",
+      "label": "Arm Circles",
       "slideImagePath": "/uploads/PT/arm-shoulder-rotation.jpg",
       "description": "arm circles x20",
       "autostart": true,

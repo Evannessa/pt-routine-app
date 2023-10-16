@@ -369,6 +369,7 @@ export default function TimerGallery(props) {
                       time={timer.time}
                       autostart={timer.autostart}
                       description={timer.description}
+                      label={timer.label}
                       updateTimerData={updateSpecificTimer}
                       slideImagePath={timer.slideImagePath}
                       repeatNumber={timer.repeatNumber}

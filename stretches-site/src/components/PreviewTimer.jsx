@@ -62,6 +62,8 @@ const StyledWrapper = styled(Container)`
         }
     }
     @media ${device.tablet} {
+
+        backdrop-filter: unset;
         background-color: transparent;
         position: relative;
         /* display: flex; */
@@ -227,6 +229,7 @@ export default function PreviewTimer(props) {
     const [showGalleryModal, setShowGalleryModal] = React.useState(false);
     const [showTextModal, setShowTextModal] = React.useState(false);
     const [formData, setFormData] = React.useState({
+        label: props.label,
         isBreak: props.isBreak,
         description: props.description,
         autostart: props.autostart,
@@ -235,6 +238,7 @@ export default function PreviewTimer(props) {
 
     //update time
     React.useEffect(() => {
+        console.log("Updating the time")
         let updateObject = { time: { ...time } };
         props.updateTimerData(updateObject, props.id);
     }, [time]);
@@ -247,6 +251,7 @@ export default function PreviewTimer(props) {
      * @param {unit} unit - which unit (seconds, minutes, hours) are we increasing
      */
     function updateValue(value, isIncrease, unit) {
+        console.log("Are values updating?", {value, isIncrease, unit})
         //if it's a decrease, make the value negative
         //so we don't have to duplicate the code
         if (!isIncrease) {
@@ -299,7 +304,10 @@ export default function PreviewTimer(props) {
             {/* #region timer values */}
             <div className="preview-timer" data-testid={"preview-timer"}>
                 <FlexContainer full={true} fullVertical={true}>
-                    <h2 className="preview-timer__number">Timer {props.number}</h2>
+                    <h2 className="preview-timer__number">
+                        {formData.label ? `${props.number} - ${formData.label}` :  
+                        `Timer ${props.number}`}
+                    </h2>
                     {/* <SpeedDialMenu actions={actions} /> */}
                     {showGalleryModal && (
                         <UploadModal
@@ -341,11 +349,11 @@ export default function PreviewTimer(props) {
                         )}
                     </StyledWrapper>
                     <div className="value-wrapper">
-                        <TimeValue value={time.hours} unit={"hours"} updateValue={updateValue}></TimeValue>
+                        <TimeValue value={props.time.hours} unit={"hours"} updateValue={updateValue}></TimeValue>
                         <span className="timer__separator">:</span>
-                        <TimeValue value={time.minutes} unit={"minutes"} updateValue={updateValue}></TimeValue>
+                        <TimeValue value={props.time.minutes} unit={"minutes"} updateValue={updateValue}></TimeValue>
                         <span className="timer__separator">:</span>
-                        <TimeValue value={time.seconds} unit={"seconds"} updateValue={updateValue}></TimeValue>
+                        <TimeValue value={props.time.seconds} unit={"seconds"} updateValue={updateValue}></TimeValue>
                     </div>
 
                     {/* only show drop area if we've saved the timer */}

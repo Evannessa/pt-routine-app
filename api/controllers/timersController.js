@@ -61,11 +61,17 @@ async function deleteSingle(type, req, res, next, name) {
 }
 async function updateSingle(type, req, res, next, name, populateWith = "") {
     const { id } = req.params;
-    console.log("Updating single", id, req.params, req.body)
-    const document = await type
+    // console.log("Updating single", id, req.params, req.body)
+    const isValid = mongoose.isValidObjectId(id)
+    if(!isValid){
+        return res.status(404).json("Not a valid MongoDB id")
+    }
+
+    const document = isValid ? await type
         .findOneAndUpdate({ _id: id }, { ...req.body }, { new: true })
-        .populate(populateWith);
-    if (!document) {
+        .populate(populateWith) : null
+
+    if (!isValid || !document) {
         return next(createCustomError(`No ${name} found with id ${id}`, 404));
     }
     return res.status(200).json({ document });

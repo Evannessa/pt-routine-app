@@ -231,7 +231,7 @@ function Dashboard(props) {
     function navigateToFactory(newId) {
         navigate(`/factory/${newId}`);
     }
-    const updateSets = async function updateSets(action, id) {
+    const updateSets = async function (action, id) {
         // console.log("Doing " + action + " to " + id);
         switch (action) {
             case "create":
@@ -247,7 +247,7 @@ function Dashboard(props) {
                 requests.axiosRequest(options);
                 break;
             case "edit":
-                navigate(`/factory/${id}`);
+                navigate(`/dashboard/factory/${id}`);
                 break;
             default:
                 console.warn("Not a valid action");
@@ -263,11 +263,10 @@ function Dashboard(props) {
                 id = timerSet._id.hasOwnProperty("$oid") ? timerSet._id["$oid"] : nanoid()
             }
             if(!timerSet._id || typeof timerSet._id == "object"){
-                console.log(timerSet._id)
                 timerSet._id = id;
             }
             let isMockData = user && user.role === "admin" ? false : true
-            return <TimerSetCard timerSet={timerSet} key={id} timerSetStyle="card" isMockData={isMockData}></TimerSetCard>;
+            return <TimerSetCard timerSet={timerSet} key={id} timerSetStyle="card" isMockData={isMockData} updateSets={updateSets}></TimerSetCard>;
         })
         : [];
     const ConditionalWrapper = ({ condition, wrapper, children }) => 
