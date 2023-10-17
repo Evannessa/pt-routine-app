@@ -14,6 +14,7 @@ import { ThemeContext } from "../App";
 import { TooltipWrapper } from "../portal-components/TooltipPopover";
 // import Draggable from "react-draggable";
 import DraggableEmbedModal from "./display/DraggableEmbedModal";
+import { ButtonWithIcon } from "./styled-components/Buttons.Styled";
 /* #region   Styled Components */
 
 /** Header, which will contain details from timer set */
@@ -244,6 +245,8 @@ export default function ActiveTimerDisplay() {
                       minutes={timer.time.minutes}
                       seconds={timer.time.seconds}
                       description={timer.description}
+                      label={timer.label}
+                      isRep={timer.isRep}
                       setClockAtZero={setClockAtZero}
                       clockAtZero={timer.clockAtZero}
                       autostart={timer.autostart}
@@ -323,12 +326,10 @@ export default function ActiveTimerDisplay() {
                 {/* HEADER W/ TIMER NAME */}
                 <StyledHeader className="activeSet__header" theme={theme}>
                     <h1 className="activeSet__name">{timerSetName}</h1>
-                    <button className="button" onClick={handleClick} data-action="resetAll">
-                            <span className="material-icons">restart_alt</span>
-                    </button>
+                    <ButtonWithIcon className="button" onClick={handleClick} data-action="resetAll" icon={"restart_alt"} title="reset routine from beginning"/>
                     <TooltipWrapper>
                         <div>
-                            <Link to={`/dashboard/factory/${params.setId}`}>
+                            <Link to={`/dashboard/factory/${params.setId}`} title="edit this routine">
                                 <span className="material-icons">edit</span>
                             </Link>
                         </div>
