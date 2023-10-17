@@ -225,8 +225,11 @@ export default function TimerGallery(props) {
         console.log(
             "Updating",
             data,
-            formData.timers?.filter((timer) => timer._id === id)
+            formData.timers?.filter((timer) => timer._id === id).pop()
         );
+        console.log({
+            timers: formData.timers?.map((timer)=> timer._id === id ? {...timer, ...data} : timer)
+        })
         setFormData((prevFormData) => {
             return {
                 ...prevFormData,
