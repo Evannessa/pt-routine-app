@@ -235,6 +235,7 @@ export default function PreviewTimer(props) {
         description: props.description,
         autostart: props.autostart,
         repeatNumber: props.repeatNumber,
+        isRep: props.isRep
     });
 
     //update time
@@ -458,23 +459,22 @@ export default function PreviewTimer(props) {
                                     borderColor: "white"
                                 }}
                             ></Input>
-                            {/* <Input
-                                disabled={!props.isBreak}
+                            <Input
                                 type="checkbox"
-                                name="isAutoBreak"
-                                id={`${props.id}isAutoBreak`}
-                                value="isAutoBreak"
-                                checked={props.isAutoBreak}
+                                name="isRep"
+                                id={`${props.id}isRep`}
+                                value="isRep"
+                                checked={props.isRep}
                                 setStateFunction={updateTimerData}
                                 icon="schedule"
                                 hasLabel={true}
                                 inputStyle="chip"
-                                tooltip="Is this timer an automatic break timer"
+                                tooltip="Is this timer a rep timer"
                                 style={{
                                     color: "white",
                                     borderColor: "white"
                                 }}
-                            ></Input> */}
+                            ></Input>
                         
                         </fieldset>
                     </BottomForm>

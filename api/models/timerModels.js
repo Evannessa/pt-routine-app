@@ -27,6 +27,11 @@ const TimerSchema = new mongoose.Schema({
         default: false,
     },
     isBreak: { type: Boolean, required: true, default: false },
+    isRep: {
+        type: Boolean,
+        required: true,
+        default: false,
+    }
 });
 const TimerSetSchema = new mongoose.Schema({
     label: {

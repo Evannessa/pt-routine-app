@@ -281,7 +281,7 @@ export default function TimerGallery(props) {
 
     function navigateToDisplay() {
         let id = formData._id;
-        navigate(`/display/${id}`);
+        navigate(`/dashboard/display/${id}`);
     }
 
     /**
@@ -366,6 +366,7 @@ export default function TimerGallery(props) {
                       key={timer._id}
                       id={timer._id}
                       isBreak={timer.isBreak}
+                      isRep={timer.isRep}
                       time={timer.time}
                       autostart={timer.autostart}
                       description={timer.description}

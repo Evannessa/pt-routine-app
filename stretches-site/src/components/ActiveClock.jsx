@@ -21,6 +21,7 @@ const StyledTimer = styled.div`
     padding: 1rem;
     .timer__values{
         position: relative;
+        /* display: ${props => props.isRep && 'none'}; */
     }
     .repeat-wrapper{
         font-size: small;
@@ -214,26 +215,35 @@ export default function ActiveClock(props) {
     }
 
     return (
-        <StyledTimer className="timer">
+        <StyledTimer className="timer" isRep={props.isRep}>
             <div className="timer__values">
                 {loopsRemaining > 0 && 
                     <div className="repeat-wrapper">
-                        <span>{loopsRemaining}</span>
+                        {!props.isRep ? 
+                        <><span>{loopsRemaining}</span>
                         <img src={repeatIcon}></img>
+                        </> : <span>{String(parseInt(time.seconds))}s</span>
+                        }
                     </div>
                 }
-                {props.hours > 0 && (
+                {!props.isRep ? 
+                <>{props.hours > 0 && 
                     <div className="time-value">
                         <h3 className="value">{String(parseInt(time.hours)).padStart(2, 0)}</h3>
                     </div>
-                )}
+                }
                 <div className="time-value">
                     <h3 className="value">{String(parseInt(time.minutes)).padStart(2, 0)}:</h3>
                 </div>
 
                 <div className="time-value">
                     <h3 className="value">{String(parseInt(time.seconds)).padStart(2, 0)}</h3>
-                </div>
+                </div></> : (<div>
+                    <div className="time-value">
+                        <h3 className="value">{String(parseInt(loopsRemaining)).padStart(2, 0)}</h3>
+                    </div>
+                </div>)
+            }
             </div>
             <ButtonWrapper className="btn__wrapper">
                 {!started && !paused && (
@@ -245,6 +255,7 @@ export default function ActiveClock(props) {
                     <button
                         className={`timer__btn ${paused ? "" : "ghost"}`}
                         onClick={paused ? resumeTimer : pauseTimer}
+                        title={paused ? "Continue Timer" : "Pause Timer"}
                     >
                         {paused ? "Continue" : "Pause"}
                     </button>
