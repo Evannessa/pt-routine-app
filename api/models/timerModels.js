@@ -68,6 +68,11 @@ const TimerSetSchema = new mongoose.Schema({
         isBreak: { type: Boolean, required: true, default: false },
         isAutoBreak: { type: Boolean, required: true, default: false },
         repeatNumber: { type: Number, required: true, default: 0 },
+  isRep: {
+        type: Boolean,
+        required: true,
+        default: false,
+    }
     })],
     youtubeLink: {
         type: String,
