@@ -75,6 +75,9 @@ button {
 	}
 
 	&.modal__btn {
+		display: flex;
+		align-items: center;
+		justify-content: space-evenly;
 		width: 50%;
 		height: 3rem;
 		font-size: var(--text-sm);

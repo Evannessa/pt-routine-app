@@ -16,6 +16,9 @@ import { ThemeProvider } from "styled-components";
 import { device } from "./styled-components/devices";
 // import SidebarToggle from "./SidebarToggle";
 import Drawer from "./Drawer";
+import Modal from "./Modal";
+import ActionFactory from "../classes/ActionFactory";
+import TimerHelpers from "../classes/TimerHelper";
 
 const DashboardHeader = styled(Container)`
     padding: 1rem;
@@ -119,6 +122,10 @@ function Dashboard(props) {
     const navigate = useNavigate();
     const [timerSets, setTimerSets] = useState();
     const [showEmbed, setShowEmbed] = useState(false)
+    const [showDeletePrompt, setShowDeletePrompt] = useState({
+        set: '',
+        showPrompt: false
+    })
 
     // "cards" vs "list"
     // const [viewMode, setViewMode] = useState("cards")
@@ -237,6 +244,37 @@ function Dashboard(props) {
     function navigateToFactory(newId) {
         navigate(`/factory/${newId}`);
     }
+
+    function cancelShowDeletePrompt(){
+        setShowDeletePrompt(prevValue => {
+            return{
+                ...prevValue,
+                showPrompt: false,
+                set: ''
+            }
+        })
+    }
+    function toggleShowDeletePrompt(id){
+        setShowDeletePrompt(prevValue => {
+            return{
+                ...prevValue,
+                showPrompt: true,
+                set: id
+            }
+        })
+    }
+
+    function deleteSet(id){
+        console.log("Test. Will delete", id)
+        return
+        // let options = {
+        //     method: "DELETE",
+        //     pathsArray: ["factory", id],
+        //     setStateCallback: getTimerSets,
+        // };
+        // requests.axiosRequest(options);
+
+    }
     const updateSets = async function (action, id) {
         // console.log("Doing " + action + " to " + id);
         switch (action) {
@@ -245,29 +283,27 @@ function Dashboard(props) {
                 // navigate(`/factory/${newId}`);
                 break;
             case "delete":
-                let options = {
-                    method: "DELETE",
-                    pathsArray: ["factory", id],
-                    setStateCallback: getTimerSets,
-                };
-                requests.axiosRequest(options);
+                toggleShowDeletePrompt(id)
                 break;
             case "edit":
                 navigate(`/dashboard/factory/${id}`);
                 break;
             default:
                 console.warn("Not a valid action");
+                break;
         }
     };
 
+  
+
     const timerSetCards = timerSets
         ? timerSets.map((timerSet) => {
-            let id = nanoid()
-            if(typeof timerSet._id === "string"){
-                id = timerSet._id
-            }else if(typeof timerSet._id === "object"){
-                id = timerSet._id.hasOwnProperty("$oid") ? timerSet._id["$oid"] : nanoid()
-            }
+            let id = TimerHelpers.getSetId(timerSet)
+            // if(typeof timerSet._id === "string"){
+            //     id = timerSet._id
+            // }else if(typeof timerSet._id === "object"){
+            //     id = timerSet._id.hasOwnProperty("$oid") ? timerSet._id["$oid"] : nanoid()
+            // }
             if(!timerSet._id || typeof timerSet._id == "object"){
                 timerSet._id = id;
             }
@@ -277,9 +313,30 @@ function Dashboard(props) {
         : [];
     const ConditionalWrapper = ({ condition, wrapper, children }) => 
         condition ? wrapper(children) : children;
+    
+    const focusedRoutine = timerSets && Array.isArray(timerSets) ? timerSets.find((set)=> TimerHelpers.getSetId(set) == showDeletePrompt.set) : 'Not an array'
+    console.log(focusedRoutine, showDeletePrompt.set)
 
     return (
         <div>
+            { showDeletePrompt.showPrompt && 
+                <Modal
+                    setId={showDeletePrompt.set}
+                    title="Warning!"
+                    icon="warning"
+                    description={`Are you sure you want to delete routine 
+                        '${focusedRoutine?.label}'?
+                        This action is irreversible!     
+                    `}
+                    actions={
+                        [
+                            ActionFactory("Delete Routine", "delete_forever", deleteSet, "Delete Routine", {classList: "primary"})
+                        ]
+                    }
+                    cancelAction={cancelShowDeletePrompt}
+                >
+                </Modal>
+            }
             <ThemeProvider theme={theme}>
             <ConditionalWrapper condition={inDisplayMode} wrapper={children=> <Drawer>{children}</Drawer>}>
                 <DashboardWrapper
