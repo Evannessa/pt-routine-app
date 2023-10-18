@@ -28,7 +28,9 @@ const StyledNavLink = styled(NavLink)`
         .timerSet__img{
             grid-column: 1/2;
             border-radius: 8px;
-            padding: 0.5rem;
+            margin: 0.5rem;
+            border-radius: 50%;
+            border: 2px solid var(--clr-primary-pink);
         }
         .timerSet__content{
             grid-column: 2/3;
@@ -50,8 +52,14 @@ const StyledNavLink = styled(NavLink)`
     p,
     button {
         color: hsl(348.7, 100%, 55.1%);
-        /* color: ${(props) => props.themeColor1 || "white"}; */
+        opacity: 75%;
+        transition: opacity 100ms ease-in-out;
+        &:hover{
+            opacity: 100%;
+            color: ${props => props.themeColor2};
+        }
     }
+  
     transform: scale(1);
     transition: transform 200ms ease-in;
     &:hover {
@@ -120,6 +128,7 @@ function TimerSetCard({ timerSet, updateSets, timerSetStyle = "link", isMockData
                                 onClick={handleClick}
                                 data-id={timerSet._id}
                                 data-action="edit"
+                                title="edit this routine"
                             >
                                 <span className="material-icons">edit</span>
                             </button>
@@ -128,6 +137,7 @@ function TimerSetCard({ timerSet, updateSets, timerSetStyle = "link", isMockData
                                 onClick={handleClick}
                                 data-id={timerSet._id}
                                 data-action="delete"
+                                title="delete this routine"
                             >
                                 <span className="material-icons">delete</span>
                             </button>
