@@ -84,6 +84,9 @@ const DashboardGrid = styled.section`
     display: ${props => props.displayMode ? "flex" : "grid"};
     ${props => props.displayMode && "flex-direction: column"};
     ${props => props.displayMode && "overflow-y: scroll"};
+    @media ${device.tablet}{
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
 `;
 
 
@@ -116,6 +119,9 @@ function Dashboard(props) {
     const navigate = useNavigate();
     const [timerSets, setTimerSets] = useState();
     const [showEmbed, setShowEmbed] = useState(false)
+
+    // "cards" vs "list"
+    // const [viewMode, setViewMode] = useState("cards")
     const [embedUrls, setEmbedUrls] = useState(
         {
             spotifyEmbed: "",
