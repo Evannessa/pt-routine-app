@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useRef} from "react";
 import styled from "styled-components";
 import Draggable from "react-draggable";
 
@@ -10,6 +10,7 @@ const StyledDraggable = styled.div`
     grid-template-rows: 1rem 1fr;
     width: 417px;
     height: 281px;
+    bottom: 0;
 
     aspect-ratio: 16/9;
     resize: both;
@@ -36,9 +37,10 @@ const StyledDraggable = styled.div`
 `;
 
 function DraggableEmbedModal(props) {
+    const nodeRef = useRef(null)
     return (
-        <Draggable handle=".anchor">
-            <StyledDraggable className="draggable-modal">
+        <Draggable handle=".anchor" nodeRef={nodeRef}>
+            <StyledDraggable className="draggable-modal" ref={nodeRef}>
                 <div className="anchor">
                     <span class="material-symbols-outlined">drag_handle</span>
                 </div>

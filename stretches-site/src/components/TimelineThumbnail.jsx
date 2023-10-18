@@ -94,6 +94,10 @@ const ThumbnailContainer = styled.div`
     width: 4rem;
     height: 4rem;
     min-width: 4rem;
+
+    .dragStart{
+
+    }
     .time-wrapper {
         border-radius: 12px;
         width: 4rem;
@@ -203,6 +207,59 @@ const TimelineThumbnail = forwardRef(
         const [isOn, setIsOn] = useState();
         const newRef = useRef();
 
+        const itemRef = useRef(null)
+
+        const onDragStart = (e) =>{
+            e.dataTransfer.effectAllowed = 'move'
+            e.dataTransfer.setDragImage(e.target, 50000, 50000)
+
+            let ghostNode = e.target.cloneNode(true)
+
+            ghostNode.style.position = "absolute"
+
+            //set to mouse position
+            ghostNode.style.top = (e.pageY - e.target.offsetHeight / 2) + 'px'
+            ghostNode.style.left = (e.pageX - e.target.offsetWidth / 2) + 'px'
+
+            ghostNode.style.height = e.target.offsetHeight  + 'px'
+            ghostNode.style.width = e.target.offsetWidth  + 'px'
+
+            ghostNode.style.opacity = '0.8'
+            ghostNode.style.pointerEvents = 'none'
+
+            ghostNode.id = 'ghostNode'
+            document.body.prepend(ghostNode)
+
+            // identify selected item
+
+            ref.current.classList.add('dragStart')
+
+
+        }
+
+        // even t when dragging
+        const onDrag = (e) => {
+            let ghostNode = document.querySelector("#ghostNode")
+            ghostNode.style.top = `${(e.pageY - e.target.offsetY/2)}px`            
+            ghostNode.style.left = `${e.pageX - e.target.offsetX/2}px`
+
+        }
+
+        const onDragEnd = (e)=>{
+            document.querySelector("#ghostNode").remove()
+            ref.current.classList.remove('dragStart')
+
+        }
+
+        const onDragEnter = () => ref.current.classList.add('dragOver')
+        const onDragLeave = () => ref.current.classList.remove('dragOver')
+
+        const onDragOver = (e) => e.preventDefault()
+
+        const onDrop = () => {
+            ref.current.classList.remove('dragOver')
+        }
+
         return (
             <ThumbnailContainer
                 ref={ref}
@@ -216,6 +273,14 @@ const TimelineThumbnail = forwardRef(
                 isSelected={isSelected}
                 data-test-id={"timeline-thumbnail"}
                 viewed={viewed}
+                draggable="true"
+                onDragStart={onDragStart}
+                onDragEnd={onDragEnd}
+                onDrag={onDrag}
+                onDragEnter={onDragEnter}
+                onDragLeave={onDragLeave}
+                onDragOver={onDragOver}
+                onDrop={onDrop}
             >
                 <section className="hud">
                     <ButtonWithTooltipWrapper left={true}>

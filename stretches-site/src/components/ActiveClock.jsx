@@ -62,7 +62,7 @@ export default function ActiveClock(props) {
         seconds: props.seconds,
     });
 
-    const [loopsRemaining, setLoopsRemaining] = React.useState(props.repeatNumber);
+    const [loopsRemaining, setLoopsRemaining] = React.useState(props.repeatNumber - 1);
     const [started, setStarted] = React.useState(false);
     const [paused, setPaused] = React.useState(false);
     // const [atZero, setAtZero] = React.useState(false);
