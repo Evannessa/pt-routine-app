@@ -3,6 +3,11 @@ import TimelineThumbnail from "./TimelineThumbnail";
 import styled from "styled-components";
 // import { AnimateBubbles } from "./AnimateBubbles";
 import ActionFactory from "../classes/ActionFactory";
+import {DndContext} from '@dnd-kit/core';
+// import {Draggable} from './Draggable'
+// import {Dropable} from './Droppable'
+
+
 /* #region  Styled components */
 
 const TimelineWrapper = styled.ul`
@@ -178,6 +183,7 @@ function SetTimeline({ timers,
                 onDragOver={(e) => e.preventDefault()}
                 handleClick={handleClick}
                 ref={createRef()}
+                timer={timer}
                 {...timer}
                 addNewTimer={addNewTimer}
                 onTimerSelected={onTimerSelected}
@@ -185,9 +191,11 @@ function SetTimeline({ timers,
                 navigate={navigateToParentTimer}
                 dataKey={timer._id}
                 dataId={timer._id && timer._id.slice(-2)}
+                isRep={timer.isRep}
+                repeatNumber={timer.repeatNumber}
                 actions={[
                     ActionFactory("navigate", "double_arrow", navigateToParentTimer),
-                    ActionFactory("duplicate", "content_copy",),
+                    ActionFactory("duplicate", "content_copy", duplicateParentTimer),
                     ActionFactory("delete", "delete_forever", deleteParentTimer),
                 ]}
                 isSelected={selectedTimers.find((st) => st._id === timer._id)}

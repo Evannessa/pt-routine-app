@@ -7,6 +7,7 @@ import FloatingToolbar from "./FloatingToolbar";
 import { StyledToolbar } from "./FloatingToolbar";
 import cannotLoad from "../images/cannot_load.jpg"
 import Portal from "./Portal";
+import textFormatter from "../helpers/formatText";
 const { urlBase, urlBaseNoApi } = urls;
 
 /* #region Styled Components  */
@@ -95,6 +96,11 @@ const ThumbnailContainer = styled.div`
     height: 4rem;
     min-width: 4rem;
 
+    .tooltip-card-title{
+        font-weight: bold;
+        padding: 0.5em;
+    }
+
     .dragStart{
 
     }
@@ -104,6 +110,18 @@ const ThumbnailContainer = styled.div`
         height: 4rem;
         transform: scale(1, 1);
         background-color: ${(props) => (props.isSelected ? "pink" : "rgba(255, 255, 255, 0.5)")};
+        .thumbnail-text{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            .abbreviation{
+                font-weight: bold;
+            }
+            *:last-child{
+                font-size: 0.95rem;
+            }
+        }
     }
 
     ${ButtonWithTooltipWrapper} {
@@ -191,17 +209,21 @@ const TimelineThumbnail = forwardRef(
             handleClick,
             addNewTimer,
             index,
-            description,
-            time,
+            // description,
+            // isRep,
+            // time,
             dataKey,
             dataId,
             isSelected,
             actions,
             navigate,
-            slideImagePath,
+            // slideImagePath,
+            // repeatNumber,
+            timer
         },
         ref
     ) => {
+        const {time, repeatNumber, isRep, description, slideImagePath} = timer
         const [coords, setCoords] = useState();
         const [hover, setHover] = useState(false);
         const [isOn, setIsOn] = useState();
@@ -271,6 +293,7 @@ const TimelineThumbnail = forwardRef(
                 data-id={dataId}
                 title={description}
                 isSelected={isSelected}
+                repeatNumber={repeatNumber}
                 data-test-id={"timeline-thumbnail"}
                 viewed={viewed}
                 draggable="true"
@@ -298,17 +321,21 @@ const TimelineThumbnail = forwardRef(
                     <TooltipWrapper toggleAction="hover">
                         <Hoverable className="time-wrapper" title={description} onClick={() => navigate(dataKey)}>
                             {description && <Tooltip>{description}</Tooltip>}
-                            <span>
-                                {String(time.minutes).padStart(2, "0")}:{String(time.seconds).padStart(2, "0")}
-                            </span>
+                            <div className="thumbnail-text">
+                                <span className="abbreviation">{textFormatter.firstLetterOfEachWord(timer.label)}</span>
+                                {!isRep ? <span>
+                                    {String(time.minutes).padStart(2, "0")}:{String(time.seconds).padStart(2, "0")}
+                                </span> : <span>{`x${repeatNumber}`}</span>}
+                            </div>
                         </Hoverable>
                         <section>
+                            <p className="tooltip-card-title">{timer.label}</p>
                             {/* <img src={urlBase + slideImagePath} alt="Exercise Slide" /> */}
                             <img src={`${urlBaseNoApi}${slideImagePath}`} alt="Exercise Slide" crossOrigin="true" onError={({ currentTarget }) => {
                     currentTarget.onerror = null; // prevents looping
                     currentTarget.src= cannotLoad;
                 }}/>
-                            <p>{description}</p>
+                            {/* <p>{description}</p> */}
                             <FloatingToolbar actions={actions} timerId={dataKey} coords={coords}></FloatingToolbar>
                         </section>
                     </TooltipWrapper>
