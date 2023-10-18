@@ -242,7 +242,7 @@ function Dashboard(props) {
     }
 
     function navigateToFactory(newId) {
-        navigate(`/factory/${newId}`);
+        navigate(`/dashboard/factory/${newId}`);
     }
 
     function cancelShowDeletePrompt(){
@@ -266,14 +266,13 @@ function Dashboard(props) {
 
     function deleteSet(id){
         console.log("Test. Will delete", id)
-        return
-        // let options = {
-        //     method: "DELETE",
-        //     pathsArray: ["factory", id],
-        //     setStateCallback: getTimerSets,
-        // };
-        // requests.axiosRequest(options);
-
+        let options = {
+            method: "DELETE",
+            pathsArray: ["factory", id],
+            setStateCallback: getTimerSets,
+        };
+        requests.axiosRequest(options);
+        cancelShowDeletePrompt()
     }
     const updateSets = async function (action, id) {
         // console.log("Doing " + action + " to " + id);
@@ -315,7 +314,6 @@ function Dashboard(props) {
         condition ? wrapper(children) : children;
     
     const focusedRoutine = timerSets && Array.isArray(timerSets) ? timerSets.find((set)=> TimerHelpers.getSetId(set) == showDeletePrompt.set) : 'Not an array'
-    console.log(focusedRoutine, showDeletePrompt.set)
 
     return (
         <div>
@@ -345,6 +343,7 @@ function Dashboard(props) {
                         <DashboardHeader >
                             <h1>At-Home Exercise App</h1>
                             <ButtonWrapper  displayMode={inDisplayMode}>
+                                {/*TODO: Turn these into a set of ActionFactory objects  */}
                                 <ButtonWithIcon type="contained" icon="play_circle" title="set default YouTube playlist or video" onClick={setShowMediaEmbedPopover}>
                                     Set YouTube Playlist
                                 </ButtonWithIcon>
@@ -354,6 +353,9 @@ function Dashboard(props) {
                                 <ButtonWithIcon type="contained" icon="image" title="set imgur gallery">
                                     Set Imgur Gallery
                                 </ButtonWithIcon>
+                                <ButtonWithIcon type="contained" icon="add" title="Add New Routine" onClick={createNewSet}>
+                                        Create New Routine
+                                    </ButtonWithIcon>
                                 {(!user || user.role !== "admin") && (
                                     <ButtonWithIcon type="contained" icon="save" onClick={onSave} title="Save Timer Sets to local storage">
                                         Save Timer Sets Local Storage

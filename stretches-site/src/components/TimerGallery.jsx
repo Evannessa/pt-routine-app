@@ -266,6 +266,7 @@ export default function TimerGallery(props) {
     // duplicate this timer
     function duplicateTimer(id){
         
+        // updateFormData("timers", [...formData.timers.map((timer) => timer._id == id ? )])
     }
 
     //scroll to the specific timer that meets the id
