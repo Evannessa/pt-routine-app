@@ -263,9 +263,14 @@ export default function TimerGallery(props) {
         );
     }
 
+    // duplicate this timer
+    function duplicateTimer(id){
+        
+    }
+
     //scroll to the specific timer that meets the id
     function navigateToTimer(id) {
-        let matchElement = childRefs.current.find((el) => el.firstChild.dataset.key === id);
+        const matchElement = childRefs.current.find((el) => el.firstChild.dataset.key === id);
         matchElement.scrollIntoView({ behavior: "smooth" });
     }
 
@@ -297,15 +302,12 @@ export default function TimerGallery(props) {
         const action = element.dataset.action;
         switch (action) {
             case "add-spotify-link":
-                console.log("Adding link to spotify");
                 setShowModal({ isOpen: true, currentModalIndex: 0 });
                 break;
             case "add-youtube-link":
-                console.log("Adding link to spotify");
                 setShowModal({ isOpen: true, currentModalIndex: 1 });
                 break;
             case "save":
-                console.log("Save this timer");
                 await saveNewTimer();
                 break;
             case "start-timer":
@@ -461,6 +463,7 @@ export default function TimerGallery(props) {
                     setParentTimers={updateAllTimers}
                     deleteParentTimer={deleteTimer}
                     navigateToParentTimer={navigateToTimer}
+                    duplicateParentTimer={duplicateTimer}
                 />
             </ThemeProvider>
             {/* TIMERS */}

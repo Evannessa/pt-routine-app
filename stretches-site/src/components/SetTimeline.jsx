@@ -54,7 +54,14 @@ const Tooltip = styled.span`
 `;
 /* #endregion */
 
-function SetTimeline({ timers, timerInView, addNewTimer, setParentTimers, navigateToParentTimer, deleteParentTimer }) {
+function SetTimeline({ timers,
+    timerInView,
+    addNewTimer, 
+    setParentTimers, 
+    navigateToParentTimer, 
+    deleteParentTimer, 
+    duplicateParentTimer }) 
+    {
     const timerThumbnailRefs = React.useRef([]);
     const [dragging, setDragging] = React.useState(false);
     const [dragIndex, setDragIndex] = React.useState(0);
@@ -157,35 +164,36 @@ function SetTimeline({ timers, timerInView, addNewTimer, setParentTimers, naviga
     //map the timers to the thumbnail components
     let thumbnailComponents = timers
         ? timers.map((timer, index) => (
-              //NOTE: placing things like "draggable" on React Components vs Divs doesn't work
-              <TimelineThumbnail
-                  //   className="dragDiv"
-                  key={timer._id}
-                  index={index}
-                  id={timer._id && timer._id.slice(-2)}
-                  draggable
-                  onDragStart={() => handleDragStart(index)}
-                  onDragEnter={(e) => handleDragEnter(e, index)}
-                  onDragLeave={(e) => handleDragLeave(e)}
-                  onDrop={(e) => handleDrop(e)}
-                  onDragOver={(e) => e.preventDefault()}
-                  handleClick={handleClick}
-                  ref={createRef()}
-                  {...timer}
-                  addNewTimer={addNewTimer}
-                  onTimerSelected={onTimerSelected}
-                  onTimerDeselected={onTimerDeselected}
-                  navigate={navigateToParentTimer}
-                  dataKey={timer._id}
-                  dataId={timer._id && timer._id.slice(-2)}
-                  actions={[
-                      ActionFactory("navigate", "double_arrow", navigateToParentTimer),
-                      ActionFactory("delete", "delete_forever", deleteParentTimer),
-                  ]}
-                  isSelected={selectedTimers.find((st) => st._id === timer._id)}
-                  viewed={timerInView === timer._id}
-              />
-          ))
+            //NOTE: placing things like "draggable" on React Components vs Divs doesn't work
+            <TimelineThumbnail
+                //   className="dragDiv"
+                key={timer._id}
+                index={index}
+                id={timer._id && timer._id.slice(-2)}
+                draggable
+                onDragStart={() => handleDragStart(index)}
+                onDragEnter={(e) => handleDragEnter(e, index)}
+                onDragLeave={(e) => handleDragLeave(e)}
+                onDrop={(e) => handleDrop(e)}
+                onDragOver={(e) => e.preventDefault()}
+                handleClick={handleClick}
+                ref={createRef()}
+                {...timer}
+                addNewTimer={addNewTimer}
+                onTimerSelected={onTimerSelected}
+                onTimerDeselected={onTimerDeselected}
+                navigate={navigateToParentTimer}
+                dataKey={timer._id}
+                dataId={timer._id && timer._id.slice(-2)}
+                actions={[
+                    ActionFactory("navigate", "double_arrow", navigateToParentTimer),
+                    ActionFactory("duplicate", "content_copy",),
+                    ActionFactory("delete", "delete_forever", deleteParentTimer),
+                ]}
+                isSelected={selectedTimers.find((st) => st._id === timer._id)}
+                viewed={timerInView === timer._id}
+            />
+        ))
         : [];
 
     //!This code is temporarily removed until basic functionality is working properly

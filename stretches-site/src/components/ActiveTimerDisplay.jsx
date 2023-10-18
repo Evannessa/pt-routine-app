@@ -355,15 +355,18 @@ export default function ActiveTimerDisplay() {
                         {!completed ? (
                             <>
                                 <h2>
-                                    Clock{" "}
+                                    Clock{" "} 
                                     <span>
                                         {currentClock + 1} / {timers.length}
                                     </span>
                                 </h2>
+                                <h3>
+                                </h3>
                                 <div className="slide__wrapper">
                                     {timers[currentClock].slideImagePath && slideComponents[currentClock]}
                                     {descriptionComponents[currentClock]}
                                 </div>
+                                <h3>{timers[currentClock].label}</h3>
                                 {timerComponents[currentClock]}
                             </>
                         ) : (
