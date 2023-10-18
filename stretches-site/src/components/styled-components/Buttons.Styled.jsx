@@ -88,8 +88,13 @@ export const CircleIconButton = styled(IconButton)`
 `;
 CircleIconButton.displayName = "CircleIconButton";
 
+export const Icon = ({icon})=>{
+    return <span className="material-symbols-outlined">{icon}</span>;
+}
+
 export const ButtonWithIcon = ({ type, icon, ...props }) => {
-    const iconEl = <span className="material-symbols-outlined">{icon}</span>;
+    // const iconEl = <span className="material-symbols-outlined">{icon}</span>;
+    const iconEl = <Icon icon={icon}></Icon>
     return (
         <>
             {type === "circle" ? (
