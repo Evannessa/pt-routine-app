@@ -10,7 +10,8 @@ const StyledDraggable = styled.div`
     grid-template-rows: 1rem 1fr;
     width: 417px;
     height: 281px;
-    bottom: 0;
+    top: 40%;
+    right: 5%;
 
     aspect-ratio: 16/9;
     resize: both;

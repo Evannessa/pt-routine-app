@@ -6,6 +6,7 @@ import Input, {StyledInputWrapper} from "./input/Input";
 import * as Buttons from "./styled-components/Buttons.Styled";
 import { ButtonWithIcon } from "./styled-components/Buttons.Styled";
 import Select from "./input/Select";
+import ActionFactory from "../classes/ActionFactory";
 // import { StyledInputWrapper } from "./input/Input";
 const ButtonWrapper = styled.div`
     display: flex;
@@ -40,13 +41,12 @@ const StyledGalleryHeader = styled.div`
             props.expanded &&
             css`
                 top: 0%;
-            `};
+        `};
         ${(props) =>
             !props.expanded &&
             css`
                 top: -40vh;
-                /* top: -30%; */
-            `}
+        `}
         button {
             z-index: 1000;
         }
@@ -57,7 +57,7 @@ const StyledGalleryHeader = styled.div`
 
         box-shadow: 0px 3px 8px 5px rgba(0, 0, 0, 0.05);
 
-        // the inner grid container for the content
+        /* // the inner grid container for the content */
         > ${Container} {
             display: grid;
             justify-content: stretch;
@@ -126,15 +126,24 @@ const StyledGalleryHeader = styled.div`
         }
     }
 
-    //if our height is over 600 px, show full
+    /* //if our height is over 600 px, show full */
     @media (min-height: 600px) and  (min-width: 600px) {
-        .expand {
+        /* .expand {
             display: none;
-        }
+        } */
         > ${Container} {
             position: relative;
             top: unset;
+            height: ${props => props.expanded ? "auto" : "0px"   };
+            padding: ${props => !props.expanded && "0px"};
+            *:not(button.expand) {
+                height: ${props => props.expanded ? "auto" : "0px"   };
+                padding: ${props => !props.expanded && "0px"};
+                transform: ${props => !props.expanded && "scale(0)"};
+            }
+
         }
+        
     }
 `;
 StyledGalleryHeader.displayName = "GalleryHeader";
@@ -142,11 +151,22 @@ StyledGalleryHeader.displayName = "GalleryHeader";
 export default function GalleryHeader(props) {
     const { formData, updateFormData, handleClick, expanded, setExpanded } = props;
 
+    const actionData = [
+        ActionFactory("startTimer", "play_circle", ()=>{}, "Start the Routine"),
+        ActionFactory("addBreaks", "more_time", ()=>{}, "Automatically insert a break between each Timer in this Routine"),
+        ActionFactory("addSpotifyLink", "music_note", ()=>{}, "Add a link to a spotify playlist"),
+        ActionFactory("addYoutubeLink", "youtube_activity", ()=>{}, "Add a link to a YouTube video or playlist"),
+    ]
     const buttonData = {
         startTimer: {
             icon: "play_circle",
             action: "start-timer",
             tooltip: "Start the Routine"
+        },
+        addBreaks:{
+            icon: "more_time",
+            action: "auto-breaks",
+            tooltip: "Automatically insert a break between each Timer in this Routine"
         },
         addSpotifyLink: {
             icon: "music_note",
@@ -212,16 +232,17 @@ export default function GalleryHeader(props) {
                         {buttonElements.startTimer}
                         {buttonElements.addSpotifyLink}
                         {buttonElements.addYoutubeLink}
+                        {buttonElements.addBreaks}
                     </ButtonWrapper>
                 </Container>
-                <Buttons.IconButton
+                {/* <Buttons.IconButton
                     className="expand"
                     onClick={() => {
                         setExpanded((prevState) => !prevState);
                     }}
                 >
                     <span className="material-symbols-outlined">{expanded ? "expand_less" : "expand_more"}</span>
-                </Buttons.IconButton>
+                </Buttons.IconButton> */}
             </Container>
             <Buttons.IconButton
                 className="expand"

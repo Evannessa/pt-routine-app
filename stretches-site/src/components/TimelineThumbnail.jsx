@@ -282,6 +282,11 @@ const TimelineThumbnail = forwardRef(
             ref.current.classList.remove('dragOver')
         }
 
+        function callAddNewTimer(index, beforeOrAfter, event){
+            let shouldDuplicate = event.ctrlKey
+            addNewTimer(index, beforeOrAfter, shouldDuplicate)
+        }
+
         return (
             <ThumbnailContainer
                 ref={ref}
@@ -310,7 +315,7 @@ const TimelineThumbnail = forwardRef(
                         <NewTimerButton
                             title={description}
                             left={true}
-                            onClick={() => addNewTimer(index, -1)}
+                            onClick={(event) => callAddNewTimer(index, -1, event)}
                             className="material-icons"
                         >
                             add
@@ -330,11 +335,10 @@ const TimelineThumbnail = forwardRef(
                         </Hoverable>
                         <section>
                             <p className="tooltip-card-title">{timer.label}</p>
-                            {/* <img src={urlBase + slideImagePath} alt="Exercise Slide" /> */}
                             <img src={`${urlBaseNoApi}${slideImagePath}`} alt="Exercise Slide" crossOrigin="true" onError={({ currentTarget }) => {
-                    currentTarget.onerror = null; // prevents looping
-                    currentTarget.src= cannotLoad;
-                }}/>
+                                currentTarget.onerror = null; // prevents looping
+                                currentTarget.src= cannotLoad;
+                            }}/>
                             {/* <p>{description}</p> */}
                             <FloatingToolbar actions={actions} timerId={dataKey} coords={coords}></FloatingToolbar>
                         </section>
@@ -344,7 +348,7 @@ const TimelineThumbnail = forwardRef(
                         <NewTimerButton
                             left={false}
                             title={description}
-                            onClick={() => addNewTimer(index, 1)}
+                            onClick={(event) => callAddNewTimer(index, 1, event)}
                             className="material-icons"
                         >
                             add
