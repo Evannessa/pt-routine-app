@@ -16,9 +16,9 @@ const mongoSanitize = require("express-mongo-sanitize");
 const createError = require("http-errors");
 const xss = require("xss-clean");
 
-//TODO: Add this back inlate
+// TODO: Add this back in later
 // const helmet = require("helmet");
-const rateLimiter = require("express-rate-limit");
+// const rateLimiter = require("express-rate-limit");
 
 // const session = require('express-session')
 // var indexRouter = require("./routes/index");
@@ -36,12 +36,14 @@ const errorHandlerMiddleware = require("./middleware/error-handler");
 const fileUpload = require("express-fileupload");
 
 app.set("trust proxy", 1);
-app.use(
-    rateLimiter({
-        windowMs: 15 * 60 * 1000,
-        max: 60,
-    })
-);
+
+//TODO: add this back in later
+// app.use(
+//     rateLimiter({
+//         windowMs: 15 * 60 * 1000,
+//         max: 60,
+//     })
+// );
 
 const port = process.env.PORT || 3000;
 

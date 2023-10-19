@@ -45,6 +45,7 @@ export const ThemeContext = React.createContext({
         console.log("toggle?");
     },
     themeName: "primary",
+    altTheme: themes.secondary
 });
 //can't transition gradients, so doing workaround with pseudo element
 const StyledApp = styled.div`

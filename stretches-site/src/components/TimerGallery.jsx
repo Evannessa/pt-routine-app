@@ -10,6 +10,9 @@ import { ThemeContext } from "../App";
 import GalleryHeader from "./GalleryHeader";
 import { requests } from "../helpers/requests";
 import { useGlobalContext } from "../context";
+import AutoBreakConfig from "./AutoBreakConfig";
+import helpers from "../classes/Helpers";
+
 /* ---------------------------- Styled Components --------------------------- */
 
 // #region Styled Components
@@ -314,6 +317,9 @@ export default function TimerGallery(props) {
             case "start-timer":
                 navigateToDisplay();
                 break;
+            case "auto-breaks":
+                console.log("Automatically adding breaks for timers")
+                break;
             default:
                 console.log("No associated action for", action);
                 break;
@@ -401,11 +407,13 @@ export default function TimerGallery(props) {
     /**
      *
      * @param {int} position - the index of the particular timer in the current array;
-     * @param {*} beforeOrAfter - whether we want to add a new timer before or after
+     * @param {boolean} beforeOrAfter - whether we want to add a new timer before or after
+     * @param {boolean} duplicate - whether or not we want to duplicate the timer
      */
-    async function addNewTimer(position, beforeOrAfter) {
+    async function addNewTimer(position, beforeOrAfter, duplicate = false) {
         let insertAtIndex = position + beforeOrAfter;
-        const newTimerData = {
+        console.log(formData.timers[position])
+        const newTimerData = !duplicate ? {
             // _id: "new",
             time: { hours: 0, seconds: 0, minutes: 0 },
             label: "New Timer",
@@ -414,7 +422,14 @@ export default function TimerGallery(props) {
             autostart: false,
             isBreak: false,
             repeatNumber: 0,
-        };
+        } : helpers.cloneObject(formData.timers[position], true) 
+
+        //delete the id 
+        if(duplicate){
+            delete newTimerData._id
+        }
+
+        debugger
         //make sure it doesn't go over or under
         if (insertAtIndex < 0) {
             insertAtIndex = 0;
