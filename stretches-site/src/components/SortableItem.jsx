@@ -20,7 +20,9 @@ export function SortableThumbnail(props) {
   };
   
   return (
-    <TimelineThumbnail ref={setNodeRef} style={style} {...props}>      
+    <TimelineThumbnail ref={setNodeRef} style={style} 
+        {...props}
+    >      
         <button style={{
             position: 'absolute',
             zIndex: 1000

@@ -126,30 +126,46 @@ function SetTimeline({ timers,
     }
 
     //swap the position of two timers
-    function swap(timer1, timer2) {
+    function swap(index1, index2) {
         let swapTimers = [...timers];
 
-        let index1 = timers.indexOf(timer1);
-        let index2 = timers.indexOf(timer2);
+        let timer1 = timers[index1]
+        let timer2 = timers[index2]
+        // let index1 = timers.indexOf(timer1);
+        // let index2 = timers.indexOf(timer2);
         swapTimers.splice(index1, 1, timer2);
         swapTimers.splice(index2, 1, timer1);
         //swap
 
-        setSelectedTimers([]); //reset the selected timers
 
-        setParentTimers(swapTimers); //set the timers in the parent
+        // setSelectedTimers([]); //reset the selected timers
+
+        // setParentTimers(swapTimers); //set the timers in the parent
     }
     function handleMouseMove(e) {
         mousePosition.current = { x: e.clientX, y: e.clientY };
     }
     useEffect(() => {
         if (timers.length > 0) {
-            setItems(getTimerIds().sort())
+            console.log("Setting items")
+            setItems(getTimerIds())
         }
         // return () => {
         //     cleanup
         // };
     }, [timers]);
+
+    function updateTimerPositions(oldIndex, newIndex){
+        // swap(oldIndex, newIndex)
+        let swapTimers = [...timers]
+        const temp = swapTimers[newIndex]
+        swapTimers[newIndex] = swapTimers[oldIndex]
+        swapTimers[oldIndex] = temp
+        console.log(swapTimers.map((item)=> item._id?.slice(-3)), timers.map((item)=> item._id?.slice(-3)))
+        setParentTimers(swapTimers)
+    }
+
+
     //swap the timers when 2 are selected
     React.useEffect(() => {
         if (selectedTimers.length >= 2) {
@@ -161,21 +177,26 @@ function SetTimeline({ timers,
 
     function handleDragStart(event) {
         const { active } = event;
-        console.log("Starting to drag")
 
         setActiveId(active.id);
     }
 
     function handleDragEnd(event) {
         const { active, over } = event;
+        console.log("Starting to drop", {active: active.id, over: over.id})
 
         if (active.id !== over.id) {
-            setItems((items) => {
-                const oldIndex = items.indexOf(active.id);
-                const newIndex = items.indexOf(over.id);
+            // const oldIndex = timers.find()
+            const oldIndex = items.indexOf(active.id);
+            const newIndex = items.indexOf(over.id);
+            console.log(items, oldIndex, newIndex)
+            updateTimerPositions(oldIndex, newIndex)
+            // setItems((items) => {
+            //     const oldIndex = items.indexOf(active.id);
+            //     const newIndex = items.indexOf(over.id);
 
-                return arrayMove(items, oldIndex, newIndex);
-            });
+            //     return arrayMove(items, oldIndex, newIndex);
+            // });
         }
 
         setActiveId(null);
@@ -193,7 +214,7 @@ function SetTimeline({ timers,
         return timer ? <SortableThumbnail
             key={timer._id}
             index={index}
-            id={parseInt(index)}
+            id={timer._id}
             // ref={createRef()}
             timer={timer}
             {...timer}
@@ -255,7 +276,7 @@ function SetTimeline({ timers,
                     {thumbnailComponents}
                 </SortableContext>
                 <DragOverlay>
-                    {activeId ? <TimelineThumbnail id={activeId} timer={timers[activeId]}/> : null}
+                    {activeId && timers.length > 0 ? <TimelineThumbnail id={activeId} timer={timers.find(timer => timer._id == activeId)}/> : null}
                 </DragOverlay>
             </DndContext>
         </TimelineWrapper>
