@@ -1,11 +1,29 @@
-import React, { createRef } from "react";
+import React, { createRef, useState } from "react";
 import TimelineThumbnail from "./TimelineThumbnail";
 import styled from "styled-components";
 // import { AnimateBubbles } from "./AnimateBubbles";
 import ActionFactory from "../classes/ActionFactory";
-import {DndContext} from '@dnd-kit/core';
-// import {Draggable} from './Draggable'
-// import {Dropable} from './Droppable'
+import {
+    DndContext,
+    DragOverlay,
+    closestCenter,
+    KeyboardSensor,
+    PointerSensor,
+    useSensor,
+    useSensors,
+} from '@dnd-kit/core';
+
+import {
+    SortableContext,
+    arrayMove,
+    sortableKeyboardCoordinates,
+    horizontalListSortingStrategy
+} from '@dnd-kit/sortable'
+
+import TimerHelpers from "../classes/TimerHelper";
+import { SortableThumbnail } from "./SortableItem";
+import { useEffect } from "react";
+
 
 
 /* #region  Styled components */
@@ -61,20 +79,34 @@ const Tooltip = styled.span`
 
 function SetTimeline({ timers,
     timerInView,
-    addNewTimer, 
-    setParentTimers, 
-    navigateToParentTimer, 
-    deleteParentTimer, 
-    duplicateParentTimer }) 
-    {
+    addNewTimer,
+    setParentTimers,
+    navigateToParentTimer,
+    deleteParentTimer,
+    duplicateParentTimer }) {
     const timerThumbnailRefs = React.useRef([]);
     const [dragging, setDragging] = React.useState(false);
     const [dragIndex, setDragIndex] = React.useState(0);
     const mousePosition = React.useRef({ x: null, y: null });
     const [selectedTimers, setSelectedTimers] = React.useState([]);
+    const [activeId, setActiveId] = useState(null);
+    const [items, setItems] = useState(getTimerIds());
+    const sensors = useSensors(
+        useSensor(PointerSensor),
+        useSensor(KeyboardSensor, {
+            coordinateGetter: sortableKeyboardCoordinates,
+        })
+    );
 
-    function onTimerSelected(timerElement) {
+    function getTimerIds() {
+        return timers.map(timer => TimerHelpers.getSetId(timer))
+    }
+    function onTimerSelected(timerElement, event) {
         //push returns the array's length
+        if (event.ctrlKey) {
+            console.log("Ctrl key pressed")
+        }
+        debugger;
         let newArray = [...selectedTimers];
         let timer = timers.find((timer) => timer._id === timerElement.dataset.key);
         if (!newArray.includes(timer)) {
@@ -108,7 +140,14 @@ function SetTimeline({ timers,
     function handleMouseMove(e) {
         mousePosition.current = { x: e.clientX, y: e.clientY };
     }
-
+    useEffect(() => {
+        if(timers.length > 0){
+            setItems(getTimerIds)
+        }
+        // return () => {
+        //     cleanup
+        // };
+    }, [timers]);   
     //swap the timers when 2 are selected
     React.useEffect(() => {
         if (selectedTimers.length >= 2) {
@@ -163,26 +202,24 @@ function SetTimeline({ timers,
 
     /** click of the thumbnail */
     function handleClick(e) {
-        onTimerSelected(e.currentTarget);
+        onTimerSelected(e, e.currentTarget);
     }
 
+    const actions = {
+        addNewTimer:addNewTimer,
+        onTimerSelected:onTimerSelected,
+        onTimerDeselected:onTimerDeselected,
+        navigate:navigateToParentTimer
+    } 
+
     //map the timers to the thumbnail components
-    let thumbnailComponents = timers
-        ? timers.map((timer, index) => (
-            //NOTE: placing things like "draggable" on React Components vs Divs doesn't work
-            <TimelineThumbnail
-                //   className="dragDiv"
+    let thumbnailComponents = items && items.length > 0 ? items.map((item)=> {
+        let timer = timers[item]
+        return timer ? <SortableThumbnail
                 key={timer._id}
-                index={index}
-                id={timer._id && timer._id.slice(-2)}
-                draggable
-                onDragStart={() => handleDragStart(index)}
-                onDragEnter={(e) => handleDragEnter(e, index)}
-                onDragLeave={(e) => handleDragLeave(e)}
-                onDrop={(e) => handleDrop(e)}
-                onDragOver={(e) => e.preventDefault()}
-                handleClick={handleClick}
-                ref={createRef()}
+                index={item}
+                id={timer._id}
+                // ref={createRef()}
                 timer={timer}
                 {...timer}
                 addNewTimer={addNewTimer}
@@ -191,26 +228,80 @@ function SetTimeline({ timers,
                 navigate={navigateToParentTimer}
                 dataKey={timer._id}
                 dataId={timer._id && timer._id.slice(-2)}
-                isRep={timer.isRep}
-                repeatNumber={timer.repeatNumber}
                 actions={[
                     ActionFactory("navigate", "double_arrow", navigateToParentTimer),
-                    ActionFactory("duplicate", "content_copy", duplicateParentTimer),
+                    // ActionFactory("duplicate", "content_copy", duplicateParentTimer),
                     ActionFactory("delete", "delete_forever", deleteParentTimer),
                 ]}
                 isSelected={selectedTimers.find((st) => st._id === timer._id)}
                 viewed={timerInView === timer._id}
-            />
-        ))
-        : [];
+            /> : <></>
+    }) : []
+    // let thumbnailComponents = timers
+    //     ? timers.map((timer, index) => (
+    //         <SortableThumbnail
+    //             key={timer._id && timer._id.slice(-2)}
+    //             index={index}
+    //             id={timer._id && timer._id.slice(-2)}
+    //             // ref={createRef()}
+    //             timer={timer}
+    //             {...timer}
+    //             addNewTimer={addNewTimer}
+    //             onTimerSelected={onTimerSelected}
+    //             onTimerDeselected={onTimerDeselected}
+    //             navigate={navigateToParentTimer}
+    //             dataKey={timer._id}
+    //             dataId={timer._id && timer._id.slice(-2)}
+    //             actions={[
+    //                 ActionFactory("navigate", "double_arrow", navigateToParentTimer),
+    //                 // ActionFactory("duplicate", "content_copy", duplicateParentTimer),
+    //                 ActionFactory("delete", "delete_forever", deleteParentTimer),
+    //             ]}
+    //             isSelected={selectedTimers.find((st) => st._id === timer._id)}
+    //             viewed={timerInView === timer._id}
+    //         />
+    //     ))
+    //     : [];
 
-    //!This code is temporarily removed until basic functionality is working properly
-    {
-        /* <AnimateBubbles>{thumbnailComponents}</AnimateBubbles> */
+
+  function handleDragStart(event) {
+    const {active} = event;
+    
+    setActiveId(active.id);
+  }
+  
+  function handleDragEnd(event) {
+    const {active, over} = event;
+    
+    if (active.id !== over.id) {
+      setItems((items) => {
+        const oldIndex = items.indexOf(active.id);
+        const newIndex = items.indexOf(over.id);
+        
+        return arrayMove(items, oldIndex, newIndex);
+      });
     }
+    setActiveId(null);
+  }
+
     return (
         <TimelineWrapper onMouseMove={handleMouseMove}>
-            {thumbnailComponents.length > 0 && thumbnailComponents}
+            <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragStart={handleDragStart}
+                onDragEnd={handleDragEnd}
+            >
+                <SortableContext
+                    items={items}
+                    strategy={horizontalListSortingStrategy}
+                >
+                    {thumbnailComponents.length > 0 && thumbnailComponents}
+                </SortableContext>
+            <DragOverlay>
+                {activeId ? <TimelineThumbnail id={activeId} /> : null}
+            </DragOverlay>
+            </DndContext>
         </TimelineWrapper>
     );
 }

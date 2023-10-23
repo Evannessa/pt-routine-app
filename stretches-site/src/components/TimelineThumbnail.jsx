@@ -8,6 +8,9 @@ import { StyledToolbar } from "./FloatingToolbar";
 import cannotLoad from "../images/cannot_load.jpg"
 import Portal from "./Portal";
 import textFormatter from "../helpers/formatText";
+import { useDraggable, useDroppable } from "@dnd-kit/core";
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 const { urlBase, urlBaseNoApi } = urls;
 
 /* #region Styled Components  */
@@ -129,7 +132,7 @@ const ThumbnailContainer = styled.div`
     }
     ${(props) =>
         props.viewed ?
-        css`
+            css`
             .time-wrapper {
                 background-color: white;
                 color: var(--clr-primary-pink);
@@ -209,87 +212,32 @@ const TimelineThumbnail = forwardRef(
             handleClick,
             addNewTimer,
             index,
-            // description,
-            // isRep,
-            // time,
             dataKey,
             dataId,
             isSelected,
             actions,
             navigate,
-            // slideImagePath,
-            // repeatNumber,
             timer
         },
         ref
     ) => {
-        const {time, repeatNumber, isRep, description, slideImagePath} = timer
+        const { time, repeatNumber, isRep, description, slideImagePath } = timer
         const [coords, setCoords] = useState();
         const [hover, setHover] = useState(false);
         const [isOn, setIsOn] = useState();
-        const newRef = useRef();
 
-        const itemRef = useRef(null)
-
-        const onDragStart = (e) =>{
-            e.dataTransfer.effectAllowed = 'move'
-            e.dataTransfer.setDragImage(e.target, 50000, 50000)
-
-            let ghostNode = e.target.cloneNode(true)
-
-            ghostNode.style.position = "absolute"
-
-            //set to mouse position
-            ghostNode.style.top = (e.pageY - e.target.offsetHeight / 2) + 'px'
-            ghostNode.style.left = (e.pageX - e.target.offsetWidth / 2) + 'px'
-
-            ghostNode.style.height = e.target.offsetHeight  + 'px'
-            ghostNode.style.width = e.target.offsetWidth  + 'px'
-
-            ghostNode.style.opacity = '0.8'
-            ghostNode.style.pointerEvents = 'none'
-
-            ghostNode.id = 'ghostNode'
-            document.body.prepend(ghostNode)
-
-            // identify selected item
-
-            ref.current.classList.add('dragStart')
-
-
-        }
-
-        // even t when dragging
-        const onDrag = (e) => {
-            let ghostNode = document.querySelector("#ghostNode")
-            ghostNode.style.top = `${(e.pageY - e.target.offsetY/2)}px`            
-            ghostNode.style.left = `${e.pageX - e.target.offsetX/2}px`
-
-        }
-
-        const onDragEnd = (e)=>{
-            document.querySelector("#ghostNode").remove()
-            ref.current.classList.remove('dragStart')
-
-        }
-
-        const onDragEnter = () => ref.current.classList.add('dragOver')
-        const onDragLeave = () => ref.current.classList.remove('dragOver')
-
-        const onDragOver = (e) => e.preventDefault()
-
-        const onDrop = () => {
-            ref.current.classList.remove('dragOver')
-        }
-
-        function callAddNewTimer(index, beforeOrAfter, event){
+        function callAddNewTimer(index, beforeOrAfter, event) {
             let shouldDuplicate = event.ctrlKey
             addNewTimer(index, beforeOrAfter, shouldDuplicate)
         }
 
+   
+
+
         return (
             <ThumbnailContainer
                 ref={ref}
+                // ref={ref}
                 hover={hover}
                 onMouseEnter={() => setHover(true)}
                 onMouseLeave={() => setHover(false)}
@@ -301,14 +249,6 @@ const TimelineThumbnail = forwardRef(
                 repeatNumber={repeatNumber}
                 data-test-id={"timeline-thumbnail"}
                 viewed={viewed}
-                draggable="true"
-                onDragStart={onDragStart}
-                onDragEnd={onDragEnd}
-                onDrag={onDrag}
-                onDragEnter={onDragEnter}
-                onDragLeave={onDragLeave}
-                onDragOver={onDragOver}
-                onDrop={onDrop}
             >
                 <section className="hud">
                     <ButtonWithTooltipWrapper left={true}>
@@ -337,8 +277,8 @@ const TimelineThumbnail = forwardRef(
                             <p className="tooltip-card-title">{timer.label}</p>
                             <img src={`${urlBaseNoApi}${slideImagePath}`} alt="Exercise Slide" crossOrigin="true" onError={({ currentTarget }) => {
                                 currentTarget.onerror = null; // prevents looping
-                                currentTarget.src= cannotLoad;
-                            }}/>
+                                currentTarget.src = cannotLoad;
+                            }} />
                             {/* <p>{description}</p> */}
                             <FloatingToolbar actions={actions} timerId={dataKey} coords={coords}></FloatingToolbar>
                         </section>
