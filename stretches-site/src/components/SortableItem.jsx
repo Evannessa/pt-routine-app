@@ -3,6 +3,7 @@ import {useSortable} from '@dnd-kit/sortable';
 import {CSS} from '@dnd-kit/utilities';
 
 import TimelineThumbnail from './TimelineThumbnail';
+import DummyThumbnail from './DummyThumbnail';
 
 export function SortableThumbnail(props) {
   const {
@@ -19,6 +20,11 @@ export function SortableThumbnail(props) {
   };
   
   return (
-    <TimelineThumbnail ref={setNodeRef} style={style} {...attributes} {...listeners} {...props}/>
+    <TimelineThumbnail ref={setNodeRef} style={style} {...props}>      
+        <button style={{
+            position: 'absolute',
+            zIndex: 1000
+        }}{...listeners} {...attributes}>Drag handle</button>
+    </TimelineThumbnail>
   );
 }

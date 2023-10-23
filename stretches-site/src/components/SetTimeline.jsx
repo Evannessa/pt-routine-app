@@ -23,6 +23,8 @@ import {
 import TimerHelpers from "../classes/TimerHelper";
 import { SortableThumbnail } from "./SortableItem";
 import { useEffect } from "react";
+import helpers from "../classes/Helpers";
+import DummyThumbnail from "./DummyThumbnail";
 
 
 
@@ -141,13 +143,13 @@ function SetTimeline({ timers,
         mousePosition.current = { x: e.clientX, y: e.clientY };
     }
     useEffect(() => {
-        if(timers.length > 0){
-            setItems(getTimerIds)
+        if (timers.length > 0) {
+            setItems(getTimerIds().sort())
         }
         // return () => {
         //     cleanup
         // };
-    }, [timers]);   
+    }, [timers]);
     //swap the timers when 2 are selected
     React.useEffect(() => {
         if (selectedTimers.length >= 2) {
@@ -155,87 +157,60 @@ function SetTimeline({ timers,
         }
     }, [selectedTimers]);
 
-    function preventDefaults(e) {
-        e.preventDefault();
-        e.stopPropagation();
-    }
-    function handleDragStart(index) {
-        setDragIndex(index);
-        setDragging(true);
-    }
-    function handleDragEnter(e, index) {
-        // preventDefaults(e);
-        // e.stopPropagation();
-        e.target.style.backgroundColor = "black";
-        e.target.style.color = "white";
-        const newTimerList = [...timers];
-        const timer = timers[dragIndex]; //get the timer at the index of the current dragged item
-        newTimerList.splice(dragIndex, 1); //delete item at our drag item's index
-        newTimerList.splice(index, 0, timer); //add new item at the entered index, delete none
-        setDragIndex(index);
-        setParentTimers(newTimerList);
-    }
-    function handleDragOver(e) {
-        preventDefaults(e);
-        e.stopPropagation();
+
+
+    function handleDragStart(event) {
+        const { active } = event;
+        console.log("Starting to drag")
+
+        setActiveId(active.id);
     }
 
-    function handleDragLeave(e) {
-        e.target.style.backgroundColor = "rgba(255, 255, 255, 0.5)";
-    }
-    function handleDrop(e) {
-        e.target.style.backgroundColor = "rgba(255, 255, 255, 0.5)";
-        setDragging(false);
+    function handleDragEnd(event) {
+        const { active, over } = event;
+
+        if (active.id !== over.id) {
+            setItems((items) => {
+                const oldIndex = items.indexOf(active.id);
+                const newIndex = items.indexOf(over.id);
+
+                return arrayMove(items, oldIndex, newIndex);
+            });
+        }
+
+        setActiveId(null);
     }
 
-    /**position items for drag and drop
-     *
-     */
-    function positionItems() {
-        let indexCounter = 0;
-        timerThumbnailRefs.forEach((item) => {
-            item.style.left = 50 * indexCounter + indexCounter * 10 + "px";
-            item.setAttribute("order", indexCounter + 1);
-            indexCounter++;
-        });
-    }
 
     /** click of the thumbnail */
     function handleClick(e) {
         onTimerSelected(e, e.currentTarget);
     }
 
-    const actions = {
-        addNewTimer:addNewTimer,
-        onTimerSelected:onTimerSelected,
-        onTimerDeselected:onTimerDeselected,
-        navigate:navigateToParentTimer
-    } 
-
     //map the timers to the thumbnail components
-    let thumbnailComponents = items && items.length > 0 ? items.map((item)=> {
-        let timer = timers[item]
+    const thumbnailComponents = items && items.length > 0 ? items.map((item, index) => {
+        const timer = helpers.getItemWithProperty(timers, "_id", item)
         return timer ? <SortableThumbnail
-                key={timer._id}
-                index={item}
-                id={timer._id}
-                // ref={createRef()}
-                timer={timer}
-                {...timer}
-                addNewTimer={addNewTimer}
-                onTimerSelected={onTimerSelected}
-                onTimerDeselected={onTimerDeselected}
-                navigate={navigateToParentTimer}
-                dataKey={timer._id}
-                dataId={timer._id && timer._id.slice(-2)}
-                actions={[
-                    ActionFactory("navigate", "double_arrow", navigateToParentTimer),
-                    // ActionFactory("duplicate", "content_copy", duplicateParentTimer),
-                    ActionFactory("delete", "delete_forever", deleteParentTimer),
-                ]}
-                isSelected={selectedTimers.find((st) => st._id === timer._id)}
-                viewed={timerInView === timer._id}
-            /> : <></>
+            key={timer._id}
+            index={index}
+            id={parseInt(index)}
+            // ref={createRef()}
+            timer={timer}
+            {...timer}
+            addNewTimer={addNewTimer}
+            onTimerSelected={onTimerSelected}
+            onTimerDeselected={onTimerDeselected}
+            navigate={navigateToParentTimer}
+            dataKey={timer._id}
+            dataId={timer._id && timer._id.slice(-2)}
+            actions={[
+                ActionFactory("navigate", "double_arrow", navigateToParentTimer),
+                // ActionFactory("duplicate", "content_copy", duplicateParentTimer),
+                ActionFactory("delete", "delete_forever", deleteParentTimer),
+            ]}
+            isSelected={selectedTimers.find((st) => st._id === timer._id)}
+            viewed={timerInView === timer._id}
+        /> : <></>
     }) : []
     // let thumbnailComponents = timers
     //     ? timers.map((timer, index) => (
@@ -264,25 +239,6 @@ function SetTimeline({ timers,
     //     : [];
 
 
-  function handleDragStart(event) {
-    const {active} = event;
-    
-    setActiveId(active.id);
-  }
-  
-  function handleDragEnd(event) {
-    const {active, over} = event;
-    
-    if (active.id !== over.id) {
-      setItems((items) => {
-        const oldIndex = items.indexOf(active.id);
-        const newIndex = items.indexOf(over.id);
-        
-        return arrayMove(items, oldIndex, newIndex);
-      });
-    }
-    setActiveId(null);
-  }
 
     return (
         <TimelineWrapper onMouseMove={handleMouseMove}>
@@ -296,11 +252,11 @@ function SetTimeline({ timers,
                     items={items}
                     strategy={horizontalListSortingStrategy}
                 >
-                    {thumbnailComponents.length > 0 && thumbnailComponents}
+                    {thumbnailComponents}
                 </SortableContext>
-            <DragOverlay>
-                {activeId ? <TimelineThumbnail id={activeId} /> : null}
-            </DragOverlay>
+                <DragOverlay>
+                    {activeId ? <TimelineThumbnail id={activeId} timer={timers[activeId]}/> : null}
+                </DragOverlay>
             </DndContext>
         </TimelineWrapper>
     );
