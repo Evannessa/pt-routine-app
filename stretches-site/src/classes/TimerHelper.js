@@ -12,6 +12,9 @@ const TimerHelpers = (() => {
         }
         return id
     }
+    function abbreviateId(id){
+        return id.splice(-2)
+    }
  
     return {
         getSetId,
