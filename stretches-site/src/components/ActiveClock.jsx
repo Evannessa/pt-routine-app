@@ -4,7 +4,8 @@ import repeatIcon from "../images/refresh-symbol.png"
 import { useAudio } from "./AudioPlayer";
 import useSound from "use-sound"
 import { urls } from "../helpers/requests";
-import bellSound from "../images/240934__the_very_real_horst__neptun-solo-07-tibetan-singing-bowl.wav"
+import bellSound from "../audio/240934__the_very_real_horst__neptun-solo-07-tibetan-singing-bowl.wav"
+import bellSoundHighPitch from "../audio/271370__inoshirodesign__singing-bowl-strike-sound.mp3"
 
 const ButtonWrapper = styled.div`
     display: flex;
@@ -60,8 +61,6 @@ export default function ActiveClock(props) {
     const { id } = props;
     const [muted, setMuted] = React.useState(false);
     // const bellSound = useAudio("")
-    const [playing, toggle] = useAudio(bellSound);
-    const tickSound = useRef();
     const [time, setTime] = React.useState({
         hours: props.hours,
         minutes: props.minutes,
@@ -76,6 +75,7 @@ export default function ActiveClock(props) {
 
     const [playActive] = useSound(bellSound, {volume: 0.25})
 
+    // update minutes, hours, and seconds accordingly
     function runTime() {
         if (time.seconds === 0) {
             updateTime("minutes", time.minutes - 1);
@@ -87,6 +87,12 @@ export default function ActiveClock(props) {
         //     updateTime("hours", time.hours - 1);
         //     updateTime("minutes", 59);
         // }
+        if( !props.isRep && (time.hours <= 0 && time.minutes <= 0 && time.seconds <= 3)){
+            console.log("Less than three seconds left")
+            playActive()
+        }else if(props.isRep && time.hours <= 0 && time.minutes <= 0 && time.seconds <= 0){
+            playActive()
+        }
         if (time.hours <= 0 && time.seconds <= 0 && time.minutes <= 0) {
             clearTimeout(token.current);
             updateTime("hours", 0);
@@ -132,10 +138,7 @@ export default function ActiveClock(props) {
         }
     }
     function updateTime(propName, newValue) {
-        if(propName == "seconds" && newValue <= 3){
-            console
-            playActive()
-        }
+       
         setTime((prevTime) => {
             return {
                 ...prevTime,
@@ -187,14 +190,7 @@ export default function ActiveClock(props) {
         setPaused(false);
         setStarted(true);
     }
-    function playAudio() {
-        if (!muted) {
-            tickSound.current = new Audio("./assets/ticking-clock_1-d7477.mp3");
-            tickSound.current.play();
-            console.log(tickSound.current);
-            // tickSound.current.currentTime = 0;
-        }
-    }
+
 
     const buttonData = {
         stop: {
