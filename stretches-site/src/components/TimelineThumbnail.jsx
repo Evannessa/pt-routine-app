@@ -11,6 +11,7 @@ import textFormatter from "../helpers/formatText";
 import { useDraggable, useDroppable } from "@dnd-kit/core";
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import ExercisePopupCard from "./ExercisePopupCard";
 const { urlBase, urlBaseNoApi } = urls;
 
 /* #region Styled Components  */
@@ -74,7 +75,7 @@ const NewTimerButton = styled.button`
         }
     }
 `;
-const Hoverable = styled.div`
+const StyledHoverable = styled.div`
     & + ${Tooltip} {
         opacity: 100%;
     }
@@ -208,6 +209,7 @@ ThumbnailContainer.displayName = "ThumbnailContainer";
 const TimelineThumbnail = forwardRef(
     (
         {
+            children,
             viewed,
             handleClick,
             addNewTimer,
@@ -227,17 +229,12 @@ const TimelineThumbnail = forwardRef(
         const [isOn, setIsOn] = useState();
 
         function callAddNewTimer(index, beforeOrAfter, event) {
-            let shouldDuplicate = event.ctrlKey
+            const shouldDuplicate = event.ctrlKey
             addNewTimer(index, beforeOrAfter, shouldDuplicate)
         }
-
-   
-
-
         return (
             <ThumbnailContainer
                 ref={ref}
-                // ref={ref}
                 hover={hover}
                 onMouseEnter={() => setHover(true)}
                 onMouseLeave={() => setHover(false)}
@@ -250,6 +247,7 @@ const TimelineThumbnail = forwardRef(
                 data-test-id={"timeline-thumbnail"}
                 viewed={viewed}
             >
+                {children}
                 <section className="hud">
                     <ButtonWithTooltipWrapper left={true}>
                         <NewTimerButton
@@ -260,11 +258,17 @@ const TimelineThumbnail = forwardRef(
                         >
                             add
                         </NewTimerButton>
-                        <Tooltip>Add Timer Before</Tooltip>
+                        <Tooltip>
+                            Add Timer Before (Hold <code>Ctrl</code> to duplicate) 
+                        </Tooltip>
                     </ButtonWithTooltipWrapper>
 
                     <TooltipWrapper toggleAction="hover">
-                        <Hoverable className="time-wrapper" title={description} onClick={() => navigate(dataKey)}>
+                        <StyledHoverable 
+                            className="time-wrapper" 
+                            title={description} 
+                            onClick={() => navigate(dataKey)}
+                        >
                             {description && <Tooltip>{description}</Tooltip>}
                             <div className="thumbnail-text">
                                 <span className="abbreviation">{textFormatter.firstLetterOfEachWord(timer.label)}</span>
@@ -272,16 +276,24 @@ const TimelineThumbnail = forwardRef(
                                     {String(time.minutes).padStart(2, "0")}:{String(time.seconds).padStart(2, "0")}
                                 </span> : <span>{`x${repeatNumber}`}</span>}
                             </div>
-                        </Hoverable>
-                        <section>
+                        </StyledHoverable>
+                        <ExercisePopupCard data={{
+                            src: `${urlBaseNoApi}${slideImagePath}`,
+                            label: timer.label,
+                            actions: actions,
+                            timerId: dataKey,
+                            timer: timer,
+                            coords: coords,
+                            cannotLoad: cannotLoad
+                        }}/>
+                        {/* <section>
                             <p className="tooltip-card-title">{timer.label}</p>
                             <img src={`${urlBaseNoApi}${slideImagePath}`} alt="Exercise Slide" crossOrigin="true" onError={({ currentTarget }) => {
                                 currentTarget.onerror = null; // prevents looping
                                 currentTarget.src = cannotLoad;
                             }} />
-                            {/* <p>{description}</p> */}
                             <FloatingToolbar actions={actions} timerId={dataKey} coords={coords}></FloatingToolbar>
-                        </section>
+                        </section> */}
                     </TooltipWrapper>
 
                     <ButtonWithTooltipWrapper left={false}>
@@ -293,7 +305,9 @@ const TimelineThumbnail = forwardRef(
                         >
                             add
                         </NewTimerButton>
-                        <Tooltip>Add Timer After</Tooltip>
+                        <Tooltip>
+                            Add Timer After (Hold <code>Ctrl</code> to duplicate) 
+                        </Tooltip>
                     </ButtonWithTooltipWrapper>
                 </section>
             </ThumbnailContainer>
