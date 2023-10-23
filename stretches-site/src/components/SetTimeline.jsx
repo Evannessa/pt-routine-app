@@ -87,8 +87,6 @@ function SetTimeline({ timers,
     deleteParentTimer,
     duplicateParentTimer }) {
     const timerThumbnailRefs = React.useRef([]);
-    const [dragging, setDragging] = React.useState(false);
-    const [dragIndex, setDragIndex] = React.useState(0);
     const mousePosition = React.useRef({ x: null, y: null });
     const [selectedTimers, setSelectedTimers] = React.useState([]);
     const [activeId, setActiveId] = useState(null);
@@ -156,12 +154,10 @@ function SetTimeline({ timers,
     }, [timers]);
 
     function updateTimerPositions(oldIndex, newIndex){
-        // swap(oldIndex, newIndex)
         let swapTimers = [...timers]
         const temp = swapTimers[newIndex]
         swapTimers[newIndex] = swapTimers[oldIndex]
         swapTimers[oldIndex] = temp
-        console.log(swapTimers.map((item)=> item._id?.slice(-3)), timers.map((item)=> item._id?.slice(-3)))
         setParentTimers(swapTimers)
     }
 
