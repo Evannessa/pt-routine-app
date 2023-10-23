@@ -1,6 +1,10 @@
 import React, { useRef } from "react";
 import styled from "styled-components";
 import repeatIcon from "../images/refresh-symbol.png"
+import { useAudio } from "./AudioPlayer";
+import useSound from "use-sound"
+import { urls } from "../helpers/requests";
+import bellSound from "../images/240934__the_very_real_horst__neptun-solo-07-tibetan-singing-bowl.wav"
 
 const ButtonWrapper = styled.div`
     display: flex;
@@ -55,6 +59,8 @@ const StyledTimer = styled.div`
 export default function ActiveClock(props) {
     const { id } = props;
     const [muted, setMuted] = React.useState(false);
+    // const bellSound = useAudio("")
+    const [playing, toggle] = useAudio(bellSound);
     const tickSound = useRef();
     const [time, setTime] = React.useState({
         hours: props.hours,
@@ -67,6 +73,8 @@ export default function ActiveClock(props) {
     const [paused, setPaused] = React.useState(false);
     // const [atZero, setAtZero] = React.useState(false);
     const token = React.useRef();
+
+    const [playActive] = useSound(bellSound, {volume: 0.25})
 
     function runTime() {
         if (time.seconds === 0) {
@@ -124,6 +132,10 @@ export default function ActiveClock(props) {
         }
     }
     function updateTime(propName, newValue) {
+        if(propName == "seconds" && newValue <= 3){
+            console
+            playActive()
+        }
         setTime((prevTime) => {
             return {
                 ...prevTime,
@@ -177,7 +189,7 @@ export default function ActiveClock(props) {
     }
     function playAudio() {
         if (!muted) {
-            tickSound.current = new Audio("/assets/ticking-clock_1-d7477.mp3");
+            tickSound.current = new Audio("./assets/ticking-clock_1-d7477.mp3");
             tickSound.current.play();
             console.log(tickSound.current);
             // tickSound.current.currentTime = 0;
@@ -217,6 +229,7 @@ export default function ActiveClock(props) {
     return (
         <StyledTimer className="timer" isRep={props.isRep}>
             <div className="timer__values">
+                {/* {(time.hours + time.seconds + time.minutes) < 3 && playActive()} */}
                 {loopsRemaining > 0 && 
                     <div className="repeat-wrapper">
                         {!props.isRep ? 

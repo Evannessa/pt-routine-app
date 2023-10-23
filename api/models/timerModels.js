@@ -69,6 +69,7 @@ const TimerSetSchema = new mongoose.Schema({
         isAutoBreak: { type: Boolean, required: true, default: false },
         repeatNumber: { type: Number, required: true, default: 0 },
   isRep: {
+
         type: Boolean,
         required: true,
         default: false,
