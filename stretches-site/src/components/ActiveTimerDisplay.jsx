@@ -274,6 +274,10 @@ export default function ActiveTimerDisplay() {
         : [];
     //if the clock hits zero, etc.
 
+    function playAutoBreak(){
+
+    }
+
     function moveToNextClock() {
         setCurrentClock((oldClock) => (oldClock += 1)); //increment the current clock
     }
@@ -290,6 +294,7 @@ export default function ActiveTimerDisplay() {
             const repeatSet = repeat;
             if (clockAtZero) {
                 if (currentClock + 1 < timers.length) {
+                    //TODO: Put auto-break functionality here
                     moveToNextClock();
                 } else {
                     if (repeatSet > 0) {
