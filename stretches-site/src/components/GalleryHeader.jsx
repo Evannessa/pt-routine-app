@@ -2,20 +2,25 @@ import React from "react";
 import styled, { css } from "styled-components";
 import { device } from "./styled-components/devices";
 import { Container } from "./styled-components/layout.styled";
-import Input, {StyledInputWrapper} from "./input/Input";
+import Input, { StyledInputWrapper } from "./input/Input";
 import * as Buttons from "./styled-components/Buttons.Styled";
 import { ButtonWithIcon } from "./styled-components/Buttons.Styled";
 import Select from "./input/Select";
-import ActionFactory from "../classes/ActionFactory";
+import AutoBreakConfig from "./AutoBreakConfig";
 // import { StyledInputWrapper } from "./input/Input";
 const ButtonWrapper = styled.div`
     display: flex;
     justify-content: space-evenly;
+    gap: 1rem;
+    .inner-wrapper{
+        display:flex;
+        justify-content: center;
+    }
     > * {
         flex: 0 1;
     }
-    width: 25%;
-    margin-left: auto;
+    /* width: 25%; */
+    /* margin-left: auto; */
 `;
 ButtonWrapper.displayName = "ButtonWrapper";
 /* ---------------------------- Styled Components --------------------------- */
@@ -29,27 +34,31 @@ const StyledGalleryHeader = styled.div`
     position: relative;
     flex: 1 0 1;
     //the outer container that will expand and contract when button is clicked
-    > ${Container} {
+    .button-wrapper{
+            display: flex;
+            &:nth-child(2){
+                margin-right: auto;
+            }
+            &:nth-last-child(3){
+                margin-left: auto;
+
+            }
+
+        }
+    .header-top{
         background-color: white;
         position: absolute;
         z-index: 900;
         width: 100%;
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
+        /* flex-direction: column; */
         transition: all 200ms ease-out;
-        ${(props) =>
-            props.expanded &&
-            css`
-                top: 0%;
-        `};
-        ${(props) =>
-            !props.expanded &&
-            css`
-                top: -40vh;
-        `}
+        top: ${props => props.expanded ? "0%" : "-40vh"};
         button {
             z-index: 1000;
         }
+    
 
         padding: clamp(1rem, 1rem + 1vh, 2rem);
         /* margin-bottom: 2rem; */
@@ -131,17 +140,21 @@ const StyledGalleryHeader = styled.div`
         /* .expand {
             display: none;
         } */
-        > ${Container} {
+        .header-bottom{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .header-top {
             position: relative;
             top: unset;
-            height: ${props => props.expanded ? "auto" : "0px"   };
+            height: ${props => props.expanded ? "auto" : "0px"};
             padding: ${props => !props.expanded && "0px"};
-            *:not(button.expand) {
-                height: ${props => props.expanded ? "auto" : "0px"   };
+            ${StyledInputWrapper}{
+                height: ${props => props.expanded ? "auto" : "0px"};
                 padding: ${props => !props.expanded && "0px"};
                 transform: ${props => !props.expanded && "scale(0)"};
             }
-
         }
         
     }
@@ -149,21 +162,16 @@ const StyledGalleryHeader = styled.div`
 StyledGalleryHeader.displayName = "GalleryHeader";
 // #endregion
 export default function GalleryHeader(props) {
-    const { formData, updateFormData, handleClick, expanded, setExpanded } = props;
+    const { formData, updateFormData, handleClick, expanded, setExpanded, actions } = props;
 
-    const actionData = [
-        ActionFactory("startTimer", "play_circle", ()=>{}, "Start the Routine"),
-        ActionFactory("addBreaks", "more_time", ()=>{}, "Automatically insert a break between each Timer in this Routine"),
-        ActionFactory("addSpotifyLink", "music_note", ()=>{}, "Add a link to a spotify playlist"),
-        ActionFactory("addYoutubeLink", "youtube_activity", ()=>{}, "Add a link to a YouTube video or playlist"),
-    ]
+
     const buttonData = {
         startTimer: {
             icon: "play_circle",
             action: "start-timer",
             tooltip: "Start the Routine"
         },
-        addBreaks:{
+        addBreaks: {
             icon: "more_time",
             action: "auto-breaks",
             tooltip: "Automatically insert a break between each Timer in this Routine"
@@ -180,9 +188,16 @@ export default function GalleryHeader(props) {
         },
     };
 
-    const buttonElements = {};
+    const buttonElements = actions.map((action) => <ButtonWithIcon
+        type="circle"
+        key={action.name}
+        onClick={action.functionRef}
+        // data-action={data.action}
+        icon={action.icon}
+        title={action.description ? action.description : action.name}
+    ></ButtonWithIcon>)
 
-    for (let key in buttonData) {
+    /* for (let key in buttonData) {
         const data = buttonData[key];
         buttonElements[key] = (
             <ButtonWithIcon
@@ -193,7 +208,7 @@ export default function GalleryHeader(props) {
                 title={data.tooltip}
             ></ButtonWithIcon>
         );
-    }
+    } */
 
     /**
      * Add automatic breaks
@@ -202,10 +217,22 @@ export default function GalleryHeader(props) {
         //add automatic breaks
     }
 
+    const expandButton = (<Buttons.IconButton
+                    className="expand"
+                    onClick={() => {
+                        setExpanded();
+                    }}
+                >
+                    <span className="material-symbols-outlined">{expanded ? "expand_less" : "expand_more"} </span>
+                </Buttons.IconButton>
+
+
+    )
+
     return (
         <StyledGalleryHeader expanded={expanded}>
             <Container full={true} fullVertical={true}>
-                <Container>
+                <Container className="header-top">
                     <Input
                         className="quarter-width"
                         type="text"
@@ -227,31 +254,18 @@ export default function GalleryHeader(props) {
                         hasLabel={true}
                         inputStyle="floatingLabel"
                     ></Input>
+                 
 
-                    <ButtonWrapper className="button-wrapper">
-                        {buttonElements.startTimer}
-                        {buttonElements.addSpotifyLink}
-                        {buttonElements.addYoutubeLink}
-                        {buttonElements.addBreaks}
-                    </ButtonWrapper>
+
                 </Container>
-                {/* <Buttons.IconButton
-                    className="expand"
-                    onClick={() => {
-                        setExpanded((prevState) => !prevState);
-                    }}
-                >
-                    <span className="material-symbols-outlined">{expanded ? "expand_less" : "expand_more"}</span>
-                </Buttons.IconButton> */}
             </Container>
-            <Buttons.IconButton
-                className="expand"
-                onClick={() => {
-                    setExpanded();
-                }}
-            >
-                <span className="material-symbols-outlined">{expanded ? "expand_less" : "expand_more"} </span>
-            </Buttons.IconButton>
+            <Container className="header-bottom">
+                <ButtonWrapper className="button-wrapper">
+                    <div class="inner-wrapper">{buttonElements.slice(0, 3)}</div>
+                    <div class="inner-wrapper">{expandButton}</div>
+                    <div class="inner-wrapper">{buttonElements.slice(-2)}</div>
+                </ButtonWrapper>
+            </Container>
         </StyledGalleryHeader>
     );
 }

@@ -31,6 +31,7 @@ StyledChangeButton.displayName = "ChangeButton";
 export default function ChangeTimeButton(props) {
     /* ------------------------------- React Hooks ------------------------------ */
     const theme = useContext(ThemeContext);
+    const overrideTheme = props.theme
 
     /* ---------------------------- Return Statement ---------------------------- */
     return (
@@ -40,7 +41,7 @@ export default function ChangeTimeButton(props) {
             // }`}
             onClick={props.updateValue}
         >
-            <ThemeProvider theme={theme}>
+            <ThemeProvider theme={overrideTheme ? overrideTheme : theme}>
                 {props.isIncrease ? "+" : "-"}
                 {props.value}
             </ThemeProvider>

@@ -65,6 +65,7 @@ export default function TimeValue(props) {
             changeBtns.push(
                 <ChangeTimeButton
                     key={i}
+                    theme={props.theme}
                     value={values[i]}
                     isIncrease={isIncrease}
                     updateValue={() =>

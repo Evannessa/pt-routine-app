@@ -165,13 +165,7 @@ const FlexContainer = styled(Container)`
         font-size: clamp(0.75rem, 0.75rem + 1vw, 1rem);
     }
 
-    .value-wrapper {
-        width: 100vw;
-        .timer__separator,
-        h3 {
-            font-size: clamp(3rem, 3rem + 2vh, 3.5rem);
-        }
-    }
+
 
     @media ${device.tablet} {
         ${BottomDrawer} {
@@ -450,7 +444,7 @@ export default function PreviewTimer(props) {
                                 value="isBreak"
                                 checked={props.isBreak}
                                 setStateFunction={updateTimerData}
-                                icon="schedule"
+                                icon="timelapse"
                                 hasLabel={true}
                                 inputStyle="chip"
                                 tooltip="Is this timer a break timer, meant for resting in between exercises?"
@@ -466,7 +460,7 @@ export default function PreviewTimer(props) {
                                 value="isRep"
                                 checked={props.isRep}
                                 setStateFunction={updateTimerData}
-                                icon="schedule"
+                                icon="repeat"
                                 hasLabel={true}
                                 inputStyle="chip"
                                 tooltip="Is this timer a rep timer"

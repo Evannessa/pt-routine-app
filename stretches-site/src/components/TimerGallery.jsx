@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import PreviewTimer from "./PreviewTimer";
 import { mockTimerSets } from "../mockData/MockTimers";
 import ActionModal from "./ActionModal";
@@ -12,6 +12,8 @@ import { requests } from "../helpers/requests";
 import { useGlobalContext } from "../context";
 import AutoBreakConfig from "./AutoBreakConfig";
 import helpers from "../classes/Helpers";
+import FloatingToolbar from "./FloatingToolbar";
+import ActionFactory from "../classes/ActionFactory";
 
 /* ---------------------------- Styled Components --------------------------- */
 
@@ -65,6 +67,7 @@ export default function TimerGallery(props) {
     const [formData, setFormData] = React.useState(props.formData || {});
     const [timerSet, setTimerSet] = React.useState();
     const [currentTimer, setCurrentTimer] = React.useState();
+    const [sortMode, setSortMode] = useState(false)
     const navigate = useNavigate();
 
     let params = useParams(); //show the params of the get request
@@ -136,6 +139,7 @@ export default function TimerGallery(props) {
                     spotifyLink: formData.spotifyLink,
                     timers: formData.timers,
                     repeatNumber: formData.repeatNumber,
+                    autoBreakTime: formData.autoBreakTime
                 },
             };
             requests.axiosRequest(options);
@@ -296,6 +300,46 @@ export default function TimerGallery(props) {
         navigate(`/dashboard/display/${id}`);
     }
 
+    const actionData = [
+        ActionFactory(
+            "startRoutine", 
+            "play_circle", 
+            ()=> navigateToDisplay(),
+            "Start the Routine"
+        ),
+      
+        ActionFactory(
+            "addSpotifyLink", 
+            "music_note", 
+            (event)=>{
+                setShowModal({ isOpen: true, currentModalIndex: 0 });
+            }, 
+            "Add a link to a spotify playlist"
+        ),
+        ActionFactory(
+            "addYoutubeLink", 
+            "youtube_activity", 
+            (event)=>{
+                setShowModal({ isOpen: true, currentModalIndex: 1 });
+            }, 
+            "Add a link to a YouTube video or playlist"
+        ),
+        ActionFactory(
+            "addBreaks", 
+            "more_time", 
+            (event)=>{}, 
+            "Automatically insert a break between each Timer in this Routine"
+        ),
+        ActionFactory(
+            "toggleSortMode", 
+            "reorder", 
+            ()=>{
+                setSortMode(!sortMode)
+            }, 
+            "Sort Mode"
+        )
+    ]
+
     /**
      * handle different actions when we click upon buttons
      * @param {*} event - the click event
@@ -342,11 +386,14 @@ export default function TimerGallery(props) {
                     spotifyLink: formData.spotifyLink,
                     timers: formData.timers,
                     repeatNumber: formData.repeatNumber,
+                    autoBreakTime: formData.autoBreakTime
                 },
             };
             await requests.axiosRequest(options);
         }
     }
+
+ 
     //update all the data in the form
     const updateFormData = useCallback(async (property, data) => {
         console.log("Updating", property, data);
@@ -463,6 +510,7 @@ export default function TimerGallery(props) {
             <ThemeProvider theme={theme}>
                 {formData && Object.keys(formData).length > 0 && (
                     <GalleryHeader
+                        actions={actionData}
                         expanded={expanded}
                         setExpanded={() => setExpanded((prevData) => !prevData)}
                         updateFormData={updateFormData}
@@ -473,6 +521,7 @@ export default function TimerGallery(props) {
                     ></GalleryHeader>
                 )}
                 <SetTimeline
+                    sortMode={sortMode}
                     timerInView={currentTimer}
                     addNewTimer={addNewTimer}
                     timers={formData.timers || []}
@@ -481,6 +530,13 @@ export default function TimerGallery(props) {
                     navigateToParentTimer={navigateToTimer}
                     duplicateParentTimer={duplicateTimer}
                 />
+                {/* <FloatingToolbar actions={
+                    {
+
+
+                    }
+
+                }></FloatingToolbar> */}
             </ThemeProvider>
             {/* TIMERS */}
             <ThemeProvider theme={theme}>
@@ -488,7 +544,10 @@ export default function TimerGallery(props) {
                     {previewTimers}
                 </TimerWrapper>
             </ThemeProvider>
-
+            <AutoBreakConfig 
+                time={formData ? formData.autoBreakTime : {hours: 0, minutes: 0, seconds:5}}
+                updateFormData={updateFormData}
+            />
             {showModal.isOpen && (
                 <ActionModal
                     open={showModal.isOpen}
