@@ -68,6 +68,7 @@ export default function TimerGallery(props) {
     const [timerSet, setTimerSet] = React.useState();
     const [currentTimer, setCurrentTimer] = React.useState();
     const [sortMode, setSortMode] = useState(false)
+    const [showAutoBreak, setShowAutoBreak] = useState(false)
     const navigate = useNavigate();
 
     let params = useParams(); //show the params of the get request
@@ -327,7 +328,9 @@ export default function TimerGallery(props) {
         ActionFactory(
             "addBreaks", 
             "more_time", 
-            (event)=>{}, 
+            (event)=>{
+                setShowAutoBreak(!showAutoBreak)
+            }, 
             "Automatically insert a break between each Timer in this Routine"
         ),
         ActionFactory(
@@ -530,13 +533,7 @@ export default function TimerGallery(props) {
                     navigateToParentTimer={navigateToTimer}
                     duplicateParentTimer={duplicateTimer}
                 />
-                {/* <FloatingToolbar actions={
-                    {
 
-
-                    }
-
-                }></FloatingToolbar> */}
             </ThemeProvider>
             {/* TIMERS */}
             <ThemeProvider theme={theme}>
@@ -544,10 +541,10 @@ export default function TimerGallery(props) {
                     {previewTimers}
                 </TimerWrapper>
             </ThemeProvider>
-            <AutoBreakConfig 
+            {showAutoBreak && <AutoBreakConfig 
                 time={formData ? formData.autoBreakTime : {hours: 0, minutes: 0, seconds:5}}
                 updateFormData={updateFormData}
-            />
+            />}
             {showModal.isOpen && (
                 <ActionModal
                     open={showModal.isOpen}
