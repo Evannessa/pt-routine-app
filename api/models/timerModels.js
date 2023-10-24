@@ -84,6 +84,11 @@ const TimerSetSchema = new mongoose.Schema({
         default: "",
     },
     repeatNumber: { type: Number, required: true, default: 0 },
+    autoBreakTime: {type: Map, of:Number, required: true, default: {
+        hours: 0,
+        minutes: 0,
+        seconds: 5,
+    }}
 });
 
 //? model is wrapper around schema

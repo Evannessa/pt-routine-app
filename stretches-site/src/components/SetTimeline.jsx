@@ -79,7 +79,9 @@ const Tooltip = styled.span`
 `;
 /* #endregion */
 
-function SetTimeline({ timers,
+function SetTimeline({ 
+    sortMode,
+    timers,
     timerInView,
     addNewTimer,
     setParentTimers,
@@ -91,6 +93,7 @@ function SetTimeline({ timers,
     const [selectedTimers, setSelectedTimers] = React.useState([]);
     const [activeId, setActiveId] = useState(null);
     const [items, setItems] = useState(getTimerIds());
+    // const [sortMode, setSortMode] = useState(false)
     const sensors = useSensors(
         useSensor(PointerSensor),
         useSensor(KeyboardSensor, {
@@ -211,6 +214,7 @@ function SetTimeline({ timers,
             key={timer._id}
             index={index}
             id={timer._id}
+            disabled={sortMode}
             // ref={createRef()}
             timer={timer}
             {...timer}

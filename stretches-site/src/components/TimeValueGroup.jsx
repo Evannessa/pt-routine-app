@@ -1,7 +1,18 @@
 import React from 'react';
 import TimeValue from './TimeValue';
+import styled from 'styled-components';
 
-const TimeValueGroup = ({time, updateTimerData}) => {
+const StyledValueGroup = styled.div`
+        /* width: 100vw; */
+        width: 100%;
+        .timer__separator,
+        h3 {
+            font-size: clamp(3rem, 3rem + 2vh, 3.5rem);
+            color: white;
+        }
+`;
+
+const TimeValueGroup = ({time, updateTimerData, theme}) => {
  /**
      *
      * @param {value} value - the value by which we're increasing or decreasing
@@ -45,13 +56,13 @@ const TimeValueGroup = ({time, updateTimerData}) => {
     }
 
     return (
-        <div className="value-wrapper">
-                <TimeValue value={time.hours} unit={"hours"} updateValue={updateValue}></TimeValue>
+        <StyledValueGroup className="value-wrapper">
+                <TimeValue value={time.hours} unit={"hours"} updateValue={updateValue} theme={theme}></TimeValue>
                 <span className="timer__separator">:</span>
-                <TimeValue value={time.minutes} unit={"minutes"} updateValue={updateValue}></TimeValue>
+                <TimeValue value={time.minutes} unit={"minutes"} updateValue={updateValue} theme={theme}></TimeValue>
                 <span className="timer__separator">:</span>
-                <TimeValue value={time.seconds} unit={"seconds"} updateValue={updateValue}></TimeValue>
-        </div>
+                <TimeValue value={time.seconds} unit={"seconds"} updateValue={updateValue} theme={theme}></TimeValue>
+        </StyledValueGroup>
     );
 }
 

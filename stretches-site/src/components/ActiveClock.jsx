@@ -1,9 +1,7 @@
 import React, { useRef } from "react";
 import styled from "styled-components";
 import repeatIcon from "../images/refresh-symbol.png"
-import { useAudio } from "./AudioPlayer";
 import useSound from "use-sound"
-import { urls } from "../helpers/requests";
 import bellSound from "../audio/240934__the_very_real_horst__neptun-solo-07-tibetan-singing-bowl.wav"
 import bellSoundHighPitch from "../audio/271370__inoshirodesign__singing-bowl-strike-sound.mp3"
 

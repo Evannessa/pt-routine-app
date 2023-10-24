@@ -24,7 +24,7 @@ const grow = keyframes`
 	}
 
 `;
-const Tooltip = styled.span`
+const StyledTooltip = styled.span`
     position: absolute;
     z-index: 100;
     bottom: 100%;
@@ -70,19 +70,20 @@ const NewTimerButton = styled.button`
         color: var(--clr-primary-orange);
         /* border-color: pink; */
         /* color: pink; */
-        & + ${Tooltip} {
+        & + ${StyledTooltip} {
             opacity: 100%;
         }
     }
 `;
 const StyledHoverable = styled.div`
-    & + ${Tooltip} {
+    & + ${StyledTooltip} {
         opacity: 100%;
     }
 `;
 const ButtonWithTooltipWrapper = styled.div`
     position: relative;
     opacity: 100%;
+    /* pointer-events: ${props => props.sortMode ? "none" : "auto"};; */
 
     &:hover {
         ${NewTimerButton} {
@@ -104,16 +105,22 @@ const ThumbnailContainer = styled.div`
         font-weight: bold;
         padding: 0.5em;
     }
-
-    .dragStart{
-
+    /* .drag-handle{
+        opacity: 0%;
+        pointer-events: none;
     }
+    &:hover{
+        .drag-handle{
+            opacity:100%;
+            pointer-events: auto;
+        }
+    } */
     .time-wrapper {
         border-radius: 12px;
         width: 4rem;
         height: 4rem;
         transform: scale(1, 1);
-        background-color: ${(props) => (props.isSelected ? "pink" : "rgba(255, 255, 255, 0.5)")};
+        background-color: ${(props) => (props.isSelected ? "pink" : "rgba(255, 255, 255, 0.75)")};
         .thumbnail-text{
             display: flex;
             flex-direction: column;
@@ -189,7 +196,7 @@ const ThumbnailContainer = styled.div`
 
         &:hover {
             > ${ButtonWithTooltipWrapper} {
-                pointer-events: auto;
+                /* pointer-events: ${props => props.sortMode ? "none" : "auto"}; */
                 transform: scale(1);
                 /* opacity: 100%; */
             }
@@ -219,11 +226,13 @@ const TimelineThumbnail = forwardRef(
             isSelected,
             actions,
             navigate,
-            timer
+            timer,
+            disabled
         },
         ref
     ) => {
         const { time, repeatNumber, isRep, description, slideImagePath } = timer
+        const sortMode = !disabled
         const [coords, setCoords] = useState();
         const [hover, setHover] = useState(false);
         const [isOn, setIsOn] = useState();
@@ -236,7 +245,7 @@ const TimelineThumbnail = forwardRef(
             <ThumbnailContainer
                 ref={ref}
                 hover={hover}
-                onMouseEnter={() => setHover(true)}
+                onMouseEnter={() => !sortMode  && setHover(true)}
                 onMouseLeave={() => setHover(false)}
                 className="thumbnailContainer"
                 data-key={dataKey}
@@ -246,21 +255,23 @@ const TimelineThumbnail = forwardRef(
                 repeatNumber={repeatNumber}
                 data-test-id={"timeline-thumbnail"}
                 viewed={viewed}
+                sortmode={sortMode}
             >
                 {children}
-                <section className="hud">
+                <section className="hud" sortmode={sortMode}>
                     <ButtonWithTooltipWrapper left={true}>
                         <NewTimerButton
                             title={description}
+                            sortmode={sortMode}
                             left={true}
                             onClick={(event) => callAddNewTimer(index, -1, event)}
                             className="material-icons"
                         >
                             add
                         </NewTimerButton>
-                        <Tooltip>
+                        <StyledTooltip>
                             Add Timer Before (Hold <code>Ctrl</code> to duplicate) 
-                        </Tooltip>
+                        </StyledTooltip>
                     </ButtonWithTooltipWrapper>
 
                     <TooltipWrapper toggleAction="hover">
@@ -269,7 +280,7 @@ const TimelineThumbnail = forwardRef(
                             title={description} 
                             onClick={() => navigate(dataKey)}
                         >
-                            {description && <Tooltip>{description}</Tooltip>}
+                            {description && <StyledTooltip>{description}</StyledTooltip>}
                             <div className="thumbnail-text">
                                 <span className="abbreviation">{textFormatter.firstLetterOfEachWord(timer.label)}</span>
                                 {!isRep ? <span>
@@ -286,18 +297,11 @@ const TimelineThumbnail = forwardRef(
                             coords: coords,
                             cannotLoad: cannotLoad
                         }}/>
-                        {/* <section>
-                            <p className="tooltip-card-title">{timer.label}</p>
-                            <img src={`${urlBaseNoApi}${slideImagePath}`} alt="Exercise Slide" crossOrigin="true" onError={({ currentTarget }) => {
-                                currentTarget.onerror = null; // prevents looping
-                                currentTarget.src = cannotLoad;
-                            }} />
-                            <FloatingToolbar actions={actions} timerId={dataKey} coords={coords}></FloatingToolbar>
-                        </section> */}
                     </TooltipWrapper>
 
                     <ButtonWithTooltipWrapper left={false}>
                         <NewTimerButton
+                            sortmode={sortMode}
                             left={false}
                             title={description}
                             onClick={(event) => callAddNewTimer(index, 1, event)}
@@ -305,9 +309,9 @@ const TimelineThumbnail = forwardRef(
                         >
                             add
                         </NewTimerButton>
-                        <Tooltip>
+                        <StyledTooltip>
                             Add Timer After (Hold <code>Ctrl</code> to duplicate) 
-                        </Tooltip>
+                        </StyledTooltip>
                     </ButtonWithTooltipWrapper>
                 </section>
             </ThumbnailContainer>

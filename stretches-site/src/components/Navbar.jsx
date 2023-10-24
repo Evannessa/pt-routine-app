@@ -3,6 +3,10 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { useGlobalContext } from "../context";
 
+// const StyledToolbar = styled.`
+  
+// `;
+
 const Navbar = () => {
     const { user, logoutUser } = useGlobalContext();
     return (
@@ -10,6 +14,10 @@ const Navbar = () => {
             <div className="nav-center">
                 <Link to="/" className="home-link">
                     Home
+                    {/* <img src={logo} alt="jobs app" className="logo" /> */}
+                </Link>
+            <Link to="/dashboard" className="home-link">
+                    Dashboard
                     {/* <img src={logo} alt="jobs app" className="logo" /> */}
                 </Link>
                 {user && (
@@ -36,6 +44,7 @@ const Wrapper = styled.nav`
     display: flex;
     align-items: center;
     justify-content: center;
+
     .nav-center {
         width: var(--fluid-width);
         max-width: var(--max-width);
@@ -43,6 +52,7 @@ const Wrapper = styled.nav`
         justify-content: space-between;
         align-items: center;
         flex-wrap: wrap;
+        gap: 1rem;
     }
     .nav-links {
         display: flex;
