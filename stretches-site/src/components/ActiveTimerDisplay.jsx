@@ -15,6 +15,7 @@ import { TooltipWrapper } from "../portal-components/TooltipPopover";
 // import Draggable from "react-draggable";
 import DraggableEmbedModal from "./display/DraggableEmbedModal";
 import { ButtonWithIcon } from "./styled-components/Buttons.Styled";
+import { nanoid } from "nanoid";
 /* #region   Styled Components */
 
 /** Header, which will contain details from timer set */
@@ -174,13 +175,43 @@ export default function ActiveTimerDisplay() {
 
     const [completed, setCompleted] = React.useState(false);
 
+    function populateAutoBreaks(_timers, autoBreakTime){
+        let timersWithBreaks = []
+        let breakTimer = {
+            ...timers[0], 
+            _id: "auto-break",
+            time: autoBreakTime,
+            label: "Auto Break",
+            isBreak: true,
+            isAutoBreak: true
+        }
+        for(let timer of timers){
+            timersWithBreaks.push(timer)
+            timersWithBreaks.push({...breakTimer, _id: nanoid()})
+        }
 
+
+    }
     /**Get the timers stored in the database when the component mounts */
     function populateActiveTimerSet(result) {
         // console.log("Result is", result, result.timers);
         if (!result) return;
-        const { _id, timers, label, youtubeLink, spotifyLink, repeatNumber } = result;
-        const newTimerObjects = timers.map((timer) => {
+        const { _id, timers, label, autoBreakTime, youtubeLink, spotifyLink, repeatNumber } = result;
+        let timersWithBreaks = []
+        let breakTimer = {
+            ...timers[0], 
+            _id: "auto-break",
+            time: autoBreakTime,
+            label: "Auto Break",
+            isBreak: true,
+            isAutoBreak: true
+        }
+        for(let timer of timers){
+            timersWithBreaks.push(timer)
+            timersWithBreaks.push({...breakTimer, _id: nanoid()})
+        }
+
+        const newTimerObjects = timersWithBreaks.map((timer) => {
             return {
                 ...timer,
                 clockAtZero: false,
@@ -274,7 +305,8 @@ export default function ActiveTimerDisplay() {
         : [];
     //if the clock hits zero, etc.
 
-    function playAutoBreak(){
+    function createAutoBreak(){
+
 
     }
 
@@ -294,7 +326,6 @@ export default function ActiveTimerDisplay() {
             const repeatSet = repeat;
             if (clockAtZero) {
                 if (currentClock + 1 < timers.length) {
-                    //TODO: Put auto-break functionality here
                     moveToNextClock();
                 } else {
                     if (repeatSet > 0) {
@@ -360,7 +391,7 @@ export default function ActiveTimerDisplay() {
                         {!completed ? (
                             <>
                                 <h2>
-                                    Clock{" "} 
+                                    Exercise {" "} 
                                     <span>
                                         {currentClock + 1} / {timers.length}
                                     </span>

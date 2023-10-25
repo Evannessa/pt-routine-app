@@ -2,7 +2,7 @@ import React, { useCallback, useState } from "react";
 import PreviewTimer from "./PreviewTimer";
 import { mockTimerSets } from "../mockData/MockTimers";
 import ActionModal from "./ActionModal";
-import SetTimeline from "./SetTimeline";
+import RoutineTimeline from "./RoutineTimeline";
 import { useParams, useLocation, Navigate, useNavigate, useOutletContext } from "react-router-dom";
 import styled from "styled-components";
 import { ThemeProvider } from "styled-components";
@@ -523,7 +523,7 @@ export default function TimerGallery(props) {
                         isSavedTimer={isSavedTimer}
                     ></GalleryHeader>
                 )}
-                <SetTimeline
+                <RoutineTimeline
                     sortMode={sortMode}
                     timerInView={currentTimer}
                     addNewTimer={addNewTimer}
