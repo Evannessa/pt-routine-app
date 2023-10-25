@@ -43,7 +43,7 @@ const getImage = async (req, res) => {
 
 const getAllUploads = async (req, res) => {
     try {
-        const folder = path.join(__dirname, "../public/uploads/")
+        const folder = path.join(__dirname, "../public/uploads/PT")
         fs.readdir(folder, (err, files) => {
             const imgFiles = files.filter((file) => {
                 const extensions = [".png", ".jpg", ".webp", ".jpeg", ".gif"]

@@ -79,7 +79,7 @@ const Tooltip = styled.span`
 `;
 /* #endregion */
 
-function SetTimeline({ 
+function RoutineTimeline({ 
     sortMode,
     timers,
     timerInView,
@@ -283,4 +283,4 @@ function SetTimeline({
     );
 }
 
-export default SetTimeline;
+export default RoutineTimeline;

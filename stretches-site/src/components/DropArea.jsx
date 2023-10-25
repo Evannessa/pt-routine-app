@@ -220,7 +220,8 @@ function DropArea(props) {
                     currentTarget.src= cannotLoad;
                 }}
                 crossOrigin="true"
-                alt="preview"
+                title={props.slideImagePath}
+                alt={props.slideImagePath}
                 ref={previewRef}
             />
 

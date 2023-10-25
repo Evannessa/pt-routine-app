@@ -59,10 +59,11 @@ function UploadModal(props) {
 
     function selectImage(event) {
         const src = event.currentTarget.getAttribute("src");
-        const baseName = "/uploads/" + src.split("/").pop();
+        const baseName = "/uploads/PT/" + src.split("/").pop();
         console.log("Base file name is", baseName);
 
         props.updateTimerData("slideImagePath", baseName);
+        props.closeCallback()
     }
 
     const imageElements = imagePaths
@@ -70,7 +71,8 @@ function UploadModal(props) {
             key={nanoid()} 
             onClick={selectImage} 
             alt={str} 
-            src={`${urlBaseNoApi}/uploads${str}`} />)
+            title={str}
+            src={`${urlBaseNoApi}/uploads/PT${str}`} />)
         : [];
 
     return <StyledModal>
