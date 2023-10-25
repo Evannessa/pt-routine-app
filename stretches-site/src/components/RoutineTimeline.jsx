@@ -185,27 +185,14 @@ function RoutineTimeline({
         console.log("Starting to drop", {active: active.id, over: over.id})
 
         if (active.id !== over.id) {
-            // const oldIndex = timers.find()
             const oldIndex = items.indexOf(active.id);
             const newIndex = items.indexOf(over.id);
-            console.log(items, oldIndex, newIndex)
             updateTimerPositions(oldIndex, newIndex)
-            // setItems((items) => {
-            //     const oldIndex = items.indexOf(active.id);
-            //     const newIndex = items.indexOf(over.id);
-
-            //     return arrayMove(items, oldIndex, newIndex);
-            // });
         }
 
         setActiveId(null);
     }
 
-
-    /** click of the thumbnail */
-    function handleClick(e) {
-        onTimerSelected(e, e.currentTarget);
-    }
 
     //map the timers to the thumbnail components
     const thumbnailComponents = items && items.length > 0 ? items.map((item, index) => {
