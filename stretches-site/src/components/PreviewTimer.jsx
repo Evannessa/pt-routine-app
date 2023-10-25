@@ -10,11 +10,19 @@ import { IconButton, CircleIconButton, ButtonWithIcon } from "./styled-component
 import Input, {StyledInputWrapper} from "./input/Input";
 import { device } from "./styled-components/devices";
 import UploadModal from "./UploadModal";
-import TimeValueGroup from "./TimeValueGroup";
+import TimeValueGroup, { StyledValueGroup } from "./TimeValueGroup";
+import EditableHeading from "./EditableHeading";
 
 /* ---------------------------- Styled Components --------------------------- */
 // #region Styled Components
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+
+const StyledTimer = styled.div`
+    display: grid;
+
+
+`
+
 const ExtraButtons = styled(Container)`
     display: flex;
     align-items: center;
@@ -148,12 +156,13 @@ const BottomDrawer = styled(Container)`
 BottomDrawer.displayName = "BottomDrawer";
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
-const FlexContainer = styled(Container)`
+const GridContainer = styled(Container)`
     position: relative;
     width: 100%;
     height: 100%;
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-rows: 5rem minmax(0,1fr);
     align-items: center;
     h1,
     h2 {
@@ -166,8 +175,15 @@ const FlexContainer = styled(Container)`
     }
 
 
-
     @media ${device.tablet} {
+        .preview-timer__number{
+            grid-row: 1/2;
+            height: 100%;
+            align-items: center;
+        }
+        ${StyledValueGroup}, ${StyledWrapper}{
+            grid-row: 2/3;
+        }
         ${BottomDrawer} {
             display: none;
         }
@@ -300,11 +316,31 @@ export default function PreviewTimer(props) {
         >
             {/* #region timer values */}
             <div className="preview-timer" data-testid={"preview-timer"}>
-                <FlexContainer full={true} fullVertical={true}>
-                    <h2 className="preview-timer__number">
+                <GridContainer full={true} fullVertical={true}>
+                    <EditableHeading
+                        text={formData.label ? `${props.number} - ${formData.label}` :  
+                        `Timer ${props.number}`}
+                        headingNumber={2}
+                        className="preview-timer__number"
+                        inputProps={
+                            {
+                                type:"text",
+                                name:"label",
+                                id:`${props.id}label`,
+                                value:props.label || "",
+                                setStateFunction:updateTimerData,
+                                hasLabel:false,
+                                tooltip:"The label for this exercise",
+                                style:{ color: "white" }
+                                // inputStyle="chip"
+                            }
+
+                        }
+                    />
+                    {/* <h2 className="preview-timer__number">
                         {formData.label ? `${props.number} - ${formData.label}` :  
                         `Timer ${props.number}`}
-                    </h2>
+                    </h2> */}
                     {/* <SpeedDialMenu actions={actions} /> */}
                     {showGalleryModal && (
                         <UploadModal
@@ -346,13 +382,6 @@ export default function PreviewTimer(props) {
                         )}
                     </StyledWrapper>
                     <TimeValueGroup time={props.time} updateTimerData={updateTimerData}></TimeValueGroup>
-                    {/* <div className="value-wrapper">
-                        <TimeValue value={props.time.hours} unit={"hours"} updateValue={updateValue}></TimeValue>
-                        <span className="timer__separator">:</span>
-                        <TimeValue value={props.time.minutes} unit={"minutes"} updateValue={updateValue}></TimeValue>
-                        <span className="timer__separator">:</span>
-                        <TimeValue value={props.time.seconds} unit={"seconds"} updateValue={updateValue}></TimeValue>
-                    </div> */}
 
                     {/* only show drop area if we've saved the timer */}
                     <StyledWrapper showModal={showTextModal}>
@@ -379,7 +408,7 @@ export default function PreviewTimer(props) {
                             style={{ color: "white" }}
                         ></Input>
                     </StyledWrapper>
-                </FlexContainer>
+                </GridContainer>
                 {/* #endregion */}
                 <BottomDrawer full={true}>
                     <ExtraButtons full={true} justifyCenter={true} alignCenter={true}>

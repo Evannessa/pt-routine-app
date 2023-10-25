@@ -2,7 +2,7 @@ import React from 'react';
 import TimeValue from './TimeValue';
 import styled from 'styled-components';
 
-const StyledValueGroup = styled.div`
+export const StyledValueGroup = styled.div`
         /* width: 100vw; */
         width: 100%;
         .timer__separator,
