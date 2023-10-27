@@ -1,7 +1,11 @@
 import React, { createRef, useState } from "react";
 import TimelineThumbnail from "./TimelineThumbnail";
 import styled from "styled-components";
-// import { AnimateBubbles } from "./AnimateBubbles";
+import {
+  restrictToHorizontalAxis,
+  restrictToWindowEdges,
+} from '@dnd-kit/modifiers';
+
 import ActionFactory from "../classes/ActionFactory";
 import {
     DndContext,
@@ -31,6 +35,7 @@ import DummyThumbnail from "./DummyThumbnail";
 /* #region  Styled components */
 
 const TimelineWrapper = styled.ul`
+    position: relative;
     z-index: 200;
     display: flex;
     gap: 3rem;
@@ -49,6 +54,10 @@ const TimelineWrapper = styled.ul`
     box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
 /* box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px; */
     /* box-shadow: rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset, rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px; */
+    ul{
+        top: 0 !important;
+        /* transform: tra */
+    }
 
 
     /* overflow-x: auto; */
@@ -201,7 +210,7 @@ function RoutineTimeline({
             key={timer._id}
             index={index}
             id={timer._id}
-            disabled={sortMode}
+            disabled={!sortMode}
             // ref={createRef()}
             timer={timer}
             {...timer}
@@ -255,6 +264,7 @@ function RoutineTimeline({
                 collisionDetection={closestCenter}
                 onDragStart={handleDragStart}
                 onDragEnd={handleDragEnd}
+                modifiers={[restrictToHorizontalAxis]}
             >
                 <SortableContext
                     items={items}
@@ -262,8 +272,13 @@ function RoutineTimeline({
                 >
                     {thumbnailComponents}
                 </SortableContext>
-                <DragOverlay>
-                    {activeId && timers.length > 0 ? <TimelineThumbnail id={activeId} timer={timers.find(timer => timer._id == activeId)}/> : null}
+                <DragOverlay
+                    modifiers={[restrictToWindowEdges, 
+                        restrictToHorizontalAxis
+                    ]}
+                    wrapperElement="ul"
+                >
+                    {activeId && timers.length > 0 ? <TimelineThumbnail id={activeId} timer={timers.find(timer => timer._id == activeId)} disabled={false}/> : null}
                 </DragOverlay>
             </DndContext>
         </TimelineWrapper>

@@ -327,7 +327,7 @@ export default function PreviewTimer(props) {
                                 type:"text",
                                 name:"label",
                                 id:`${props.id}label`,
-                                value:props.label || "",
+                                value:props.label,
                                 setStateFunction:updateTimerData,
                                 hasLabel:false,
                                 tooltip:"The label for this exercise",

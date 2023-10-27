@@ -104,7 +104,7 @@ function App() {
                 <GlobalStyle />
 
                 {/* <TimerSets timerSets={timerSets} updateSets={updateSets} /> */}
-                <Navbar />
+                {/* <Navbar /> */}
                 <Routes>
                     <Route path="/" exact element={<Home />} />
                     <Route path="/login" exact element={<Login />} />

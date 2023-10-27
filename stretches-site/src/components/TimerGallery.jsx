@@ -1,4 +1,5 @@
 import React, { useCallback, useState } from "react";
+import throttle from "lodash.throttle";
 import PreviewTimer from "./PreviewTimer";
 import { mockTimerSets } from "../mockData/MockTimers";
 import ActionModal from "./ActionModal";
@@ -67,6 +68,10 @@ export default function TimerGallery(props) {
     const [formData, setFormData] = React.useState(props.formData || {});
     const [timerSet, setTimerSet] = React.useState();
     const [currentTimer, setCurrentTimer] = React.useState();
+    const [uiToggles, setUiToggles] = useState({
+        sortMode: false,
+        showAutoBreak: false
+    })
     const [sortMode, setSortMode] = useState(false)
     const [showAutoBreak, setShowAutoBreak] = useState(false)
     const navigate = useNavigate();
@@ -248,6 +253,17 @@ export default function TimerGallery(props) {
         });
     }
 
+    function updateUiToggles(property, value){
+        setUiToggles((prevValue)=> {
+            return {
+                ...prevValue,
+                [property]: value
+            }
+        })
+
+
+    }
+
     function deleteTimer(id) {
         console.log("Deleting timer: ", id);
 
@@ -325,22 +341,32 @@ export default function TimerGallery(props) {
             }, 
             "Add a link to a YouTube video or playlist"
         ),
-        ActionFactory(
-            "addBreaks", 
-            "more_time", 
-            (event)=>{
-                setShowAutoBreak(!showAutoBreak)
-            }, 
-            "Automatically insert a break between each Timer in this Routine"
-        ),
-        ActionFactory(
-            "toggleSortMode", 
-            "reorder", 
-            ()=>{
-                setSortMode(!sortMode)
-            }, 
-            "Sort Mode"
-        )
+        // ActionFactory(
+        //     "addBreaks", 
+        //     "more_time", 
+        //     (event)=>{
+        //         setShowAutoBreak(!showAutoBreak)
+        //     }, 
+        //     "Automatically insert a break between each Timer in this Routine",
+        //     {
+        //         toggle: true
+        //     }
+        // ),
+        // ActionFactory(
+        //     "toggleSortMode", 
+        //     "reorder", 
+        //     ()=>{
+        //         setSortMode(!sortMode)
+        //     }, 
+        //     "Sort Mode",
+        //     {
+        //         toggle: true
+        //     }
+        // )
+    ]
+
+    const toggleActions = [
+
     ]
 
     /**
@@ -521,10 +547,16 @@ export default function TimerGallery(props) {
                         handleChange={handleChange}
                         formData={formData}
                         isSavedTimer={isSavedTimer}
+                        uiToggles={uiToggles}
+                        setUiToggles={updateUiToggles}
+                        // setShowAutoBreak={setShowAutoBreak}
+                        // showAutoBreak={showAutoBreak}
+                        // setSortMode={setSortMode}
+                        // sortMode={sortMode}
                     ></GalleryHeader>
                 )}
                 <RoutineTimeline
-                    sortMode={sortMode}
+                    sortMode={uiToggles.sortMode}
                     timerInView={currentTimer}
                     addNewTimer={addNewTimer}
                     timers={formData.timers || []}
@@ -541,7 +573,7 @@ export default function TimerGallery(props) {
                     {previewTimers}
                 </TimerWrapper>
             </ThemeProvider>
-            {showAutoBreak && <AutoBreakConfig 
+            {uiToggles.showAutoBreak && <AutoBreakConfig 
                 time={formData ? formData.autoBreakTime : {hours: 0, minutes: 0, seconds:5}}
                 updateFormData={updateFormData}
             />}
