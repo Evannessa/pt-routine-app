@@ -1,11 +1,15 @@
 import React, {useState} from 'react';
-import Input from './input/Input';
+import Input, {StyledInput} from './input/Input';
 import styled from 'styled-components';
 
 const StyledEditableHeader = styled.div`
    display: flex; 
    justify-content: center;
    align-items: center;
+   ${StyledInput}{
+    font-family: inherit;
+   }
+
 `;
 
 
@@ -37,11 +41,6 @@ const EditableHeading = ({
             }
         }
 
-        function updateText(event){
-
-            inputProps.setStateFunction()
-        }
-    
     return (
         <StyledEditableHeader onClick={()=> setEditMode(true)} className={className}>
             {!editMode ? 
@@ -49,7 +48,7 @@ const EditableHeading = ({
                 <Input 
                     {...inputProps}
                     value={inputProps.value}
-                    onBlur={()=> setEditMode(false)}
+                    handleBlur={(event)=> setEditMode(false)}
                 />
             }
             

@@ -1,4 +1,5 @@
 import React from "react";
+import { themes } from '../App';
 import styled, { css } from "styled-components";
 import { device } from "./styled-components/devices";
 import { Container } from "./styled-components/layout.styled";
@@ -34,135 +35,34 @@ const StyledGalleryHeader = styled.div`
     position: relative;
     flex: 1 0 1;
     //the outer container that will expand and contract when button is clicked
-    .button-wrapper{
+    .header-bottom{
             display: flex;
-            &:nth-child(2){
-                margin-right: auto;
+            flex-direction: row;
+            justify-content: space-between;
+            padding: 10px calc(-480px + 50vw);
+            max-height: 100%;
+            input[type="checkbox"] + label{
+                background-color: ${({ theme }) => theme.color2};;
+                color: white;
             }
-            &:nth-last-child(3){
-                margin-left: auto;
-
-            }
-
-        }
-    .header-top{
-        background-color: white;
-        position: absolute;
-        z-index: 900;
-        width: 100%;
-        display: flex;
-        flex-direction: row;
-        /* flex-direction: column; */
-        transition: all 200ms ease-out;
-        top: ${props => props.expanded ? "0%" : "-40vh"};
-        button {
-            z-index: 1000;
-        }
-    
-
-        padding: clamp(1rem, 1rem + 1vh, 2rem);
-        /* margin-bottom: 2rem; */
-        background-color: white;
-
-        box-shadow: 0px 3px 8px 5px rgba(0, 0, 0, 0.05);
-
-        /* // the inner grid container for the content */
-        > ${Container} {
-            display: grid;
-            justify-content: stretch;
-            align-items: center;
-            align-content: stretch;
-            grid-template-columns: 1fr 1fr;
-            grid-template-rows: 1fr 1fr;
-
-            div:first-child {
-                grid-row: 1/2;
-                grid-column: 1/2;
-            }
-            div:nth-child(2) {
-                grid-row: 2/3;
-                grid-column: 1/2;
-            }
-            ${StyledInputWrapper}{
-                flex: 1;
-            }
-
-            @media ${device.tablet} {
-                display: flex;
-                justify-content: space-between;
-            }
-
-            > ${ButtonWrapper} {
-                grid-column: 2/3;
-                grid-row: 1/3;
-                gap: 1rem;
-                width: fit-content;
-                display: flex;
-                flex-direction: column;
-                @media ${device.tablet} {
-                    flex-direction: row;
-                }
-                button {
-                    background-color: ${(props) => props.theme.color2};
-                    color: white;
-                    border: none;
-                    font-weight: bold !important;
-                    /* border-color: ${(props) => props.theme.color2}; */
-                    transition: background-color 0.25s linear;
-                    aspect-ratio: 1/1;
-                    flex: 1;
-                    padding: unset;
-                    span{
-                    }
-                }
-            }
-            > .input-label-overlay {
-                margin-left: 4rem;
-            }
-            input[type="text"],
-            input[type="number"] {
-                min-width: fit-content;
-                border-color: ${(props) => props.theme.color2} !important;
-
-                transition: background-color 0.25s linear;
-            }
-            label {
-                color: ${(props) => props.theme.color2};
-
-                transition: color 0.25s linear;
-            }
-            gap: clamp(0.25rem, 0.25rem + 1vh, 0.5rem);
+        .inner-wrapper{
+            display: flex;
+            justify-content: space-evenly;
         }
     }
-
     /* //if our height is over 600 px, show full */
     @media (min-height: 600px) and  (min-width: 600px) {
         /* .expand {
             display: none;
         } */
-        .header-bottom{
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-        .header-top {
-            position: relative;
-            top: unset;
-            height: ${props => props.expanded ? "auto" : "0px"};
-            padding: ${props => !props.expanded && "0px"};
-            ${StyledInputWrapper}{
-                height: ${props => props.expanded ? "auto" : "0px"};
-                padding: ${props => !props.expanded && "0px"};
-                transform: ${props => !props.expanded && "scale(0)"};
-            }
-        }
+    
         
     }
 `;
 StyledGalleryHeader.displayName = "GalleryHeader";
 // #endregion
 export default function GalleryHeader(props) {
-    const { formData, updateFormData, handleClick, expanded, setExpanded, actions } = props;
+    const { formData, updateFormData, handleClick, expanded, setExpanded, actions, uiToggles, setUiToggles } = props;
 
 
     const buttonData = {
@@ -195,6 +95,8 @@ export default function GalleryHeader(props) {
         // data-action={data.action}
         icon={action.icon}
         title={action.description ? action.description : action.name}
+        toggle={action.toggle}
+
     ></ButtonWithIcon>)
 
     /* for (let key in buttonData) {
@@ -210,12 +112,7 @@ export default function GalleryHeader(props) {
         );
     } */
 
-    /**
-     * Add automatic breaks
-     */
-    function autoAddBreaks() {
-        //add automatic breaks
-    }
+  
 
     const expandButton = (<Buttons.IconButton
                     className="expand"
@@ -230,41 +127,56 @@ export default function GalleryHeader(props) {
     )
 
     return (
-        <StyledGalleryHeader expanded={expanded}>
-            <Container full={true} fullVertical={true}>
-                <Container className="header-top">
-                    <Input
-                        className="quarter-width"
-                        type="text"
-                        name="label"
-                        id="label"
-                        label="Routine Name"
-                        value={formData && formData.label ? formData.label : "New Timer Set"}
-                        setStateFunction={updateFormData}
-                        hasLabel={true}
-                        inputStyle="floatingLabel"
-                    />
-                    <Input
-                        type="number"
-                        name="repeatNumber"
-                        id="repeatNumber"
-                        label="Repeat Number"
-                        setStateFunction={updateFormData}
-                        value={formData ? formData.repeatNumber : 0}
-                        hasLabel={true}
-                        inputStyle="floatingLabel"
-                    ></Input>
-                 
-
-
-                </Container>
-            </Container>
+        <StyledGalleryHeader expanded={expanded} theme={themes.primary}>
             <Container className="header-bottom">
-                <ButtonWrapper className="button-wrapper">
-                    <div class="inner-wrapper">{buttonElements.slice(0, 3)}</div>
-                    <div class="inner-wrapper">{expandButton}</div>
-                    <div class="inner-wrapper">{buttonElements.slice(-2)}</div>
-                </ButtonWrapper>
+                <Input
+                    className="quarter-width"
+                    type="text"
+                    name="label"
+                    id="label"
+                    label="Routine Name"
+                    value={formData && formData.label ? formData.label : "New Timer Set"}
+                    setStateFunction={updateFormData}
+                    hasLabel={true}
+                    inputStyle="floatingLabel"
+                    style={{
+                        borderColor: themes.primary.color1
+                    }}
+                />
+
+                <div class="inner-wrapper">{buttonElements}</div>
+                <div className="inner-wrapper">
+                    <Input
+                    type="checkbox"
+                    name="showAutoBreak"
+                    id="showAutoBreak"
+                    label="Show Auto Break"
+                    icon="more_time"
+                    value={uiToggles.showAutoBreak}
+                    setStateFunction={setUiToggles}
+                    hasLabel={true}
+                    inputStyle="chip"
+                    style={{
+                        borderColor: "black"
+                    }}
+                />
+                <Input
+                    type="checkbox"
+                    name="sortMode"
+                    id="sortMode"
+                    label="Sort Mode"
+                    icon={"reorder"}
+                    value={uiToggles.sortMode}
+                    setStateFunction={setUiToggles}
+                    hasLabel={true}
+                    inputStyle="chip"
+                    style={{
+                        borderColor: "black"
+                    }}
+                />
+
+                </div>
+                {/* <div class="inner-wrapper">{expandButton}</div> */}
             </Container>
         </StyledGalleryHeader>
     );

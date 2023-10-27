@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
+import debounce from "lodash.debounce";
+import throttle from "lodash.throttle"
 import PropTypes from "prop-types";
 import styled, { css } from "styled-components";
 import tf from "../../helpers/formatText";
@@ -174,6 +176,7 @@ StyledInput.displayName = "StyledInput";
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 // #endregion
 function Input(props) {
+
     let {
         // wrapped = true,
         className="",
@@ -191,11 +194,13 @@ function Input(props) {
         checked,
         inputStyle,
         style,
-        tooltip
+        tooltip,
+        handleBlur
     } = props;
     label = hasLabel && label ? label : name
     const [isChecked, setIsChecked] = useState(checked);
 
+    /* const [debouncedValue] = (value, 500); */
     useEffect(() => {
         setIsChecked(checked);
     }, [checked]);
@@ -212,13 +217,33 @@ function Input(props) {
         let passValue = value + adjust
         setStateFunction(name, passValue, parentName)
     }
+    const debounceFn = useCallback(throttle(handleDebounceFn, 100), []);
+
+    function handleDebounceFn(name, passValue, parentName){
+        setStateFunction(name, passValue, parentName)
+    }
+
+  /* const debouncedChangeHandler = useCallback(
+    debounce(handleChange, 300)
+  , []); */
     function handleChange(event) {
         let { value, checked, type } = event.currentTarget;
         let passValue = type === "checkbox" ? checked : value;
-        setStateFunction(name, passValue, parentName);
+        debounceFn(name, passValue, parentName)
+        /* setStateFunction(name, passValue, parentName); */
     }
+    /* function handleBlur(event){
+        if(props.handleBlur){
+            props.handleBlur(event)
+        }
+    } */
     return (
-        <StyledInputWrapper inputStyle={inputStyle} style={{ ...style }} className={className} title={tooltip}>
+        <StyledInputWrapper 
+            inputStyle={inputStyle} 
+            style={{ ...style }} 
+            className={className} 
+            title={tooltip}
+        >
             <StyledInput
                 as={type === "textarea" ? "textarea" : "input"}
                 className="input-label-overlay"
@@ -231,7 +256,9 @@ function Input(props) {
                 {...extraProps}
                 checked={isChecked}
                 disabled={props.disabled}
+                /* onChange={handleChange} */
                 onChange={handleChange}
+                onBlur={handleBlur}
                 style={{ ...style }}
                 title={tooltip}
             ></StyledInput>

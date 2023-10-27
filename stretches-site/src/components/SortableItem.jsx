@@ -59,7 +59,7 @@ export function SortableThumbnail(props) {
             disabled={props.disabled}
         >
             <Icon className="button-icon" icon="drag_indicator"></Icon>
-            <span>{props.index}</span>
+            <span>{props.timer.label}</span>
 
         </StyledHandle>
     </TimelineThumbnail>

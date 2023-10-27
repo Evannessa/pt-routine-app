@@ -92,9 +92,10 @@ const ButtonWithTooltipWrapper = styled.div`
         }
     }
 `;
-const ThumbnailContainer = styled.div`
+const ThumbnailContainer = styled.li`
     overflow: ${(props) => (props.hover ? "visible" : "hidden")} !important;
     position: relative;
+    list-style-type: none;
 
     border-radius: 12px;
     width: 4rem;
