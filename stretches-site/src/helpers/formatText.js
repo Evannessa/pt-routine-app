@@ -6,7 +6,7 @@ const textFormatter = (() => {
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
     function firstLetterOfEachWord(string, number=1){
-        let rgx = new RegExp(/(\p{L}{1})\p{L}+/, 'gu');
+        let rgx = new RegExp(/\b(\w)/, 'g');
         let initials = [...string.matchAll(rgx)] || [];
         initials = initials.map((array)=> 
         { 
