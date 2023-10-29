@@ -1,5 +1,6 @@
 import React, { createRef, useState } from "react";
-import TimelineThumbnail from "./TimelineThumbnail";
+import { ButtonWithIcon } from "./styled-components/Buttons.Styled";
+import TimelineThumbnail, { NewTimerButton } from "./TimelineThumbnail";
 import styled from "styled-components";
 import {
   restrictToHorizontalAxis,
@@ -58,6 +59,18 @@ const TimelineWrapper = styled.ul`
         top: 0 !important;
         /* transform: tra */
     }
+    ${NewTimerButton}{
+        position: static;
+        transform: unset;
+        opacity: unset;
+        /* border: 1px solid white; */
+        color: white;
+        border-radius: 10px;
+        span{
+            color: white;
+        }
+    }
+
 
 
     /* overflow-x: auto; */
@@ -280,6 +293,13 @@ function RoutineTimeline({
                 >
                     {activeId && timers.length > 0 ? <TimelineThumbnail id={activeId} timer={timers.find(timer => timer._id == activeId)} disabled={false}/> : null}
                 </DragOverlay>
+                <NewTimerButton  
+                            title={"Add a new exercise timer"}
+                            sortmode={sortMode}
+                            left={true}
+                            onClick={(event) => addNewTimer(timers.length - 1, -1, event.ctrlKey)}
+                            className="material-icons">add</NewTimerButton>
+                {/* <ButtonWithIcon className="add-button" icon={"add"}></ButtonWithIcon> */}
             </DndContext>
         </TimelineWrapper>
     );

@@ -365,9 +365,7 @@ export default function TimerGallery(props) {
         // )
     ]
 
-    const toggleActions = [
 
-    ]
 
     /**
      * handle different actions when we click upon buttons

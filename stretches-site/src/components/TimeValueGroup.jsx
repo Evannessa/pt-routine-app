@@ -12,7 +12,7 @@ export const StyledValueGroup = styled.div`
         }
 `;
 
-const TimeValueGroup = ({time, updateTimerData, theme}) => {
+const TimeValueGroup = ({time, updateTimerData, theme, isRep}) => {
  /**
      *
      * @param {value} value - the value by which we're increasing or decreasing
@@ -31,14 +31,6 @@ const TimeValueGroup = ({time, updateTimerData, theme}) => {
             [unit]: changeValueAndReturn(time[unit], value, unit)
         }
         updateTimerData("time", updatedTime)
-        // return updatedTime
-        // setTime((prevTime) => {
-        //     return {
-        //         ...prevTime,
-        //         // [unit]: prevTime[unit] + value,
-        //         [unit]: changeValueAndReturn(prevTime[unit], value, unit),
-        //     };
-        // });
     }
 
     function changeValueAndReturn(previousValue, value, unit, isIncrease) {
@@ -55,14 +47,20 @@ const TimeValueGroup = ({time, updateTimerData, theme}) => {
         return returnValue;
     }
 
+    const timeValues = Object.keys(time).map((key, index)=> <TimeValue value={time[key]} unit={key} updateValue={updateValue} theme={theme} isRep={isRep}/>)
+
     return (
         <StyledValueGroup className="value-wrapper">
-                <TimeValue value={time.hours} unit={"hours"} updateValue={updateValue} theme={theme}></TimeValue>
+                {timeValues[0]}
+                {/* <TimeValue value={time.hours} unit={"hours"} updateValue={updateValue} theme={theme}></TimeValue> */}
                 <span className="timer__separator">:</span>
-                <TimeValue value={time.minutes} unit={"minutes"} updateValue={updateValue} theme={theme}></TimeValue>
+                {timeValues[1]}
+                {/* <TimeValue value={time.minutes} unit={"minutes"} updateValue={updateValue} theme={theme}></TimeValue> */}
                 <span className="timer__separator">:</span>
-                <TimeValue value={time.seconds} unit={"seconds"} updateValue={updateValue} theme={theme}></TimeValue>
+                {timeValues[2]}
+                {/* <TimeValue value={time.seconds} unit={"seconds"} updateValue={updateValue} theme={theme}></TimeValue> */}
         </StyledValueGroup>
+
     );
 }
 

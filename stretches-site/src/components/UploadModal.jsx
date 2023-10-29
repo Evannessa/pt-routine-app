@@ -6,6 +6,8 @@ import { StyledModal } from "./styled-components/modal.styled";
 import { ButtonWithIcon } from "./styled-components/Buttons.Styled";
 const { urlBase, urlBaseNoApi, uploadsUrl } = urls;
 
+
+
 const StyledImgThumbnail = styled.img`
     max-width: 4rem;
     height: auto;
@@ -23,12 +25,38 @@ const StyledImgThumbnail = styled.img`
 const ImageList = styled.div`
     display: flex;
     width: fit-content;
-    max-width: 400px;
+    justify-content: center;
+    align-items: center;
+    max-width: 100%;
     max-height: 300px;
     overflow: auto;
     gap: 0.25rem;
     flex-wrap: wrap;
 `;
+
+const StyledUploadModal = styled(StyledModal)`
+    display: grid;
+    grid-template-columns: minmax(0,1fr) 20px;
+    grid-template-rows: 30px 40px minmax(0, 1fr);
+    height: 50vh;
+    .close-button{
+        grid-row:1/2;
+        grid-column: 2/3;
+    }
+    h3{
+        grid-row: 1/2;
+        grid-column: 1/2;
+        color: #212121;
+    }
+    ${ImageList}{
+        grid-row: 2/4;
+        grid-column: 1/2;
+    }
+    /* align-items: center; */
+    /* justify-content: center; */
+
+
+`
 /**
  * This displays the various images we've uploaded by fetching image files from the uploads folder
  * and allows to switch which image belongs to a timer by clicking
@@ -67,24 +95,27 @@ function UploadModal(props) {
     }
 
     const imageElements = imagePaths
-        ? imagePaths.map((str) => <StyledImgThumbnail 
-            key={nanoid()} 
-            onClick={selectImage} 
-            alt={str} 
+        ? imagePaths.map((str) => <StyledImgThumbnail
+            key={nanoid()}
+            onClick={selectImage}
+            alt={str}
             title={str}
             src={`${urlBaseNoApi}/uploads/PT${str}`} />)
         : [];
 
-    return <StyledModal>
-                    <ButtonWithIcon
-                                color="slategray"
-                                onClick={() => {
-                                    props.closeCallback();
-                                }}
-                                icon="close"
-                            >
-                            </ButtonWithIcon>
-            {imagePaths && <ImageList>{imageElements}</ImageList>}</StyledModal>;
+    return <StyledUploadModal>
+        <ButtonWithIcon
+        className="close-button"
+            color="slategray"
+            onClick={() => {
+                props.closeCallback();
+            }}
+            icon="close"
+        >
+        </ButtonWithIcon>
+        <h3>Uploaded Images</h3>
+        {imagePaths && <ImageList>{imageElements}</ImageList>}
+    </StyledUploadModal>;
 }
 
 export default UploadModal;

@@ -53,7 +53,7 @@ export const StyledDropArea = styled(Container)`
         min-height: 4rem;
         max-width: 100%;
         max-height: 100%;
-	    transform: rotate(15deg) scale(0.8);
+	    transform: rotate(8deg);
         box-shadow: 0px 2px 4px 2px #21212150;
     }
 

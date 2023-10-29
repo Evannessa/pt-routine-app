@@ -26,7 +26,7 @@ const grow = keyframes`
 `;
 const StyledTooltip = styled.span`
     position: absolute;
-    z-index: 100;
+    z-index: 900;
     bottom: 100%;
     left: 50%;
     transform: translateX(-50%);
@@ -41,7 +41,7 @@ const StyledTooltip = styled.span`
     white-space: nowrap;
     pointer-events: none;
 `;
-const NewTimerButton = styled.button`
+export const NewTimerButton = styled.button`
     display: flex;
     transform: scale(0);
     align-items: center;

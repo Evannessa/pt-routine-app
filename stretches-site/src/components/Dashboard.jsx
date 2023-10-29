@@ -92,6 +92,10 @@ const DashboardGrid = styled.section`
     }
 `;
 
+const DashboardOuter = styled.section`
+    height: 100vh;
+
+`
 
 const DashboardWrapper = styled.section`
     position: ${props => props.displayMode ? 'absolute' : 'auto'};
@@ -316,7 +320,7 @@ function Dashboard(props) {
     const focusedRoutine = timerSets && Array.isArray(timerSets) ? timerSets.find((set)=> TimerHelpers.getSetId(set) == showDeletePrompt.set) : 'Not an array'
 
     return (
-        <div>
+        <DashboardOuter className="dashboard__outer">
             { showDeletePrompt.showPrompt && 
                 <Modal
                     setId={showDeletePrompt.set}
@@ -377,7 +381,7 @@ function Dashboard(props) {
             </ConditionalWrapper>
             </ThemeProvider>
             <Outlet context={[timerSets, getTimerSets, saved, embedUrls, user]} />
-        </div>
+        </DashboardOuter>
     );
 }
 
