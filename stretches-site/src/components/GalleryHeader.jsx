@@ -48,6 +48,11 @@ const StyledGalleryHeader = styled.div`
         .inner-wrapper{
             display: flex;
             justify-content: space-evenly;
+            gap: 0.75rem;
+            button{
+                background-color: ${({ theme }) => theme.color1};
+                color: white;
+            }
         }
     }
     /* //if our height is over 600 px, show full */
@@ -150,7 +155,7 @@ export default function GalleryHeader(props) {
                     type="checkbox"
                     name="showAutoBreak"
                     id="showAutoBreak"
-                    label="Show Auto Break"
+                    label="Auto Break"
                     icon="more_time"
                     value={uiToggles.showAutoBreak}
                     setStateFunction={setUiToggles}

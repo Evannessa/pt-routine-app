@@ -60,8 +60,8 @@ export default function TimeValue(props) {
      */
     function createChangeTimeButtons(isIncrease) {
         let changeBtns = [];
-        let values = [1, 5, 10, 30];
-        for (let i = 0; i <= 3; i++) {
+        let values = !props.isRep ? [1, 5, 10, 30] : [1, 10];
+        for (let i = 0; i <= values.length - 1; i++) {
             changeBtns.push(
                 <ChangeTimeButton
                     key={i}

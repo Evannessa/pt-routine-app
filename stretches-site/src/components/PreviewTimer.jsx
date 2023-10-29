@@ -7,7 +7,7 @@ import { BackgroundWrapper } from "./styled-components/BackgroundWrapper.styled"
 import styled from "styled-components";
 import { Container } from "./styled-components/layout.styled";
 import { IconButton, CircleIconButton, ButtonWithIcon } from "./styled-components/Buttons.Styled";
-import Input, {StyledInputWrapper} from "./input/Input";
+import Input, { StyledInputWrapper } from "./input/Input";
 import { device } from "./styled-components/devices";
 import UploadModal from "./UploadModal";
 import TimeValueGroup, { StyledValueGroup } from "./TimeValueGroup";
@@ -17,8 +17,16 @@ import EditableHeading from "./EditableHeading";
 // #region Styled Components
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
-const StyledTimer = styled.div`
+const StyledTimeWrapper = styled.section`
     display: grid;
+    grid-template-rows: 80% 1fr;
+    justify-items: center;
+    ${StyledValueGroup}{
+        grid-row: ${props => props.isRep ? `2/3` : `1/2`};
+    }
+    ${StyledInputWrapper}{
+        grid-row: ${props => props.isRep ? `1/2` : `2/3`};
+    }
 
 
 `
@@ -35,7 +43,7 @@ const ExtraButtons = styled(Container)`
 
 ExtraButtons.displayName = "ExtraButtons";
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
-const StyledWrapper = styled(Container)`
+const StyledModalWrapper = styled(Container)`
     --padding-top: clamp(1rem, 1vw + 1rem, 2rem);
 
 
@@ -62,12 +70,22 @@ const StyledWrapper = styled(Container)`
         color: currentColor;
     }
     h3 {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
         color: cornflowerblue;
         font-size: clamp(0.75rem, 1vw + 0.75rem, 1.25rem);
         margin-top: auto;
         margin-bottom: auto;
         + div {
             margin-bottom: auto;
+        }
+        span{
+            display: inline-flex;
+            &[data-variation="small"]{
+                font-size: small;
+            }
         }
     }
     @media ${device.tablet} {
@@ -126,8 +144,10 @@ const StyledWrapper = styled(Container)`
         }
     }
 `;
-StyledWrapper.displayName = "StyledWrapper";
+StyledModalWrapper.displayName = "StyledModalWrapper";
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+
+
 const BottomDrawer = styled(Container)`
     display: flex;
     flex-direction: column;
@@ -181,7 +201,8 @@ const GridContainer = styled(Container)`
             height: 100%;
             align-items: center;
         }
-        ${StyledValueGroup}, ${StyledWrapper}{
+
+        .time-rep-wrapper, ${StyledModalWrapper}{
             grid-row: 2/3;
         }
         ${BottomDrawer} {
@@ -263,7 +284,7 @@ export default function PreviewTimer(props) {
      * @param {unit} unit - which unit (seconds, minutes, hours) are we increasing
      */
     function updateValue(value, isIncrease, unit) {
-        console.log("Are values updating?", {value, isIncrease, unit})
+        console.log("Are values updating?", { value, isIncrease, unit })
         //if it's a decrease, make the value negative
         //so we don't have to duplicate the code
         if (!isIncrease) {
@@ -278,7 +299,7 @@ export default function PreviewTimer(props) {
         });
     }
 
-     function changeValueAndReturn(previousValue, value, unit, isIncrease) {
+    function changeValueAndReturn(previousValue, value, unit, isIncrease) {
         let returnValue = previousValue + value;
         if (returnValue < 0) {
             returnValue = 0;
@@ -318,41 +339,37 @@ export default function PreviewTimer(props) {
             <div className="preview-timer" data-testid={"preview-timer"}>
                 <GridContainer full={true} fullVertical={true}>
                     <EditableHeading
-                        text={formData.label ? `${props.number} - ${formData.label}` :  
-                        `Timer ${props.number}`}
+                        text={formData.label ? `${props.number} - ${formData.label}` :
+                            `Timer ${props.number}`}
                         headingNumber={2}
                         className="preview-timer__number"
                         inputProps={
                             {
-                                type:"text",
-                                name:"label",
-                                id:`${props.id}label`,
-                                value:props.label,
-                                setStateFunction:updateTimerData,
-                                hasLabel:false,
-                                tooltip:"The label for this exercise",
-                                style:{ color: "white" }
+                                type: "text",
+                                name: "label",
+                                id: `${props.id}label`,
+                                value: props.label,
+                                setStateFunction: updateTimerData,
+                                hasLabel: false,
+                                tooltip: "The label for this exercise",
+                                style: { color: "white" }
                                 // inputStyle="chip"
                             }
 
                         }
                     />
-                    {/* <h2 className="preview-timer__number">
-                        {formData.label ? `${props.number} - ${formData.label}` :  
-                        `Timer ${props.number}`}
-                    </h2> */}
-                    {/* <SpeedDialMenu actions={actions} /> */}
+
                     {showGalleryModal && (
                         <UploadModal
                             parentId={props.id}
                             slideImagePath={props.slideImagePath}
                             updateTimerData={updateTimerData}
-                            closeCallback={()=>
+                            closeCallback={() =>
                                 setShowGalleryModal(false)
                             }
                         ></UploadModal>
                     )}
-                    <StyledWrapper showModal={showDropModal}>
+                    <StyledModalWrapper showModal={showDropModal}>
                         {showDropModal && (
                             <ButtonWithIcon
                                 color="slategray"
@@ -363,15 +380,21 @@ export default function PreviewTimer(props) {
                             >
                             </ButtonWithIcon>
                         )}
-                        <h3>
-                            Drop an Image{" "}
-                            <ButtonWithIcon
-                                icon="gallery_thumbnail"
-                                onClick={() => {
-                                    setShowGalleryModal(!showGalleryModal);
-                                }}
-                                title="Choose from previously uploaded images"
-                            ></ButtonWithIcon>
+                        <h3 className="drop-instructions">
+                            <span>
+                                Drag & Drop an Image
+                                <ButtonWithIcon
+                                    icon="gallery_thumbnail"
+                                    onClick={() => {
+                                        setShowGalleryModal(!showGalleryModal);
+                                    }}
+                                    title="Choose from previously uploaded images"
+                                ></ButtonWithIcon>
+                            </span>
+                            <span data-variation="small">
+                                (or choose one from your Gallery) ⮭
+
+                            </span>
                         </h3>
                         {params.setId && (
                             <DropArea
@@ -380,11 +403,27 @@ export default function PreviewTimer(props) {
                                 updateTimerData={updateTimerData}
                             />
                         )}
-                    </StyledWrapper>
-                    <TimeValueGroup time={props.time} updateTimerData={updateTimerData}></TimeValueGroup>
+                    </StyledModalWrapper>
+                    <StyledTimeWrapper className="time-rep-wrapper" isRep={props.isRep}>
+                        <TimeValueGroup time={props.time} updateTimerData={updateTimerData} isRep={props.isRep} />
+                        <Input
+                            type="number"
+                            name="repeatNumber"
+                            id={`${props.id}repeatNumber`}
+                            value={parseInt(props.repeatNumber) || 0}
+                            setStateFunction={updateTimerData}
+                            hasLabel={true}
+                            label="No. of Sets"
+                            tooltip="How many times will this stretch or exercise repeat?"
+                            inputStyle="numberSpinner"
+                            style={{
+                                color: "white",
+                            }}
+                        ></Input>
+                    </StyledTimeWrapper>
 
                     {/* only show drop area if we've saved the timer */}
-                    <StyledWrapper showModal={showTextModal}>
+                    <StyledModalWrapper showModal={showTextModal}>
                         {showTextModal && (
                             <ButtonWithIcon
                                 color="slategray"
@@ -407,7 +446,7 @@ export default function PreviewTimer(props) {
                             hasLabel={false}
                             style={{ color: "white" }}
                         ></Input>
-                    </StyledWrapper>
+                    </StyledModalWrapper>
                 </GridContainer>
                 {/* #endregion */}
                 <BottomDrawer full={true}>
@@ -452,7 +491,7 @@ export default function PreviewTimer(props) {
                                 }}
                                 tooltip="should this timer start automatically"
                             ></Input>
-                            <Input
+                            {/* <Input
                                 type="number"
                                 name="repeatNumber"
                                 id={`${props.id}repeatNumber`}
@@ -465,7 +504,7 @@ export default function PreviewTimer(props) {
                                 style={{
                                     color: "white",
                                 }}
-                            ></Input>
+                            ></Input> */}
                             <Input
                                 type="checkbox"
                                 name="isBreak"
@@ -498,7 +537,7 @@ export default function PreviewTimer(props) {
                                     borderColor: "white"
                                 }}
                             ></Input>
-                        
+
                         </fieldset>
                     </BottomForm>
                 </BottomDrawer>

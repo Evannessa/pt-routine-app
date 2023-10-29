@@ -13,6 +13,8 @@ const StyledHandle = styled.button`
     height: 100%;
     width: 100%;
     /* width: 2rem; */
+    background-color: transparent;
+    padding: unset;
     opacity: ${props => props.disabled ? "0%" : "100%"};
     top: 0;
     left: 0;
@@ -26,9 +28,12 @@ const StyledHandle = styled.button`
 
     span.button-icon{
         display: grid;
-        place-content: center;
+        place-content: start;
         width: 20%;
         height: 100%;
+        font-size: small;
+        padding-top: 0.5rem;
+        padding-left: 0.15rem;
     }
 `;
 
@@ -59,7 +64,7 @@ export function SortableThumbnail(props) {
             disabled={props.disabled}
         >
             <Icon className="button-icon" icon="drag_indicator"></Icon>
-            <span>{props.timer.label}</span>
+            {/* <span>{props.timer.label}</span> */}
 
         </StyledHandle>
     </TimelineThumbnail>
