@@ -47,17 +47,34 @@ const TimeValueGroup = ({time, updateTimerData, theme, isRep}) => {
         return returnValue;
     }
 
-    const timeValues = Object.keys(time).map((key, index)=> <TimeValue value={time[key]} unit={key} updateValue={updateValue} theme={theme} isRep={isRep}/>)
+    const timeValues = Object.keys(time).map((key, index)=> { return {
+        key: key,
+        component: <TimeValue 
+        value={time[key]} 
+        unit={key} 
+        updateValue={updateValue} 
+        theme={theme} 
+        isRep={isRep}/>}}
+    )
+
+    function getComponentByKey(array, key){
+        return array.find(val => val.key == key).component
+    }
+ 
 
     return (
         <StyledValueGroup className="value-wrapper">
-                {timeValues[0]}
-                {/* <TimeValue value={time.hours} unit={"hours"} updateValue={updateValue} theme={theme}></TimeValue> */}
-                <span className="timer__separator">:</span>
-                {timeValues[1]}
+                {!isRep && 
+                <>
+                    {getComponentByKey(timeValues, "hours")}
+                    {/* <TimeValue value={time.hours} unit={"hours"} updateValue={updateValue} theme={theme}></TimeValue> */}
+                    <span className="timer__separator">:</span>
+                </>
+                }
+                    {getComponentByKey(timeValues, "minutes")}
                 {/* <TimeValue value={time.minutes} unit={"minutes"} updateValue={updateValue} theme={theme}></TimeValue> */}
                 <span className="timer__separator">:</span>
-                {timeValues[2]}
+                    {getComponentByKey(timeValues, "seconds")}
                 {/* <TimeValue value={time.seconds} unit={"seconds"} updateValue={updateValue} theme={theme}></TimeValue> */}
         </StyledValueGroup>
 

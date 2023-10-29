@@ -36,6 +36,7 @@ import DummyThumbnail from "./DummyThumbnail";
 /* #region  Styled components */
 
 const TimelineWrapper = styled.ul`
+    margin-left: 32px;
     position: relative;
     z-index: 200;
     display: flex;
@@ -126,14 +127,14 @@ function RoutineTimeline({
     function getTimerIds() {
         return timers.map(timer => TimerHelpers.getSetId(timer))
     }
-    function onTimerSelected(timerElement, event) {
+    function onTimerSelected(dataKey, event) {
         //push returns the array's length
         if (event.ctrlKey) {
             console.log("Ctrl key pressed")
         }
-        debugger;
+        // debugger;
         let newArray = [...selectedTimers];
-        let timer = timers.find((timer) => timer._id === timerElement.dataset.key);
+        let timer = timers.find((timer) => timer._id === dataKey);
         if (!newArray.includes(timer)) {
             newArray.push(timer);
             setSelectedTimers(newArray);

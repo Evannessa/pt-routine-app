@@ -19,7 +19,7 @@ import EditableHeading from "./EditableHeading";
 
 const StyledTimeWrapper = styled.section`
     display: grid;
-    grid-template-rows: 80% 1fr;
+    grid-template-rows: ${props => !props.isRep ? `80% 1fr` : `50% 1fr`};
     justify-items: center;
     ${StyledValueGroup}{
         grid-row: ${props => props.isRep ? `2/3` : `1/2`};
@@ -55,7 +55,6 @@ const StyledModalWrapper = styled(Container)`
     padding: clamp(1rem, 1vw + 1rem, 2rem);
     border-radius: 15px;
     background-color: #ffffff92;
-    backdrop-filter: blur(5px);
     height: 80%;
     width: 90%;
     box-shadow: rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset, rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
@@ -197,6 +196,7 @@ const GridContainer = styled(Container)`
 
     @media ${device.tablet} {
         .preview-timer__number{
+            margin-top: 2rem;
             grid-row: 1/2;
             height: 100%;
             align-items: center;
@@ -413,7 +413,7 @@ export default function PreviewTimer(props) {
                             value={parseInt(props.repeatNumber) || 0}
                             setStateFunction={updateTimerData}
                             hasLabel={true}
-                            label="No. of Sets"
+                            label="No. of Reps"
                             tooltip="How many times will this stretch or exercise repeat?"
                             inputStyle="numberSpinner"
                             style={{

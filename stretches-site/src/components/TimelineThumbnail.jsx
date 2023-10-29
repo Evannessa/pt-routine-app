@@ -76,6 +76,37 @@ export const NewTimerButton = styled.button`
     }
 `;
 const StyledHoverable = styled.div`
+    align-items: center;
+    .order-number{
+        position: absolute;
+        bottom: 0.15rem;
+        left: 0.15rem;
+        border-radius: 50%;
+        width: 1rem;
+        height: 1rem;
+        text-align: center;
+        /* color: white; */
+        display: grid;
+        place-content: center;
+        font-size: small;
+        vertical-align: center;
+        color: ${props => props.theme.color2}; 
+        font-weight: bold;
+        background-color: hsla(0, 0%, 100%, 0.435);
+        z-index: 999;
+    }
+    img.thumbnail-img{
+        object-position: center;
+        object-fit: cover;
+        max-width: 100%;
+        max-height: 100%;
+        z-index: 500;
+        border-radius: inherit;
+    }
+    .thumbnail-text, .thumbnail-img{
+        grid-row: 1/2;
+        grid-column: 1/2;
+    }
     & + ${StyledTooltip} {
         opacity: 100%;
     }
@@ -93,6 +124,7 @@ const ButtonWithTooltipWrapper = styled.div`
     }
 `;
 const ThumbnailContainer = styled.li`
+    transform: ${props => props.isSelected ? "scale(1.15)" : "scale(1)"};
     overflow: ${(props) => (props.hover ? "visible" : "hidden")} !important;
     position: relative;
     list-style-type: none;
@@ -121,7 +153,9 @@ const ThumbnailContainer = styled.li`
         width: 4rem;
         height: 4rem;
         transform: scale(1, 1);
-        background-color: ${(props) => (props.isSelected ? "pink" : "rgba(255, 255, 255, 0.75)")};
+        background-color: ${(props) => (props.isSelected ? "pink" : "rgba(255, 255, 255, 1)")};
+        /* background-image: ${props => props.img} !important; */
+
         .thumbnail-text{
             display: flex;
             flex-direction: column;
@@ -152,11 +186,11 @@ const ThumbnailContainer = styled.li`
                 /* color: hsl(270.2, 87.1%, 33.5%);// var(--clr-primary-pink-darker); */
             }
         `};
-    ${(props) =>
+    /* ${(props) =>
         props.isSelected &&
         css`
             animation: ${grow} 2s linear alternate infinite;
-        `};
+        `}; */
     /* display: flex; */
     /* flex-direction: column; */
     /* align-items: center; */
@@ -182,6 +216,7 @@ const ThumbnailContainer = styled.li`
         grid-template-columns: 1fr 4rem 1fr;
         align-items: center;
         .time-wrapper {
+            /* background-image: ${props => props.img} !important; */
             grid-column: 2/3;
             display: grid;
             place-content: center;
@@ -228,11 +263,13 @@ const TimelineThumbnail = forwardRef(
             actions,
             navigate,
             timer,
-            disabled
+            disabled,
+            theme,
+            onTimerSelected
         },
         ref
     ) => {
-        const { time, repeatNumber, isRep, description, slideImagePath } = timer
+        const { time, repeatNumber, isRep, description, label, slideImagePath } = timer
         const sortMode = !disabled
         const [coords, setCoords] = useState();
         const [hover, setHover] = useState(false);
@@ -251,18 +288,19 @@ const TimelineThumbnail = forwardRef(
                 className="thumbnailContainer"
                 data-key={dataKey}
                 data-id={dataId}
-                title={description}
+                title={label}
                 isSelected={isSelected}
                 repeatNumber={repeatNumber}
                 data-test-id={"timeline-thumbnail"}
                 viewed={viewed}
                 sortmode={sortMode}
+                img={`${urlBaseNoApi}${slideImagePath}`}
             >
                 {children}
                 <section className="hud" sortmode={sortMode}>
                     <ButtonWithTooltipWrapper left={true}>
                         <NewTimerButton
-                            title={description}
+                            title={label}
                             sortmode={sortMode}
                             left={true}
                             onClick={(event) => callAddNewTimer(index, -1, event)}
@@ -278,9 +316,18 @@ const TimelineThumbnail = forwardRef(
                     <TooltipWrapper toggleAction="hover">
                         <StyledHoverable 
                             className="time-wrapper" 
-                            title={description} 
-                            onClick={() => navigate(dataKey)}
+                            title={label} 
+                            onClick={(event) => 
+                                {
+                                    onTimerSelected(dataKey, event)
+                                    navigate(dataKey)
+                                }
+                            }
+                            img={`${urlBaseNoApi}${slideImagePath}`}
+                            theme={theme}
                         >
+                            <span className="order-number">{index + 1}</span>
+                            <img className="thumbnail-img" src={`${urlBaseNoApi}${slideImagePath}`}/>
                             {description && <StyledTooltip>{description}</StyledTooltip>}
                             <div className="thumbnail-text">
                                 <span className="abbreviation">{textFormatter.firstLetterOfEachWord(timer.label)}</span>
@@ -293,6 +340,7 @@ const TimelineThumbnail = forwardRef(
                             src: `${urlBaseNoApi}${slideImagePath}`,
                             label: timer.label,
                             actions: actions,
+                            dataKey: dataKey,
                             timerId: dataKey,
                             timer: timer,
                             coords: coords,
@@ -304,7 +352,7 @@ const TimelineThumbnail = forwardRef(
                         <NewTimerButton
                             sortmode={sortMode}
                             left={false}
-                            title={description}
+                            title={label}
                             onClick={(event) => callAddNewTimer(index, 1, event)}
                             className="material-icons"
                         >
