@@ -345,7 +345,7 @@ function Dashboard(props) {
                     displayMode={inDisplayMode}
                 >
                         <DashboardHeader >
-                            <h1>At-Home Exercise App</h1>
+                            {/* <h1>At-Home Exercise App</h1> */}
                             <ButtonWrapper  displayMode={inDisplayMode}>
                                 {/*TODO: Turn these into a set of ActionFactory objects  */}
                                 <ButtonWithIcon type="contained" icon="play_circle" title="set default YouTube playlist or video" onClick={setShowMediaEmbedPopover}>
@@ -353,9 +353,6 @@ function Dashboard(props) {
                                 </ButtonWithIcon>
                                 <ButtonWithIcon type="contained" icon="music_note" title="set default Spotify playlist">
                                     Set Spotify Playlist
-                                </ButtonWithIcon>
-                                <ButtonWithIcon type="contained" icon="image" title="set imgur gallery">
-                                    Set Imgur Gallery
                                 </ButtonWithIcon>
                                 <ButtonWithIcon type="contained" icon="add" title="Add New Routine" onClick={createNewSet}>
                                         Create New Routine

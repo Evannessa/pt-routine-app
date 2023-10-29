@@ -70,10 +70,9 @@ export default function TimerGallery(props) {
     const [currentTimer, setCurrentTimer] = React.useState();
     const [uiToggles, setUiToggles] = useState({
         sortMode: false,
-        showAutoBreak: false
+        showAutoBreak: false,
+        
     })
-    const [sortMode, setSortMode] = useState(false)
-    const [showAutoBreak, setShowAutoBreak] = useState(false)
     const navigate = useNavigate();
 
     let params = useParams(); //show the params of the get request
@@ -85,24 +84,25 @@ export default function TimerGallery(props) {
     const modalInfo = [
         {
             name: "spotifyLink",
-            description: <span>Copy paste a Spotify link here to embed a Spotify Episode or Playlist.</span>,
+            description: <span>Copy & Paste a Spotify url below to embed a Spotify podcast episode or Playlist into this routine.</span>,
             type: "embed",
             onSubmit: linkSpotify,
         },
         {
             name: "youtubeLink",
             title: "Embed Youtube Video or Playlist",
-            description: <span>Copy paste a Youtube link here to embed a YouTube Video or Playlist.</span>,
+            description: <span>Copy & Paste a Youtube video url below to embed a YouTube Video or Playlist into this routine.</span>,
             type: "embed",
             onSubmit: linkYoutube,
         },
     ];
 
     function updateTimerSet(response) {
-        console.log("Response was", response);
+        // console.log("Response was", response);
         if (response) {
             setFormData(response);
             label.current = response.label;
+            console.log(response)
         } else {
             console.log("Response was null");
         }
@@ -145,7 +145,8 @@ export default function TimerGallery(props) {
                     spotifyLink: formData.spotifyLink,
                     timers: formData.timers,
                     repeatNumber: formData.repeatNumber,
-                    autoBreakTime: formData.autoBreakTime
+                    autoBreakTime: formData.autoBreakTime,
+                    autoBreakTimer: formData.autoBreakTimer
                 },
             };
             requests.axiosRequest(options);
@@ -201,6 +202,7 @@ export default function TimerGallery(props) {
                 if (child === null) {
                     return;
                 }
+                console.log(child)
                 return observer.current.unobserve(child);
             });
     }, [formData.timers, updateTheme]);
@@ -214,7 +216,6 @@ export default function TimerGallery(props) {
      * @param {any} data - add link to spotify
      */
     function linkSpotify(data) {
-        console.log(data);
         setFormData((oldData) => {
             return { ...oldData, spotifyLink: data };
         });
@@ -270,6 +271,7 @@ export default function TimerGallery(props) {
         //find the timer we're deleting
         let deletedElement = childRefs.current.find((element) => element.firstChild.dataset.key === id);
         //unobserve it, store its index
+        console.log(deletedElement)
         observer.current.unobserve(deletedElement);
         let index = childRefs.current.indexOf(deletedElement);
 
@@ -413,7 +415,8 @@ export default function TimerGallery(props) {
                     spotifyLink: formData.spotifyLink,
                     timers: formData.timers,
                     repeatNumber: formData.repeatNumber,
-                    autoBreakTime: formData.autoBreakTime
+                    autoBreakTime: formData.autoBreakTime,
+                    autoBreakTimer: formData.autoBreakTimer
                 },
             };
             await requests.axiosRequest(options);
@@ -572,6 +575,7 @@ export default function TimerGallery(props) {
                 </TimerWrapper>
             </ThemeProvider>
             {uiToggles.showAutoBreak && <AutoBreakConfig 
+                timer={formData && formData.autoBreakTimer}
                 time={formData ? formData.autoBreakTime : {hours: 0, minutes: 0, seconds:5}}
                 updateFormData={updateFormData}
             />}

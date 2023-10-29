@@ -3,6 +3,11 @@ import styled from "styled-components";
 import textFormatter from "../helpers/formatText";
 import * as Buttons from "./styled-components/Buttons.Styled";
 
+import guitarPhoto from "../images/GuitarPhoto.jpg"
+import popcornPhoth from "../images/popcornPhoto.jpg"
+import Input from "./input/Input";
+import ActionFactory from "../classes/ActionFactory";
+
 const Modal = styled.dialog`
     padding: 0;
     z-index: 999;
@@ -34,15 +39,17 @@ const Modal = styled.dialog`
         padding-block: clamp(0.75rem, 0.75rem + 1vh, 1rem);
         border-top-left-radius: 15px;
         border-top-right-radius: 15px;
-        background-image: ${(props) =>
+        background-image: linear-gradient(45deg, #ff000085, #ffc0cb7d) 
+        ${(props) =>
             props.img === "spotifyLink"
-                ? `url(
-                      "/Free Blue, Purple and Green Acoustic Guitars Stock Photo.jpg"
+                ? `, url(
+                      "${guitarPhoto}"
                   )`
-                : `url(
-                      "/Free Selective Focus Photography of Popcorns Stock Photo.jpg"
+                : `, url(
+                      "${popcornPhoth}"
                   )`};
         background-size: cover;
+        background-position: center;
         ${Buttons.IconButton} {
             margin-left: auto;
             color: white;
@@ -69,6 +76,13 @@ const Modal = styled.dialog`
         border-bottom-left-radius: 15px;
         border-bottom-right-radius: 15px;
     }
+    .modal__btn{
+        font-size: medium;
+        font-weight: 500;
+        &.primary{
+            font-weight: bold;
+        }
+    }
 `;
 export default function ActionModal(props) {
     const [formData, setFormData] = React.useState({
@@ -84,6 +98,10 @@ export default function ActionModal(props) {
         });
     }
 
+    function pasteIntoInput(){
+
+    }
+
     function submitAndClose(data) {
         props.primaryAction(data);
         props.cancelAction();
@@ -93,14 +111,13 @@ export default function ActionModal(props) {
         <Modal open={props.open} img={props.title}>
             <div className="modal__header">
                 <h1 className="modal__title>">
-                    {textFormatter.capitalizeFirstLetter(
+                    Paste {textFormatter.capitalizeFirstLetter(
                         textFormatter.camelCaseToWords(props.title)
                     )}
                 </h1>
 
-                <Buttons.IconButton onClick={() => props.cancelAction()}>
-                    close
-                </Buttons.IconButton>
+                <Buttons.ButtonWithIcon onClick={() => props.cancelAction()} icon="close">
+                </Buttons.ButtonWithIcon>
             </div>
 
             <div className="modal__body">
@@ -108,12 +125,17 @@ export default function ActionModal(props) {
                     {props.description}
                 </p>
                 {props.type === "embed" && (
-                    <textarea
+                    <>
+                    <input
+                        type="text"
                         name="embedArea"
-                        placeholder="paste the embed code here"
+                        placeholder="Paste Url"
                         onChange={handleChange}
                         value={formData.embedArea}
-                    ></textarea>
+                    />
+                    {/* TODO: A paste functionality to be added later */}
+                    {/* <Buttons.IconButton icon="content_paste" onClick={()}/> */}
+                </>
                 )}
             </div>
             <div className="modal__button-wrapper button-wrapper">

@@ -46,7 +46,7 @@ const AutoBreakConfig = (props) => {
         <StyledBreakConfig theme={themes.secondary}>
             <TimeValueGroup 
                 theme={themes.secondary} 
-                time={props.time ? props.time : mockTime} 
+                time={props.timer ? props.timer.time : mockTime} 
                 updateTimerData={updateAutoBreak}
             />
         </StyledBreakConfig>

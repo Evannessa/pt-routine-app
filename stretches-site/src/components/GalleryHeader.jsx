@@ -39,7 +39,7 @@ const StyledGalleryHeader = styled.div`
             display: flex;
             flex-direction: row;
             justify-content: space-between;
-            padding: 10px calc(-480px + 50vw);
+            padding: 15px calc(-480px + 50vw);
             max-height: 100%;
             input[type="checkbox"] + label{
                 background-color: ${({ theme }) => theme.color2};;
@@ -49,9 +49,12 @@ const StyledGalleryHeader = styled.div`
             display: flex;
             justify-content: space-evenly;
             gap: 0.75rem;
-            button{
-                background-color: ${({ theme }) => theme.color1};
+            button:not(.more){
+                background-color: ${({ theme }) => theme.color2};
                 color: white;
+            }
+            button.action-startRoutine{
+                background-image: ${({ theme }) => `linear-gradient(45deg, ${theme.color1}, ${theme.color2})`};
             }
         }
     }
@@ -94,6 +97,7 @@ export default function GalleryHeader(props) {
     };
 
     const buttonElements = actions.map((action) => <ButtonWithIcon
+        className={`action-${action.name}`}
         type="circle"
         key={action.name}
         onClick={action.functionRef}
@@ -117,16 +121,16 @@ export default function GalleryHeader(props) {
         );
     } */
 
-  
+
 
     const expandButton = (<Buttons.IconButton
-                    className="expand"
-                    onClick={() => {
-                        setExpanded();
-                    }}
-                >
-                    <span className="material-symbols-outlined">{expanded ? "expand_less" : "expand_more"} </span>
-                </Buttons.IconButton>
+        className="more"
+        onClick={() => {
+            setExpanded();
+        }}
+    >
+        <span className="material-symbols-outlined">more_vert</span>
+    </Buttons.IconButton>
 
 
     )
@@ -134,54 +138,61 @@ export default function GalleryHeader(props) {
     return (
         <StyledGalleryHeader expanded={expanded} theme={themes.primary}>
             <Container className="header-bottom">
-                <Input
-                    className="quarter-width"
-                    type="text"
-                    name="label"
-                    id="label"
-                    label="Routine Name"
-                    value={formData && formData.label ? formData.label : "New Timer Set"}
-                    setStateFunction={updateFormData}
-                    hasLabel={true}
-                    inputStyle="floatingLabel"
-                    style={{
-                        borderColor: themes.primary.color1
-                    }}
-                />
 
-                <div class="inner-wrapper">{buttonElements}</div>
+                <div class="inner-wrapper">
+                    <Input
+                        type="text"
+                        name="label"
+                        id="label"
+                        label="Routine Name"
+                        value={formData && formData.label ? formData.label : "New Timer Set"}
+                        setStateFunction={updateFormData}
+                        hasLabel={true}
+                        inputStyle="floatingLabel"
+                        style={{
+                            borderColor: themes.primary.color1
+                        }}
+                    />
+                    {buttonElements[0]}
+                </div>
+
+                <div class="inner-wrapper">{buttonElements.slice(1)}</div>
                 <div className="inner-wrapper">
                     <Input
-                    type="checkbox"
-                    name="showAutoBreak"
-                    id="showAutoBreak"
-                    label="Auto Break"
-                    icon="more_time"
-                    value={uiToggles.showAutoBreak}
-                    setStateFunction={setUiToggles}
-                    hasLabel={true}
-                    inputStyle="chip"
-                    style={{
-                        borderColor: "black"
-                    }}
-                />
-                <Input
-                    type="checkbox"
-                    name="sortMode"
-                    id="sortMode"
-                    label="Sort Mode"
-                    icon={"reorder"}
-                    value={uiToggles.sortMode}
-                    setStateFunction={setUiToggles}
-                    hasLabel={true}
-                    inputStyle="chip"
-                    style={{
-                        borderColor: "black"
-                    }}
-                />
+                        className={"showCheck"}
+                        type="checkbox"
+                        name="showAutoBreak"
+                        id="showAutoBreak"
+                        label="Auto Break"
+                        icon="more_time"
+                        value={uiToggles.showAutoBreak}
+                        setStateFunction={setUiToggles}
+                        hasLabel={true}
+                        inputStyle="chip"
+                        variant="showCheck"
+                        style={{
+                            borderColor: "black"
+                        }}
+                    />
+                    <Input
+                        className={"showCheck"}
+                        type="checkbox"
+                        name="sortMode"
+                        id="sortMode"
+                        label="Sort Mode"
+                        icon={"reorder"}
+                        value={uiToggles.sortMode}
+                        setStateFunction={setUiToggles}
+                        hasLabel={true}
+                        inputStyle="chip"
+                        variant="showCheck"
+                        style={{
+                            borderColor: "black"
+                        }}
+                    />
 
                 </div>
-                {/* <div class="inner-wrapper">{expandButton}</div> */}
+                <div class="inner-wrapper">{expandButton}</div>
             </Container>
         </StyledGalleryHeader>
     );

@@ -30,6 +30,7 @@ const StyledHeader = styled.div`
     margin-left: -5rem;
     margin-right: -5rem;
     padding: 1.25rem;
+    margin-top: 2rem;
     z-index: 300;
 
     > h1 {

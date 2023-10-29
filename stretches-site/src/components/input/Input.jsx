@@ -28,10 +28,14 @@ export const StyledInputWrapper = styled.div`
             css`
                 position: absolute;
                 background: white;
-                padding: 0 clamp(0.25rem, 0.5vw + 0.25rem, 0.5rem);
+                padding: 0 clamp(0.15rem, 0.5vw + 0.15rem, 0.2rem);
                 left: 5%;
-                bottom: 80%;
+                /* bottom: 80%; */
+                top: 0;
+                transform: translateY(-50%);
                 white-space:nowrap;
+                font-weight: bold;
+                font-size: small;
             `};
     }
     ${props => props.inputStyle === "numberSpinner" && css`
@@ -195,7 +199,8 @@ function Input(props) {
         inputStyle,
         style,
         tooltip,
-        handleBlur
+        handleBlur,
+        variant
     } = props;
     label = hasLabel && label ? label : name
     const [isChecked, setIsChecked] = useState(checked);
@@ -275,7 +280,9 @@ function Input(props) {
             </>}
             {hasLabel && (
                 <label htmlFor={type === "radio" ? value : id}>
-                    {icon && <span className="material-icons">{icon}</span>}
+                    {icon && <span className="material-icons">
+                        {variant === "showCheck" ? `${value ? "check_circle" : "radio_button_unchecked"}` : icon}
+                    </span>}
                     {type === "radio"
                         ? tf.capitalizeFirstLetter(tf.camelCaseToWords(value))
                         : tf.capitalizeFirstLetter(tf.camelCaseToWords(label))}
