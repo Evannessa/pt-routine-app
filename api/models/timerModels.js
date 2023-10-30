@@ -85,18 +85,20 @@ const TimerSetSchema = new mongoose.Schema({
     },
     repeatNumber: { type: Number, required: true, default: 0 },
     autoBreakTimer: {
+        type: Map,
         required: true,
-    type: new mongoose.Schema({
-        time: {
-            type: Map,
-            of: Number,
-            default: {
+        default: {
+            label: "Break",
+            description: "Take a few moments to rest",
+            slideImagePath: "",
+            time: {
                 hours: 0,
                 minutes: 0,
                 seconds: 5,
-            },
-        },
-        label: {
+            }
+        }
+    },
+    label: {
             type: String,
             trim: true,
         },
@@ -114,8 +116,6 @@ const TimerSetSchema = new mongoose.Schema({
         // isBreak: { type: Boolean, required: true, default: false },
         // isAutoBreak: { type: Boolean, required: true, default: false },
         // repeatNumber: { type: Number, required: true, default: 0 },
-    })
-},
     autoBreakTime: {type: Map, of:Number, required: true, default: {
         hours: 0,
         minutes: 0,

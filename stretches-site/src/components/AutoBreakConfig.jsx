@@ -30,6 +30,16 @@ const StyledBreakConfig = styled.div`
 `
 
 const AutoBreakConfig = (props) => {
+    const mockTimer = {
+        label: "Break",
+        description: "Take a few moments to rest",
+        slideImagePath: "",
+        time: {
+            hours: 0,
+            minutes: 0,
+            seconds: 5,
+        }
+    }
     const mockTime = {
         hours: 0,
         minutes: 0,
@@ -46,7 +56,7 @@ const AutoBreakConfig = (props) => {
         <StyledBreakConfig theme={themes.secondary}>
             <TimeValueGroup 
                 theme={themes.secondary} 
-                time={props.timer ? props.timer.time : mockTime} 
+                time={props.timer ? props.timer.time : mockTimer.time} 
                 updateTimerData={updateAutoBreak}
             />
         </StyledBreakConfig>
