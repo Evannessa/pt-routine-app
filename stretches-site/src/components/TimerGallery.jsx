@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from "react";
 import throttle from "lodash.throttle";
 import PreviewTimer from "./PreviewTimer";
+import { placeholderImages } from "./Images";
 import { mockTimerSets } from "../mockData/MockTimers";
 import ActionModal from "./ActionModal";
 import RoutineTimeline from "./RoutineTimeline";

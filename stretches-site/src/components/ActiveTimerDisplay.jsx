@@ -16,6 +16,7 @@ import { TooltipWrapper } from "../portal-components/TooltipPopover";
 import DraggableEmbedModal from "./display/DraggableEmbedModal";
 import { ButtonWithIcon } from "./styled-components/Buttons.Styled";
 import { nanoid } from "nanoid";
+import { getPlaceholderImage, placeholderImages } from "./Images";
 /* #region   Styled Components */
 
 /** Header, which will contain details from timer set */
@@ -203,9 +204,14 @@ export default function ActiveTimerDisplay() {
             ...timers[0], 
             _id: "auto-break",
             time: autoBreakTime,
+            description: "Take a few moments to rest",
             label: "Auto Break",
             isBreak: true,
-            isAutoBreak: true
+            isAutoBreak: true,
+            isRep: false,
+            repeatNumber: 0,
+            slideImagePath: placeholderImages[0]
+            // slideImagePath: `${urlBase}${placeholderImages[0]`//"" //`${urlBase}${getPlaceholderImage()}`
         }
         for(let timer of timers){
             timersWithBreaks.push(timer)
@@ -290,7 +296,7 @@ export default function ActiveTimerDisplay() {
     //map all the images associated w/ each timer to the slide component
     let slideComponents = timers
         ? timers.map((timer) => {
-            let prePath = "http://localhost:3000"
+            let prePath = !timer.isBreak ? "http://localhost:3000" : ""
             return <Slide key={timer._id + "TimerSlide"} 
                 // image={Bow}/>
                  image={`${prePath}${timer.slideImagePath}`} />;

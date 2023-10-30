@@ -13,6 +13,7 @@ import UploadModal from "./UploadModal";
 import TimeValueGroup, { StyledValueGroup } from "./TimeValueGroup";
 import EditableHeading from "./EditableHeading";
 
+
 /* ---------------------------- Styled Components --------------------------- */
 // #region Styled Components
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
@@ -521,7 +522,7 @@ export default function PreviewTimer(props) {
                                     borderColor: "white"
                                 }}
                             ></Input>
-                            <Input
+                            {!props.isBreak && <Input
                                 type="checkbox"
                                 name="isRep"
                                 id={`${props.id}isRep`}
@@ -536,8 +537,7 @@ export default function PreviewTimer(props) {
                                     color: "white",
                                     borderColor: "white"
                                 }}
-                            ></Input>
-
+                            />}
                         </fieldset>
                     </BottomForm>
                 </BottomDrawer>

@@ -37,6 +37,16 @@ export const themes = {
         gradient: "linear-gradient(45deg, #25C6DC, #514A9D)",
         shadow: "2px 2px 3px hsla(244, 62%, 39%, 0.43)"
     },
+    tertiary:{
+        color1: "#8f94fb",
+        color2: "#4e54c8",
+        gradient: "linear-gradient(45deg, #25C6DC, #514A9D)",
+        shadow: "2px 2px 3px hsla(244, 62%, 39%, 0.43)"
+    }
+// background: linear-gradient(to left, #8E54E9, #4776E6); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+// background: linear-gradient(to left, #12FFF7, #B3FFAB); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+// #AAFFA9 to #11FFBD
+
 };
 
 export const ThemeContext = React.createContext({

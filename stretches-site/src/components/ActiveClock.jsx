@@ -3,6 +3,7 @@ import styled from "styled-components";
 import repeatIcon from "../images/refresh-symbol.png"
 import useSound from "use-sound"
 import bellSound from "../audio/240934__the_very_real_horst__neptun-solo-07-tibetan-singing-bowl.wav"
+import shortBell from "../audio/singing_bowl_short.wav"
 import bellSoundHighPitch from "../audio/271370__inoshirodesign__singing-bowl-strike-sound.mp3"
 
 const ButtonWrapper = styled.div`
@@ -71,7 +72,7 @@ export default function ActiveClock(props) {
     // const [atZero, setAtZero] = React.useState(false);
     const token = React.useRef();
 
-    const [playActive] = useSound(bellSound, {volume: 0.25})
+    const [playActive] = useSound(shortBell, {volume: 0.25})
 
     // update minutes, hours, and seconds accordingly
     function runTime() {
