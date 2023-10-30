@@ -28,20 +28,22 @@ export const themes = {
         color1: "#fd6e2b",
         color2: "#f02e5f",
         gradient: "linear-gradient(45deg, #fd6e2b, #f02e5f)",
-        shadow: "2px 2px 3px hsla(0, 62%, 39.2%, 0.43)"
+        shadow: "2px 2px 3px hsla(0, 62%, 39.2%, 0.43)",
+        dark: "hsla(0, 62%, 39.2%, 0.43)"
     },
     secondary: {
         color1: "#25C6DC",
         color2: "#547cf5",
 
         gradient: "linear-gradient(45deg, #25C6DC, #514A9D)",
-        shadow: "2px 2px 3px hsla(244, 62%, 39%, 0.43)"
+        shadow: "2px 2px 3px hsla(244, 62%, 39%, 0.43)",
+        dark: "hsla(244, 62%, 39%, 0.43)"
     },
     tertiary:{
         color1: "#8f94fb",
         color2: "#4e54c8",
         gradient: "linear-gradient(45deg, #25C6DC, #514A9D)",
-        shadow: "2px 2px 3px hsla(244, 62%, 39%, 0.43)"
+        shadow: "2px 2px 3px hsla(244, 62%, 39%, 0.43)",
     }
 // background: linear-gradient(to left, #8E54E9, #4776E6); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 // background: linear-gradient(to left, #12FFF7, #B3FFAB); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */

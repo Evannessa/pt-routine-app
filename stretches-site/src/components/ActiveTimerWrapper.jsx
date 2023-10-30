@@ -1,10 +1,10 @@
 import React from 'react';
+import Slide from "./Slide";
 import ActiveClock from './ActiveClock';
 import styled from 'styled-components';
-styled
 
 const SlideWrapper = styled.section`
-        background-color: hsla(267deg, 100%, 7.6%, 0.1);
+        background-color: ${props => props.theme.dark};//hsla(267deg, 100%, 7.6%, 0.1);
         max-width: 414px;
         min-height: 250px;
         margin: 2vh;
@@ -37,8 +37,9 @@ const SlideWrapper = styled.section`
   
 `;
 
-const ActiveTimerWrapper = ({ timers, currentClock }) => {
+const ActiveTimerWrapper = ({ timers, currentClock, setClockAtZero, theme }) => {
     const timersNoBreaks = timers.filter((timer) => !timer.isBreak)
+    console.log(theme)
 
     const timerComponents = timers
         ? timers.map((timer, index) => {
@@ -80,13 +81,13 @@ const ActiveTimerWrapper = ({ timers, currentClock }) => {
     }
     return (
         <>
-            {!timers[currentClock].isBreak && <h2>
+            {!timers[currentClock].isBreak ? <h2>
                 Exercise {" "}
                 <span>
-                    {getTimerIndex(timers[currentClock._id]) + 1} / {timersNoBreaks.length}
+                    {getTimerIndex(timers[currentClock]._id) + 1} / {timersNoBreaks.length}
                 </span>
-            </h2>}
-            <SlideWrapper>
+            </h2> : <h2>Break</h2>}
+            <SlideWrapper theme={theme}>
                 {timers[currentClock].slideImagePath && slideComponents[currentClock]}
                 {descriptionComponents[currentClock]}
             </SlideWrapper>
