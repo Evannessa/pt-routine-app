@@ -17,6 +17,7 @@ import DraggableEmbedModal from "./display/DraggableEmbedModal";
 import { ButtonWithIcon } from "./styled-components/Buttons.Styled";
 import { nanoid } from "nanoid";
 import { getPlaceholderImage, placeholderImages } from "./Images";
+import ActiveTimerWrapper from "./ActiveTimerWrapper";
 /* #region   Styled Components */
 
 /** Header, which will contain details from timer set */
@@ -312,10 +313,7 @@ export default function ActiveTimerDisplay() {
         : [];
     //if the clock hits zero, etc.
 
-    function createAutoBreak(){
-
-
-    }
+   
 
     function moveToNextClock() {
         setCurrentClock((oldClock) => (oldClock += 1)); //increment the current clock
@@ -396,22 +394,7 @@ export default function ActiveTimerDisplay() {
                 {timers ? (
                     <StyledBody>
                         {!completed ? (
-                            <>
-                                <h2>
-                                    Exercise {" "} 
-                                    <span>
-                                        {currentClock + 1} / {timers.length}
-                                    </span>
-                                </h2>
-                                <h3>
-                                </h3>
-                                <div className="slide__wrapper">
-                                    {timers[currentClock].slideImagePath && slideComponents[currentClock]}
-                                    {descriptionComponents[currentClock]}
-                                </div>
-                                <h3>{timers[currentClock].label}</h3>
-                                {timerComponents[currentClock]}
-                            </>
+                            <ActiveTimerWrapper timers={timers} currentClock={currentClock} setClockAtZero={setClockAtZero} theme={theme}/>
                         ) : (
                             <>
                                 <h2>All Clocks Completed</h2>
