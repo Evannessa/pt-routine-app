@@ -51,7 +51,6 @@ export default function TimerGallery(props) {
     /* ------------------------------- React Hooks ------------------------------ */
     // #region States and hooks
 
-    // const { user } = useGlobalContext();
 
     const [timerSets, getTimerSets, embedUrls, user] = useOutletContext();
     // const user = {role: "admin"}
@@ -98,12 +97,16 @@ export default function TimerGallery(props) {
         },
     ];
 
+    /**
+     * Updates our Routine formData object in reaction to an axios "PATCH" request
+     * @param {Object} response - the response from the PATCH request
+     */
     function updateTimerSet(response) {
         // console.log("Response was", response);
         if (response) {
             setFormData(response);
             label.current = response.label;
-            console.log(response)
+            // console.log(response)
         } else {
             console.log("Response was null");
         }
@@ -114,20 +117,20 @@ export default function TimerGallery(props) {
      */
     React.useEffect(() => {
         const getTimerSet = async () => {
-            if(user && user.role == "admin"){
+            // if(user && user.role == "admin"){
                 let options = {
                     method: "GET",
                     pathsArray: ["factory", id],
                     setStateCallback: updateTimerSet,
                 };
             await requests.axiosRequest(options);
-            }else{
-                let sets = timerSets ? timerSets : mockTimerSets
-                let currentSet = sets.find((set) => {
-                    return set._id === params.setId;
-                }) 
-                updateTimerSet(currentSet);
-        }
+            // }else{
+            //     let sets = timerSets ? timerSets : mockTimerSets
+            //     let currentSet = sets.find((set) => {
+            //         return set._id === params.setId;
+            //     }) 
+            //     updateTimerSet(currentSet);
+        // }
         };
         getTimerSet();
         return () => {};
@@ -255,6 +258,11 @@ export default function TimerGallery(props) {
         });
     }
 
+    /**
+     * Toggles various UI elements like certain modals and changing back and forth from sort mode
+     * @param {String} property - the name of the property we're toggling
+     * @param {*} value - the value we're changing the property to
+     */
     function updateUiToggles(property, value){
         setUiToggles((prevValue)=> {
             return {
@@ -266,6 +274,10 @@ export default function TimerGallery(props) {
 
     }
 
+    /**
+     * Deletes a timer by its ID 
+     * @param {String} id - the id of the timer to delete
+     */
     function deleteTimer(id) {
         console.log("Deleting timer: ", id);
 
@@ -290,36 +302,34 @@ export default function TimerGallery(props) {
         );
     }
 
-    // duplicate this timer
-    function duplicateTimer(id){
-        
-        // updateFormData("timers", [...formData.timers.map((timer) => timer._id == id ? )])
-    }
-
-    //scroll to the specific timer that meets the id
+    /**
+     * Scrolls into view the specific timer that matches this id.
+     * @param {String} id - the id of a timer
+     */
     function navigateToTimer(id) {
         const matchElement = childRefs.current.find((el) => el.firstChild.dataset.key === id);
         matchElement.scrollIntoView({ behavior: "smooth" });
     }
 
-    //update all the timers in the set
+    /**
+     * - updates all of the exercise timers in this routine
+     * @param {Array} data - the timer array w/ updated timer objects within
+     */
     function updateAllTimers(data) {
         updateFormData("timers", [...data]);
-        // if (data.length) {
-        //     setFormData((prevData) => {
-        // 		...prevData,
-        //         timers: [...data];
-        //     });
-        // } else {
-        //     console.log("No data passed");
-        // }
     }
 
+    /**
+     * Navigates to the "Display" of this particular exercise routine by id
+     */
     function navigateToDisplay() {
         let id = formData._id;
         navigate(`/dashboard/display/${id}`);
     }
 
+    /**
+     * Action Factory Objects to store data about buttons, icons, and their data
+     */
     const actionData = [
         ActionFactory(
             "startRoutine", 
@@ -344,28 +354,6 @@ export default function TimerGallery(props) {
             }, 
             "Add a link to a YouTube video or playlist"
         ),
-        // ActionFactory(
-        //     "addBreaks", 
-        //     "more_time", 
-        //     (event)=>{
-        //         setShowAutoBreak(!showAutoBreak)
-        //     }, 
-        //     "Automatically insert a break between each Timer in this Routine",
-        //     {
-        //         toggle: true
-        //     }
-        // ),
-        // ActionFactory(
-        //     "toggleSortMode", 
-        //     "reorder", 
-        //     ()=>{
-        //         setSortMode(!sortMode)
-        //     }, 
-        //     "Sort Mode",
-        //     {
-        //         toggle: true
-        //     }
-        // )
     ]
 
 
@@ -400,6 +388,9 @@ export default function TimerGallery(props) {
         }
     }
 
+    /**
+     * Saves a newly created timer
+     */
     async function saveNewTimer() {
         if (formData.label) {
             const options = {
@@ -440,7 +431,9 @@ export default function TimerGallery(props) {
         return <Navigate to={`/factory/${storedRef.current}`} />;
     }
 
-    //turn timers into objects
+    /**
+     * The objects representing the preview timers (and their wrappers)
+     */
     const previewTimers = formData
         ? formData.timers?.map((timer, index) => (
               <div
@@ -551,10 +544,6 @@ export default function TimerGallery(props) {
                         isSavedTimer={isSavedTimer}
                         uiToggles={uiToggles}
                         setUiToggles={updateUiToggles}
-                        // setShowAutoBreak={setShowAutoBreak}
-                        // showAutoBreak={showAutoBreak}
-                        // setSortMode={setSortMode}
-                        // sortMode={sortMode}
                     ></GalleryHeader>
                 )}
                 <RoutineTimeline
@@ -565,7 +554,7 @@ export default function TimerGallery(props) {
                     setParentTimers={updateAllTimers}
                     deleteParentTimer={deleteTimer}
                     navigateToParentTimer={navigateToTimer}
-                    duplicateParentTimer={duplicateTimer}
+                    // duplicateParentTimer={duplicateTimer}
                 />
 
             </ThemeProvider>

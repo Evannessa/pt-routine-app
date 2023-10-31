@@ -27,9 +27,13 @@ const StyledTimeWrapper = styled.section`
     }
     ${StyledInputWrapper}{
         grid-row: ${props => props.isRep ? `1/2` : `2/3`};
+            span.material-symbols-outlined{
+                font-weight: 300;
+            }
+
         .number-box{
             ${props => props.isRep && `font-size: xxx-large`};
-
+                font-weight: 100;
         }
     }
 
