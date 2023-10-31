@@ -29,7 +29,7 @@ export const themes = {
         color2: "#f02e5f",
         gradient: "linear-gradient(45deg, #fd6e2b, #f02e5f)",
         shadow: "2px 2px 3px hsla(0, 62%, 39.2%, 0.43)",
-        dark: "hsla(0, 62%, 39.2%, 0.43)"
+        dark: "hsla(349, 68%, 11%, 1)"
     },
     secondary: {
         color1: "#25C6DC",
@@ -37,7 +37,7 @@ export const themes = {
 
         gradient: "linear-gradient(45deg, #25C6DC, #514A9D)",
         shadow: "2px 2px 3px hsla(244, 62%, 39%, 0.43)",
-        dark: "hsla(244, 62%, 39%, 0.43)"
+        dark: "hsla(244, 63%, 15%, 1)"
     },
     tertiary:{
         color1: "#8f94fb",

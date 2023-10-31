@@ -17,6 +17,7 @@ const SlideWrapper = styled.section`
         border-radius: 12px;
         overflow: hidden;
         .slide {
+            background-color: ${props => props.theme.dark};
             /* margin: 2vh; */
             width: 100%;
             height: auto;
@@ -28,7 +29,8 @@ const SlideWrapper = styled.section`
             align-self: end;
             width: 100%;
             text-align: center;
-            background-color: hsla(323, 72.3%, 12.7%, 0.64);
+            background-color: ${props => props.theme.dark};//hsla(267deg, 100%, 7.6%, 0.1);
+            /* background-color: hsla(323, 72.3%, 12.7%, 0.64); */
             grid-row: 1/2;
             grid-column: 1/2;
             padding: 0.5em;

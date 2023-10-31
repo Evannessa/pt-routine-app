@@ -120,7 +120,7 @@ const ActiveTimerSetContainer = styled.div`
         flex-direction: row;
         justify-content: center;
     }
-    .slide__wrapper {
+    /* .slide__wrapper {
         background-color: hsla(267deg, 100%, 7.6%, 0.1);
         max-width: 414px;
         min-height: 250px;
@@ -134,7 +134,6 @@ const ActiveTimerSetContainer = styled.div`
         border-radius: 12px;
         overflow: hidden;
         .slide {
-            /* margin: 2vh; */
             width: 100%;
             height: auto;
             margin: unset;
@@ -150,8 +149,8 @@ const ActiveTimerSetContainer = styled.div`
             grid-column: 1/2;
             padding: 0.5em;
             z-index: 20;
-        }
-    }
+        } */
+    /* } */
 `;
 
 /* #endregion */
@@ -274,43 +273,7 @@ export default function ActiveTimerDisplay() {
         }
     }, [currentClock, timers, updateTheme]);
 
-    let timerComponents = timers
-        ? timers.map((timer, index) => {
-              return (
-                  <ActiveClock
-                      key={timer._id}
-                      id={timer._id}
-                      hours={timer.time.hours}
-                      minutes={timer.time.minutes}
-                      seconds={timer.time.seconds}
-                      description={timer.description}
-                      label={timer.label}
-                      isRep={timer.isRep}
-                      setClockAtZero={setClockAtZero}
-                      clockAtZero={timer.clockAtZero}
-                      autostart={timer.autostart}
-                      repeatNumber={timer.repeatNumber}
-                  ></ActiveClock>
-              );
-          })
-        : [];
-    //map all the images associated w/ each timer to the slide component
-    let slideComponents = timers
-        ? timers.map((timer) => {
-            let prePath = !timer.isBreak ? "http://localhost:3000" : ""
-            return <Slide key={timer._id + "TimerSlide"} 
-                // image={Bow}/>
-                 image={`${prePath}${timer.slideImagePath}`} />;
-              //   let path = timer.slideImagePath.split("/").pop();
-              //   return <Slide key={timer._id + "TimerSlide"} image={`/${path}`} />;
-              //   return <Slide key={timer._id + "TimerSlide"} image={`https://i.imgur.com/Zjk88Uz.jpg/`} />;
-          })
-        : [];
-    let descriptionComponents = timers
-        ? timers.map((timer) => {
-              return <p key={timer._id + "Description"}>{timer.description}</p>;
-          })
-        : [];
+    
     //if the clock hits zero, etc.
 
    

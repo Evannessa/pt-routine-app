@@ -1,4 +1,5 @@
 import { nanoid } from "nanoid";
+
 import React, { useRef, useState, useEffect, forwardRef } from "react";
 import styled, { css, keyframes } from "styled-components";
 import { urls } from "../helpers/requests";
@@ -283,7 +284,7 @@ const TimelineThumbnail = forwardRef(
             <ThumbnailContainer
                 ref={ref}
                 hover={hover}
-                onMouseEnter={() => !sortMode  && setHover(true)}
+                onMouseEnter={() => !sortMode && setHover(true)}
                 onMouseLeave={() => setHover(false)}
                 className="thumbnailContainer"
                 data-key={dataKey}
@@ -309,25 +310,29 @@ const TimelineThumbnail = forwardRef(
                             add
                         </NewTimerButton>
                         <StyledTooltip>
-                            Add Timer Before (Hold <code>Ctrl</code> to duplicate) 
+                            Add Timer Before (Hold <code>Ctrl</code> to duplicate)
                         </StyledTooltip>
                     </ButtonWithTooltipWrapper>
 
                     <TooltipWrapper toggleAction="hover">
-                        <StyledHoverable 
-                            className="time-wrapper" 
-                            title={label} 
-                            onClick={(event) => 
-                                {
-                                    onTimerSelected(dataKey, event)
-                                    navigate(dataKey)
-                                }
+                        <StyledHoverable
+                            className="time-wrapper"
+                            title={label}
+                            onClick={(event) => {
+                                onTimerSelected(dataKey, event)
+                                navigate(dataKey)
                             }
-                            img={`${urlBaseNoApi}${slideImagePath}`}
+                            }
                             theme={theme}
                         >
                             <span className="order-number">{index + 1}</span>
-                            <img className="thumbnail-img" src={`${urlBaseNoApi}${slideImagePath}`}/>
+                            <img className="thumbnail-img" src={`${urlBaseNoApi}${slideImagePath}`}
+                                onError={({ currentTarget }) => {
+                                    currentTarget.onerror = null; // prevents looping
+                                    currentTarget.src = cannotLoad;
+                                }}
+
+                            />
                             {description && <StyledTooltip>{description}</StyledTooltip>}
                             <div className="thumbnail-text">
                                 <span className="abbreviation">{textFormatter.firstLetterOfEachWord(timer.label)}</span>
@@ -345,7 +350,7 @@ const TimelineThumbnail = forwardRef(
                             timer: timer,
                             coords: coords,
                             cannotLoad: cannotLoad
-                        }}/>
+                        }} />
                     </TooltipWrapper>
 
                     <ButtonWithTooltipWrapper left={false}>
@@ -359,7 +364,7 @@ const TimelineThumbnail = forwardRef(
                             add
                         </NewTimerButton>
                         <StyledTooltip>
-                            Add Timer After (Hold <code>Ctrl</code> to duplicate) 
+                            Add Timer After (Hold <code>Ctrl</code> to duplicate)
                         </StyledTooltip>
                     </ButtonWithTooltipWrapper>
                 </section>
