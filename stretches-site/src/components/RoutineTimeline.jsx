@@ -3,8 +3,8 @@ import { ButtonWithIcon } from "./styled-components/Buttons.Styled";
 import TimelineThumbnail, { NewTimerButton } from "./TimelineThumbnail";
 import styled from "styled-components";
 import {
-  restrictToHorizontalAxis,
-  restrictToWindowEdges,
+    restrictToHorizontalAxis,
+    restrictToWindowEdges,
 } from '@dnd-kit/modifiers';
 
 import ActionFactory from "../classes/ActionFactory";
@@ -60,13 +60,14 @@ const TimelineWrapper = styled.ul`
         top: 0 !important;
         /* transform: tra */
     }
-    ${NewTimerButton}{
+    ${NewTimerButton}.special{
         position: static;
-        transform: unset;
+        transform: scale(1.5) translate(-25%);
         opacity: unset;
-        /* border: 1px solid white; */
         color: white;
         border-radius: 10px;
+        margin: unset;
+        background-color: hsla(0, 0%, 100%, 0.3);
         span{
             color: white;
         }
@@ -102,18 +103,18 @@ const Tooltip = styled.span`
 `;
 /* #endregion */
 
-function RoutineTimeline({ 
+function RoutineTimeline({
     sortMode,
     timers,
     timerInView,
     addNewTimer,
     setParentTimers,
     navigateToParentTimer,
-    deleteParentTimer,
-    duplicateParentTimer }) {
+    deleteParentTimer
+    }) {
     const timerThumbnailRefs = React.useRef([]);
     const mousePosition = React.useRef({ x: null, y: null });
-    const [selectedTimers, setSelectedTimers] = React.useState([]);
+    const [selectedTimers, setSelectedTimers] = React.useState();
     const [activeId, setActiveId] = useState(null);
     const [items, setItems] = useState(getTimerIds());
     // const [sortMode, setSortMode] = useState(false)
@@ -149,51 +150,26 @@ function RoutineTimeline({
         // timerElement.style.backgroundColor = "white";
     }
 
-    //swap the position of two timers
-    function swap(index1, index2) {
-        let swapTimers = [...timers];
-
-        let timer1 = timers[index1]
-        let timer2 = timers[index2]
-        // let index1 = timers.indexOf(timer1);
-        // let index2 = timers.indexOf(timer2);
-        swapTimers.splice(index1, 1, timer2);
-        swapTimers.splice(index2, 1, timer1);
-        //swap
-
-
-        // setSelectedTimers([]); //reset the selected timers
-
-        // setParentTimers(swapTimers); //set the timers in the parent
-    }
     function handleMouseMove(e) {
         mousePosition.current = { x: e.clientX, y: e.clientY };
     }
     useEffect(() => {
         if (timers.length > 0) {
-            console.log("Setting items")
             setItems(getTimerIds())
+            setSelectedTimers([timers[0]])
         }
         // return () => {
         //     cleanup
         // };
     }, [timers]);
 
-    function updateTimerPositions(oldIndex, newIndex){
+    function updateTimerPositions(oldIndex, newIndex) {
         let swapTimers = [...timers]
         const temp = swapTimers[newIndex]
         swapTimers[newIndex] = swapTimers[oldIndex]
         swapTimers[oldIndex] = temp
         setParentTimers(swapTimers)
     }
-
-
-    //swap the timers when 2 are selected
-    React.useEffect(() => {
-        if (selectedTimers.length >= 2) {
-            swap(selectedTimers[0], selectedTimers[1]);
-        }
-    }, [selectedTimers]);
 
 
 
@@ -205,7 +181,6 @@ function RoutineTimeline({
 
     function handleDragEnd(event) {
         const { active, over } = event;
-        console.log("Starting to drop", {active: active.id, over: over.id})
 
         if (active.id !== over.id) {
             const oldIndex = items.indexOf(active.id);
@@ -225,6 +200,7 @@ function RoutineTimeline({
             index={index}
             id={timer._id}
             disabled={!sortMode}
+            isLast={index === timers.length - 1}
             // ref={createRef()}
             timer={timer}
             {...timer}
@@ -239,35 +215,10 @@ function RoutineTimeline({
                 // ActionFactory("duplicate", "content_copy", duplicateParentTimer),
                 ActionFactory("delete", "delete_forever", deleteParentTimer),
             ]}
-            isSelected={selectedTimers.find((st) => st._id === timer._id)}
+            isSelected={selectedTimers && selectedTimers.find((st) => st._id === timer._id)}
             viewed={timerInView === timer._id}
         /> : <></>
     }) : []
-    // let thumbnailComponents = timers
-    //     ? timers.map((timer, index) => (
-    //         <SortableThumbnail
-    //             key={timer._id && timer._id.slice(-2)}
-    //             index={index}
-    //             id={timer._id && timer._id.slice(-2)}
-    //             // ref={createRef()}
-    //             timer={timer}
-    //             {...timer}
-    //             addNewTimer={addNewTimer}
-    //             onTimerSelected={onTimerSelected}
-    //             onTimerDeselected={onTimerDeselected}
-    //             navigate={navigateToParentTimer}
-    //             dataKey={timer._id}
-    //             dataId={timer._id && timer._id.slice(-2)}
-    //             actions={[
-    //                 ActionFactory("navigate", "double_arrow", navigateToParentTimer),
-    //                 // ActionFactory("duplicate", "content_copy", duplicateParentTimer),
-    //                 ActionFactory("delete", "delete_forever", deleteParentTimer),
-    //             ]}
-    //             isSelected={selectedTimers.find((st) => st._id === timer._id)}
-    //             viewed={timerInView === timer._id}
-    //         />
-    //     ))
-    //     : [];
 
 
 
@@ -287,19 +238,19 @@ function RoutineTimeline({
                     {thumbnailComponents}
                 </SortableContext>
                 <DragOverlay
-                    modifiers={[restrictToWindowEdges, 
+                    modifiers={[restrictToWindowEdges,
                         restrictToHorizontalAxis
                     ]}
                     wrapperElement="ul"
                 >
-                    {activeId && timers.length > 0 ? <TimelineThumbnail id={activeId} timer={timers.find(timer => timer._id == activeId)} disabled={false}/> : null}
+                    {activeId && timers.length > 0 ? <TimelineThumbnail id={activeId} timer={timers.find(timer => timer._id == activeId)} disabled={false} /> : null}
                 </DragOverlay>
-                <NewTimerButton  
-                            title={"Add a new exercise timer"}
-                            sortmode={sortMode}
-                            left={true}
-                            onClick={(event) => addNewTimer(timers.length - 1, -1, event.ctrlKey)}
-                            className="material-icons">add</NewTimerButton>
+                <NewTimerButton
+                    title={"Add a new exercise timer"}
+                    sortmode={sortMode}
+                    left={false}
+                    onClick={(event) => addNewTimer(timers.length - 1, -1, event.ctrlKey)}
+                    className="material-icons special">add</NewTimerButton>
                 {/* <ButtonWithIcon className="add-button" icon={"add"}></ButtonWithIcon> */}
             </DndContext>
         </TimelineWrapper>

@@ -45,6 +45,7 @@ const StyledTooltip = styled.span`
 export const NewTimerButton = styled.button`
     display: flex;
     transform: scale(0);
+    transform: ${props => props.isLast && props.right ? `scale(1)` : `scale(0)`};
     align-items: center;
     justify-content: center;
     background-color: transparent;
@@ -134,28 +135,25 @@ const ThumbnailContainer = styled.li`
     width: 4rem;
     height: 4rem;
     min-width: 4rem;
+    ${props => props.isSelected && css`
+    &::after{
+        content: "▴";
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+    }`};
 
     .tooltip-card-title{
         font-weight: bold;
         padding: 0.5em;
     }
-    /* .drag-handle{
-        opacity: 0%;
-        pointer-events: none;
-    }
-    &:hover{
-        .drag-handle{
-            opacity:100%;
-            pointer-events: auto;
-        }
-    } */
     .time-wrapper {
         border-radius: 12px;
         width: 4rem;
         height: 4rem;
         transform: scale(1, 1);
         background-color: ${(props) => (props.isSelected ? "pink" : "rgba(255, 255, 255, 1)")};
-        /* background-image: ${props => props.img} !important; */
 
         .thumbnail-text{
             display: flex;
@@ -214,11 +212,13 @@ const ThumbnailContainer = styled.li`
         left: 50%;
         transform: translate(-50%, -50%);
         display: grid;
-        grid-template-columns: 1fr 4rem 1fr;
+        /* grid-template-columns: ${props => !props.isLast ? `1fr 4rem 1fr` : `1fr 4rem` }; */
+        grid-template-columns: minmax(40px, 1fr) 4rem minmax(40px,1fr);
+        /* grid-template-columns: 1fr 4rem 1fr; */
         align-items: center;
         .time-wrapper {
-            /* background-image: ${props => props.img} !important; */
             grid-column: 2/3;
+            /* grid-column: ${props => !props.isLast ? `2/3` : ``};; */
             display: grid;
             place-content: center;
         }
@@ -266,7 +266,8 @@ const TimelineThumbnail = forwardRef(
             timer,
             disabled,
             theme,
-            onTimerSelected
+            onTimerSelected,
+            isLast
         },
         ref
     ) => {
@@ -296,6 +297,7 @@ const TimelineThumbnail = forwardRef(
                 viewed={viewed}
                 sortmode={sortMode}
                 img={`${urlBaseNoApi}${slideImagePath}`}
+                isLast={isLast}
             >
                 {children}
                 <section className="hud" sortmode={sortMode}>
@@ -310,7 +312,8 @@ const TimelineThumbnail = forwardRef(
                             add
                         </NewTimerButton>
                         <StyledTooltip>
-                            Add Timer Before (Hold <code>Ctrl</code> to duplicate)
+                            Add Timer Before <br></br>
+                            (Hold <code>Ctrl</code> to duplicate)
                         </StyledTooltip>
                     </ButtonWithTooltipWrapper>
 
@@ -352,7 +355,7 @@ const TimelineThumbnail = forwardRef(
                             cannotLoad: cannotLoad
                         }} />
                     </TooltipWrapper>
-
+                    { !isLast &&
                     <ButtonWithTooltipWrapper left={false}>
                         <NewTimerButton
                             sortmode={sortMode}
@@ -367,6 +370,7 @@ const TimelineThumbnail = forwardRef(
                             Add Timer After (Hold <code>Ctrl</code> to duplicate)
                         </StyledTooltip>
                     </ButtonWithTooltipWrapper>
+                }
                 </section>
             </ThumbnailContainer>
         );
