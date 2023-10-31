@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from "react";
 import throttle from "lodash.throttle";
 import PreviewTimer from "./PreviewTimer";
-import { placeholderImages } from "./Images";
+import { placeholderImages, getPlaceholderImage } from "./Images";
 import { mockTimerSets } from "../mockData/MockTimers";
 import ActionModal from "./ActionModal";
 import RoutineTimeline from "./RoutineTimeline";
@@ -490,7 +490,7 @@ export default function TimerGallery(props) {
      */
     async function addNewTimer(position, beforeOrAfter, duplicate = false) {
         let insertAtIndex = position + beforeOrAfter;
-        console.log(formData.timers[position])
+        console.log({position, beforeOrAfter}, formData.timers[position])
         const newTimerData = !duplicate ? {
             // _id: "new",
             time: { hours: 0, seconds: 0, minutes: 0 },
@@ -507,7 +507,7 @@ export default function TimerGallery(props) {
             delete newTimerData._id
         }
 
-        debugger
+        // debugger
         //make sure it doesn't go over or under
         if (insertAtIndex < 0) {
             insertAtIndex = 0;

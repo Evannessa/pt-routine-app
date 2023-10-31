@@ -40,8 +40,9 @@ export const StyledInputWrapper = styled.div`
     }
     ${props => props.inputStyle === "numberSpinner" && css`
         align-items: center;
-        border-radius: 999px;
-        border: 1px solid white;
+        border: unset;
+        /* border-radius: 999px; */
+        /* border: 1px solid white; */
         color: white;
         display: flex;
         flex-direction: row;

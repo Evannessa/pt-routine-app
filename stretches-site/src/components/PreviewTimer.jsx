@@ -27,6 +27,10 @@ const StyledTimeWrapper = styled.section`
     }
     ${StyledInputWrapper}{
         grid-row: ${props => props.isRep ? `1/2` : `2/3`};
+        .number-box{
+            ${props => props.isRep && `font-size: xxx-large`};
+
+        }
     }
 
 
