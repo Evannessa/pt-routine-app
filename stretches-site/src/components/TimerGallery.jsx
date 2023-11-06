@@ -16,6 +16,8 @@ import AutoBreakConfig from "./AutoBreakConfig";
 import helpers from "../classes/Helpers";
 import FloatingToolbar from "./FloatingToolbar";
 import ActionFactory from "../classes/ActionFactory";
+import { useMediaQuery } from 'react-responsive'
+import { device } from "./styled-components/devices";
 
 /* ---------------------------- Styled Components --------------------------- */
 
@@ -66,7 +68,7 @@ export default function TimerGallery(props) {
         currentModalIndex: -1,
     }); //whether or not we want to show the modal
     const [formData, setFormData] = React.useState(props.formData || {});
-    const [timerSet, setTimerSet] = React.useState();
+    // const [timerSet, setTimerSet] = React.useState();
     const [currentTimer, setCurrentTimer] = React.useState();
     const [uiToggles, setUiToggles] = useState({
         sortMode: false,
@@ -96,6 +98,13 @@ export default function TimerGallery(props) {
             onSubmit: linkYoutube,
         },
     ];
+    const isDesktopOrLaptop = useMediaQuery({
+        query: device.laptopL
+    })
+    const isBigScreen = useMediaQuery({ query: '(min-width: 1824px)' })
+    const isTablet = useMediaQuery({ query: device.tablet})
+    const isLaptop = useMediaQuery({query: device.laptop})
+    const isMobileSmall = useMediaQuery({query: device.mobileS}) 
 
     /**
      * Updates our Routine formData object in reaction to an axios "PATCH" request
@@ -544,6 +553,7 @@ export default function TimerGallery(props) {
                         isSavedTimer={isSavedTimer}
                         uiToggles={uiToggles}
                         setUiToggles={updateUiToggles}
+                        isTablet={isTablet}
                     ></GalleryHeader>
                 )}
                 <RoutineTimeline

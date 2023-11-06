@@ -174,26 +174,11 @@ export default function ActiveTimerDisplay() {
     const [repeat, setRepeat] = React.useState();
     const [links, setLinks] = React.useState(null);
     const [currentClock, setCurrentClock] = React.useState(0);
+    const [muted, setMuted] = React.useState(false)
 
     const [completed, setCompleted] = React.useState(false);
 
-    function populateAutoBreaks(_timers, autoBreakTime){
-        let timersWithBreaks = []
-        let breakTimer = {
-            ...timers[0], 
-            _id: "auto-break",
-            time: autoBreakTime,
-            label: "Auto Break",
-            isBreak: true,
-            isAutoBreak: true
-        }
-        for(let timer of timers){
-            timersWithBreaks.push(timer)
-            timersWithBreaks.push({...breakTimer, _id: nanoid()})
-        }
-
-
-    }
+   
     /**Get the timers stored in the database when the component mounts */
     function populateActiveTimerSet(result) {
         // console.log("Result is", result, result.timers);
@@ -322,6 +307,9 @@ export default function ActiveTimerDisplay() {
             setTimers(initialState.current);
         } else if (action === "edit") {
             navigate(`${urlBase}/dashboard/factory/${id.current}`);
+        }else if(action  === "mute"){
+            console.log("Should be muting clock")
+            setMuted(!muted)
         }
     }
     return (
@@ -330,7 +318,6 @@ export default function ActiveTimerDisplay() {
                 {/* HEADER W/ TIMER NAME */}
                 <StyledHeader className="activeSet__header" theme={theme}>
                     <h1 className="activeSet__name">{timerSetName}</h1>
-                    <ButtonWithIcon className="button" onClick={handleClick} data-action="resetAll" icon={"restart_alt"} title="reset routine from beginning"/>
                     <TooltipWrapper>
                         <div>
                             <Link to={`/dashboard/factory/${params.setId}`} title="edit this routine">
@@ -339,6 +326,18 @@ export default function ActiveTimerDisplay() {
                         </div>
                         <p>Edit this Timer</p>
                     </TooltipWrapper>
+                    <ButtonWithIcon 
+                        className="button" 
+                        onClick={handleClick} 
+                        data-action="resetAll" 
+                        icon={"restart_alt"} 
+                        title="reset routine from beginning"/>
+                    <ButtonWithIcon 
+                        className="button" 
+                        onClick={handleClick} 
+                        data-action="mute" 
+                        icon={muted ? "volume_up" : "volume_off"} 
+                        title={muted ? "turn on timer sounds" : "mute timer sounds"}/>
                 </StyledHeader>
                 {links && links.spotifyLink && links.spotifyLink.length > 0 && (
                     <DraggableEmbedModal links={links}>
@@ -357,7 +356,13 @@ export default function ActiveTimerDisplay() {
                 {timers ? (
                     <StyledBody>
                         {!completed ? (
-                            <ActiveTimerWrapper timers={timers} currentClock={currentClock} setClockAtZero={setClockAtZero} theme={theme}/>
+                            <ActiveTimerWrapper 
+                                timers={timers} 
+                                currentClock={currentClock} 
+                                setClockAtZero={setClockAtZero} 
+                                theme={theme}
+                                muted={muted}
+                            />
                         ) : (
                             <>
                                 <h2>All Clocks Completed</h2>

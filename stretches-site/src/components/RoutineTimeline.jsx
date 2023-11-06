@@ -1,5 +1,5 @@
 import React, { createRef, useState } from "react";
-import { ButtonWithIcon } from "./styled-components/Buttons.Styled";
+import { ButtonWithIcon, IconButton } from "./styled-components/Buttons.Styled";
 import TimelineThumbnail, { NewTimerButton } from "./TimelineThumbnail";
 import styled from "styled-components";
 import {
@@ -60,15 +60,19 @@ const TimelineWrapper = styled.ul`
         top: 0 !important;
         /* transform: tra */
     }
-    ${NewTimerButton}.special{
+    .add-button.special{
+        width: 3rem;
+        height: 3rem;
         position: static;
-        transform: scale(1.5) translate(-25%);
+        transform: scale(1.0) translate(-25%);
+        border: 2px solid white !important;
         opacity: unset;
         color: white;
         border-radius: 10px;
         margin: unset;
         background-color: hsla(0, 0%, 100%, 0.3);
         span{
+            font-size: xx-large;
             color: white;
         }
     }
@@ -190,6 +194,7 @@ function RoutineTimeline({
 
         setActiveId(null);
     }
+    console.log(timerInView)
 
 
     //map the timers to the thumbnail components
@@ -215,7 +220,7 @@ function RoutineTimeline({
                 // ActionFactory("duplicate", "content_copy", duplicateParentTimer),
                 ActionFactory("delete", "delete_forever", deleteParentTimer),
             ]}
-            isSelected={selectedTimers && selectedTimers.find((st) => st._id === timer._id)}
+            isSelected={timerInView ? timerInView === timer._id : (selectedTimers && selectedTimers.find((st) => st._id === timer._id))}
             viewed={timerInView === timer._id}
         /> : <></>
     }) : []
@@ -245,12 +250,11 @@ function RoutineTimeline({
                 >
                     {activeId && timers.length > 0 ? <TimelineThumbnail id={activeId} timer={timers.find(timer => timer._id == activeId)} disabled={false} /> : null}
                 </DragOverlay>
-                <NewTimerButton
+                <ButtonWithIcon
+                    icon="add"
                     title={"Add a new exercise timer"}
-                    sortmode={sortMode}
-                    left={false}
                     onClick={(event) => addNewTimer(timers.length - 1, -1, event.ctrlKey)}
-                    className="material-icons special">add</NewTimerButton>
+                    className="add-button special"/>
                 {/* <ButtonWithIcon className="add-button" icon={"add"}></ButtonWithIcon> */}
             </DndContext>
         </TimelineWrapper>

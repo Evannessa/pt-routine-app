@@ -128,6 +128,11 @@ export const StyledInputWrapper = styled.div`
 				background-color: hsla(0, 0%, 100%, 0.53);
 				color: hsl(343.4, 79.9%, 29.2%);
 				font-weight: bold;
+                span{
+                    display: grid;
+                    place-content: center;
+                    /* align-items: center; */
+                }
 				// color: var(--clr-primary-pink)
 			}
 		}
@@ -282,7 +287,7 @@ function Input(props) {
             {hasLabel && (
                 <label htmlFor={type === "radio" ? value : id}>
                     {icon && <span className="material-icons">
-                        {variant === "showCheck" ? `${value ? "check_circle" : "radio_button_unchecked"}` : icon}
+                        {variant === "showCheck" ? `${value ? "check_circle" : "⬤"}` : icon}
                     </span>}
                     {type === "radio"
                         ? tf.capitalizeFirstLetter(tf.camelCaseToWords(value))

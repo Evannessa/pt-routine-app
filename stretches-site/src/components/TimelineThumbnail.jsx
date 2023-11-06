@@ -126,7 +126,8 @@ const ButtonWithTooltipWrapper = styled.div`
     }
 `;
 const ThumbnailContainer = styled.li`
-    transform: ${props => props.isSelected ? "scale(1.15)" : "scale(1)"};
+    /* transform: ${props => props.isSelected ? "scale(1.15)" : "scale(1)"}; */
+    outline: ${props => props.viewed ? `2px solid #ff3758` : "unset"};
     overflow: ${(props) => (props.hover ? "visible" : "hidden")} !important;
     position: relative;
     list-style-type: none;
@@ -135,13 +136,17 @@ const ThumbnailContainer = styled.li`
     width: 4rem;
     height: 4rem;
     min-width: 4rem;
-    ${props => props.isSelected && css`
+    ${props => props.viewed && css`
     &::after{
-        content: "▴";
+        content: "▲";
+        pointer-events: none;
+        /* font-size: xx-large; */
         position: absolute;
         bottom: 0;
         left: 50%;
-        transform: translateX(-50%);
+        transform: translate(-50%);
+        display: inline-flex;
+        align-items: end;
     }`};
 
     .tooltip-card-title{
@@ -153,7 +158,7 @@ const ThumbnailContainer = styled.li`
         width: 4rem;
         height: 4rem;
         transform: scale(1, 1);
-        background-color: ${(props) => (props.isSelected ? "pink" : "rgba(255, 255, 255, 1)")};
+        background-color: ${(props) => (props.viewed ? "pink" : "rgba(255, 255, 255, 1)")};
 
         .thumbnail-text{
             display: flex;
@@ -212,6 +217,7 @@ const ThumbnailContainer = styled.li`
         left: 50%;
         transform: translate(-50%, -50%);
         display: grid;
+        opacity: ${props => props.isSelected ? `100%` : `80%`};
         /* grid-template-columns: ${props => !props.isLast ? `1fr 4rem 1fr` : `1fr 4rem` }; */
         grid-template-columns: minmax(40px, 1fr) 4rem minmax(40px,1fr);
         /* grid-template-columns: 1fr 4rem 1fr; */
@@ -232,6 +238,7 @@ const ThumbnailContainer = styled.li`
         }
 
         &:hover {
+            
             > ${ButtonWithTooltipWrapper} {
                 /* pointer-events: ${props => props.sortMode ? "none" : "auto"}; */
                 transform: scale(1);
