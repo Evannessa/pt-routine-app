@@ -1,6 +1,7 @@
 import React from "react";
 import InputNumber from "./InputNumber";
 import TimeValue from "./TimeValue";
+import { useMediaQuery } from 'react-responsive'
 import DropArea, { StyledDropArea } from "./DropArea";
 import { useParams } from "react-router-dom";
 import { BackgroundWrapper } from "./styled-components/BackgroundWrapper.styled";
@@ -12,6 +13,7 @@ import { device } from "./styled-components/devices";
 import UploadModal from "./UploadModal";
 import TimeValueGroup, { StyledValueGroup } from "./TimeValueGroup";
 import EditableHeading from "./EditableHeading";
+
 
 
 /* ---------------------------- Styled Components --------------------------- */
@@ -189,21 +191,34 @@ const GridContainer = styled(Container)`
     width: 100%;
     height: 100%;
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    grid-template-rows: 5rem minmax(0,1fr);
     align-items: center;
+    grid-template-columns: 100%;
+    grid-template-rows: 5rem minmax(0,1fr);
     h1,
     h2 {
         font-size: clamp(1rem, 1rem + 2vw, 2rem);
         display: flex;
+        text-align: center;
+        line-height: 2rem;
     }
     p,
     input, textarea {
         font-size: clamp(0.75rem, 0.75rem + 1vw, 1rem);
     }
+    .preview-timer__number{
+        grid-row: 1/2;
+        height: 100%;
+        align-items: center;
+    }
+
+    .time-rep-wrapper{
+        grid-row: 2/3;
+    }
 
 
     @media ${device.tablet} {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-template-rows: 5rem minmax(0,1fr);
         .preview-timer__number{
             margin-top: 2rem;
             grid-row: 1/2;
@@ -264,6 +279,14 @@ export default function PreviewTimer(props) {
     // @blocksort desc
     /* ----------------------------- State and Hooks ---------------------------- */
     // #region State and Hooks
+    const isDesktopOrLaptop = useMediaQuery({
+        query: device.laptopL
+    })
+    const isBigScreen = useMediaQuery({ query: '(min-width: 1824px)' })
+    const isTabletOrMobile = useMediaQuery({ query: device.tablet})
+    const isLaptop = useMediaQuery({query: device.laptop})
+    const isMobileSmall = useMediaQuery({query: device.mobileS}) 
+
     const params = useParams();
     const [time, setTime] = React.useState(props.time);
     const [showDropModal, setShowDropModal] = React.useState(false);

@@ -39,9 +39,8 @@ const SlideWrapper = styled.section`
   
 `;
 
-const ActiveTimerWrapper = ({ timers, currentClock, setClockAtZero, theme }) => {
+const ActiveTimerWrapper = ({ timers, currentClock, setClockAtZero, theme, muted }) => {
     const timersNoBreaks = timers.filter((timer) => !timer.isBreak)
-    console.log(theme)
 
     const timerComponents = timers
         ? timers.map((timer, index) => {
@@ -59,6 +58,7 @@ const ActiveTimerWrapper = ({ timers, currentClock, setClockAtZero, theme }) => 
                     clockAtZero={timer.clockAtZero}
                     autostart={timer.autostart}
                     repeatNumber={timer.repeatNumber}
+                    soundEnabled={!muted}
                 ></ActiveClock>
             );
         })

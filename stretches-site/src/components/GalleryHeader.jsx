@@ -8,6 +8,8 @@ import * as Buttons from "./styled-components/Buttons.Styled";
 import { ButtonWithIcon } from "./styled-components/Buttons.Styled";
 import Select from "./input/Select";
 import AutoBreakConfig from "./AutoBreakConfig";
+import ConditionalWrapper from "./ConditionalWrapper";
+import { useState } from "react";
 // import { StyledInputWrapper } from "./input/Input";
 const ButtonWrapper = styled.div`
     display: flex;
@@ -41,13 +43,16 @@ const StyledGalleryHeader = styled.div`
             justify-content: space-between;
             padding: 15px calc(-480px + 50vw);
             max-height: 100%;
+            max-width: 100vw;
             input[type="checkbox"] + label{
                 background-color: ${({ theme }) => theme.color2};;
                 color: white;
             }
         .inner-wrapper{
+            position: relative;
             display: flex;
             justify-content: space-evenly;
+            align-items: center;
             gap: 0.75rem;
             button:not(.more){
                 background-color: ${({ theme }) => theme.color2};
@@ -56,7 +61,48 @@ const StyledGalleryHeader = styled.div`
             button.action-startRoutine{
                 background-image: ${({ theme }) => `linear-gradient(45deg, ${theme.color1}, ${theme.color2})`};
             }
+
+ul[data-variant="overflow"]{
+    display: flex;
+    li{
+        list-style-type: none;
+    }
+    ${props => !props.isTablet ? css` 
+            position: absolute;
+            flex-direction: column;
+            background-color: #ffffff7b;
+            backdrop-filter: blur(4px);
+            right: 0;
+            top: 100%;
+            z-index: 500;
+            width: fit-content;
+            box-shadow: 0px 0px 2px #0000008e;
+                li label{
+                    white-space: nowrap;
+                    background-color: transparent;
+                    border-radius: unset;
+                    color: #410b1c;
+                }
+            ` : css`
+                position: relative;
+                flex-direction: row;
+                background-color: transparent;
+                backdrop-filter: unset;
+            `};
         }
+          
+        }
+    }
+    @media ${device.tablet}{
+        .header-bottom{
+        .inner-wrapper ul[data-variant="overflow"]{
+            position: relative;
+            flex-direction: row;
+            background-color: transparent;
+            backdrop-filter: unset;
+        }
+    }
+      
     }
     /* //if our height is over 600 px, show full */
     @media (min-height: 600px) and  (min-width: 600px) {
@@ -70,7 +116,12 @@ const StyledGalleryHeader = styled.div`
 StyledGalleryHeader.displayName = "GalleryHeader";
 // #endregion
 export default function GalleryHeader(props) {
-    const { formData, updateFormData, handleClick, expanded, setExpanded, actions, uiToggles, setUiToggles } = props;
+    const { formData, updateFormData, handleClick, expanded, setExpanded, actions, uiToggles,
+        setUiToggles,
+        isTablet
+
+    } = props;
+    const [overflowActive, setOverflowActive] = useState(false)
 
 
     const buttonData = {
@@ -108,25 +159,14 @@ export default function GalleryHeader(props) {
 
     ></ButtonWithIcon>)
 
-    /* for (let key in buttonData) {
-        const data = buttonData[key];
-        buttonElements[key] = (
-            <ButtonWithIcon
-                type="circle"
-                onClick={handleClick}
-                data-action={data.action}
-                icon={data.icon}
-                title={data.tooltip}
-            ></ButtonWithIcon>
-        );
-    } */
+
 
 
 
     const expandButton = (<Buttons.IconButton
         className="more"
         onClick={() => {
-            setExpanded();
+            setOverflowActive(!overflowActive);
         }}
     >
         <span className="material-symbols-outlined">more_vert</span>
@@ -136,8 +176,8 @@ export default function GalleryHeader(props) {
     )
 
     return (
-        <StyledGalleryHeader expanded={expanded} theme={themes.primary}>
-            <Container className="header-bottom">
+        <StyledGalleryHeader expanded={expanded} theme={themes.primary} overflowActive={overflowActive} isTablet={isTablet}>
+            <Container className="header-bottom" >
 
                 <div class="inner-wrapper">
                     <Input
@@ -157,42 +197,53 @@ export default function GalleryHeader(props) {
                 </div>
 
                 <div class="inner-wrapper">{buttonElements.slice(1)}</div>
+                <div class="inner-wrapper"></div>
                 <div className="inner-wrapper">
-                    <Input
-                        className={"showCheck"}
-                        type="checkbox"
-                        name="showAutoBreak"
-                        id="showAutoBreak"
-                        label="Auto Break"
-                        icon="more_time"
-                        value={uiToggles.showAutoBreak}
-                        setStateFunction={setUiToggles}
-                        hasLabel={true}
-                        inputStyle="chip"
-                        variant="showCheck"
-                        style={{
-                            borderColor: "black"
-                        }}
-                    />
-                    <Input
-                        className={"showCheck"}
-                        type="checkbox"
-                        name="sortMode"
-                        id="sortMode"
-                        label="Sort Mode"
-                        icon={"reorder"}
-                        value={uiToggles.sortMode}
-                        setStateFunction={setUiToggles}
-                        hasLabel={true}
-                        inputStyle="chip"
-                        variant="showCheck"
-                        style={{
-                            borderColor: "black"
-                        }}
-                    />
-
+                    {(isTablet || overflowActive) &&
+                        <ul data-variant="overflow">
+                            <li onClick={()=> setOverflowActive(false)}>
+                                <Input
+                                    className={"showCheck"}
+                                    type="checkbox"
+                                    name="showAutoBreak"
+                                    id="showAutoBreak"
+                                    label="Auto Break"
+                                    icon="more_time"
+                                    value={uiToggles.showAutoBreak}
+                                    setStateFunction={setUiToggles}
+                                    hasLabel={true}
+                                    inputStyle="chip"
+                                    variant="showCheck"
+                                    onClick={()=> setOverflowActive(false)}
+                                    style={{
+                                        borderColor: "black"
+                                    }}
+                                />
+                            </li>
+                            <li onClick={()=> setOverflowActive(false)}>
+                                <Input
+                                    className={"showCheck"}
+                                    type="checkbox"
+                                    name="sortMode"
+                                    id="sortMode"
+                                    label="Sort Mode"
+                                    icon={"reorder"}
+                                    value={uiToggles.sortMode}
+                                    setStateFunction={setUiToggles}
+                                    hasLabel={true}
+                                    inputStyle="chip"
+                                    variant="showCheck"
+                                    style={{
+                                        borderColor: "black"
+                                    }}
+                                />
+                            </li>
+                        </ul>
+                    }
+                    {!isTablet && 
+                        <>{expandButton}</>
+                    }
                 </div>
-                <div class="inner-wrapper">{expandButton}</div>
             </Container>
         </StyledGalleryHeader>
     );
