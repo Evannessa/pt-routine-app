@@ -63,6 +63,7 @@ export const ThemeContext = React.createContext({
 const StyledApp = styled.div`
 * {
     scrollbar-width: thin !important;
+    box-sizing: border-box;
 }
     grid-template-rows: minmax(10px, 32px) 1fr;
     color: ${(props) => props.theme.color1};
@@ -116,7 +117,7 @@ function App() {
                 <GlobalStyle />
 
                 {/* <TimerSets timerSets={timerSets} updateSets={updateSets} /> */}
-                {/* <Navbar /> */}
+                <Navbar />
                 <Routes>
                     <Route path="/" exact element={<Home />} />
                     <Route path="/login" exact element={<Login />} />

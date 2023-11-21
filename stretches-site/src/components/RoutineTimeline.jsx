@@ -220,7 +220,7 @@ function RoutineTimeline({
                 // ActionFactory("duplicate", "content_copy", duplicateParentTimer),
                 ActionFactory("delete", "delete_forever", deleteParentTimer),
             ]}
-            isSelected={timerInView ? timerInView === timer._id : (selectedTimers && selectedTimers.find((st) => st._id === timer._id))}
+            isSelected={selectedTimers && selectedTimers.find((st) => st._id === timer._id)}
             viewed={timerInView === timer._id}
         /> : <></>
     }) : []
