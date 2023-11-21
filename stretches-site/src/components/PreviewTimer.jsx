@@ -20,6 +20,14 @@ import EditableHeading from "./EditableHeading";
 // #region Styled Components
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
+const StyledPreviewTimerWrapper = styled(BackgroundWrapper)`
+    .preview-timer{
+        display: grid;
+        grid-template-rows: 80% 10%;
+    }
+
+`
+
 const StyledTimeWrapper = styled.section`
     display: grid;
     grid-template-rows: ${props => !props.isRep ? `80% 1fr` : `50% 1fr`};
@@ -362,7 +370,7 @@ export default function PreviewTimer(props) {
     }
 
     return (
-        <BackgroundWrapper
+        <StyledPreviewTimerWrapper
             className={`preview-timer-wrapper ${formData.isBreak ? "break" : ""}`}
             break={formData.isBreak}
             data-key={props.id}
@@ -558,6 +566,7 @@ export default function PreviewTimer(props) {
                                 name="isRep"
                                 id={`${props.id}isRep`}
                                 value="isRep"
+                                label="Rep Mode"
                                 checked={props.isRep}
                                 setStateFunction={updateTimerData}
                                 icon="repeat"
@@ -573,6 +582,6 @@ export default function PreviewTimer(props) {
                     </BottomForm>
                 </BottomDrawer>
             </div>
-        </BackgroundWrapper>
+        </StyledPreviewTimerWrapper>
     );
 }

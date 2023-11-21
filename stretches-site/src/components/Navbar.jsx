@@ -2,24 +2,21 @@ import React from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { useGlobalContext } from "../context";
+import { Icon, ButtonWithIcon } from "./styled-components/Buttons.Styled";
+import { TooltipWrapper } from "../portal-components/TooltipPopover";
 
 // const StyledToolbar = styled.`
   
 // `;
-
 const Navbar = () => {
     const { user, logoutUser } = useGlobalContext();
     return (
         <Wrapper>
             <div className="nav-center">
-                <Link to="/" className="home-link">
+                <StyledLink to="/dashboard" className="home-link">
+                   <Icon icon={"home"}></Icon> 
                     Home
-                    {/* <img src={logo} alt="jobs app" className="logo" /> */}
-                </Link>
-            <Link to="/dashboard" className="home-link">
-                    Dashboard
-                    {/* <img src={logo} alt="jobs app" className="logo" /> */}
-                </Link>
+                </StyledLink>
                 {user && (
                     <div className="nav-links">
                         <p>hello, {user.name}</p>
@@ -34,16 +31,31 @@ const Navbar = () => {
                     </div>
                 )}
             </div>
+                <ButtonWithIcon icon={"help"} className="help"></ButtonWithIcon>
         </Wrapper>
     );
 };
 
+const StyledLink = styled(Link)`
+    display: inline-flex;
+    gap: 0.5rem;
+    align-items: center;
+    text-align: center;
+`;
+
+
+
 const Wrapper = styled.nav`
+    /* margin-left: 5rem; */
+    padding-inline: 2rem;
+    position: fixed;
+    z-index: 900;
     background: var(--white, white);
     height: 2rem;
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 100%;
 
     .nav-center {
         width: var(--fluid-width);
@@ -63,10 +75,10 @@ const Wrapper = styled.nav`
         text-transform: capitalize;
         margin-bottom: 0.25rem;
     }
-    .home-link {
-        display: flex;
-        align-items: flex-end;
+    .help{
+        margin-left: auto;
     }
+ 
     @media (min-width: 776px) {
         .nav-links {
             flex-direction: row;

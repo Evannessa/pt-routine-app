@@ -2,9 +2,11 @@ import React from 'react';
 import FloatingToolbar from './FloatingToolbar';
 import styled from 'styled-components';
 
+
 const StyledPopupCard = styled.section`
     p{
         padding: 0.5em;
+
     }
   
 `;
