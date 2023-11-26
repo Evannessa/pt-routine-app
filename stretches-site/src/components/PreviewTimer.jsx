@@ -106,7 +106,7 @@ const StyledModalWrapper = styled(Container)`
             }
         }
     }
-    @media ${device.tablet} {
+    @media ${device.laptop} {
 
         backdrop-filter: unset;
         background-color: transparent;
@@ -185,7 +185,7 @@ const BottomDrawer = styled(Container)`
     ${ExtraButtons} {
         display: flex;
     }
-    @media ${device.tablet} {
+    @media ${device.laptop} {
         ${ExtraButtons} {
             display: none;
         }
@@ -224,7 +224,7 @@ const GridContainer = styled(Container)`
     }
 
 
-    @media ${device.tablet} {
+    @media ${device.laptop} {
         grid-template-columns: repeat(3, minmax(0, 1fr));
         grid-template-rows: 5rem minmax(0,1fr);
         .preview-timer__number{
@@ -525,6 +525,7 @@ export default function PreviewTimer(props) {
                                 icon="play_arrow"
                                 hasLabel={true}
                                 inputStyle="chip"
+                                variant={"showCheck"}
                                 style={{
                                     color: "white",
                                     borderColor: "white"
@@ -554,6 +555,7 @@ export default function PreviewTimer(props) {
                                 setStateFunction={updateTimerData}
                                 icon="timelapse"
                                 hasLabel={true}
+                                variant={"showCheck"}
                                 inputStyle="chip"
                                 tooltip="Is this timer a break timer, meant for resting in between exercises?"
                                 style={{
@@ -571,6 +573,7 @@ export default function PreviewTimer(props) {
                                 setStateFunction={updateTimerData}
                                 icon="repeat"
                                 hasLabel={true}
+                                variant={"showCheck"}
                                 inputStyle="chip"
                                 tooltip="Is this timer a rep timer"
                                 style={{

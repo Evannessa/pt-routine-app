@@ -147,6 +147,18 @@ export const requests = (function () {
         //     console.log("There was an error");
         // }
     }
+    function checkImage(url) {
+        var request = new XMLHttpRequest();
+        request.open("GET", url, true);
+        request.send();
+        request.onload = function() {
+        if (request.status == 200){
+            console.log("image exists");
+        } else {
+            console.log("image doesn't exist");
+        }
+    }
+}
 
     /**
      *
