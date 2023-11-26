@@ -127,7 +127,7 @@ const ButtonWithTooltipWrapper = styled.div`
 `;
 const ThumbnailContainer = styled.li`
     /* transform: ${props => props.isSelected ? "scale(1.15)" : "scale(1)"}; */
-    outline: ${props => props.viewed ? `2px solid #ff3758` : "unset"};
+    outline: ${props => props.viewed ? `2px solid ${props.theme.color2}` : "unset"};
     overflow: ${(props) => (props.hover ? "visible" : "hidden")} !important;
     position: relative;
     list-style-type: none;
@@ -305,6 +305,7 @@ const TimelineThumbnail = forwardRef(
                 sortmode={sortMode}
                 img={`${urlBaseNoApi}${slideImagePath}`}
                 isLast={isLast}
+                theme={theme}
             >
                 {children}
                 <section className="hud" sortmode={sortMode}>
