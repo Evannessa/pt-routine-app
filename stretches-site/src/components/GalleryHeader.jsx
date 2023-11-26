@@ -46,7 +46,8 @@ const StyledGalleryHeader = styled.div`
             max-width: 100vw;
             input[type="checkbox"] {
                 & + label{
-                background-color: transparent;
+                /* background-color: transparent; */
+	            background-color: hsl(348, 100%, 95.1%);
                 border: 1px solid;
                 border-color: ${({ theme }) => theme.color2}; 
                 color: ${({theme})=> theme.color2};

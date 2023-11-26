@@ -111,10 +111,9 @@ const DashboardWrapper = styled.section`
 `;
 
 const AddRoutineButton = styled.button`
-    .material-symbols-outlined{
-        font-size: xx-large;
-    }
+
     background-color: transparent;
+    padding: 0.5em 1em;
     /* background-color: hsla(0, 0%, 100%, 0.3); */
     border: 2px solid white;
     border-radius: 10px;

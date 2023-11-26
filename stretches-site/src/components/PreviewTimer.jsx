@@ -177,9 +177,14 @@ const BottomDrawer = styled(Container)`
     height: 30%;
     fieldset.chip-group{
         justify-content: center;
+	  
         ${StyledInputWrapper} label{
             border-color: white;
-            color: white;
+            /* color: white; */
+            font-weight: bold;
+            background-color: hsla(0, 0%, 100%, 0.28);
+            color: hsl(0, 100%, 14.5%);
+	        border: unset;
         }
     }
     ${ExtraButtons} {

@@ -10,10 +10,20 @@ import { ThemeProvider } from "styled-components";
 const StyledNavLink = styled(NavLink)`
     background-color: white;
     border-radius: 10px;
+    border-top-left-radius: ${props => props.isActive ? "5px" : "10px"};
+    border-bottom-left-radius: ${props => props.isActive ? "5px" : "10px"};
     overflow: hidden;
     /* aspect-ratio: 1/1; */
     display: inline-flex;
-    border-left: ${props => props.isActive ? `10px solid ${props.theme.color2}` : "unset"};
+    &::before{
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border-left: ${props => props.isActive ? `5px solid ${props.theme.color2}` : "unset"};
+    }
    
  
     box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
@@ -27,18 +37,26 @@ const StyledNavLink = styled(NavLink)`
         grid-template-rows: 100%;
         grid-template-columns: 20% 80%;
         align-items: center;
-        gap: 0.25rem;
+        /* gap: 0.25rem; */
         .timerSet__img{
             grid-column: 1/2;
             border-radius: 8px;
             margin: 0.5rem;
             border-radius: 50%;
-            border: 2px solid var(--clr-primary-pink);
+            border: 2px solid ${props => props.theme.color2};
         }
         .timerSet__content{
             display: grid;
-            grid-template-columns: 80% 20%;
+            grid-template-columns: 70% 30%;
             grid-column: 2/3;
+        }
+        .timerSet__img-wrapper{
+            display: flex;
+            align-items: center;
+            grid-row: 1/2;
+            grid-column: 1/2;
+            background-color: ${props => props.theme.color2};
+            height: 100%;
         }
     }
     .text-wrapper{
@@ -80,18 +98,19 @@ const StyledNavLink = styled(NavLink)`
         max-height: 100%;
         object-position: center;
     }
-    > div{
-      
-    }
+   
     section{
-        padding: 1rem;
+        padding: 0.5rem;
+        padding-left: 1rem;
         display: flex;
         justify-content: space-between;
        
         .button-wrapper{
+            align-items: center;
             width: unset;
         }
     }
+   
     img, section{
         grid-row: 1/2;
         grid-column: 1/2;
@@ -123,12 +142,14 @@ function TimerSetCard({ timerSet, updateSets, isActive, timerSetStyle = "link", 
         >
             {timerSet && (
                 <div className="timerSet__wrapper">
-                    {timerSetStyle === "card" && 
-                    <img className="timerSet__img" src={urlBaseNoApi + cardImagePath} alt={cardImageLabel} 
-                     crossOrigin="true" onError={({ currentTarget }) => {
-                        currentTarget.onerror = null; // prevents looping
-                        currentTarget.src= cannotLoad; }}/>
-                    }
+                    <div class="timerSet__img-wrapper">
+                        {timerSetStyle === "card" &&
+                        <img className="timerSet__img" src={urlBaseNoApi + cardImagePath} alt={cardImageLabel}
+                         crossOrigin="true" onError={({ currentTarget }) => {
+                            currentTarget.onerror = null; // prevents looping
+                            currentTarget.src= cannotLoad; }}/>
+                        }
+                    </div>
                     <section className="timerSet__content">
                         
                         <div class="text-wrapper">
