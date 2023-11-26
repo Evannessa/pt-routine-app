@@ -23,7 +23,7 @@ import EditableHeading from "./EditableHeading";
 const StyledPreviewTimerWrapper = styled(BackgroundWrapper)`
     .preview-timer{
         display: grid;
-        grid-template-rows: 80% 10%;
+        grid-template-rows: 80% 20%;
     }
 
 `
