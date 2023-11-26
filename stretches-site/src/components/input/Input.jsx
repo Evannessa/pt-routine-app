@@ -24,8 +24,8 @@ export const StyledInputWrapper = styled.div`
         order: 1;
         z-index: 100;
         ${(props) =>
-            props.inputStyle === "floatingLabel" &&
-            css`
+        props.inputStyle === "floatingLabel" &&
+        css`
                 position: absolute;
                 background: white;
                 padding: 0 clamp(0.15rem, 0.5vw + 0.15rem, 0.2rem);
@@ -115,6 +115,26 @@ export const StyledInputWrapper = styled.div`
 			display: flex;
 			align-items: center;
 			gap: 0.45rem;
+            .custom-check{
+                background-color: white;
+                border-radius: 50%;
+                &::after{
+                    position: absolute;
+                    display: block;
+                    content: "";
+                    left: 50%;
+                    top: 40%;
+                    width: 4px;
+                    height: 8px;
+                    border: solid white;
+                    border-width: 0 2px 2px 0;
+                    transform: translate(-50%, -50%) rotate(45deg);
+                    opacity: 0;
+                    transition: all 0.2s ease;
+                }
+
+
+            }
 
 			&:hover {
 				cursor: pointer;
@@ -189,7 +209,7 @@ function Input(props) {
 
     let {
         // wrapped = true,
-        className="",
+        className = "",
         warningText = "",
         value,
         type,
@@ -219,24 +239,24 @@ function Input(props) {
     // const InputTag = `${type === "textarea" ? "textarea" : "input"}`;
 
     // const WrapperTag = !wrapped ? "div" : Fragment;
-   function handleClick(event){
+    function handleClick(event) {
         let target = event.currentTarget
         let adjust = event.ctrlKey ? 10 : 1
-        if(target.id == "number__decrement"){
-            adjust *= -1 
+        if (target.id == "number__decrement") {
+            adjust *= -1
         }
         let passValue = value + adjust
         setStateFunction(name, passValue, parentName)
     }
     const debounceFn = useCallback(throttle(handleDebounceFn, 100), []);
 
-    function handleDebounceFn(name, passValue, parentName){
+    function handleDebounceFn(name, passValue, parentName) {
         setStateFunction(name, passValue, parentName)
     }
 
-  /* const debouncedChangeHandler = useCallback(
-    debounce(handleChange, 300)
-  , []); */
+    /* const debouncedChangeHandler = useCallback(
+      debounce(handleChange, 300)
+    , []); */
     function handleChange(event) {
         let { value, checked, type } = event.currentTarget;
         let passValue = type === "checkbox" ? checked : value;
@@ -249,10 +269,10 @@ function Input(props) {
         }
     } */
     return (
-        <StyledInputWrapper 
-            inputStyle={inputStyle} 
-            style={{ ...style }} 
-            className={className} 
+        <StyledInputWrapper
+            inputStyle={inputStyle}
+            style={{ ...style }}
+            className={className}
             title={tooltip}
         >
             <StyledInput
@@ -278,16 +298,17 @@ function Input(props) {
                     <span>{value}</span>
                 </div>
                 <button type="button" className="number__next" onClick={handleClick} id="number__increment">
-                  <span className="material-symbols-outlined">add</span>
+                    <span className="material-symbols-outlined">add</span>
                 </button>
                 <button type="button" className="number__prev" onClick={handleClick} id="number__decrement">
-                  <span className="material-symbols-outlined">remove</span>
+                    <span className="material-symbols-outlined">remove</span>
                 </button>
             </>}
             {hasLabel && (
                 <label htmlFor={type === "radio" ? value : id}>
+                    {/*variant === "showCheck" && <span className="custom-check"></span>*/}
                     {icon && <span className="material-icons">
-                        {variant === "showCheck" ? `${value ? "check_circle" : "⬤"}` : icon}
+                        {variant === "showCheck" ? `${checked ? "check_circle" : "circle"}` : icon}
                     </span>}
                     {type === "radio"
                         ? tf.capitalizeFirstLetter(tf.camelCaseToWords(value))

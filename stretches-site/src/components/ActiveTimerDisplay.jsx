@@ -222,7 +222,7 @@ export default function ActiveTimerDisplay() {
     }
  /**
      * callback that reacts to setId changing
-     * Will request an axious request with the proper options
+     * Will request an axios request with the proper options
      * Then use the "populateActiveTimerSet" callback
      */
     React.useEffect(() => {

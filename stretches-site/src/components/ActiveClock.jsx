@@ -5,6 +5,7 @@ import useSound from "use-sound"
 import bellSound from "../audio/240934__the_very_real_horst__neptun-solo-07-tibetan-singing-bowl.wav"
 import shortBell from "../audio/singing_bowl_short.wav"
 import bellSoundHighPitch from "../audio/271370__inoshirodesign__singing-bowl-strike-sound.mp3"
+import ProgressCircle from "./ProgressCircle";
 
 
 const ButtonWrapper = styled.div`
@@ -224,6 +225,7 @@ export default function ActiveClock(props) {
 
     return (
         <StyledTimer className="timer" isRep={props.isRep}>
+            {/* <ProgressCircle></ProgressCircle> */}
             <div className="timer__values">
                 {/* {(time.hours + time.seconds + time.minutes) < 3 && playActive()} */}
                 {loopsRemaining > 0 && 

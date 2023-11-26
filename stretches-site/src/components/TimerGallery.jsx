@@ -346,6 +346,14 @@ export default function TimerGallery(props) {
             ()=> navigateToDisplay(),
             "Start the Routine"
         ),
+        ActionFactory(
+            "addMediaLink",
+            "add_link",
+            ()=> {
+                setShowModal({isOpen: true, currentModalIndex: 1})
+            },
+            "Add a link to a YouTube video, Spotify track, or playlist"
+        ),
       
         ActionFactory(
             "addSpotifyLink", 

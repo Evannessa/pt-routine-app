@@ -44,9 +44,16 @@ const StyledGalleryHeader = styled.div`
             padding: 15px calc(-480px + 50vw);
             max-height: 100%;
             max-width: 100vw;
-            input[type="checkbox"] + label{
-                background-color: ${({ theme }) => theme.color2};;
-                color: white;
+            input[type="checkbox"] {
+                & + label{
+                background-color: transparent;
+                border: 1px solid;
+                border-color: ${({ theme }) => theme.color2}; 
+                color: ${({theme})=> theme.color2};
+                }
+                &:checked + label{
+
+                }
             }
         .inner-wrapper{
             position: relative;
@@ -185,7 +192,7 @@ export default function GalleryHeader(props) {
                         name="label"
                         id="label"
                         label="Routine Name"
-                        value={formData && formData.label ? formData.label : "New Timer Set"}
+                        value={formData && formData.label ? formData.label : "New Routine"}
                         setStateFunction={updateFormData}
                         hasLabel={true}
                         inputStyle="floatingLabel"
@@ -197,7 +204,6 @@ export default function GalleryHeader(props) {
                 </div>
 
                 <div class="inner-wrapper">{buttonElements.slice(1)}</div>
-                <div class="inner-wrapper"></div>
                 <div className="inner-wrapper">
                     {(isTablet || overflowActive) &&
                         <ul data-variant="overflow">
@@ -209,7 +215,9 @@ export default function GalleryHeader(props) {
                                     id="showAutoBreak"
                                     label="Auto Break"
                                     icon="more_time"
-                                    value={uiToggles.showAutoBreak}
+                                    checked={uiToggles.showAutoBreak}
+                                    // value={uiToggles.showAutoBreak}
+                                    value="showAutoBreak"
                                     setStateFunction={setUiToggles}
                                     hasLabel={true}
                                     inputStyle="chip"
@@ -228,7 +236,9 @@ export default function GalleryHeader(props) {
                                     id="sortMode"
                                     label="Sort Mode"
                                     icon={"reorder"}
-                                    value={uiToggles.sortMode}
+                                    checked={uiToggles.sortMode}
+                                    value="sortMode"
+                                    // value={uiToggles.sortMode}
                                     setStateFunction={setUiToggles}
                                     hasLabel={true}
                                     inputStyle="chip"
