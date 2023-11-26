@@ -1,6 +1,13 @@
 import styled, { css } from "styled-components";
 import Form from "../input/Form";
 import Input from "../input/Input";
+
+export const StyledCheckbox = styled.div`
+
+
+`
+
+
 export const StyledTextboxSpan = styled.div`
     background-color: var(--clr-primary-deep-dark);
     min-width: 8rem;

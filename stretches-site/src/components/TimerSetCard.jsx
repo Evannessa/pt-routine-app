@@ -1,9 +1,11 @@
-import React from "react";
+import React, {useContext} from "react";
 import { Outlet, NavLink } from "react-router-dom";
 import styled from "styled-components";
 import guitarPhoto from "../images/GuitarPhoto.jpg"
 import { urls } from "../helpers/requests";
 import cannotLoad from "../images/cannot_load.jpg"
+import { ThemeContext } from "../App";
+import { ThemeProvider } from "styled-components";
 
 const StyledNavLink = styled(NavLink)`
     background-color: white;
@@ -11,10 +13,11 @@ const StyledNavLink = styled(NavLink)`
     overflow: hidden;
     /* aspect-ratio: 1/1; */
     display: inline-flex;
+    border-left: ${props => props.isActive ? `10px solid ${props.theme.color2}` : "unset"};
    
  
     box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
-    color: ${(props) => props.themeColor1 || "white"};
+    color: ${(props) => props.theme.color2 || "white"};
     div.timerSet__wrapper{
         justify-self: flex-end;
         width: 100%;
@@ -33,6 +36,8 @@ const StyledNavLink = styled(NavLink)`
             border: 2px solid var(--clr-primary-pink);
         }
         .timerSet__content{
+            display: grid;
+            grid-template-columns: 80% 20%;
             grid-column: 2/3;
         }
     }
@@ -51,13 +56,17 @@ const StyledNavLink = styled(NavLink)`
     }
     p,
     button {
-        color: hsl(348.7, 100%, 55.1%);
+        color: ${(props) => props.theme.color2};
+        /* color: hsl(348.7, 100%, 55.1%); */
         opacity: 75%;
         transition: opacity 100ms ease-in-out;
         &:hover{
             opacity: 100%;
-            color: ${props => props.themeColor2};
+            color: ${props => props.theme.color2};
         }
+    }
+    button span{
+        font-size: 1.25rem;
     }
   
     transform: scale(1);
@@ -89,10 +98,12 @@ const StyledNavLink = styled(NavLink)`
     }
 `;
 
-function TimerSetCard({ timerSet, updateSets, timerSetStyle = "link", isMockData=false }) {
+function TimerSetCard({ timerSet, updateSets, isActive, timerSetStyle = "link", isMockData=false }) {
+    const theme = useContext(ThemeContext)
     const {urlBaseNoApi} = urls
     const cardImagePath = timerSet.timers[0].slideImagePath;
     const cardImageLabel = timerSet.timers[0].label;
+
 
     async function handleClick(event) {
         event.stopPropagation();
@@ -103,10 +114,12 @@ function TimerSetCard({ timerSet, updateSets, timerSetStyle = "link", isMockData
         updateSets(action, id);
     }
     return (
+        <ThemeProvider theme={theme.theme}>
         <StyledNavLink
             to={`display/${timerSet._id}`}
             // className={`timerSet nav-link ${isActive ? " selected" : ""}`}
             data-id={timerSet._id}
+            isActive={isActive}
         >
             {timerSet && (
                 <div className="timerSet__wrapper">
@@ -146,6 +159,7 @@ function TimerSetCard({ timerSet, updateSets, timerSetStyle = "link", isMockData
                 </div>
             )}
         </StyledNavLink>
+    </ThemeProvider>
     );
 }
 

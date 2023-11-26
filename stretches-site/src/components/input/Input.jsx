@@ -115,26 +115,10 @@ export const StyledInputWrapper = styled.div`
 			display: flex;
 			align-items: center;
 			gap: 0.45rem;
-            .custom-check{
-                background-color: white;
-                border-radius: 50%;
-                &::after{
-                    position: absolute;
-                    display: block;
-                    content: "";
-                    left: 50%;
-                    top: 40%;
-                    width: 4px;
-                    height: 8px;
-                    border: solid white;
-                    border-width: 0 2px 2px 0;
-                    transform: translate(-50%, -50%) rotate(45deg);
-                    opacity: 0;
-                    transition: all 0.2s ease;
-                }
-
-
+            span.material-icons{
+                opacity: 20%;
             }
+
 
 			&:hover {
 				cursor: pointer;
@@ -148,7 +132,8 @@ export const StyledInputWrapper = styled.div`
 				background-color: hsla(0, 0%, 100%, 0.53);
 				color: hsl(343.4, 79.9%, 29.2%);
 				font-weight: bold;
-                span{
+                span.material-icons{
+                    opacity: 100%;
                     display: grid;
                     place-content: center;
                     /* align-items: center; */

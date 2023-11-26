@@ -5,7 +5,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { Container } from "./styled-components/layout.styled";
 import MediaEmbedHandler from "./MediaEmbedHandler";
 import styled, {css} from "styled-components";
-import { ButtonWithIcon } from "./styled-components/Buttons.Styled";
+import { ButtonWithIcon, IconButton, Icon } from "./styled-components/Buttons.Styled";
 import { requests } from "../helpers/requests";
 import { useGlobalContext } from "../context";
 import TimerSetCard from "./TimerSetCard";
@@ -110,6 +110,25 @@ const DashboardWrapper = styled.section`
     };
 `;
 
+const AddRoutineButton = styled.button`
+    .material-symbols-outlined{
+        font-size: xx-large;
+    }
+    background-color: transparent;
+    /* background-color: hsla(0, 0%, 100%, 0.3); */
+    border: 2px solid white;
+    border-radius: 10px;
+    overflow: hidden;
+    display: inline-flex;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    color: ${(props) => props.themeColor1 || "white"};
+    width: 100%;
+    max-height: 100%;
+    max-width: 100%;
+    justify-content: center;
+    font-size: large;
+    gap: 0.25em;
+`
 
 function Dashboard(props) {
     const saved = true;
@@ -119,6 +138,7 @@ function Dashboard(props) {
     // const { user } = useGlobalContext();
     const theme = useContext(ThemeContext)
     const inDisplayMode = location.pathname.includes("display") || location.pathname.includes("factory")
+    console.log(params)
     // const { name, userId, role } = user;
 
     /* ---------------------- React Hooks, State and Effect --------------------- */
@@ -311,9 +331,13 @@ function Dashboard(props) {
                 timerSet._id = id;
             }
             let isMockData = user && user.role === "admin" ? false : true
-            return <TimerSetCard timerSet={timerSet} key={id} timerSetStyle="card" isMockData={isMockData} updateSets={updateSets}></TimerSetCard>;
+            return <TimerSetCard timerSet={timerSet} key={id} timerSetStyle="card" isMockData={isMockData} updateSets={updateSets}
+                    isActive={params.setId === id}
+                ></TimerSetCard>;
         })
         : [];
+    
+    
     const ConditionalWrapper = ({ condition, wrapper, children }) => 
         condition ? wrapper(children) : children;
     
@@ -354,9 +378,6 @@ function Dashboard(props) {
                                 <ButtonWithIcon type="contained" icon="music_note" title="set default Spotify playlist">
                                     Set Spotify Playlist
                                 </ButtonWithIcon>
-                                <ButtonWithIcon type="contained" icon="add" title="Add New Routine" onClick={createNewSet}>
-                                        Create New Routine
-                                    </ButtonWithIcon>
                                 {(!user || user.role !== "admin") && (
                                     <ButtonWithIcon type="contained" icon="save" onClick={onSave} title="Save Timer Sets to local storage">
                                         Save Timer Sets Local Storage
@@ -370,8 +391,17 @@ function Dashboard(props) {
                             </InputButtonGroup>}
                         </DashboardHeader>
                         <DashboardGrid
-                            displayMode={inDisplayMode}>
+                            displayMode={inDisplayMode}
+                            theme={theme}
+                            >
                                 {timerSetCards}
+                            <AddRoutineButton 
+                                title="add New Routine"
+                                onClick={createNewSet}
+                           >
+                            <Icon icon="add"></Icon> 
+                            <span>Add Routine</span>
+                            </AddRoutineButton> 
                         </DashboardGrid>
                     {/* {location.pathname.includes("display") && <SidebarToggle></SidebarToggle>} */}
                 </DashboardWrapper>

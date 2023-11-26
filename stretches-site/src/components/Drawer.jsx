@@ -48,7 +48,7 @@ const StyledDrawer = styled.section`
         height: ${props => props.position == "top" || props.position == "bottom" ? "20vh" : "100%"};
     }
     @media ${device.laptop}{
-        width: ${props => props.position == "left" || props.position == "right" ? "25vw" : "100%"};
+        width: ${props => props.position == "left" || props.position == "right" ? "30vw" : "100%"};
     }
     border-right: 1px solid hsla(0, 0%, 100%, 0.506);
     ${({ position, isClosed }) => handleDrawerPosition(position, isClosed)}
