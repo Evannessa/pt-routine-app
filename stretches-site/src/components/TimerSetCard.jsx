@@ -117,7 +117,7 @@ const StyledNavLink = styled(NavLink)`
     }
 `;
 
-function TimerSetCard({ timerSet, updateSets, isActive, timerSetStyle = "link", isMockData=false }) {
+function TimerSetCard({ timerSet, updateSets, isActive, childHovered, timerSetStyle = "link", isMockData=false }) {
     const theme = useContext(ThemeContext)
     const {urlBaseNoApi} = urls
     const cardImagePath = timerSet.timers[0].slideImagePath;
@@ -141,7 +141,10 @@ function TimerSetCard({ timerSet, updateSets, isActive, timerSetStyle = "link", 
             isActive={isActive}
         >
             {timerSet && (
-                <div className="timerSet__wrapper">
+                <div className="timerSet__wrapper" 
+                    // onMouseOver={()=> childHovered(true)}
+                    // onMouseLeave={()=> childHovered(false)}
+                    >
                     <div class="timerSet__img-wrapper">
                         {timerSetStyle === "card" &&
                         <img className="timerSet__img" src={urlBaseNoApi + cardImagePath} alt={cardImageLabel}

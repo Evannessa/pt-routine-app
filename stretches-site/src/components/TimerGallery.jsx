@@ -249,14 +249,14 @@ export default function TimerGallery(props) {
      * @param {id} id = the id of the timer we're updating
      */
     function updateSpecificTimer(data, id) {
-        console.log(
+      /*   console.log(
             "Updating",
             data,
             formData.timers?.filter((timer) => timer._id === id).pop()
         );
         console.log({
             timers: formData.timers?.map((timer)=> timer._id === id ? {...timer, ...data} : timer)
-        })
+        }) */
         setFormData((prevFormData) => {
             return {
                 ...prevFormData,

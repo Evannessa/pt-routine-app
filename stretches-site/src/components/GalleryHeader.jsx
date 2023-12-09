@@ -47,9 +47,11 @@ const StyledGalleryHeader = styled.div`
             input[type="checkbox"] {
                 & + label{
                 /* background-color: transparent; */
-	            background-color: hsl(348, 100%, 95.1%);
-                border: 1px solid;
-                border-color: ${({ theme }) => theme.color2}; 
+                background-color: transparent; //hsl(348.2, 100%, 88%);
+
+	            /* background-color: hsl(348, 100%, 95.1%); */
+                border: 2px solid; 
+                border-color: ${({ theme }) => theme.color2};  
                 color: ${({theme})=> theme.color2};
                 }
                 &:checked + label{
@@ -74,6 +76,7 @@ ul[data-variant="overflow"]{
     display: flex;
     li{
         list-style-type: none;
+        margin-right: 0.5rem;
     }
     ${props => !props.isTablet ? css` 
             position: absolute;

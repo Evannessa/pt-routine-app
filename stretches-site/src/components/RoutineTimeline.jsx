@@ -42,7 +42,7 @@ const TimelineWrapper = styled.ul`
     display: flex;
     gap: 3rem;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     overflow-x: scroll;
     overflow-y: hidden;
     background-color: rgba(255, 255, 255, 0.2);
@@ -194,7 +194,6 @@ function RoutineTimeline({
 
         setActiveId(null);
     }
-    console.log(timerInView)
 
 
     //map the timers to the thumbnail components
