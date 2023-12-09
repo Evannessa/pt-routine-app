@@ -106,6 +106,11 @@ const StyledBody = styled.div`
     }
 `;
 
+const StyledLink = styled(Link)`
+    text-decoration: none;
+    border-bottom: unset;
+`
+
 const ActiveTimerSetContainer = styled.div`
     display: flex;
     flex-direction: column;
@@ -320,9 +325,9 @@ export default function ActiveTimerDisplay() {
                     <h1 className="activeSet__name">{timerSetName}</h1>
                     <TooltipWrapper>
                         <div>
-                            <Link to={`/dashboard/factory/${params.setId}`} title="edit this routine">
+                            <StyledLink to={`/dashboard/factory/${params.setId}`} title="edit this routine">
                                 <span className="material-icons">edit</span>
-                            </Link>
+                            </StyledLink>
                         </div>
                         <p>Edit this Timer</p>
                     </TooltipWrapper>

@@ -3,6 +3,18 @@ import Slide from "./Slide";
 import ActiveClock from './ActiveClock';
 import styled from 'styled-components';
 
+const StyledClockHeader = styled.section`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 0.75rem;
+    h3{
+        font-size: large;
+    }
+
+`
+
 const SlideWrapper = styled.section`
         background-color: ${props => props.theme.dark};//hsla(267deg, 100%, 7.6%, 0.1);
         max-width: 414px;
@@ -83,17 +95,19 @@ const ActiveTimerWrapper = ({ timers, currentClock, setClockAtZero, theme, muted
     }
     return (
         <>
-            {!timers[currentClock].isBreak ? <h2>
-                Exercise {" "}
-                <span>
-                    {getTimerIndex(timers[currentClock]._id) + 1} / {timersNoBreaks.length}
-                </span>
-            </h2> : <h2>Break</h2>}
+            <StyledClockHeader>
+                {!timers[currentClock].isBreak ? <h2>
+                    Exercise {" "}
+                    <span>
+                        {getTimerIndex(timers[currentClock]._id) + 1} / {timersNoBreaks.length}
+                    </span>
+                </h2> : <h2>Break</h2>}
+                {!timers[currentClock].isBreak && <h3>{timers[currentClock].label}</h3>}
+            </StyledClockHeader>
             <SlideWrapper theme={theme}>
                 {timers[currentClock].slideImagePath && slideComponents[currentClock]}
                 {descriptionComponents[currentClock]}
             </SlideWrapper>
-            <h3>{timers[currentClock].label}</h3>
             {timerComponents[currentClock]}
         </>
     );

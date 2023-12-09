@@ -1,4 +1,5 @@
 import { Route, Routes, Outlet, useNavigate, Switch, useParams, useLocation } from "react-router-dom";
+import UploadModal from "./UploadModal";
 import InputButtonGroup from "./input/InputButtonGroup";
 import Input, { StyledInputWrapper } from "./input/Input";
 import React, { useState, useEffect, useContext } from "react";
@@ -19,6 +20,8 @@ import Drawer from "./Drawer";
 import Modal from "./Modal";
 import ActionFactory from "../classes/ActionFactory";
 import TimerHelpers from "../classes/TimerHelper";
+import RoutinePreview from "./RoutinePreview";
+import sunsetLandscape from "../images/sunset_landscape.jpg"
 
 const DashboardHeader = styled(Container)`
     padding: 1rem;
@@ -54,10 +57,12 @@ const ButtonWrapper = styled.div`
     gap: 1rem;
 
     ${props => props.displayMode ? css`
-        color: var(--clr-primary-pink);
+        /* color: var(--clr-primary-pink); */
+        color: white;
+        opacity: 60%;
         button{
             &:hover{
-                color: var(--clr-primary-orange);
+                opacity: 100%;
             }
         span.material-icons {
             margin: unset;
@@ -90,11 +95,15 @@ const DashboardGrid = styled.section`
     @media ${device.tablet}{
         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     }
+    @media ${device.laptop}{
+        max-width: 80%;
+        margin: 0 auto;
+    }
 `;
 
 const DashboardOuter = styled.section`
     height: 100vh;
-
+   
 `
 
 const DashboardWrapper = styled.section`
@@ -108,6 +117,12 @@ const DashboardWrapper = styled.section`
 
         `
     };
+    height: 100%;
+    background-image: linear-gradient(to top, transparent, ${props => props.theme.theme.color1}), ${`url(${sunsetLandscape})`};
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  
 `;
 
 const AddRoutineButton = styled.button`
@@ -137,14 +152,15 @@ function Dashboard(props) {
     // const { user } = useGlobalContext();
     const theme = useContext(ThemeContext)
     const inDisplayMode = location.pathname.includes("display") || location.pathname.includes("factory")
-    console.log(params)
     // const { name, userId, role } = user;
 
     /* ---------------------- React Hooks, State and Effect --------------------- */
     // #region Hooks, State and Effect
     const navigate = useNavigate();
     const [timerSets, setTimerSets] = useState();
+    const [hoveredSet, setHoveredSet] = useState()
     const [showEmbed, setShowEmbed] = useState(false)
+    const [showGalleryModal, setShowGalleryModal] = React.useState(false);
     const [showDeletePrompt, setShowDeletePrompt] = useState({
         set: '',
         showPrompt: false
@@ -267,6 +283,9 @@ function Dashboard(props) {
     function navigateToFactory(newId) {
         navigate(`/dashboard/factory/${newId}`);
     }
+    function navigateToDashboard() {
+        navigate(`/dashboard/`);
+    }
 
     function cancelShowDeletePrompt(){
         setShowDeletePrompt(prevValue => {
@@ -316,6 +335,20 @@ function Dashboard(props) {
         }
     };
 
+    function childHovered(id){
+        // let hoveredSet = timerSets[id]
+        if(id){
+            setHoveredSet(timerSets[id])
+        }else{
+            setHoveredSet(null)
+        }
+
+
+    }
+
+    function showImageGallery(){
+
+    }
   
 
     const timerSetCards = timerSets
@@ -332,6 +365,7 @@ function Dashboard(props) {
             let isMockData = user && user.role === "admin" ? false : true
             return <TimerSetCard timerSet={timerSet} key={id} timerSetStyle="card" isMockData={isMockData} updateSets={updateSets}
                     isActive={params.setId === id}
+                    // childHovered={(val)=> val ? childHovered(id) : childHovered(null)}
                 ></TimerSetCard>;
         })
         : [];
@@ -343,6 +377,7 @@ function Dashboard(props) {
     const focusedRoutine = timerSets && Array.isArray(timerSets) ? timerSets.find((set)=> TimerHelpers.getSetId(set) == showDeletePrompt.set) : 'Not an array'
 
     return (
+        <ThemeProvider theme={theme}>
         <DashboardOuter className="dashboard__outer">
             { showDeletePrompt.showPrompt && 
                 <Modal
@@ -362,7 +397,16 @@ function Dashboard(props) {
                 >
                 </Modal>
             }
-            <ThemeProvider theme={theme}>
+            {showGalleryModal && (
+                        <UploadModal
+                            // parentId={props.id}
+                            // slideImagePath={props.slideImagePath}
+                            // updateTimerData={updateTimerData}
+                            closeCallback={() =>
+                                setShowGalleryModal(false)
+                            }
+                        ></UploadModal>
+                    )}
             <ConditionalWrapper condition={inDisplayMode} wrapper={children=> <Drawer>{children}</Drawer>}>
                 <DashboardWrapper
                     displayMode={inDisplayMode}
@@ -371,12 +415,13 @@ function Dashboard(props) {
                             {/* <h1>At-Home Exercise App</h1> */}
                             <ButtonWrapper  displayMode={inDisplayMode}>
                                 {/*TODO: Turn these into a set of ActionFactory objects  */}
-                                <ButtonWithIcon type="contained" icon="play_circle" title="set default YouTube playlist or video" onClick={setShowMediaEmbedPopover}>
-                                    Set YouTube Playlist
-                                </ButtonWithIcon>
-                                <ButtonWithIcon type="contained" icon="music_note" title="set default Spotify playlist">
-                                    Set Spotify Playlist
-                                </ButtonWithIcon>
+                                {inDisplayMode && <ButtonWithIcon type="contained" icon="home" title="back to dashboard"
+                                onClick={()=> navigateToDashboard()} 
+                                />}
+                                <ButtonWithIcon type="contained" icon="gallery_thumbnail" title="show image gallery" onClick={()=> setShowGalleryModal(!showGalleryModal)}/>
+                                <ButtonWithIcon type="contained" icon="play_circle" title="set default YouTube playlist or video" onClick={setShowMediaEmbedPopover}/>
+                                {/* <ButtonWithIcon type="contained" icon="music_note" title="set default Spotify playlist" onClick={}> */}
+                                {/* </ButtonWithIcon> */}
                                 {(!user || user.role !== "admin") && (
                                     <ButtonWithIcon type="contained" icon="save" onClick={onSave} title="Save Timer Sets to local storage">
                                         Save Timer Sets Local Storage
@@ -405,9 +450,11 @@ function Dashboard(props) {
                     {/* {location.pathname.includes("display") && <SidebarToggle></SidebarToggle>} */}
                 </DashboardWrapper>
             </ConditionalWrapper>
-            </ThemeProvider>
+            {/* <RoutinePreview routine={hoveredSet}></RoutinePreview> */}
             <Outlet context={[timerSets, getTimerSets, saved, embedUrls, user]} />
+            
         </DashboardOuter>
+        </ThemeProvider>
     );
 }
 
