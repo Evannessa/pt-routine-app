@@ -182,8 +182,9 @@ const BottomDrawer = styled(Container)`
             border-color: white;
             /* color: white; */
             font-weight: bold;
-            background-color: hsla(0, 0%, 100%, 0.28);
-            color: hsl(0, 100%, 14.5%);
+            background-color: hsla(0, 0%, 100%, 0.64); //hsla(0, 0%, 100%, 0.28);
+            /* color: hsl(0, 100%, 14.5%); */
+            color: hsl(0, 66%, 39.2%);
 	        border: unset;
         }
     }

@@ -2,6 +2,14 @@ const textFormatter = (() => {
     function camelCaseToWords(string) {
         return string.replace(/([a-z0-9])([A-Z])/g, "$1 $2");
     }
+    function readableFileName(string){
+        return string.replace(/\/|(\.jpg)|(\.png)|(\.webp)/gm, "").replace(/-|_/gm, " ")
+    }
+    function toSentenceCase(string){
+        let replace = string.replace(/([a-z0-9])([A-Z])/g, "$1 $2");
+        replace = string.split("-").slice(0, -1).join(" ")
+        return replace
+    }
     function capitalizeFirstLetter(string) {
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
@@ -31,7 +39,8 @@ const textFormatter = (() => {
     return {
         camelCaseToWords,
         capitalizeFirstLetter,
-        firstLetterOfEachWord
+        firstLetterOfEachWord,
+        readableFileName
     };
 })();
 export default textFormatter;
