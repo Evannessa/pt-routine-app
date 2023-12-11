@@ -45,11 +45,11 @@ export const StyledInputWrapper = styled.div`
         /* border: 1px solid white; */
         color: white;
         display: flex;
-        flex-direction: row;
+        flex-direction: column;
         justify-content: space-between;
         padding: 0.5em;
         width: 6rem;
-            .number__prev, .number__next{
+            .number__down, .number__up{
                 background-color: transparent;
                 border: unset;
                 appearance: unset;
@@ -69,17 +69,18 @@ export const StyledInputWrapper = styled.div`
             width: 1px;
         }
         .number{
-            &__prev{
-                order: 1;
+            &__down{
+                order: 3;
             }
             &-box{
                 order: 2;
             }
-            &__next{
-                order: 3;
+            &__up{
+                order: 1;
             }
         }
         label{
+            display: none;
             white-space: nowrap;
             font-size: small;
             opacity: 70%;
@@ -282,11 +283,12 @@ function Input(props) {
                 <div className="number-box">
                     <span>{value}</span>
                 </div>
-                <button type="button" className="number__next" onClick={handleClick} id="number__increment">
-                    <span className="material-symbols-outlined">add</span>
+              
+                <button type="button" className="number__down" onClick={handleClick} id="number__decrement">
+                    <span className="material-symbols-outlined">stat_minus_1</span>
                 </button>
-                <button type="button" className="number__prev" onClick={handleClick} id="number__decrement">
-                    <span className="material-symbols-outlined">remove</span>
+                <button type="button" className="number__up" onClick={handleClick} id="number__increment">
+                    <span className="material-symbols-outlined">stat_1</span>
                 </button>
             </>}
             {hasLabel && (
