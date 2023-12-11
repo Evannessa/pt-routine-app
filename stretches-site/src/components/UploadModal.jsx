@@ -6,6 +6,7 @@ import { StyledModal } from "./styled-components/modal.styled";
 import { ButtonWithIcon } from "./styled-components/Buttons.Styled";
 import textFormatter from "../helpers/formatText";
 import StyledScrollShadow from "./styled-components/StyledScrollShadow";
+import { device } from "./styled-components/devices";
 const { urlBase, urlBaseNoApi, uploadsUrl } = urls;
 
 
@@ -48,7 +49,7 @@ const StyledImgThumbnail = styled.li`
             font-size: small;
         }
     }
-    &:hover {
+    &:hover, &:focus {
         outline: 2px solid pink;
         .thumbnailHeader{
             transform: scaleY(1);
@@ -68,7 +69,6 @@ const StyledImgThumbnail = styled.li`
 const ImageList = styled.ul`
     display: grid;
     grid-gap: 0.5em;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
     width: fit-content;
     justify-content: center;
     align-items: center;
@@ -79,13 +79,22 @@ const ImageList = styled.ul`
     /* box-shadow: inset 0px 0px 6px #4c008295; */
     position: relative;
     height: 100%;
+    
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    @media ${device.tablet}{
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
 `;
 
 const StyledUploadModal = styled(StyledModal)`
     display: grid;
     grid-template-columns: minmax(0,1fr) 20px;
     grid-template-rows: auto minmax(0, 1fr);
+    width: 80%;
     height: 60vh;
+    @media ${device.laptop}{
+        width: 60%;
+    }
     .close-button{
         grid-row:1/2;
         grid-column: 2/3;

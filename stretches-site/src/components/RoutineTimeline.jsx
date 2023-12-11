@@ -42,7 +42,14 @@ const TimelineWrapper = styled.ul`
     display: flex;
     gap: 3rem;
     align-items: center;
-    justify-content: flex-start;
+    /* justify-content: flex-start; */
+    > li:first-child, button:first-child{
+        margin-left: auto;
+    }
+    > li:last-child, button:last-child{
+        margin-right: auto;
+    }
+
     overflow-x: scroll;
     overflow-y: hidden;
     background-color: rgba(255, 255, 255, 0.2);
@@ -69,12 +76,13 @@ const TimelineWrapper = styled.ul`
         opacity: unset;
         color: white;
         border-radius: 10px;
-        margin: unset;
+        /* margin: unset; */
         background-color: hsla(0, 0%, 100%, 0.3);
         span{
             font-size: xx-large;
             color: white;
         }
+        margin-right: auto;
     }
 
 

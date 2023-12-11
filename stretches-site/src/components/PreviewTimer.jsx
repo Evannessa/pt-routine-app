@@ -32,10 +32,15 @@ const StyledTimeWrapper = styled.section`
     display: grid;
     grid-template-rows: ${props => !props.isRep ? `80% 1fr` : `50% 1fr`};
     justify-items: center;
+    position: relative;
+ 
     ${StyledValueGroup}{
         grid-row: ${props => props.isRep ? `2/3` : `1/2`};
     }
-    ${StyledInputWrapper}{
+    /* ${StyledInputWrapper}{
+        position: absolute;
+        top: 100%;
+        left: 100%;
         grid-row: ${props => props.isRep ? `1/2` : `2/3`};
             span.material-symbols-outlined{
                 font-weight: 300;
@@ -45,7 +50,7 @@ const StyledTimeWrapper = styled.section`
             ${props => props.isRep && `font-size: xxx-large`};
                 font-weight: 100;
         }
-    }
+    } */
 
 
 `
@@ -94,16 +99,31 @@ const StyledModalWrapper = styled(Container)`
         align-items: center;
         color: cornflowerblue;
         font-size: clamp(0.75rem, 1vw + 0.75rem, 1.25rem);
-        margin-top: auto;
-        margin-bottom: auto;
-        + div {
+        @media ${device.laptop}{
+            margin-top: auto;
             margin-bottom: auto;
+            + div {
+                margin-bottom: auto;
+            }
         }
+       
         span{
             display: inline-flex;
             &[data-variation="small"]{
                 font-size: small;
             }
+        }
+    }
+    .task-description, ${StyledDropArea}{
+        width: 100%;
+        flex: 2;
+        input[type="text"],textarea{
+                border-radius: 20px;
+                border-width: 1px;
+        }
+        textarea{
+            color: white;
+            background-color: white;
         }
     }
     @media ${device.laptop} {
@@ -141,18 +161,13 @@ const StyledModalWrapper = styled(Container)`
             height: 80%;
             width: 80%;
             align-items: center;
+            width: 100%;
 	        /* box-shadow: rgba(33, 33, 33, 0.314) 0px 2px 0px 2px inset, rgba(255, 255, 255, 0.342) 0 -2px 0 -2px inset; */
             /* border-bottom: 3px solid rgba(255, 255, 255, 0.342);  */
-            input[type="text"],textarea{
-                border-radius: 20px;
-                border-width: 1px;
-                width: 100%;
-            }
-            textarea{
+            input[type="text"], textarea{
                 background-color: transparent;
-                color: white;
-                /* border-style: dashed; */
             }
+          
         }
 
         .task-description{
@@ -451,8 +466,8 @@ export default function PreviewTimer(props) {
                         )}
                     </StyledModalWrapper>
                     <StyledTimeWrapper className="time-rep-wrapper" isRep={props.isRep}>
-                        <TimeValueGroup time={props.time} updateTimerData={updateTimerData} isRep={props.isRep} />
-                        <Input
+                        <TimeValueGroup time={props.time} updateTimerData={updateTimerData} isRep={props.isRep} repeatNumber={props.repeatNumber || 0} id={props.id}/>
+                        {/* <Input
                             type="number"
                             name="repeatNumber"
                             id={`${props.id}repeatNumber`}
@@ -465,7 +480,7 @@ export default function PreviewTimer(props) {
                             style={{
                                 color: "white",
                             }}
-                        ></Input>
+                        ></Input> */}
                     </StyledTimeWrapper>
 
                     {/* only show drop area if we've saved the timer */}
