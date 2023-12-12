@@ -159,7 +159,6 @@ const StyledModalWrapper = styled(Container)`
         
         .task-description, ${StyledDropArea}{
             height: 80%;
-            width: 80%;
             align-items: center;
             width: 100%;
 	        /* box-shadow: rgba(33, 33, 33, 0.314) 0px 2px 0px 2px inset, rgba(255, 255, 255, 0.342) 0 -2px 0 -2px inset; */
@@ -168,6 +167,9 @@ const StyledModalWrapper = styled(Container)`
                 background-color: transparent;
             }
           
+        }
+        ${StyledDropArea}{
+            width: 80%;
         }
 
         .task-description{
