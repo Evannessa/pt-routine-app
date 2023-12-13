@@ -1,19 +1,26 @@
-import React from "react";
+import React, {useContext} from "react";
 import axios from "axios";
 import FormData from "form-data";
 import { useParams } from "react-router-dom";
 import { Container } from "./styled-components/layout.styled";
-import styled from "styled-components";
+import styled, {ThemeProvider} from "styled-components";
 import { urls, combineUrlFragments } from "../helpers/requests";
 import cannotLoad from "../images/cannot_load.jpg"
 import dragDropImage from "../images/drag_drop_image.webp"
+import { useGlobalContext } from "../context";
+import { ThemeContext } from "../App";
 // #region Styled Components
 export const StyledDropArea = styled(Container)`
     border-radius: 20px;
     /* width: 50%; */
     /* margin: 2% auto; */
     padding: 1rem;
-    background-color: transparent;
+    /* background-color: transparent; */
+    background-image: ${props => `${props.theme.theme.gradient}, url(${dragDropImage})`};
+    background-blend-mode: overlay;
+    background-size: contain;
+    background-position: center center;
+    background-repeat: no-repeat;
     /* max-height: 5rem; */
     height: 100%;
     width: 80%;
@@ -76,6 +83,7 @@ StyledDropArea.displayName = "StyledDropArea";
 // #endregion
 /* -------------------------------------------------------------------------- */
 function DropArea(props) {
+    const theme = useContext(ThemeContext)
     const { urlBase, urlBaseNoApi, uploadsUrl, factoryRoute, uploadsRoute } = urls;
     // const uploadsUrl = combineUrlFragments(urlBase, [factoryRoute, uploadsRoute]);
     /* ---------------------------- States and Hooks ---------------------------- */
@@ -192,6 +200,7 @@ function DropArea(props) {
         });
         reader.readAsDataURL(file);
     }
+    console.log(theme.theme.gradient)
 
     /* -------------------------------------------------------------------------- */
     // #endregion
@@ -206,8 +215,9 @@ function DropArea(props) {
             onDrop={handleDrop}
             onPaste={handlePaste}
             ref={dropRef}
+            theme={theme}
         >
-            <img
+            {props.slideImagePath && <img
                 className="slide__preview"
                 src={
                     props.slideImagePath && props.slideImagePath.length > 0
@@ -217,13 +227,13 @@ function DropArea(props) {
                 }
                 onError={({ currentTarget }) => {
                     currentTarget.onerror = null; // prevents looping
-                    currentTarget.src= cannotLoad;
+                    currentTarget.src= dragDropImage;
                 }}
                 crossOrigin="true"
                 title={props.slideImagePath}
                 alt={props.slideImagePath}
                 ref={previewRef}
-            />
+            />}
 
         </StyledDropArea>
     );

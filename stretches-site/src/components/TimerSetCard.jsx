@@ -77,14 +77,20 @@ const StyledNavLink = styled(NavLink)`
         color: ${(props) => props.theme.color2};
         /* color: hsl(348.7, 100%, 55.1%); */
         opacity: 75%;
+     
+    }
+    button span{
+        font-size: 1.25rem;
+        pointer-events: none;
+    }
+    button{
+        cursor: pointer;
+        padding: 0.25rem;
         transition: opacity 100ms ease-in-out;
         &:hover{
             opacity: 100%;
             color: ${props => props.theme.color2};
         }
-    }
-    button span{
-        font-size: 1.25rem;
     }
   
     transform: scale(1);
