@@ -106,7 +106,8 @@ const StyledHoverable = styled.div`
         max-height: 100%;
         z-index: 500;
         border-radius: inherit;
-        filter: brightness(120%) grayscale(10%);
+        filter: brightness(150%) grayscale(30%);
+        /* filter: brightness(120%) grayscale(10%); */
     }
     .thumbnail-text, .thumbnail-img{
         grid-row: 1/2;

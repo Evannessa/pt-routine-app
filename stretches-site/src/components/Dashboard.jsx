@@ -23,6 +23,8 @@ import TimerHelpers from "../classes/TimerHelper";
 import RoutinePreview from "./RoutinePreview";
 import sunsetLandscape from "../images/sunset_landscape.jpg"
 import nightLandscape from "../images/night_landscape.jpg"
+import hourglassPrimary from "../images/hourglass_1_full.png"
+import hourglassSecondary from "../images/hourglass_4.png"
 
 const DashboardHeader = styled(Container)`
     padding: 1rem;

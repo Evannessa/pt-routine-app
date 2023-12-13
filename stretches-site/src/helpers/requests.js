@@ -72,7 +72,7 @@ export const requests = (function () {
         }
         delete options.pathsArray;
         options.url = url;
-        console.log("Our options are now", options)
+        // console.log("Our options are now", options)
 
         //delete the setStateCallback from the object too
         delete options.setStateCallback;

@@ -3,10 +3,12 @@ import FloatingToolbar from './FloatingToolbar';
 import styled from 'styled-components';
 import hourglassPrimary from "../images/hourglass_1_full.png"
 import hourglassSecondary from "../images/hourglass_4.png"
+import { themes } from '../App';
 
 const StyledPopupCard = styled.section`
     p{
         padding: 0.5em;
+        color: ${props => props.isBreak ? props.themes.secondary.color2 : props.themes.primary.color1};
 
     }
   
@@ -20,9 +22,8 @@ const StyledPopupCard = styled.section`
 const ExercisePopupCard = (props) => {
     const { src, cannotLoad, actions, dataKey, coords, timer } = props.data
     const placeholder = timer.isBreak ? hourglassSecondary : hourglassPrimary
-    console.log(" Source is ", src)
     return (
-        <StyledPopupCard>
+        <StyledPopupCard isBreak={timer.isBreak} themes={themes}>
             <p className="tooltip-card-title">{timer.label}</p>
             <FloatingToolbar actions={actions} timerId={dataKey} coords={coords}></FloatingToolbar>
             <img src={src.length > 0 ? src : placeholder} alt="Exercise Slide" crossOrigin="true" onError={({ currentTarget }) => {
