@@ -22,7 +22,8 @@ import {
     SortableContext,
     arrayMove,
     sortableKeyboardCoordinates,
-    horizontalListSortingStrategy
+    horizontalListSortingStrategy,
+    rectSwappingStrategy
 } from '@dnd-kit/sortable'
 
 import TimerHelpers from "../classes/TimerHelper";
@@ -138,6 +139,7 @@ function RoutineTimeline({
     );
 
     function getTimerIds() {
+        console.log("Getting timer ids", timers.length)
         return timers.map(timer => TimerHelpers.getSetId(timer))
     }
     function onTimerSelected(dataKey, event) {
@@ -166,7 +168,9 @@ function RoutineTimeline({
         mousePosition.current = { x: e.clientX, y: e.clientY };
     }
     useEffect(() => {
+        console.log("Use effect for timers")
         if (timers.length > 0) {
+            console.log("Is this triggering?", getTimerIds())
             setItems(getTimerIds())
             setSelectedTimers([timers[0]])
         }
@@ -206,6 +210,7 @@ function RoutineTimeline({
 
     //map the timers to the thumbnail components
     const thumbnailComponents = items && items.length > 0 ? items.map((item, index) => {
+        // console.log("Updating thumbnails", items)
         const timer = helpers.getItemWithProperty(timers, "_id", item)
         return timer ? <SortableThumbnail
             key={timer._id}
@@ -232,6 +237,7 @@ function RoutineTimeline({
         /> : <></>
     }) : []
 
+    console.log("On render, items vs timers vs components", items.length, timers.length, thumbnailComponents.length)
 
 
     return (
