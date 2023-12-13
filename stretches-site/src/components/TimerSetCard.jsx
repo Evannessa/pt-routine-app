@@ -6,6 +6,8 @@ import { urls } from "../helpers/requests";
 import cannotLoad from "../images/cannot_load.jpg"
 import { ThemeContext } from "../App";
 import { ThemeProvider } from "styled-components";
+// import hourglassPrimary from "../images/hourglass_1_full.png"
+import hourglassIcon from "../images/hourglass_white.webp"
 
 const StyledNavLink = styled(NavLink)`
     background-color: white;
@@ -153,7 +155,7 @@ function TimerSetCard({ timerSet, updateSets, isActive, childHovered, timerSetSt
                     >
                     <div class="timerSet__img-wrapper">
                         {timerSetStyle === "card" &&
-                        <img className="timerSet__img" src={urlBaseNoApi + cardImagePath} alt={cardImageLabel}
+                        <img className="timerSet__img" src={cardImagePath ? `${urlBaseNoApi + cardImagePath}` : `${hourglassIcon}`} alt={cardImageLabel}
                          crossOrigin="true" onError={({ currentTarget }) => {
                             currentTarget.onerror = null; // prevents looping
                             currentTarget.src= cannotLoad; }}/>

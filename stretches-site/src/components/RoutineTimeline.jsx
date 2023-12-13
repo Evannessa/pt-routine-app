@@ -129,7 +129,7 @@ function RoutineTimeline({
     const mousePosition = React.useRef({ x: null, y: null });
     const [selectedTimers, setSelectedTimers] = React.useState();
     const [activeId, setActiveId] = useState(null);
-    const [items, setItems] = useState(getTimerIds());
+    const [items, setItems] = useState([]);
     // const [sortMode, setSortMode] = useState(false)
     const sensors = useSensors(
         useSensor(PointerSensor),
@@ -139,14 +139,13 @@ function RoutineTimeline({
     );
 
     function getTimerIds() {
-        console.log("Getting timer ids", timers.length)
         return timers.map(timer => TimerHelpers.getSetId(timer))
     }
     function onTimerSelected(dataKey, event) {
         //push returns the array's length
-        if (event.ctrlKey) {
-            console.log("Ctrl key pressed")
-        }
+        // if (event.ctrlKey) {
+        //     console.log("Ctrl key pressed")
+        // }
         // debugger;
         let newArray = [...selectedTimers];
         let timer = timers.find((timer) => timer._id === dataKey);
@@ -168,9 +167,7 @@ function RoutineTimeline({
         mousePosition.current = { x: e.clientX, y: e.clientY };
     }
     useEffect(() => {
-        console.log("Use effect for timers")
         if (timers.length > 0) {
-            console.log("Is this triggering?", getTimerIds())
             setItems(getTimerIds())
             setSelectedTimers([timers[0]])
         }
@@ -208,10 +205,10 @@ function RoutineTimeline({
     }
 
 
-    //map the timers to the thumbnail components
     const thumbnailComponents = items && items.length > 0 ? items.map((item, index) => {
-        // console.log("Updating thumbnails", items)
-        const timer = helpers.getItemWithProperty(timers, "_id", item)
+
+        
+        const timer = helpers.getItemWithProperty(timers, "_id", item) || timers[index]
         return timer ? <SortableThumbnail
             key={timer._id}
             index={index}
@@ -237,11 +234,11 @@ function RoutineTimeline({
         /> : <></>
     }) : []
 
-    console.log("On render, items vs timers vs components", items.length, timers.length, thumbnailComponents.length)
 
 
     return (
         <TimelineWrapper onMouseMove={handleMouseMove}>
+            
             <DndContext
                 sensors={sensors}
                 collisionDetection={closestCenter}

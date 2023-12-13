@@ -101,31 +101,24 @@ export default function TimerGallery(props) {
             onSubmit: linkYoutube,
         },
     ];
-    const isDesktopOrLaptop = useMediaQuery({
-        query: device.laptopL
-    })
-    const isBigScreen = useMediaQuery({ query: '(min-width: 1824px)' })
     const isTablet = useMediaQuery({ query: device.tablet})
-    const isLaptop = useMediaQuery({query: device.laptop})
-    const isMobileSmall = useMediaQuery({query: device.mobileS}) 
+
 
     /**
      * Updates our Routine formData object in reaction to an axios "PATCH" request
      * @param {Object} response - the response from the PATCH request
      */
     function updateTimerSet(response) {
-        // console.log("Response was", response);
         if (response) {
             setFormData(response);
             label.current = response.label;
-            // console.log(response)
+            console.log("Timer set from GET request was ", response.timers)
         } else {
             console.log("Response was null");
         }
-        // debugger;
     }
     /**
-     * Get timer with this id
+     * Get timer set with this id
      */
     React.useEffect(() => {
         const getTimerSet = async () => {
@@ -136,13 +129,6 @@ export default function TimerGallery(props) {
                     setStateCallback: updateTimerSet,
                 };
             await requests.axiosRequest(options);
-            // }else{
-            //     let sets = timerSets ? timerSets : mockTimerSets
-            //     let currentSet = sets.find((set) => {
-            //         return set._id === params.setId;
-            //     }) 
-            //     updateTimerSet(currentSet);
-        // }
         };
         getTimerSet();
         return () => {};
@@ -152,6 +138,7 @@ export default function TimerGallery(props) {
     //when timer data changes, update the entire set of timers timer
     React.useEffect(() => {
         if (formData) {
+            console.log("Patching timer ", formData.label)
             let options = {
                 method: "PATCH",
                 pathsArray: ["factory", id],
@@ -218,7 +205,7 @@ export default function TimerGallery(props) {
                 if (child === null) {
                     return;
                 }
-                console.log(child)
+                // console.log(child)
                 return observer.current.unobserve(child);
             });
     }, [formData.timers, updateTheme]);
@@ -291,12 +278,12 @@ export default function TimerGallery(props) {
      * @param {String} id - the id of the timer to delete
      */
     function deleteTimer(id) {
-        console.log("Deleting timer: ", id);
+        // console.log("Deleting timer: ", id);
 
         //find the timer we're deleting
         let deletedElement = childRefs.current.find((element) => element.firstChild.dataset.key === id);
         //unobserve it, store its index
-        console.log(deletedElement)
+        // console.log(deletedElement)
         observer.current.unobserve(deletedElement);
         let index = childRefs.current.indexOf(deletedElement);
 
@@ -434,7 +421,7 @@ export default function TimerGallery(props) {
  
     //update all the data in the form
     const updateFormData = useCallback(async (property, data) => {
-        console.log("Updating", property, data);
+        // console.log("Updating", property, data);
         setFormData((prevData) => {
             return {
                 ...prevData,
@@ -500,7 +487,7 @@ export default function TimerGallery(props) {
      */
     async function addNewTimer(position, beforeOrAfter, duplicate = false) {
         let insertAtIndex = position + beforeOrAfter;
-        console.log({position, beforeOrAfter}, formData.timers[position])
+        // console.log({position, beforeOrAfter}, formData.timers[position])
         const newTimerData = !duplicate ? {
             // _id: "new",
             time: { hours: 0, seconds: 0, minutes: 0 },
@@ -530,13 +517,9 @@ export default function TimerGallery(props) {
         if (formData.timers) {
             let newArray = [...formData.timers];
             newArray.splice(insertAtIndex, 0, { ...newTimerData });
+            // setTimeout(()=> updateFormData("timers", newArray), 100)
             await updateFormData("timers", newArray);
-            // return newArray;
-            // setFormData((prevData) => {
-            //     let newArray = [...prevData];
-            //     newArray.splice(insertAtIndex, 0, { ...newTimerData });
-            //     return newArray;
-            // });
+          
         }
     }
 
