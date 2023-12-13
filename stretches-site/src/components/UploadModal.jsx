@@ -93,7 +93,10 @@ const StyledUploadModal = styled(StyledModal)`
     width: 80%;
     height: 60vh;
     @media ${device.laptop}{
+        top: 60%;
         width: 60%;
+        height: 110%;
+
     }
     .close-button{
         grid-row:1/2;

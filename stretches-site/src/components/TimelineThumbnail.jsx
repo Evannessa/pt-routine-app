@@ -1,5 +1,7 @@
 import { nanoid } from "nanoid";
 
+import hourglassPrimary from "../images/hourglass_1_full.png"
+import hourglassSecondary from "../images/hourglass_4.png"
 import React, { useRef, useState, useEffect, forwardRef } from "react";
 import styled, { css, keyframes } from "styled-components";
 import { urls } from "../helpers/requests";
@@ -104,6 +106,7 @@ const StyledHoverable = styled.div`
         max-height: 100%;
         z-index: 500;
         border-radius: inherit;
+        filter: brightness(120%) grayscale(10%);
     }
     .thumbnail-text, .thumbnail-img{
         grid-row: 1/2;
@@ -127,11 +130,10 @@ const ButtonWithTooltipWrapper = styled.div`
 `;
 const ThumbnailContainer = styled.li`
     /* transform: ${props => props.isSelected ? "scale(1.15)" : "scale(1)"}; */
-    outline: ${props => props.viewed ? `2px solid ${props.theme.color2}` : "unset"};
+    outline: ${props => props.viewed ? `2px solid hsla(0, 0%, 100%, 0.853)` : "unset"};
     overflow: ${(props) => (props.hover ? "visible" : "hidden")} !important;
     position: relative;
     list-style-type: none;
-
     border-radius: 12px;
     width: 4rem;
     height: 4rem;
@@ -147,6 +149,8 @@ const ThumbnailContainer = styled.li`
         transform: translate(-50%);
         display: inline-flex;
         align-items: end;
+        color: white;
+        filter: drop-shadow(0px 10px 2px hsla(0, 0%, 0%, 0.4));
     }`};
 
     .tooltip-card-title{
@@ -283,6 +287,7 @@ const TimelineThumbnail = forwardRef(
         const [coords, setCoords] = useState();
         const [hover, setHover] = useState(false);
         const [isOn, setIsOn] = useState();
+        const placeholder = timer.isBreak ? hourglassSecondary : hourglassPrimary
 
         function callAddNewTimer(index, beforeOrAfter, event) {
             const shouldDuplicate = event.ctrlKey
@@ -303,7 +308,7 @@ const TimelineThumbnail = forwardRef(
                 data-test-id={"timeline-thumbnail"}
                 viewed={viewed}
                 sortmode={sortMode}
-                img={`${urlBaseNoApi}${slideImagePath}`}
+                img={slideImagePath ? `${urlBaseNoApi}${slideImagePath}` : placeholder}
                 isLast={isLast}
                 theme={theme}
             >
@@ -337,7 +342,7 @@ const TimelineThumbnail = forwardRef(
                             theme={theme}
                         >
                             <span className="order-number">{index + 1}</span>
-                            <img className="thumbnail-img" src={`${urlBaseNoApi}${slideImagePath}`}
+                            <img className="thumbnail-img" src={slideImagePath ? `${urlBaseNoApi}${slideImagePath}`: placeholder}
                                 onError={({ currentTarget }) => {
                                     currentTarget.onerror = null; // prevents looping
                                     currentTarget.src = cannotLoad;
