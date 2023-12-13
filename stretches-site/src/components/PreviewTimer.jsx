@@ -201,7 +201,8 @@ const BottomDrawer = styled(Container)`
             font-weight: bold;
             background-color: hsla(0, 0%, 100%, 0.64); //hsla(0, 0%, 100%, 0.28);
             /* color: hsl(0, 100%, 14.5%); */
-            color: hsl(0, 66%, 39.2%);
+            /* color: hsl(0, 66%, 39.2%); */
+            color: ${props => props.theme.medium};
 	        border: unset;
         }
     }
@@ -397,6 +398,7 @@ export default function PreviewTimer(props) {
             className={`preview-timer-wrapper ${formData.isBreak ? "break" : ""}`}
             break={formData.isBreak}
             data-key={props.id}
+            theme={props.theme}
         >
             {/* #region timer values */}
             <div className="preview-timer" data-testid={"preview-timer"}>

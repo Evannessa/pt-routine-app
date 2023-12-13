@@ -201,7 +201,8 @@ export default function GalleryHeader(props) {
                         hasLabel={true}
                         inputStyle="floatingLabel"
                         style={{
-                            borderColor: themes.primary.color1
+                            borderColor: themes.primary.color1,
+                            color: themes.primary.color2
                         }}
                     />
                     {buttonElements[0]}

@@ -22,6 +22,7 @@ import ActionFactory from "../classes/ActionFactory";
 import TimerHelpers from "../classes/TimerHelper";
 import RoutinePreview from "./RoutinePreview";
 import sunsetLandscape from "../images/sunset_landscape.jpg"
+import nightLandscape from "../images/night_landscape.jpg"
 
 const DashboardHeader = styled(Container)`
     padding: 1rem;
@@ -118,7 +119,8 @@ const DashboardWrapper = styled.section`
         `
     };
     height: 100%;
-    background-image: linear-gradient(to top, transparent, ${props => props.theme.theme.color1}), ${`url(${sunsetLandscape})`};
+    background-image: linear-gradient(to top, transparent, ${props => props.theme.theme.color1}), 
+        ${props=> `url(${props.theme.themeName == "primary"? sunsetLandscape : nightLandscape})`};
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -174,6 +176,7 @@ function Dashboard(props) {
             youtubeEmbed: ""
         }
     )
+
     //get timer sets from local storage, or from the mock timer data
     useEffect(() => {
         let storedData = localStorage.getItem("defaultRoutineData");

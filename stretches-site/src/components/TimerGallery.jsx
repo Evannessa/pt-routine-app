@@ -29,6 +29,9 @@ const TimerWrapper = styled.div`
     &::-webkit-scrollbar-thumb {
         background: var(--clr-gradient);
     }
+    label{
+        color: ${props => props.theme.color2};
+    }
 `;
 const GalleryWrapper = styled.section``;
 GalleryWrapper.displayName = "GalleryWrapper";
@@ -301,14 +304,10 @@ export default function TimerGallery(props) {
         childRefs.current.splice(index, 1);
 
         //remove it from timer data after a bit
-        setTimeout(
-            //only include timers that don't have the id
-            updateFormData("timers", [...formData.timers.filter((timer) => timer._id !== id)]),
-            // setTimerData((prevData) =>
-            // prevData.filter((timer) => timer._id !== id)
-            // ),
-            1000
-        );
+        let filteredTimers = formData.timers.filter(timer => timer._id !== id)
+        setTimeout(()=> updateFormData("timers", [...filteredTimers]), 100);
+            // updateFormData("timers", [...formData.timers.filter((timer) => timer._id !== id)]),
+        // );
     }
 
     /**
@@ -474,6 +473,7 @@ export default function TimerGallery(props) {
                       updateTimerData={updateSpecificTimer}
                       slideImagePath={timer.slideImagePath}
                       repeatNumber={timer.repeatNumber}
+                      theme={theme}
                   />
               </div>
           ))
