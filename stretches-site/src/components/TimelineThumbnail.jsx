@@ -358,7 +358,7 @@ const TimelineThumbnail = forwardRef(
                             </div>
                         </StyledHoverable>
                         <ExercisePopupCard data={{
-                            src: `${urlBaseNoApi}${slideImagePath}`,
+                            src: `${slideImagePath ? urlBaseNoApi + slideImagePath : ""}`,
                             label: timer.label,
                             actions: actions,
                             dataKey: dataKey,

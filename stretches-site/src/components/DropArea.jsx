@@ -200,7 +200,6 @@ function DropArea(props) {
         });
         reader.readAsDataURL(file);
     }
-    console.log(theme.theme.gradient)
 
     /* -------------------------------------------------------------------------- */
     // #endregion
