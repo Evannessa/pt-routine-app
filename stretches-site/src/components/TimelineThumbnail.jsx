@@ -1,7 +1,7 @@
 import { nanoid } from "nanoid";
 
-import hourglassPrimary from "../images/hourglass_1_full.png"
-import hourglassSecondary from "../images/hourglass_4.png"
+import hourglassPrimary from "../images/hourglass_fill_0.png"
+import hourglassSecondary from "../images/hourglass_fill_3.png"
 import React, { useRef, useState, useEffect, forwardRef } from "react";
 import styled, { css, keyframes } from "styled-components";
 import { urls } from "../helpers/requests";
@@ -106,8 +106,6 @@ const StyledHoverable = styled.div`
         max-height: 100%;
         z-index: 500;
         border-radius: inherit;
-        filter: brightness(150%) grayscale(30%);
-        /* filter: brightness(120%) grayscale(10%); */
     }
     .thumbnail-text, .thumbnail-img{
         grid-row: 1/2;

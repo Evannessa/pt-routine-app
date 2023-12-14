@@ -1,8 +1,8 @@
 import React from 'react';
 import FloatingToolbar from './FloatingToolbar';
 import styled from 'styled-components';
-import hourglassPrimary from "../images/hourglass_1_full.png"
-import hourglassSecondary from "../images/hourglass_4.png"
+import hourglassPrimary from "../images/hourglass_fill_0.png"
+import hourglassSecondary from "../images/hourglass_fill_3.png"
 import { themes } from '../App';
 
 const StyledPopupCard = styled.section`

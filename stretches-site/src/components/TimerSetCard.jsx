@@ -6,7 +6,7 @@ import { urls } from "../helpers/requests";
 import cannotLoad from "../images/cannot_load.jpg"
 import { ThemeContext } from "../App";
 import { ThemeProvider } from "styled-components";
-// import hourglassPrimary from "../images/hourglass_1_full.png"
+// import hourglassPrimary from "../images/hourglass_fill_0.png"
 import hourglassIcon from "../images/hourglass_white.webp"
 
 const StyledNavLink = styled(NavLink)`
