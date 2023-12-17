@@ -32,7 +32,7 @@ const StyledHeader = styled.div`
     margin-left: -5rem;
     margin-right: -5rem;
     padding: 1.25rem;
-    margin-top: 2rem;
+    /* margin-top: 2rem; */
     z-index: 300;
 
     > h1 {
@@ -295,6 +295,12 @@ export default function ActiveTimerDisplay() {
             }
         }
     }, [timers, currentClock, repeat]);
+    /**
+     * Get timer set with this id
+     */
+    React.useEffect(() => {
+        setCurrentClock(1)
+    }, [id]);
 
     function setClockAtZero(id) {
         setTimers((oldTimers) =>

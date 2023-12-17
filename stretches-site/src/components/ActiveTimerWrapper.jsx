@@ -12,6 +12,7 @@ const StyledClockHeader = styled.section`
     h3{
         font-size: large;
     }
+    z-index: 90;
 
 `
 
@@ -19,6 +20,7 @@ const SlideWrapper = styled.section`
         background-color: ${props => props.theme.dark};//hsla(267deg, 100%, 7.6%, 0.1);
         max-width: 414px;
         min-height: 250px;
+        max-height: 250px;
         margin: 2vh;
         display: grid;
         grid-template-rows: 100%;
@@ -102,7 +104,7 @@ const ActiveTimerWrapper = ({ timers, currentClock, setClockAtZero, theme, muted
                         {getTimerIndex(timers[currentClock]._id) + 1} / {timersNoBreaks.length}
                     </span>
                 </h2> : <h2>Break</h2>}
-                {!timers[currentClock].isBreak && <h3>{timers[currentClock].label}</h3>}
+                {!timers[currentClock].isBreak ? <h3>{timers[currentClock].label}</h3> : <h3>Next: "{timers[currentClock+1]?.label}"</h3>}
             </StyledClockHeader>
             <SlideWrapper theme={theme}>
                 {timers[currentClock].slideImagePath && slideComponents[currentClock]}
