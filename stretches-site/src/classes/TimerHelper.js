@@ -9,9 +9,7 @@ const TimerHelpers = (() => {
             id = timerSet._id
         } else if (typeof timerSet._id === "object") {
             id = timerSet._id.hasOwnProperty("$oid") ? timerSet._id["$oid"] : nanoid()
-        }else{
-            console.error("Appropriate id not found for ", timerSet)
-        }
+        } 
         return id
     }
     function abbreviateId(id){

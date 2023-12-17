@@ -257,8 +257,14 @@ function RoutineTimeline({
                         restrictToHorizontalAxis
                     ]}
                     wrapperElement="ul"
+                    style={{
+                        display: "flex",
+                        alignItems: "center",
+                        height: "100%",
+                        width: "100%"
+                    }}
                 >
-                    {activeId && timers.length > 0 ? <TimelineThumbnail id={activeId} timer={timers.find(timer => timer._id == activeId)} disabled={false} /> : null}
+                    {activeId && timers.length > 0 ? <TimelineThumbnail id={activeId} timer={timers.find(timer => timer._id == activeId)} disabled={false} hideNumber={true} /> : null}
                 </DragOverlay>
                 <ButtonWithIcon
                     icon="add"

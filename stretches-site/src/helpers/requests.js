@@ -82,7 +82,6 @@ export const requests = (function () {
             .then((response) => {
                 if (response.status && response.status >= 200 && response.status < 300) {
                     if (setStateCallback) {
-                        console.log("Response data is", response.data);
                         setStateCallback(response.data.document);
                     }
                 } else {
