@@ -277,7 +277,8 @@ const TimelineThumbnail = forwardRef(
             disabled,
             theme,
             onTimerSelected,
-            isLast
+            isLast,
+            hideNumber=false
         },
         ref
     ) => {
@@ -340,7 +341,7 @@ const TimelineThumbnail = forwardRef(
                             }
                             theme={theme}
                         >
-                            <span className="order-number">{index + 1}</span>
+                            {!hideNumber && <span className="order-number">{index + 1}</span>}
                             <img className="thumbnail-img" src={slideImagePath ? `${urlBaseNoApi}${slideImagePath}`: placeholder}
                                 onError={({ currentTarget }) => {
                                     currentTarget.onerror = null; // prevents looping

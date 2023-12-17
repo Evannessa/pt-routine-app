@@ -112,7 +112,6 @@ export default function TimerGallery(props) {
         if (response) {
             setFormData(response);
             label.current = response.label;
-            console.log("Timer set from GET request was ", response.timers)
         } else {
             console.log("Response was null");
         }
@@ -138,7 +137,6 @@ export default function TimerGallery(props) {
     //when timer data changes, update the entire set of timers timer
     React.useEffect(() => {
         if (formData) {
-            console.log("Patching timer ", formData.label)
             let options = {
                 method: "PATCH",
                 pathsArray: ["factory", id],
