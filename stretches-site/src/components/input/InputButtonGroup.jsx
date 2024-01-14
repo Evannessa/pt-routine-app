@@ -10,6 +10,7 @@ export const StyledInputButtonGroup = styled.div`
     border-radius: 5px;
     display: flex;
     padding: 0.5rem;
+    margin-inline: auto;
     filter: drop-shadow(0 0 0.75rem crimson);
     ${StyledInputWrapper}{
         border-color: orange;
