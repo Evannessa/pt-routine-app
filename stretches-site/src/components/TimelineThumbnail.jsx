@@ -29,8 +29,8 @@ const grow = keyframes`
 `;
 const StyledTooltip = styled.span`
     position: absolute;
-    z-index: 900;
-    bottom: 100%;
+    z-index: 1000;
+    bottom: 145%;
     left: 50%;
     transform: translateX(-50%);
 
@@ -112,7 +112,7 @@ const StyledHoverable = styled.div`
         grid-column: 1/2;
     }
     & + ${StyledTooltip} {
-        opacity: 100%;
+        /* opacity: 100%; */
     }
 `;
 const ButtonWithTooltipWrapper = styled.div`
@@ -324,10 +324,10 @@ const TimelineThumbnail = forwardRef(
                         >
                             add
                         </NewTimerButton>
-                        <StyledTooltip>
+                        {/* <StyledTooltip>
                             Add Timer Before <br></br>
-                            (Hold <code>Ctrl</code> to duplicate)
-                        </StyledTooltip>
+                            {/* (Hold <code>Ctrl</code> to duplicate) */}
+                        {/* </StyledTooltip> */} 
                     </ButtonWithTooltipWrapper>
 
                     <TooltipWrapper toggleAction="hover">
@@ -379,9 +379,10 @@ const TimelineThumbnail = forwardRef(
                         >
                             add
                         </NewTimerButton>
-                        <StyledTooltip>
-                            Add Timer After (Hold <code>Ctrl</code> to duplicate)
-                        </StyledTooltip>
+                        {/* <StyledTooltip> */}
+                            {/* Add Timer After  */}
+                            {/* (Hold <code>Ctrl</code> to duplicate) */}
+                        {/* </StyledTooltip> */}
                     </ButtonWithTooltipWrapper>
                 }
                 </section>

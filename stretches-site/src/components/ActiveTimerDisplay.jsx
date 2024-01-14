@@ -299,7 +299,7 @@ export default function ActiveTimerDisplay() {
      * Get timer set with this id
      */
     React.useEffect(() => {
-        setCurrentClock(1)
+        setCurrentClock(0)
     }, [id]);
 
     function setClockAtZero(id) {
