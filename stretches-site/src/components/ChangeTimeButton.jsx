@@ -31,19 +31,17 @@ StyledChangeButton.displayName = "ChangeButton";
 export default function ChangeTimeButton(props) {
     /* ------------------------------- React Hooks ------------------------------ */
     const theme = useContext(ThemeContext);
+    const overrideTheme = props.theme
 
     /* ---------------------------- Return Statement ---------------------------- */
     return (
+    <ThemeProvider theme={overrideTheme ? overrideTheme : theme}>
         <StyledChangeButton
-            // className={`changeTime btn flat-box ghost colorful-ghost ${
-            // props.isIncrease ? "" : "secondary-color"
-            // }`}
             onClick={props.updateValue}
         >
-            <ThemeProvider theme={theme}>
                 {props.isIncrease ? "+" : "-"}
                 {props.value}
-            </ThemeProvider>
         </StyledChangeButton>
+    </ThemeProvider>
     );
 }

@@ -8,11 +8,17 @@ const StyledSlide = styled.div`
     align-items: center;
     border-radius: 12px;
     overflow: hidden;
+    z-index: 10;
+    max-height: 100%;
+    background-color: hsla(323, 72.3%, 12.7%, 1);
 
     img {
         object-fit: contain;
         max-width: 100%;
-        border-radius: 15px;
+        max-height: 100%;
+        height: 100%;
+        background-color: hsla(323, 72.3%, 12.7%, 0.9);
+        /* border-radius: 15px; */
     }
 `;
 

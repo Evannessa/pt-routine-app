@@ -8,7 +8,7 @@ export const StyledModal = styled.div`
     /* width: 50%; */
     color: rgb(39, 39, 39);
     font-size: var(--text-sm, 1rem);
-    z-index: 20;
+    z-index: 900;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);

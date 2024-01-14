@@ -1,34 +1,67 @@
-import React from "react";
+import React, {useContext} from "react";
 import axios from "axios";
 import FormData from "form-data";
 import { useParams } from "react-router-dom";
 import { Container } from "./styled-components/layout.styled";
-import styled from "styled-components";
-
-const url = "http://localhost:9000/factory";
-const uploadsUrl = "http://localhost:9000";
-
+import styled, {ThemeProvider} from "styled-components";
+import { urls, combineUrlFragments } from "../helpers/requests";
+import cannotLoad from "../images/cannot_load.jpg"
+import dragDropImage from "../images/drag_drop_image.webp"
+import { useGlobalContext } from "../context";
+import { ThemeContext } from "../App";
 // #region Styled Components
-const StyledDropArea = styled(Container)`
+export const StyledDropArea = styled(Container)`
     border-radius: 20px;
-    width: 50%;
-    margin: 2% auto;
+    /* width: 50%; */
+    /* margin: 2% auto; */
     padding: 1rem;
-    background-color: transparent;
-    max-height: 5rem;
+    /* background-color: transparent; */
+    background-image: ${props => `${props.theme.theme.gradient}, url(${dragDropImage})`};
+    background-blend-mode: overlay;
+    background-size: contain;
+    background-position: center center;
+    background-repeat: no-repeat;
+    /* max-height: 5rem; */
+    height: 100%;
+    width: 80%;
     max-width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid white;
+    border: 1px dashed white;
     /* box-shadow: inset 0px 2px 0px 2px #21212150; */
     /* border-bottom: 3px solid rgba(255, 255, 255, 0.342); */
+
+
+	img {
+		max-width: 100%;
+		max-height: 100%;
+        border-radius: 5px;
+	}
+
+
+	.dropForm {
+		background: transparent;
+
+		input[type="file"] {
+			width: 5rem;
+			min-height: 5rem;
+			flex: 1 0;
+			background-color: purple;
+		}
+	}
+
+	&.highlight {
+		background-color: rgba(255, 255, 255, 0.342);
+	}
 
     img {
         min-width: 4rem;
         min-height: 4rem;
         max-width: 100%;
         max-height: 100%;
+	    transform: rotate(8deg);
+        box-shadow: 0px 2px 4px 2px #21212150;
     }
 
     .dropForm {
@@ -50,6 +83,9 @@ StyledDropArea.displayName = "StyledDropArea";
 // #endregion
 /* -------------------------------------------------------------------------- */
 function DropArea(props) {
+    const theme = useContext(ThemeContext)
+    const { urlBase, urlBaseNoApi, uploadsUrl, factoryRoute, uploadsRoute } = urls;
+    // const uploadsUrl = combineUrlFragments(urlBase, [factoryRoute, uploadsRoute]);
     /* ---------------------------- States and Hooks ---------------------------- */
     // #region States and hooks
     const params = useParams();
@@ -72,11 +108,13 @@ function DropArea(props) {
 
         try {
             //upload image
+            const specificUrl = combineUrlFragments(urlBase, [factoryRoute, "/", params.setId, uploadsRoute]);
+            // `${url}/${params.setId}/uploads`
             const {
                 data: {
                     image: { src },
                 },
-            } = await axios.post(`${url}/${params.setId}/uploads`, formData, {
+            } = await axios.post(specificUrl, formData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 },
@@ -86,9 +124,9 @@ function DropArea(props) {
             props.updateTimerData("slideImagePath", src);
         } catch (error) {
             imageValue = null;
-            console.log(error);
+            console.log("An error happened while uploading an image");
         }
-        previewRef.current.src = `${uploadsUrl}/${imageValue}`;
+        previewRef.current.src = `${uploadsUrl}/uploads${imageValue}`;
     }
 
     function handlePaste(event) {
@@ -176,17 +214,26 @@ function DropArea(props) {
             onDrop={handleDrop}
             onPaste={handlePaste}
             ref={dropRef}
+            theme={theme}
         >
-            <img
+            {props.slideImagePath && <img
                 className="slide__preview"
                 src={
                     props.slideImagePath && props.slideImagePath.length > 0
-                        ? `${uploadsUrl}/${props.slideImagePath}`
-                        : "/insert_photo_white_24dp.svg"
+                        ? `${urlBaseNoApi}${props.slideImagePath}`
+                        // ? `${props.slideImagePath}`
+                        : {dragDropImage}
                 }
-                alt="preview"
+                onError={({ currentTarget }) => {
+                    currentTarget.onerror = null; // prevents looping
+                    currentTarget.src= dragDropImage;
+                }}
+                crossOrigin="true"
+                title={props.slideImagePath}
+                alt={props.slideImagePath}
                 ref={previewRef}
-            />
+            />}
+
         </StyledDropArea>
     );
 }

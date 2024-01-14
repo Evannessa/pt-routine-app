@@ -32,6 +32,7 @@ function FloatingToolbar({ children, actions, timerId }) {
                       action.functionRef(timerId);
                   }}
                   timerId={timerId}
+                  title={action.description ? action.description : action.name}
               >
                   <span className="material-icons">{action.icon}</span>
               </ActionButton>

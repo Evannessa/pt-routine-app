@@ -1,0 +1,43 @@
+services:
+    frontend:
+        build:
+            context: stretches-site
+            target: dev-envs
+        stdin_open: true
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+        ports:
+            - 3000:3000
+        restart: "no"
+        networks:
+            - react-express
+        depends_on:
+            - backend
+    backend:
+        restart: "no"
+        build:
+            context: api
+            target: dev-envs
+            args:
+                NODE_PORT: 3000
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+        expose:
+            - 3000
+        depends_on:
+            - mongo
+        networks:
+            - express-mongo
+            - react-express
+    mongo:
+        restart: always
+        image: mongo:4.2.0
+        volumes:
+            - ./data:/data/db
+        networks:
+            - express-mongo
+        expose:
+            - 27017
+networks:
+    react-express:
+    express-mongo:

@@ -26,6 +26,7 @@ async function getSingle(type, req, res, next, name, populateWith) {
     const { id } = req.params;
     const document = await type.findOne({ _id: id }).populate(populateWith);
     if (!document) {
+        console.log("No document found with that id")
         return next(createCustomError(`No ${name} found with id ${id}`, 404));
     }
     return res.status(200).json({ document });
@@ -60,11 +61,17 @@ async function deleteSingle(type, req, res, next, name) {
 }
 async function updateSingle(type, req, res, next, name, populateWith = "") {
     const { id } = req.params;
-    console.log("Updating single", id, req.params, req.body)
-    const document = await type
+    // console.log("Updating single", id, req.params, req.body)
+    const isValid = mongoose.isValidObjectId(id)
+    if(!isValid){
+        return res.status(404).json("Not a valid MongoDB id")
+    }
+
+    const document = isValid ? await type
         .findOneAndUpdate({ _id: id }, { ...req.body }, { new: true })
-        .populate(populateWith);
-    if (!document) {
+        .populate(populateWith) : null
+
+    if (!isValid || !document) {
         return next(createCustomError(`No ${name} found with id ${id}`, 404));
     }
     return res.status(200).json({ document });
@@ -192,7 +199,7 @@ const createNewSet = async (req, res) => {
         console.log("Set is", { ...set })
         res.status(201).send({ document: set });
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         res.status(500).json({ msg: error });
     }
 };

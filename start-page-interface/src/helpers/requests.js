@@ -175,7 +175,7 @@ export var requests = (function () {
      * @param {*} urlBase - url base we'll send the delete request to
      * @param {Object} deleteData - the data used to determine what should be deleted -- empty object will delete all
      */
-    async function deleteMultiple(deleteData) {}
+    async function deleteMultiple(deleteData) { }
 
     function flattenData(format, outerData, propertyName) {
         let dataToPost = [];
@@ -214,7 +214,7 @@ export var requests = (function () {
      * @param {*} itemsToUpdate the list of items we want to update
      * @param {*} property - the property we want to update
      */
-    async function updateMultiple(itemsToUpdate, property) {}
+    async function updateMultiple(itemsToUpdate, property) { }
 
     function compileUpdateData(id, propertyPath, value, action, filter) {
         let newData = {

@@ -1,12 +1,45 @@
 import axios from "axios";
 
-// export const instance = axios.create({
-// 	baseURL: `http://localhost:9000/links`,
-// })
+export const URLS = {
+    urlBase: "http://localhost:3000/api",
+    displayRoute: "/display",
+    factoryRoute: "/factory",
+    uploadsRoute: "/uploads"
+}
+export const urls = (() => {
+    const urlBase = "http://localhost:3000/api"
+    const urlBaseNoApi = "http://localhost:3000"
+    // const urlBase = "http://localhost:3000/"
+    const displayRoute = "/display"
+    const factoryRoute = "/factory"
+    const uploadsRoute = "/uploads"
 
+    const getUploadsUrl = () => {
+        // return urlBase + uploadsRoute
+        return urlBase 
+    }
+
+
+    return {
+        urlBase: urlBase,
+        urlBaseNoApi: urlBaseNoApi,
+        displayRoute: displayRoute,
+        factoryRoute: factoryRoute,
+        uploadsRoute: uploadsRoute,
+        uploadsUrl: getUploadsUrl()
+    }
+})()
+
+export const combineUrlFragments = (base, fragments = []) => {
+    let url = base
+    fragments.forEach((el) => {
+        url += el
+    })
+    return url
+
+}
 export const requests = (function () {
-    // const urlBase = "http://localhost:9000";
-    const urlBase = "http://localhost:9000/factory";
+    const { urlBase } = urls
 
     /**
      *
@@ -25,6 +58,7 @@ export const requests = (function () {
         if (!options.baseURL)
             options.baseURL = urlBase;
 
+
         //destructure the pathsArray and setStateCallback to be used elsewhere
         let { pathsArray, setStateCallback } = options;
 
@@ -38,7 +72,7 @@ export const requests = (function () {
         }
         delete options.pathsArray;
         options.url = url;
-        console.log("Our options are now", options)
+        // console.log("Our options are now", options)
 
         //delete the setStateCallback from the object too
         delete options.setStateCallback;
@@ -48,7 +82,6 @@ export const requests = (function () {
             .then((response) => {
                 if (response.status && response.status >= 200 && response.status < 300) {
                     if (setStateCallback) {
-                        console.log("Response data is", response.data);
                         setStateCallback(response.data.document);
                     }
                 } else {
@@ -58,13 +91,13 @@ export const requests = (function () {
             .catch(handleError);
     }
 
-    //join together an array of commponents for a path
+    //join together an array of components for a path
     function appendPath(pathsArray) {
         return pathsArray.join("/");
     }
 
     const handleError = (error) => {
-        console.log("There was an error", error);
+        // console.log("There was an error", error);
     };
     const makeSafe = (callback, errorHandler, pathArgs) => {
         return async () => {
@@ -72,6 +105,7 @@ export const requests = (function () {
             await callback(fullPath).catch(errorHandler);
         };
     };
+
 
     //create
     const safeCreate = makeSafe(createObject, handleError);
@@ -112,6 +146,18 @@ export const requests = (function () {
         //     console.log("There was an error");
         // }
     }
+    function checkImage(url) {
+        var request = new XMLHttpRequest();
+        request.open("GET", url, true);
+        request.send();
+        request.onload = function() {
+        if (request.status == 200){
+            console.log("image exists");
+        } else {
+            console.log("image doesn't exist");
+        }
+    }
+}
 
     /**
      *
@@ -126,7 +172,7 @@ export const requests = (function () {
                 setStateCallback(result.data.document);
             });
         } catch (error) {
-            console.log(error);
+            console.log("An error happened getting all timers");
         }
     }
 
@@ -145,7 +191,7 @@ export const requests = (function () {
                 responseData = result.data.link;
             });
         } catch (error) {
-            console.log(error);
+            console.log("An error happened while creating an object");
         } finally {
             setStateCallback(responseData);
         }
@@ -170,7 +216,7 @@ export const requests = (function () {
                     setStateCallback(response.data[propertyName])
                 );
         } catch (error) {
-            console.log(error);
+            console.log("An error happened while updating an object");
         }
     }
 
@@ -189,7 +235,7 @@ export const requests = (function () {
                 );
             });
         } catch (error) {
-            console.log(error);
+            console.log("An error happned while deleting an object");
         }
     }
 
@@ -228,7 +274,7 @@ export const requests = (function () {
                 console.log(response);
             });
         } catch (error) {
-            console.log(error);
+            console.log("An error happened while creating multiple objects");
         }
     }
     /**

@@ -1,18 +1,23 @@
 import React from "react";
+import { mockTimerSets } from "../mockData/MockTimers";
 import ActiveClock from "./ActiveClock";
-import { requests } from "../helpers/requests";
-import ProgressCircle from "./ProgressCircle";
+import { requests, urls } from "../helpers/requests";
+// import ProgressCircle from "./ProgressCircle";
 import Slide from "./Slide";
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { useParams, useNavigate, Link, useOutletContext } from "react-router-dom";
 import SpotifyEmbed from "../IFrames/SpotifyEmbed";
 import YoutubeEmbed from "../IFrames/YoutubeEmbed";
-import styled from "styled-components";
-import { ThemeProvider } from "styled-components";
+import styled, { ThemeProvider } from "styled-components";
 
+import { useGlobalContext } from "../context";
 import { ThemeContext } from "../App";
 import { TooltipWrapper } from "../portal-components/TooltipPopover";
-import Draggable from "react-draggable";
+// import Draggable from "react-draggable";
 import DraggableEmbedModal from "./display/DraggableEmbedModal";
+import { ButtonWithIcon } from "./styled-components/Buttons.Styled";
+import { nanoid } from "nanoid";
+import { getPlaceholderImage, placeholderImages } from "./Images";
+import ActiveTimerWrapper from "./ActiveTimerWrapper";
 /* #region   Styled Components */
 
 /** Header, which will contain details from timer set */
@@ -27,6 +32,7 @@ const StyledHeader = styled.div`
     margin-left: -5rem;
     margin-right: -5rem;
     padding: 1.25rem;
+    /* margin-top: 2rem; */
     z-index: 300;
 
     > h1 {
@@ -100,6 +106,11 @@ const StyledBody = styled.div`
     }
 `;
 
+const StyledLink = styled(Link)`
+    text-decoration: none;
+    border-bottom: unset;
+`
+
 const ActiveTimerSetContainer = styled.div`
     display: flex;
     flex-direction: column;
@@ -114,7 +125,7 @@ const ActiveTimerSetContainer = styled.div`
         flex-direction: row;
         justify-content: center;
     }
-    .slide__wrapper {
+    /* .slide__wrapper {
         background-color: hsla(267deg, 100%, 7.6%, 0.1);
         max-width: 414px;
         min-height: 250px;
@@ -128,7 +139,6 @@ const ActiveTimerSetContainer = styled.div`
         border-radius: 12px;
         overflow: hidden;
         .slide {
-            /* margin: 2vh; */
             width: 100%;
             height: auto;
             margin: unset;
@@ -139,18 +149,23 @@ const ActiveTimerSetContainer = styled.div`
             align-self: end;
             width: 100%;
             text-align: center;
-            background-color: #21212177;
+            background-color: hsla(323, 72.3%, 12.7%, 0.64);
             grid-row: 1/2;
             grid-column: 1/2;
             padding: 0.5em;
-        }
-    }
+            z-index: 20;
+        } */
+    /* } */
 `;
 
 /* #endregion */
 export default function ActiveTimerDisplay() {
+    const [timerSets, getTimerSets, saved, embedUrls, user] = useOutletContext();
+
+    // const { user } = useGlobalContext();
+    // const user = {role: "admin"}
     const { theme, updateTheme } = React.useContext(ThemeContext);
-    const urlBase = "http://localhost:9000";
+    const { urlBase } = urls;
 
     const params = useParams();
     // const resolvePath = useResolvedPath();
@@ -164,14 +179,36 @@ export default function ActiveTimerDisplay() {
     const [repeat, setRepeat] = React.useState();
     const [links, setLinks] = React.useState(null);
     const [currentClock, setCurrentClock] = React.useState(0);
+    const [muted, setMuted] = React.useState(false)
 
     const [completed, setCompleted] = React.useState(false);
 
+   
     /**Get the timers stored in the database when the component mounts */
     function populateActiveTimerSet(result) {
-        console.log("Our link is", result.youtubeLink);
-        const { _id, timers, label, youtubeLink, spotifyLink, repeatNumber } = result;
-        const newTimerObjects = timers.map((timer) => {
+        // console.log("Result is", result, result.timers);
+        if (!result) return;
+        const { _id, timers, label, autoBreakTime, youtubeLink, spotifyLink, repeatNumber } = result;
+        let timersWithBreaks = []
+        let breakTimer = {
+            ...timers[0], 
+            _id: "auto-break",
+            time: autoBreakTime,
+            description: "Take a few moments to rest",
+            label: "Auto Break",
+            isBreak: true,
+            isAutoBreak: true,
+            isRep: false,
+            repeatNumber: 0,
+            slideImagePath: placeholderImages[0]
+            // slideImagePath: `${urlBase}${placeholderImages[0]`//"" //`${urlBase}${getPlaceholderImage()}`
+        }
+        for(let timer of timers){
+            timersWithBreaks.push(timer)
+            timersWithBreaks.push({...breakTimer, _id: nanoid()})
+        }
+
+        const newTimerObjects = timersWithBreaks.map((timer) => {
             return {
                 ...timer,
                 clockAtZero: false,
@@ -180,21 +217,34 @@ export default function ActiveTimerDisplay() {
         initialState.current = newTimerObjects;
         setTimers(newTimerObjects);
         setTimerSetName(label);
+
         setLinks({
-            youtubeLink: youtubeLink,
-            spotifyLink: spotifyLink,
+            youtubeLink: youtubeLink ? youtubeLink : embedUrls.youtubeEmbed,
+            spotifyLink: spotifyLink ? spotifyLink : embedUrls.spotifyEmbed,
         });
         setRepeat(repeatNumber || 0);
         id.current = _id;
     }
+ /**
+     * callback that reacts to setId changing
+     * Will request an axios request with the proper options
+     * Then use the "populateActiveTimerSet" callback
+     */
     React.useEffect(() => {
-        let options = {
-            method: "GET",
-            pathsArray: ["display", params.setId],
-            baseURL: "http://localhost:9000",
-            setStateCallback: populateActiveTimerSet,
-        };
-        requests.axiosRequest(options);
+        if (user && user.role=="admin") {
+            const options = {
+                method: "GET",
+                pathsArray: ["display", params.setId],
+                setStateCallback: populateActiveTimerSet,
+            };
+            requests.axiosRequest(options);
+        } else {
+            let sets = timerSets ? timerSets : mockTimerSets
+            let currentSet = sets.find((set) => {
+                return set._id === params.setId;
+            }) 
+            populateActiveTimerSet(currentSet);
+        }
     }, [params.setId]);
 
     /**
@@ -213,36 +263,10 @@ export default function ActiveTimerDisplay() {
         }
     }, [currentClock, timers, updateTheme]);
 
-    let timerComponents = timers
-        ? timers.map((timer, index) => {
-              return (
-                  <ActiveClock
-                      key={timer._id}
-                      id={timer._id}
-                      hours={timer.time.hours}
-                      minutes={timer.time.minutes}
-                      seconds={timer.time.seconds}
-                      description={timer.description}
-                      setClockAtZero={setClockAtZero}
-                      clockAtZero={timer.clockAtZero}
-                      autostart={timer.autostart}
-                      repeatNumber={timer.repeatNumber}
-                  ></ActiveClock>
-              );
-          })
-        : [];
-    //map all the images associated w/ each timer to the slide component
-    let slideComponents = timers
-        ? timers.map((timer) => {
-              return <Slide key={timer._id + "TimerSlide"} image={`${urlBase}${timer.slideImagePath}`} />;
-          })
-        : [];
-    let descriptionComponents = timers
-        ? timers.map((timer) => {
-              return <p key={timer._id + "Description"}>{timer.description}</p>;
-          })
-        : [];
+    
     //if the clock hits zero, etc.
+
+   
 
     function moveToNextClock() {
         setCurrentClock((oldClock) => (oldClock += 1)); //increment the current clock
@@ -271,6 +295,12 @@ export default function ActiveTimerDisplay() {
             }
         }
     }, [timers, currentClock, repeat]);
+    /**
+     * Get timer set with this id
+     */
+    React.useEffect(() => {
+        setCurrentClock(0)
+    }, [id]);
 
     function setClockAtZero(id) {
         setTimers((oldTimers) =>
@@ -287,7 +317,10 @@ export default function ActiveTimerDisplay() {
             setCompleted(false);
             setTimers(initialState.current);
         } else if (action === "edit") {
-            navigate(`${urlBase}/factory/${id.current}`);
+            navigate(`${urlBase}/dashboard/factory/${id.current}`);
+        }else if(action  === "mute"){
+            console.log("Should be muting clock")
+            setMuted(!muted)
         }
     }
     return (
@@ -298,12 +331,24 @@ export default function ActiveTimerDisplay() {
                     <h1 className="activeSet__name">{timerSetName}</h1>
                     <TooltipWrapper>
                         <div>
-                            <Link to={`/factory/${params.setId}`}>
+                            <StyledLink to={`/dashboard/factory/${params.setId}`} title="edit this routine">
                                 <span className="material-icons">edit</span>
-                            </Link>
+                            </StyledLink>
                         </div>
                         <p>Edit this Timer</p>
                     </TooltipWrapper>
+                    <ButtonWithIcon 
+                        className="button" 
+                        onClick={handleClick} 
+                        data-action="resetAll" 
+                        icon={"restart_alt"} 
+                        title="reset routine from beginning"/>
+                    <ButtonWithIcon 
+                        className="button" 
+                        onClick={handleClick} 
+                        data-action="mute" 
+                        icon={muted ? "volume_up" : "volume_off"} 
+                        title={muted ? "turn on timer sounds" : "mute timer sounds"}/>
                 </StyledHeader>
                 {links && links.spotifyLink && links.spotifyLink.length > 0 && (
                     <DraggableEmbedModal links={links}>
@@ -322,19 +367,13 @@ export default function ActiveTimerDisplay() {
                 {timers ? (
                     <StyledBody>
                         {!completed ? (
-                            <>
-                                <h2>
-                                    Clock{" "}
-                                    <span>
-                                        {currentClock + 1} / {timers.length}
-                                    </span>
-                                </h2>
-                                <div className="slide__wrapper">
-                                    {timers[currentClock].slideImagePath && slideComponents[currentClock]}
-                                    {descriptionComponents[currentClock]}
-                                </div>
-                                {timerComponents[currentClock]}
-                            </>
+                            <ActiveTimerWrapper 
+                                timers={timers} 
+                                currentClock={currentClock} 
+                                setClockAtZero={setClockAtZero} 
+                                theme={theme}
+                                muted={muted}
+                            />
                         ) : (
                             <>
                                 <h2>All Clocks Completed</h2>
