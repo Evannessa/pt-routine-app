@@ -1,13 +1,24 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
+import throttle from "lodash.throttle";
 import PreviewTimer from "./PreviewTimer";
+import { placeholderImages, getPlaceholderImage } from "./Images";
+import { mockTimerSets } from "../mockData/MockTimers";
 import ActionModal from "./ActionModal";
-import SetTimeline from "./SetTimeline";
-import { useParams, useLocation, Navigate, useNavigate } from "react-router-dom";
+import RoutineTimeline from "./RoutineTimeline";
+import { useParams, useLocation, Navigate, useNavigate, useOutletContext } from "react-router-dom";
 import styled from "styled-components";
 import { ThemeProvider } from "styled-components";
 import { ThemeContext } from "../App";
 import GalleryHeader from "./GalleryHeader";
 import { requests } from "../helpers/requests";
+import { useGlobalContext } from "../context";
+import AutoBreakConfig from "./AutoBreakConfig";
+import helpers from "../classes/Helpers";
+import FloatingToolbar from "./FloatingToolbar";
+import ActionFactory from "../classes/ActionFactory";
+import { useMediaQuery } from 'react-responsive'
+import { device } from "./styled-components/devices";
+
 /* ---------------------------- Styled Components --------------------------- */
 
 // #region Styled Components
@@ -17,6 +28,9 @@ const TimerWrapper = styled.div`
     --clr-gradient: linear-gradient(45deg, var(--clr-clr1), var(--clr-clr2));
     &::-webkit-scrollbar-thumb {
         background: var(--clr-gradient);
+    }
+    label{
+        color: ${props => props.theme.color2};
     }
 `;
 const GalleryWrapper = styled.section``;
@@ -42,7 +56,10 @@ export default function TimerGallery(props) {
     /* ------------------------------- React Hooks ------------------------------ */
     // #region States and hooks
 
-    let { timerSets, getTimerSets } = props;
+
+    const [timerSets, getTimerSets, embedUrls, user] = useOutletContext();
+    // const user = {role: "admin"}
+    // let { timerSets, getTimerSets } = props;
     const { theme, updateTheme } = React.useContext(ThemeContext);
     const observer = React.useRef(); //intersection Observer
     const childRefs = React.useRef([]); //the references to all timer objects
@@ -54,8 +71,13 @@ export default function TimerGallery(props) {
         currentModalIndex: -1,
     }); //whether or not we want to show the modal
     const [formData, setFormData] = React.useState(props.formData || {});
-    const [timerSet, setTimerSet] = React.useState();
+    // const [timerSet, setTimerSet] = React.useState();
     const [currentTimer, setCurrentTimer] = React.useState();
+    const [uiToggles, setUiToggles] = useState({
+        sortMode: false,
+        showAutoBreak: false,
+        
+    })
     const navigate = useNavigate();
 
     let params = useParams(); //show the params of the get request
@@ -67,60 +89,65 @@ export default function TimerGallery(props) {
     const modalInfo = [
         {
             name: "spotifyLink",
-            description: <span>Copy paste a Spotify link here to embed a Spotify Episode or Playlist.</span>,
+            description: <span>Copy & Paste a Spotify url below to embed a Spotify podcast episode or Playlist into this routine.</span>,
             type: "embed",
             onSubmit: linkSpotify,
         },
         {
             name: "youtubeLink",
             title: "Embed Youtube Video or Playlist",
-            description: <span>Copy paste a Youtube link here to embed a YouTube Video or Playlist.</span>,
+            description: <span>Copy & Paste a Youtube video url below to embed a YouTube Video or Playlist into this routine.</span>,
             type: "embed",
             onSubmit: linkYoutube,
         },
     ];
+    const isTablet = useMediaQuery({ query: device.tablet})
 
+
+    /**
+     * Updates our Routine formData object in reaction to an axios "PATCH" request
+     * @param {Object} response - the response from the PATCH request
+     */
     function updateTimerSet(response) {
-        console.log("Response was", response);
         if (response) {
-            // setTimerSet(response);
             setFormData(response);
             label.current = response.label;
         } else {
             console.log("Response was null");
         }
-        // debugger;
     }
     /**
-     * Get timer with this id
+     * Get timer set with this id
      */
     React.useEffect(() => {
         const getTimerSet = async () => {
-            let options = {
-                method: "GET",
-                pathsArray: [id],
-                setStateCallback: updateTimerSet,
-            };
+            // if(user && user.role == "admin"){
+                let options = {
+                    method: "GET",
+                    pathsArray: ["factory", id],
+                    setStateCallback: updateTimerSet,
+                };
             await requests.axiosRequest(options);
         };
         getTimerSet();
         return () => {};
     }, [id]);
+   
 
     //when timer data changes, update the entire set of timers timer
     React.useEffect(() => {
-        console.log("Formdata changed", formData);
         if (formData) {
             let options = {
                 method: "PATCH",
-                pathsArray: [id],
-                // setStateCallback: getTimerSets,
+                pathsArray: ["factory", id],
                 data: {
                     label: formData.label,
                     youtubeLink: formData.youtubeLink,
                     spotifyLink: formData.spotifyLink,
                     timers: formData.timers,
                     repeatNumber: formData.repeatNumber,
+                    autoBreakTime: formData.autoBreakTime,
+                    autoBreakTimer: formData.autoBreakTimer
                 },
             };
             requests.axiosRequest(options);
@@ -176,6 +203,7 @@ export default function TimerGallery(props) {
                 if (child === null) {
                     return;
                 }
+                // console.log(child)
                 return observer.current.unobserve(child);
             });
     }, [formData.timers, updateTheme]);
@@ -189,7 +217,6 @@ export default function TimerGallery(props) {
      * @param {any} data - add link to spotify
      */
     function linkSpotify(data) {
-        console.log(data);
         setFormData((oldData) => {
             return { ...oldData, spotifyLink: data };
         });
@@ -210,11 +237,14 @@ export default function TimerGallery(props) {
      * @param {id} id = the id of the timer we're updating
      */
     function updateSpecificTimer(data, id) {
-        console.log(
+      /*   console.log(
             "Updating",
             data,
-            formData.timers?.filter((timer) => timer._id === id)
+            formData.timers?.filter((timer) => timer._id === id).pop()
         );
+        console.log({
+            timers: formData.timers?.map((timer)=> timer._id === id ? {...timer, ...data} : timer)
+        }) */
         setFormData((prevFormData) => {
             return {
                 ...prevFormData,
@@ -225,12 +255,33 @@ export default function TimerGallery(props) {
         });
     }
 
+    /**
+     * Toggles various UI elements like certain modals and changing back and forth from sort mode
+     * @param {String} property - the name of the property we're toggling
+     * @param {*} value - the value we're changing the property to
+     */
+    function updateUiToggles(property, value){
+        setUiToggles((prevValue)=> {
+            return {
+                ...prevValue,
+                [property]: value
+            }
+        })
+
+
+    }
+
+    /**
+     * Deletes a timer by its ID 
+     * @param {String} id - the id of the timer to delete
+     */
     function deleteTimer(id) {
-        console.log("Deleting timer: ", id);
+        // console.log("Deleting timer: ", id);
 
         //find the timer we're deleting
         let deletedElement = childRefs.current.find((element) => element.firstChild.dataset.key === id);
         //unobserve it, store its index
+        // console.log(deletedElement)
         observer.current.unobserve(deletedElement);
         let index = childRefs.current.indexOf(deletedElement);
 
@@ -238,39 +289,75 @@ export default function TimerGallery(props) {
         childRefs.current.splice(index, 1);
 
         //remove it from timer data after a bit
-        setTimeout(
-            //only include timers that don't have the id
-            updateFormData("timers", [...formData.timers.filter((timer) => timer._id !== id)]),
-            // setTimerData((prevData) =>
-            // prevData.filter((timer) => timer._id !== id)
-            // ),
-            1000
-        );
+        let filteredTimers = formData.timers.filter(timer => timer._id !== id)
+        setTimeout(()=> updateFormData("timers", [...filteredTimers]), 100);
+            // updateFormData("timers", [...formData.timers.filter((timer) => timer._id !== id)]),
+        // );
     }
 
-    //scroll to the specific timer that meets the id
+    /**
+     * Scrolls into view the specific timer that matches this id.
+     * @param {String} id - the id of a timer
+     */
     function navigateToTimer(id) {
-        let matchElement = childRefs.current.find((el) => el.firstChild.dataset.key === id);
+        const matchElement = childRefs.current.find((el) => el.firstChild.dataset.key === id);
         matchElement.scrollIntoView({ behavior: "smooth" });
     }
 
-    //update all the timers in the set
+    /**
+     * - updates all of the exercise timers in this routine
+     * @param {Array} data - the timer array w/ updated timer objects within
+     */
     function updateAllTimers(data) {
         updateFormData("timers", [...data]);
-        // if (data.length) {
-        //     setFormData((prevData) => {
-        // 		...prevData,
-        //         timers: [...data];
-        //     });
-        // } else {
-        //     console.log("No data passed");
-        // }
     }
 
+    /**
+     * Navigates to the "Display" of this particular exercise routine by id
+     */
     function navigateToDisplay() {
         let id = formData._id;
-        navigate(`/display/${id}`);
+        navigate(`/dashboard/display/${id}`);
     }
+
+    /**
+     * Action Factory Objects to store data about buttons, icons, and their data
+     */
+    const actionData = [
+        ActionFactory(
+            "startRoutine", 
+            "play_circle", 
+            ()=> navigateToDisplay(),
+            "Start the Routine"
+        ),
+        ActionFactory(
+            "addMediaLink",
+            "add_link",
+            ()=> {
+                setShowModal({isOpen: true, currentModalIndex: 1})
+            },
+            "Add a link to a YouTube video, Spotify track, or playlist"
+        ),
+      
+        ActionFactory(
+            "addSpotifyLink", 
+            "music_note", 
+            (event)=>{
+                setShowModal({ isOpen: true, currentModalIndex: 0 });
+            }, 
+            "Add a link to a spotify playlist"
+        ),
+        ActionFactory(
+            "addYoutubeLink", 
+            "youtube_activity", 
+            (event)=>{
+                setShowModal({ isOpen: true, currentModalIndex: 1 });
+            }, 
+            "Add a link to a YouTube video or playlist"
+        ),
+    ]
+
+
 
     /**
      * handle different actions when we click upon buttons
@@ -282,19 +369,19 @@ export default function TimerGallery(props) {
         const action = element.dataset.action;
         switch (action) {
             case "add-spotify-link":
-                console.log("Adding link to spotify");
                 setShowModal({ isOpen: true, currentModalIndex: 0 });
                 break;
             case "add-youtube-link":
-                console.log("Adding link to spotify");
                 setShowModal({ isOpen: true, currentModalIndex: 1 });
                 break;
             case "save":
-                console.log("Save this timer");
                 await saveNewTimer();
                 break;
             case "start-timer":
                 navigateToDisplay();
+                break;
+            case "auto-breaks":
+                console.log("Automatically adding breaks for timers")
                 break;
             default:
                 console.log("No associated action for", action);
@@ -302,12 +389,14 @@ export default function TimerGallery(props) {
         }
     }
 
+    /**
+     * Saves a newly created timer
+     */
     async function saveNewTimer() {
-        console.log(formData);
         if (formData.label) {
             const options = {
                 method: "POST",
-                pathsArray: ["new"],
+                pathsArray: ["factory", "new"],
                 setStateCallback: (data) => {
                     console.log("Saving?", data);
                     if (data) setSaved(true);
@@ -319,14 +408,18 @@ export default function TimerGallery(props) {
                     spotifyLink: formData.spotifyLink,
                     timers: formData.timers,
                     repeatNumber: formData.repeatNumber,
+                    autoBreakTime: formData.autoBreakTime,
+                    autoBreakTimer: formData.autoBreakTimer
                 },
             };
             await requests.axiosRequest(options);
         }
     }
+
+ 
     //update all the data in the form
     const updateFormData = useCallback(async (property, data) => {
-        console.log("Updating", property, data);
+        // console.log("Updating", property, data);
         setFormData((prevData) => {
             return {
                 ...prevData,
@@ -339,7 +432,9 @@ export default function TimerGallery(props) {
         return <Navigate to={`/factory/${storedRef.current}`} />;
     }
 
-    //turn timers into objects
+    /**
+     * The objects representing the preview timers (and their wrappers)
+     */
     const previewTimers = formData
         ? formData.timers?.map((timer, index) => (
               <div
@@ -355,12 +450,15 @@ export default function TimerGallery(props) {
                       key={timer._id}
                       id={timer._id}
                       isBreak={timer.isBreak}
+                      isRep={timer.isRep}
                       time={timer.time}
                       autostart={timer.autostart}
                       description={timer.description}
+                      label={timer.label}
                       updateTimerData={updateSpecificTimer}
                       slideImagePath={timer.slideImagePath}
                       repeatNumber={timer.repeatNumber}
+                      theme={theme}
                   />
               </div>
           ))
@@ -382,11 +480,13 @@ export default function TimerGallery(props) {
     /**
      *
      * @param {int} position - the index of the particular timer in the current array;
-     * @param {*} beforeOrAfter - whether we want to add a new timer before or after
+     * @param {boolean} beforeOrAfter - whether we want to add a new timer before or after
+     * @param {boolean} duplicate - whether or not we want to duplicate the timer
      */
-    async function addNewTimer(position, beforeOrAfter) {
+    async function addNewTimer(position, beforeOrAfter, duplicate = false) {
         let insertAtIndex = position + beforeOrAfter;
-        const newTimerData = {
+        // console.log({position, beforeOrAfter}, formData.timers[position])
+        const newTimerData = !duplicate ? {
             // _id: "new",
             time: { hours: 0, seconds: 0, minutes: 0 },
             label: "New Timer",
@@ -395,7 +495,14 @@ export default function TimerGallery(props) {
             autostart: false,
             isBreak: false,
             repeatNumber: 0,
-        };
+        } : helpers.cloneObject(formData.timers[position], true) 
+
+        //delete the id 
+        if(duplicate){
+            delete newTimerData._id
+        }
+
+        // debugger
         //make sure it doesn't go over or under
         if (insertAtIndex < 0) {
             insertAtIndex = 0;
@@ -408,13 +515,9 @@ export default function TimerGallery(props) {
         if (formData.timers) {
             let newArray = [...formData.timers];
             newArray.splice(insertAtIndex, 0, { ...newTimerData });
+            // setTimeout(()=> updateFormData("timers", newArray), 100)
             await updateFormData("timers", newArray);
-            // return newArray;
-            // setFormData((prevData) => {
-            //     let newArray = [...prevData];
-            //     newArray.splice(insertAtIndex, 0, { ...newTimerData });
-            //     return newArray;
-            // });
+          
         }
     }
 
@@ -429,6 +532,7 @@ export default function TimerGallery(props) {
             <ThemeProvider theme={theme}>
                 {formData && Object.keys(formData).length > 0 && (
                     <GalleryHeader
+                        actions={actionData}
                         expanded={expanded}
                         setExpanded={() => setExpanded((prevData) => !prevData)}
                         updateFormData={updateFormData}
@@ -436,16 +540,22 @@ export default function TimerGallery(props) {
                         handleChange={handleChange}
                         formData={formData}
                         isSavedTimer={isSavedTimer}
+                        uiToggles={uiToggles}
+                        setUiToggles={updateUiToggles}
+                        isTablet={isTablet}
                     ></GalleryHeader>
                 )}
-                <SetTimeline
+                <RoutineTimeline
+                    sortMode={uiToggles.sortMode}
                     timerInView={currentTimer}
                     addNewTimer={addNewTimer}
                     timers={formData.timers || []}
                     setParentTimers={updateAllTimers}
                     deleteParentTimer={deleteTimer}
                     navigateToParentTimer={navigateToTimer}
+                    // duplicateParentTimer={duplicateTimer}
                 />
+
             </ThemeProvider>
             {/* TIMERS */}
             <ThemeProvider theme={theme}>
@@ -453,7 +563,11 @@ export default function TimerGallery(props) {
                     {previewTimers}
                 </TimerWrapper>
             </ThemeProvider>
-
+            {uiToggles.showAutoBreak && <AutoBreakConfig 
+                timer={formData && formData.autoBreakTimer}
+                time={formData ? formData.autoBreakTime : {hours: 0, minutes: 0, seconds:5}}
+                updateFormData={updateFormData}
+            />}
             {showModal.isOpen && (
                 <ActionModal
                     open={showModal.isOpen}

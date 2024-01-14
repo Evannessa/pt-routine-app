@@ -1,79 +1,111 @@
-const createError = require("http-errors");
+const dotenv = require("dotenv");
+dotenv.config();
+
 const express = require("express");
 
-// const serverless = require('serverless-http');
-const path = require("path");
-const cookieParser = require("cookie-parser");
-const logger = require("morgan");
-const cors = require("cors");
-// var indexRouter = require("./routes/index");
-const factoryRouter = require("./routes/factoryRoutes");
-const displayRouter = require("./routes/displayRoutes");
-const linkInterfaceRouter = require("./routes/linkInterfaceRoutes");
-const connectDB = require("./db/connect");
-require("dotenv").config();
-const notFound = require("./middleware/not-found");
-const errorHandlerMiddleware = require("./middleware/error-handler");
-const fileUpload = require("express-fileupload");
 const app = express();
 
-const port = process.env.PORT || 9000;
+// require("express-async-errors");
+const morgan = require("morgan");
+const cookieParser = require("cookie-parser");
+const cors = require("cors");
+
+const path = require("path");
+const mongoSanitize = require("express-mongo-sanitize");
+
+const createError = require("http-errors");
+const xss = require("xss-clean");
+
+// TODO: Add this back in later
+// const helmet = require("helmet");
+// const rateLimiter = require("express-rate-limit");
+
+// const session = require('express-session')
+// var indexRouter = require("./routes/index");
+const authRouter = require("./routes/authRoutes");
+const userRouter = require("./routes/userRoutes");
+const factoryRouter = require("./routes/factoryRoutes");
+const displayRouter = require("./routes/displayRoutes");
+// const authRouter = require("./routes/authRoutes");
+
+const connectDB = require("./db/connect");
+
+const notFound = require("./middleware/not-found");
+const errorHandlerMiddleware = require("./middleware/error-handler");
+
+const fileUpload = require("express-fileupload");
+
+app.set("trust proxy", 1);
+
+//TODO: add this back in later
+// app.use(
+//     rateLimiter({
+//         windowMs: 15 * 60 * 1000,
+//         max: 60,
+//     })
+// );
+
+const port = process.env.PORT || 3000;
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
-app.set("view engine", "jade");
+app.set("view engine", "pug");
 
 app.use(cors());
-app.use(logger("dev"));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, "..", "build")));
-app.use(express.static(path.join(__dirname, "public")));
+// app.use(helmet({ crossOriginEmbedderPolicy: false}));
 
-app.use((req, res, next) => {
-    res.sendFile(path.join(__dirname, "..", "build", "index.html"));
-});
+
+
+app.use(xss());
+app.use(mongoSanitize());
+
+app.use(cookieParser(process.env.JWT_SECRET));
+app.use(morgan("dev"));
+app.use(express.json());
+
+
+
+// app.use('/uploads', express.static(path.join(__dirname, 'public')))
 
 app.use(fileUpload()); //! HAD TO PUT THIS BEFORE THE APP.USE() ROUTER
-// app.use('/.netlify/functions/api', factoryRouter)
-// app.use('/.netlify/functions/api', displayRouter)
-// app.use('/.netlify/functions/api', linkInterfaceRouter)
-app.use("/factory", factoryRouter);
-app.use("/display", displayRouter);
-app.use("/links", linkInterfaceRouter);
+
+app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "public/uploads")));
+app.use("/api/factory", factoryRouter);
+app.use("/api/display", displayRouter);
+app.use('/uploads', (_, res, next) => {
+    res.set('Cross-Origin-Resource-Policy', 'cross-origin');
+    next();
+  })
+
+
+// TODO: To be replaced when authentication is added
+// app.use("/api/auth", authRouter);
+// app.use("/api/users", userRouter);
+
 app.use(notFound);
 app.use(errorHandlerMiddleware);
-// app.use("/users", usersRouter);
-// app.use("/testAPI", testAPIRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
     next(createError(404));
 });
 
-// // error handler
-// app.use(function (err, req, res, next) {
-//     // set locals, only providing error in development
-//     res.locals.message = err.message;
-//     res.locals.error = req.app.get("env") === "development" ? err : {};
-
-//     // render the error page
-//     res.status(err.status || 500);
-//     res.render("error");
-// });
-
 const start = async () => {
     try {
-        await connectDB(process.env.MONGO_URI);
-        app.listen(9000, console.log(`Server is listening on port ${port}...`));
+        connectDB();
+        // await connectDB(process.env.MONGO_URI);
+        app.listen(port, () => {
+            console.log(`Server is listening on port ${port}...`);
+            //
+        });
     } catch (error) {
-        console.log(error);
+        console.error("There was an error")
+        // console.log(error);
     }
-
 };
-
 start();
 
+
+
 module.exports = app;
-// module.exports.handler = serverless(app)

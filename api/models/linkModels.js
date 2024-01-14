@@ -41,7 +41,7 @@ const FilterSchema = new mongoose.Schema({
 const FilterGroupSchema = new mongoose.Schema({
     categoryName: { type: String, required: true, default: "New Category" },
     groupSelector: { type: String, enum: ["and", "or"], required: true, default: "and" },
-    filters: { type: [FilterSchema], required: true, default: [() => {}] },
+    filters: { type: [FilterSchema], required: true, default: [() => { }] },
 });
 
 const TagGroupSchema = new mongoose.Schema({
@@ -63,8 +63,8 @@ const LinkSchema = new mongoose.Schema({
         default: "External", //TODO: turn this to enum value later
     },
     tags: [{ type: mongoose.Schema.Types.ObjectId, ref: "Tag" }],
-    text: "",
-    imagePath: "",
+    text: { type: String },
+    imagePath: { type: String }
 });
 
 module.exports = {

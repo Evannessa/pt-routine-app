@@ -1,8 +1,9 @@
 import React from "react";
 import styled from "styled-components";
-import { useNavigate, Outlet, NavLink } from "react-router-dom";
+import { Outlet, NavLink } from "react-router-dom";
 import { Container } from "./styled-components/layout.styled";
 import { requests } from "../helpers/requests";
+import TimerSetCard from "./TimerSetCard";
 
 const FlexContainer = styled(Container)`
     display: flex;
@@ -11,11 +12,9 @@ const FlexContainer = styled(Container)`
 `;
 
 export default function TimerSets(props) {
-    const navigate = useNavigate();
     const wrapperRef = React.useRef(null);
     const [open, setOpen] = React.useState(false);
-    let { timerSets, updateSets } = props;
-    // const [timerSets, setTimerSets] = React.useState(null);
+    let { timerSets, updateSets, timerSetStyle } = props;
 
     async function handleBlur(event) {
         console.log("Blur now");
@@ -32,42 +31,10 @@ export default function TimerSets(props) {
 
     const timerSetElements = timerSets
         ? timerSets.map((timerSet) => {
-              return (
-                  <NavLink
-                      to={`display/${timerSet._id}`}
-                      className={(isActive) => "timerSet nav-link" + (isActive ? " selected" : "")}
-                      key={timerSet._id}
-                      data-id={timerSet._id}
-                  >
-                      {timerSets && (
-                          <div className="timerSet__content">
-                              {timerSet.label ? <p>{timerSet.label}</p> : ""}
-                              <div className="button-wrapper">
-                                  <button
-                                      className="btn icon__btn"
-                                      onClick={handleClick}
-                                      data-id={timerSet._id}
-                                      data-action="edit"
-                                  >
-                                      <span className="material-icons">edit</span>
-                                  </button>
-                                  <button
-                                      className="btn icon__btn"
-                                      onClick={handleClick}
-                                      data-id={timerSet._id}
-                                      data-action="delete"
-                                  >
-                                      <span className="material-icons">delete</span>
-                                  </button>
-                              </div>
-                              {/* {timerSet.time.hours}:{timerSet.time.minutes}:
-                              {timerSet.time.seconds} */}
-                          </div>
-                      )}
-                  </NavLink>
-              );
+              if (!timerSetStyle) timerSetStyle = "nav-link";
+              return <TimerSetCard timerSet={timerSet} key={timerSet._id} timerSetStyle="link"></TimerSetCard>;
           })
-        : null;
+        : [];
     function toggleDrawer(event) {
         setOpen((prevState) => !prevState);
     }

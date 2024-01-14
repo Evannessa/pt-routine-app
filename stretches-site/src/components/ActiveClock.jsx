@@ -1,5 +1,12 @@
 import React, { useRef } from "react";
 import styled from "styled-components";
+import repeatIcon from "../images/refresh-symbol.png"
+import useSound from "use-sound"
+import bellSound from "../audio/240934__the_very_real_horst__neptun-solo-07-tibetan-singing-bowl.wav"
+import shortBell from "../audio/singing_bowl_short.wav"
+import bellSoundHighPitch from "../audio/271370__inoshirodesign__singing-bowl-strike-sound.mp3"
+import ProgressCircle from "./ProgressCircle";
+
 
 const ButtonWrapper = styled.div`
     display: flex;
@@ -18,24 +25,58 @@ const StyledTimer = styled.div`
     justify-content: space-around;
     height: 100%;
     padding: 1rem;
+    .timer__values{
+        position: relative;
+        /* display: ${props => props.isRep && 'none'}; */
+    }
+    .repeat-wrapper{
+        font-size: small;
+        position: absolute;
+        top: 100%;
+        left: 100%;
+        /* transform: translateY(-100%); */
+        display: grid;
+        grid-template-columns: 100%;
+        grid-template-rows: 100%;
+        align-items: center;
+        justify-items: center;
+        width: 2rem;
+        height: 2rem;
+        img, span{
+            grid-row: 1/2;
+            grid-column: 1/2;
+        }
+        img{
+            object-fit:contain;
+            width: 100%;
+            height: 100%;
+        }
+        span{
+            color:white;
+	        transform: translateY(0.1rem);
+        }
+    }
 `;
 
 export default function ActiveClock(props) {
     const { id } = props;
     const [muted, setMuted] = React.useState(false);
-    const tickSound = useRef();
+    // const bellSound = useAudio("")
     const [time, setTime] = React.useState({
         hours: props.hours,
         minutes: props.minutes,
         seconds: props.seconds,
     });
 
-    const [loopsRemaining, setLoopsRemaining] = React.useState(props.repeatNumber);
+    const [loopsRemaining, setLoopsRemaining] = React.useState(props.repeatNumber - 1);
     const [started, setStarted] = React.useState(false);
     const [paused, setPaused] = React.useState(false);
     // const [atZero, setAtZero] = React.useState(false);
     const token = React.useRef();
 
+    const [playActive] = useSound(shortBell, {volume: 0.25, soundEnabled: props.soundEnabled})
+
+    // update minutes, hours, and seconds accordingly
     function runTime() {
         if (time.seconds === 0) {
             updateTime("minutes", time.minutes - 1);
@@ -47,6 +88,12 @@ export default function ActiveClock(props) {
         //     updateTime("hours", time.hours - 1);
         //     updateTime("minutes", 59);
         // }
+        if( !props.isRep && (time.hours <= 0 && time.minutes <= 0 && time.seconds <= 3)){
+            console.log("Less than three seconds left")
+            playActive()
+        }else if(props.isRep && time.hours <= 0 && time.minutes <= 0 && time.seconds <= 0){
+            playActive()
+        }
         if (time.hours <= 0 && time.seconds <= 0 && time.minutes <= 0) {
             clearTimeout(token.current);
             updateTime("hours", 0);
@@ -92,6 +139,7 @@ export default function ActiveClock(props) {
         }
     }
     function updateTime(propName, newValue) {
+       
         setTime((prevTime) => {
             return {
                 ...prevTime,
@@ -143,14 +191,7 @@ export default function ActiveClock(props) {
         setPaused(false);
         setStarted(true);
     }
-    function playAudio() {
-        if (!muted) {
-            tickSound.current = new Audio("/assets/ticking-clock_1-d7477.mp3");
-            tickSound.current.play();
-            console.log(tickSound.current);
-            // tickSound.current.currentTime = 0;
-        }
-    }
+
 
     const buttonData = {
         stop: {
@@ -183,21 +224,37 @@ export default function ActiveClock(props) {
     }
 
     return (
-        <StyledTimer className="timer">
-            <p>Loops Remaining: {loopsRemaining}</p>
+        <StyledTimer className="timer" isRep={props.isRep}>
+            {/* <ProgressCircle></ProgressCircle> */}
             <div className="timer__values">
-                {props.hours > 0 && (
+                {/* {(time.hours + time.seconds + time.minutes) < 3 && playActive()} */}
+                {loopsRemaining > 0 && 
+                    <div className="repeat-wrapper">
+                        {!props.isRep ? 
+                        <><span>{loopsRemaining}</span>
+                        <img src={repeatIcon}></img>
+                        </> : <span>{String(parseInt(time.seconds))}s</span>
+                        }
+                    </div>
+                }
+                {!props.isRep ? 
+                <>{props.hours > 0 && 
                     <div className="time-value">
                         <h3 className="value">{String(parseInt(time.hours)).padStart(2, 0)}</h3>
                     </div>
-                )}
+                }
                 <div className="time-value">
                     <h3 className="value">{String(parseInt(time.minutes)).padStart(2, 0)}:</h3>
                 </div>
 
                 <div className="time-value">
                     <h3 className="value">{String(parseInt(time.seconds)).padStart(2, 0)}</h3>
-                </div>
+                </div></> : (<div>
+                    <div className="time-value">
+                        <h3 className="value">{String(parseInt(loopsRemaining)).padStart(2, 0)}</h3>
+                    </div>
+                </div>)
+            }
             </div>
             <ButtonWrapper className="btn__wrapper">
                 {!started && !paused && (
@@ -209,6 +266,7 @@ export default function ActiveClock(props) {
                     <button
                         className={`timer__btn ${paused ? "" : "ghost"}`}
                         onClick={paused ? resumeTimer : pauseTimer}
+                        title={paused ? "Continue Timer" : "Pause Timer"}
                     >
                         {paused ? "Continue" : "Pause"}
                     </button>

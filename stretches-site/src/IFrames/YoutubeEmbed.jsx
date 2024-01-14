@@ -31,10 +31,8 @@ function YoutubeEmbed(props) {
         for (let item of replacementMap) {
             const find = item.find;
             const replaceWith = item.replaceWith;
-            console.log(url.replace(find, replaceWith));
             if (url.search(find) > 0) convertedUrl = url.replace(find, replaceWith);
         }
-
         return convertedUrl;
     }
     return (
@@ -45,7 +43,7 @@ function YoutubeEmbed(props) {
                 // height="315"
                 src={convertEmbedLink(props.src)}
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowfullscreen
+                allowFullScreen
             ></iframe>
         </StyledEmbedWrapper>
     );

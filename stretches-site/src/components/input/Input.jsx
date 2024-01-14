@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
+import debounce from "lodash.debounce";
+import throttle from "lodash.throttle"
 import PropTypes from "prop-types";
 import styled, { css } from "styled-components";
 import tf from "../../helpers/formatText";
@@ -6,7 +8,7 @@ import tf from "../../helpers/formatText";
 // #region Styled Components
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
-const StyledInputWrapper = styled.div`
+export const StyledInputWrapper = styled.div`
     display: flex;
     flex-direction: column;
     position: relative;
@@ -15,30 +17,152 @@ const StyledInputWrapper = styled.div`
         order: 2;
         border-color: ${(props) => props.borderColor || "white"};
     }
+    input[type="text"], textarea{
+        height: 100%;
+    }
     label {
         order: 1;
         z-index: 100;
         ${(props) =>
-            props.inputStyle === "floatingLabel" &&
-            css`
+        props.inputStyle === "floatingLabel" &&
+        css`
                 position: absolute;
                 background: white;
-                padding: 0 clamp(0.25rem, 0.5vw + 0.25rem, 0.5rem);
+                padding: 0 clamp(0.15rem, 0.5vw + 0.15rem, 0.2rem);
                 left: 5%;
-                bottom: 80%;
+                /* bottom: 80%; */
+                top: 0;
+                transform: translateY(-50%);
+                white-space:nowrap;
+                font-weight: bold;
+                font-size: small;
             `};
     }
+    ${props => props.inputStyle === "numberSpinner" && css`
+        align-items: center;
+        border: unset;
+        /* border-radius: 999px; */
+        /* border: 1px solid white; */
+        color: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 0.5em;
+        width: 6rem;
+            .number__down, .number__up{
+                background-color: transparent;
+                border: unset;
+                appearance: unset;
+                color: white;
+                width: 1rem;
+                height: 1rem;
+            } 
+        }
+      
+        input{
+            clip: rect(0 0 0 0);
+            clip-path: inset(50%);
+            height: 1px;
+            overflow: hidden;
+            position: absolute;
+            white-space: nowrap;
+            width: 1px;
+        }
+        .number{
+            &__down{
+                order: 3;
+            }
+            &-box{
+                order: 2;
+            }
+            &__up{
+                order: 1;
+            }
+        }
+        label{
+            display: none;
+            white-space: nowrap;
+            font-size: small;
+            opacity: 70%;
+            margin-top: 0.45em;
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translate(-50%);
+        }
+    `};
+    
+	input[type="radio"],
+	input[type="checkbox"] {
+		display: none;
+		position: absolute;
+		overflow: hidden;
+		clip: rect(0 0 0 0);
+		height: 1px;
+		width: 1px;
+		margin: -1px;
+		padding: 0;
+		border: 0;
+
+		&+label {
+			background-color: transparent;
+			border: 1px solid white;
+			padding: 0.5em 1em;
+			text-align: center;
+			border-radius: 9999px;
+			z-index: 10;
+			display: inline-block;
+			vertical-align: middle;
+			display: flex;
+			align-items: center;
+			gap: 0.45rem;
+            span.material-icons{
+                opacity: 20%;
+            }
+
+
+			&:hover {
+				cursor: pointer;
+			}
+
+
+		}
+
+		&:checked {
+			&+label {
+				background-color: hsla(0, 0%, 100%, 0.53);
+				color: hsl(343.4, 79.9%, 29.2%);
+				font-weight: bold;
+                span.material-icons{
+                    opacity: 100%;
+                    display: grid;
+                    place-content: center;
+                    /* align-items: center; */
+                }
+				// color: var(--clr-primary-pink)
+			}
+		}
+	}
+
+	.chip.chip-radio {
+		position: relative;
+	}
+
+
+
 `;
 StyledInputWrapper.displayName = "StyledInputWrapper";
 
+
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
-const StyledInput = styled.input.attrs((props) => ({
+export const StyledInput = styled.input.attrs((props) => ({
     type: props.type,
     id: props.id,
 }))`
     ${(props) =>
         props.inputStyle === "chip" &&
         css`
+
             & + label {
                 background-color: ${(props) => (props.checked ? "cornflowerblue" : "transparent")};
                 color: ${(props) => (props.checked ? "white" : "cornflowerblue")};
@@ -54,7 +178,6 @@ const StyledInput = styled.input.attrs((props) => ({
                 position: absolute;
             }
         `};
-
     ${(props) =>
         props.disabled &&
         css`
@@ -69,9 +192,10 @@ StyledInput.displayName = "StyledInput";
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 // #endregion
 function Input(props) {
-    // @blocksort desc
+
     let {
         // wrapped = true,
+        className = "",
         warningText = "",
         value,
         type,
@@ -79,15 +203,21 @@ function Input(props) {
         parentName = "",
         name,
         id,
+        label,
         icon = null,
         hasLabel = false,
         extraProps = {},
         checked,
         inputStyle,
         style,
+        tooltip,
+        handleBlur,
+        variant
     } = props;
+    label = hasLabel && label ? label : name
     const [isChecked, setIsChecked] = useState(checked);
 
+    /* const [debouncedValue] = (value, 500); */
     useEffect(() => {
         setIsChecked(checked);
     }, [checked]);
@@ -95,14 +225,42 @@ function Input(props) {
     // const InputTag = `${type === "textarea" ? "textarea" : "input"}`;
 
     // const WrapperTag = !wrapped ? "div" : Fragment;
+    function handleClick(event) {
+        let target = event.currentTarget
+        let adjust = event.ctrlKey ? 10 : 1
+        if (target.id == "number__decrement") {
+            adjust *= -1
+        }
+        let passValue = value + adjust
+        setStateFunction(name, passValue, parentName)
+    }
+    const debounceFn = useCallback(throttle(handleDebounceFn, 100), []);
 
+    function handleDebounceFn(name, passValue, parentName) {
+        setStateFunction(name, passValue, parentName)
+    }
+
+    /* const debouncedChangeHandler = useCallback(
+      debounce(handleChange, 300)
+    , []); */
     function handleChange(event) {
         let { value, checked, type } = event.currentTarget;
         let passValue = type === "checkbox" ? checked : value;
-        setStateFunction(name, passValue, parentName);
+        debounceFn(name, passValue, parentName)
+        /* setStateFunction(name, passValue, parentName); */
     }
+    /* function handleBlur(event){
+        if(props.handleBlur){
+            props.handleBlur(event)
+        }
+    } */
     return (
-        <StyledInputWrapper inputStyle={inputStyle} style={{ ...style }}>
+        <StyledInputWrapper
+            inputStyle={inputStyle}
+            style={{ ...style }}
+            className={className}
+            title={tooltip}
+        >
             <StyledInput
                 as={type === "textarea" ? "textarea" : "input"}
                 className="input-label-overlay"
@@ -115,15 +273,33 @@ function Input(props) {
                 {...extraProps}
                 checked={isChecked}
                 disabled={props.disabled}
+                /* onChange={handleChange} */
                 onChange={handleChange}
+                onBlur={handleBlur}
                 style={{ ...style }}
+                title={tooltip}
             ></StyledInput>
+            {(type == "number" && inputStyle == "numberSpinner") && <>
+                <div className="number-box">
+                    <span>{value}</span>
+                </div>
+              
+                <button type="button" className="number__down" onClick={handleClick} id="number__decrement">
+                    <span className="material-symbols-outlined">stat_minus_1</span>
+                </button>
+                <button type="button" className="number__up" onClick={handleClick} id="number__increment">
+                    <span className="material-symbols-outlined">stat_1</span>
+                </button>
+            </>}
             {hasLabel && (
                 <label htmlFor={type === "radio" ? value : id}>
-                    {icon && <span className="material-icons">{icon}</span>}
+                    {/*variant === "showCheck" && <span className="custom-check"></span>*/}
+                    {icon && <span className="material-icons">
+                        {variant === "showCheck" ? `${checked ? "check_circle" : "circle"}` : icon}
+                    </span>}
                     {type === "radio"
                         ? tf.capitalizeFirstLetter(tf.camelCaseToWords(value))
-                        : tf.capitalizeFirstLetter(tf.camelCaseToWords(name))}
+                        : tf.capitalizeFirstLetter(tf.camelCaseToWords(label))}
                 </label>
             )}
             <span className="validation warning" style={{ position: "absolute", left: "110%", color: "red" }}>
