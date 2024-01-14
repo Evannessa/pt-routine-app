@@ -13,6 +13,12 @@ const textFormatter = (() => {
     function capitalizeFirstLetter(string) {
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
+    function capitalizeWords(string){
+        const words = string.split(" ");
+        return words.map((word) => { 
+            return word[0].toUpperCase() + word.substring(1); 
+        }).join(" ");
+    }
     function firstLetterOfEachWord(string, number=1){
         let rgx = new RegExp(/\b(\w)/, 'g');
         let initials = [...string.matchAll(rgx)] || [];
@@ -37,6 +43,7 @@ const textFormatter = (() => {
         return initials
     }
     return {
+        capitalizeWords,
         camelCaseToWords,
         capitalizeFirstLetter,
         firstLetterOfEachWord,

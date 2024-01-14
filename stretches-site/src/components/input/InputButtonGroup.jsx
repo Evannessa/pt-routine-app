@@ -3,8 +3,9 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { StyledInputWrapper } from './Input';
 
-const StyledInputButtonGroup = styled.div`
-   position: relative;
+export const StyledInputButtonGroup = styled.div`
+    width: fit-content;
+    position: relative;
     background-color: white;
     border-radius: 5px;
     display: flex;

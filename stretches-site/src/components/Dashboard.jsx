@@ -1,6 +1,6 @@
 import { Route, Routes, Outlet, useNavigate, Switch, useParams, useLocation } from "react-router-dom";
 import UploadModal from "./UploadModal";
-import InputButtonGroup from "./input/InputButtonGroup";
+import InputButtonGroup, {StyledInputButtonGroup} from "./input/InputButtonGroup";
 import Input, { StyledInputWrapper } from "./input/Input";
 import React, { useState, useEffect, useContext } from "react";
 import { Container } from "./styled-components/layout.styled";
@@ -404,9 +404,7 @@ function Dashboard(props) {
             }
             {showGalleryModal && (
                         <UploadModal
-                            // parentId={props.id}
-                            // slideImagePath={props.slideImagePath}
-                            // updateTimerData={updateTimerData}
+                            isGlobal={true}
                             closeCallback={() =>
                                 setShowGalleryModal(false)
                             }
@@ -435,7 +433,7 @@ function Dashboard(props) {
                             </ButtonWrapper>
                             {showEmbed && <InputButtonGroup>
                                 <Input type="text" name="youtubeEmbed" inputStyle="floatingLabel" label="Youtube Embed" hasLabel={true} setStateFunction={setEmbeds} style={{borderColor: theme.color1}}></Input>
-                                <ButtonWithIcon type="contained" icon="save" onClick={(event)=> saveDefaultEmbeds("youtubeEmbed")} title="Save Timer Sets to local storage">
+                                <ButtonWithIcon type="contained" icon="save" onClick={(event)=> saveDefaultEmbeds("youtubeEmbed")} title="Save defaulut YouTube embed">
                                 </ButtonWithIcon>
                             </InputButtonGroup>}
                         </DashboardHeader>

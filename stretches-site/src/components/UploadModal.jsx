@@ -16,22 +16,18 @@ const StyledImgThumbnail = styled.li`
     align-self: stretch;
     list-style-type: none;
     box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
-    /* max-width: 5rem; */
-    /* height: auto; */
+
     grid-row: span 2;
     object-fit: contain;
  
-    /* background-color: hsl(0, 2%, 95%); */
-    /* box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 4px 0px inset; */
-    /* border: 1px solid; */
-    /* overflow: hidden; */
-    /* border-color: ${(props) => props.theme.color2}; */
+   
     background-color: hsl(0, 0%, 92.5%);
     border-radius: 5px;
     cursor: pointer;
     border: ${props => props.isCurrent && `2px solid ${props.theme.color2}`};
     position: relative;
     .thumbnailHeader{
+        display: flex;
         position: absolute;
         top: 0;
         left: 0;
@@ -43,16 +39,21 @@ const StyledImgThumbnail = styled.li`
         overflow :hidden;
         p{
             color: black;
-            /* white-space: nowrap; */
+            overflow: hidden;
+            white-space: nowrap;
             text-overflow: ellipsis;
             text-align: center;
             font-size: small;
+        }
+        button:first-of-type{
+            margin-left: auto;
         }
     }
     &:hover, &:focus {
         outline: 2px solid pink;
         .thumbnailHeader{
             transform: scaleY(1);
+            padding-inline: 0.5rem;
         }
     }
 
@@ -93,10 +94,11 @@ const StyledUploadModal = styled(StyledModal)`
     width: 80%;
     height: 60vh;
     @media ${device.laptop}{
-        top: 60%;
+        top: ${props => props.isGlobal ? "50%" : "60%"};
         width: 60%;
-        height: 110%;
-
+        /* height: 110%; */
+        height: ${props => props.isGlobal ? "90%" : "110%"};
+        ${props => props.isGlobal && "transform: translate(-50%, -50%)"};
     }
     .close-button{
         grid-row:1/2;
@@ -153,10 +155,12 @@ function UploadModal(props) {
         requests.axiosRequest(options);
     }, []);
 
-    imagePaths && console.log(props.slideImagePath, imagePaths[0])
+    // imagePaths && console.log(props.slideImagePath, imagePaths[0])
 
     function selectImage(event) {
-        const src = event.currentTarget.getAttribute("src");
+        
+        const src = event.currentTarget.dataset.src // getAttribute("src");
+        // console.log(event.currentTarget)
         const baseName = "/uploads/PT/" + src.split("/").pop();
 
         props.updateTimerData("slideImagePath", baseName);
@@ -167,18 +171,21 @@ function UploadModal(props) {
         ? imagePaths.map((str) => <StyledImgThumbnail
             key={nanoid()}
             onClick={selectImage}
-            // alt={str}
+            data-src={`${urlBaseNoApi}/uploads/PT${str}`}
             title={str}
-            isCurrent={props.slideImagePath.includes(str)}
+            isCurrent={(props.slideImagePath && props.slideImagePath.includes(str)) || false}
             >
                 <div className="thumbnailHeader">
-                   <p>{textFormatter.readableFileName(str)}</p> 
+                   <p>{textFormatter.capitalizeWords(textFormatter.readableFileName(str))}</p> 
+                    {/* <ButtonWithIcon icon="favorite"/>                    */}
+                    {/* <ButtonWithIcon icon="delete"/>                    */}
                 </div>
                 <img src={`${urlBaseNoApi}/uploads/PT${str}`} alt={str}/>
+
             </StyledImgThumbnail>)
         : [];
 
-    return <StyledUploadModal>
+    return <StyledUploadModal isGlobal={props.isGlobal}>
         <ButtonWithIcon
         className="close-button"
             color="slategray"
@@ -190,7 +197,7 @@ function UploadModal(props) {
         </ButtonWithIcon>
         <header>
             <h2>Uploaded Images</h2>
-            <h3>Click to change image for this Exercise</h3>
+            <h3>{props.isGlobal ? "Manage exercise images" : "Click to change image for this Exercise"}</h3>
         </header>
         <StyledScrollShadow>
             {imagePaths && <ImageList>{imageElements}</ImageList>}
