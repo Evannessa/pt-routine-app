@@ -23,13 +23,13 @@ const SlideWrapper = styled.section`
         max-height: 250px;
         margin: 2vh;
         display: grid;
-        grid-template-rows: 100%;
+        grid-template-rows: 90% 1fr;
         grid-template-columns: 100%;
         align-items: center;
         justify-content: center;
         justify-items: center;
         border-radius: 12px;
-        overflow: hidden;
+        /* overflow: hidden; */
         .slide {
             background-color: ${props => props.theme.dark};
             /* margin: 2vh; */
@@ -38,17 +38,22 @@ const SlideWrapper = styled.section`
             margin: unset;
             grid-row: 1/2;
             grid-column: 1/2;
+            border-bottom-left-radius: unset;
+            border-bottom-right-radius: unset;
         }
         p {
             align-self: end;
             width: 100%;
             text-align: center;
+            vertical-align: middle;
             background-color: ${props => props.theme.dark};//hsla(267deg, 100%, 7.6%, 0.1);
             /* background-color: hsla(323, 72.3%, 12.7%, 0.64); */
-            grid-row: 1/2;
+            grid-row: 2/3;
             grid-column: 1/2;
             padding: 0.5em;
             z-index: 20;
+            border-bottom-left-radius: 12px;
+            border-bottom-right-radius: 12px;
         }
   
 `;
