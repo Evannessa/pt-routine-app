@@ -18,6 +18,8 @@ import { ButtonWithIcon } from "./styled-components/Buttons.Styled";
 import { nanoid } from "nanoid";
 import { getPlaceholderImage, placeholderImages } from "./Images";
 import ActiveTimerWrapper from "./ActiveTimerWrapper";
+import hourglassPrimary from "../images/hourglass_fill_0.png"
+import hourglassSecondary from "../images/hourglass_fill_3.png"
 /* #region   Styled Components */
 
 /** Header, which will contain details from timer set */
@@ -200,8 +202,7 @@ export default function ActiveTimerDisplay() {
             isAutoBreak: true,
             isRep: false,
             repeatNumber: 0,
-            slideImagePath: placeholderImages[0]
-            // slideImagePath: `${urlBase}${placeholderImages[0]`//"" //`${urlBase}${getPlaceholderImage()}`
+            slideImagePath: hourglassSecondary
         }
         for(let timer of timers){
             timersWithBreaks.push(timer)
