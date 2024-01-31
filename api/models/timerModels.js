@@ -33,6 +33,7 @@ const TimerSchema = new mongoose.Schema({
         default: false,
     }
 });
+
 const TimerSetSchema = new mongoose.Schema({
     label: {
         type: String,
