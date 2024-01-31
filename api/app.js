@@ -5,7 +5,6 @@ const express = require("express");
 
 const app = express();
 
-// require("express-async-errors");
 const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
@@ -14,6 +13,7 @@ const path = require("path");
 const mongoSanitize = require("express-mongo-sanitize");
 
 const createError = require("http-errors");
+
 const xss = require("xss-clean");
 
 // TODO: Add this back in later
@@ -22,11 +22,10 @@ const xss = require("xss-clean");
 
 // const session = require('express-session')
 // var indexRouter = require("./routes/index");
-const authRouter = require("./routes/authRoutes");
-const userRouter = require("./routes/userRoutes");
+// const authRouter = require("./routes/authRoutes");
+// const userRouter = require("./routes/userRoutes");
 const factoryRouter = require("./routes/factoryRoutes");
 const displayRouter = require("./routes/displayRoutes");
-// const authRouter = require("./routes/authRoutes");
 
 const connectDB = require("./db/connect");
 
@@ -63,11 +62,7 @@ app.use(cookieParser(process.env.JWT_SECRET));
 app.use(morgan("dev"));
 app.use(express.json());
 
-
-
-// app.use('/uploads', express.static(path.join(__dirname, 'public')))
-
-app.use(fileUpload()); //! HAD TO PUT THIS BEFORE THE APP.USE() ROUTER
+app.use(fileUpload()); 
 
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.static(path.join(__dirname, "public/uploads")));

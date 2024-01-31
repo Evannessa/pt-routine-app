@@ -58,7 +58,6 @@ export const requests = (function () {
         if (!options.baseURL)
             options.baseURL = urlBase;
 
-
         //destructure the pathsArray and setStateCallback to be used elsewhere
         let { pathsArray, setStateCallback } = options;
 
@@ -72,11 +71,9 @@ export const requests = (function () {
         }
         delete options.pathsArray;
         options.url = url;
-        // console.log("Our options are now", options)
 
         //delete the setStateCallback from the object too
         delete options.setStateCallback;
-        //TODO: Refactor this to use "transformRequest"
 
         axios(options)
             .then((response) => {

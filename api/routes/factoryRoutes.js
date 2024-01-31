@@ -7,11 +7,9 @@ const {
     updateSet,
     deleteSet,
     getBlankSet,
-    updateAllSets,
 } = require("../controllers/timersController");
 
-const { uploadImage, getAllUploads, getImage } = require("../controllers/uploadsController");
-
+const { uploadImage, getAllUploads} = require("../controllers/uploadsController");
 
 router.route("/").get(getAllSets); 
 router.route("/new").get(getBlankSet).post(createNewSet);

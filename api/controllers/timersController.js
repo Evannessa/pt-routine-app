@@ -189,17 +189,10 @@ async function createDefaultTimers(number) {
 const createNewSet = async (req, res) => {
     //pass the body  into the response
     const blank = await returnBlankSet()
-    console.log("Blank set is", blank)
     try {
         const set = await TimerSet.create(blank);
-        // const _newTimer = createNewTimer(true)
-        // console.log(_newTimer)
-        // set._doc.timers.push({ ..._newTimer })
-        // const set = await TimerSet.create(req.body);
-        console.log("Set is", { ...set })
         res.status(201).send({ document: set });
     } catch (error) {
-        // console.log(error);
         res.status(500).json({ msg: error });
     }
 };
@@ -211,7 +204,7 @@ const getSingleSet = async (req, res, next) => {
 
 const updateSet = async (req, res) => {
     const singleSet = await updateSingle(TimerSet, req, res)
-    return singleSet//updateSingle(TimerSet, req);
+    return singleSet
 };
 
 const deleteSet = async (req, res, next) => {
