@@ -3,6 +3,7 @@ export const mockEmbedUrls = {
     youtubeEmbed: "https://www.youtube.com/watch?v=rN89z5LqFH8",
     spotifyEmbed: ""
 }
+
 const anywhereExercises = {
   "_id": "any-stretch", 
   "label": "PT Timer - Anywhere",
