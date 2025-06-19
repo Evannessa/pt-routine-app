@@ -58,8 +58,6 @@ export class Routine extends TimeElement {
     youtubeLink: string;
 
     spotifyLink: string;
-
-
     autoBreakTimer: Timer = new Timer({
         label: "Break",
         description: "Take a few moments to rest",
@@ -72,10 +70,6 @@ export class Routine extends TimeElement {
         isBreak: true,
         isAutoBreak: true,
     });
-    slideImagePath: string;
-    description: string;
-    autostart: boolean;
-
     autoBreakTime: Time = {
         hours: 0,
         minutes: 0,
