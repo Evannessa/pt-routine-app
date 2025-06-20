@@ -1,3 +1,4 @@
+import { nanoid } from "nanoid"
 export interface Time {
     hours: number,
     minutes: number,
@@ -5,6 +6,7 @@ export interface Time {
 }
 
 export interface TimeElementOptions {
+    _id: string
     label: string,
     slideImagePath: string,
     description: string,
@@ -14,6 +16,8 @@ export interface TimeElementOptions {
 }
 
 export class TimeElement {
+
+    _id: string
     label: string // the label of the routine or exercise
     slideImagePath: string  // path of the image that will appear/represent this routine or exercise 
     description: string
@@ -21,6 +25,7 @@ export class TimeElement {
     repeatNumber: number // how many times does this repeat 
 
     constructor(options: TimeElementOptions) {
+        this._id = options._id || nanoid() 
         this.label = options.label || ""
         this.description = options.description || ""
         this.slideImagePath = options.slideImagePath || ""
@@ -59,6 +64,7 @@ export class Routine extends TimeElement {
 
     spotifyLink: string;
     autoBreakTimer: Timer = new Timer({
+        _id: nanoid(),
         label: "Break",
         description: "Take a few moments to rest",
         slideImagePath: "",
