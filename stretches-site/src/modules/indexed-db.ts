@@ -46,7 +46,7 @@ export class IndexedDBHelper {
                         storeName,
                         options ? options :
                             {
-                                keyPath: 'id',
+                                keyPath: '_id',
                                 autoIncrement: true
                             }
                     );
@@ -62,13 +62,65 @@ export class IndexedDBHelper {
         }
         );
     }
+    //get a single item from the indicated ObjectStore
     async getItemFromStore(storeName: string, query: string) {
         const db = await openDB(this.dbName, this.version);
         const value = await db.get(storeName, query);
-
         console.dir(value);
         return value
     }
+    // get all items from the indicated ObjectStore
+    async getAllItemsFromStore(storeName: string) {
+        const db = await openDB(this.dbName, this.version);
+        // Get all values from the designated object store:
+        const allValues = await db.getAll(storeName);
+        console.dir(allValues);
+        return allValues
+    }
+
+    // update multiple items
+    async updateItemsInStore(storeData: DBStoreData, values: Object[]) {
+        await this.modifyStoreItems(storeData, values, 'update')
+    }
+
+    // update a single item
+    async updateItemInStore(storeName: string) {
+        const db = await openDB(this.dbName, this.version);
+        // Update a value from in an object store with an inline key:
+        await db.put(storeName, { inlineKeyName: 'newValue' });
+
+        // Update a value from in an object store with an out-of-line key.
+        // In this case, the out-of-line key value is 1, which is the
+        // auto-incremented value.
+        //   await db.put(storeName, { field: 'value' }, 1);
+    }
+
+    //delete a single item
+    async deleteItemFromStore(storeName: string, primaryKey: string) {
+        const db = await openDB(this.dbName, this.version);
+        // Delete a value 
+        await db.delete(storeName, primaryKey);
+    }
+
+    // delete multiple items from the indicated ObjectStore
+    async deleteItemsFromStore(storeData: DBStoreData, values: string[]) {
+
+        await this.modifyStoreItems(storeData, values, 'delete')
+        // const db = await openDB(this.dbName, this.version);
+        // Create a transaction on the 'foods' store in read/write mode:
+
+        // // Update a value from in an object store with an inline key:
+        // await db.put(storeName, { inlineKeyName: 'newValue' });
+        // const tx = db.transaction(storeName, 'readwrite');
+
+        // // Delete multiple items from the 'foods' store in a single transaction:
+        // await Promise.all([
+        //     tx.store.delete('Sandwich'),
+        //     tx.store.delete('Eggs'),
+        //     tx.done
+        // ]);
+    }
+
 
 
     // indexes are a kind of object store used to retrieve data from the referenced object store by a specified property
@@ -89,21 +141,53 @@ export class IndexedDBHelper {
         const db: IDBPDatabase<unknown> = await openDB(this.dbName, this.version);
         await db.add(storeName, value)
     }
+
+    //!Caution: When updating a row in an object store, IndexedDB doesn't perform a diff on the data you're updating. For example, if you use .add() to add a new row, then update that value later with .put(), it erases any fields in the original value that aren't in the new value.
+    async modifyStoreItems(storeData: DBStoreData, values: Object[] | string[], operation: 'add' | 'update' | 'delete') {
+        // create the store if it doesn't exist
+        const { storeName } = storeData
+        if (operation === 'add' || operation === 'update') this.createStoreInDB(storeData)
+        const db: IDBPDatabase<unknown> = await openDB(this.dbName, this.version)
+        //create a transaction on the passed-in store in read/write mode
+        const tx = db.transaction(storeName, 'readwrite')
+
+        const promises: (Promise<IDBValidKey> | Promise<void>)[] = values.map((value) => {
+            if (operation === 'add') {
+                return tx.store.add(value)
+            } else if (operation === "update") {
+                return tx.store.put(value)
+            } else if (operation === "delete" && typeof value === "string") {
+                return tx.store.delete(value)
+            }
+            return tx.store.add(value)
+        }
+        )
+
+        try {
+            await Promise.all([...promises, tx.done])
+        } catch (error: any) {
+            if (error.name === 'ConstraintError') {
+                console.dir(error)
+                console.warn("Such entry with id exists already")
+                // await addBook();
+            } else {
+                throw error;
+            }
+
+        }
+    }
+
     async addItemsToStore(storeData: DBStoreData, values: Object[]) {
-        // create the
+        this.modifyStoreItems(storeData, values, 'add')
+    }
+
+    async _addItemsToStore(storeData: DBStoreData, values: Object[]) {
+        // create the store if it doesn't exist
         const { storeName } = storeData
         this.createStoreInDB(storeData)
         const db: IDBPDatabase<unknown> = await openDB(this.dbName, this.version)
-        // const db: IDBPDatabase<unknown> = await openDB(this.dbName, this.version, {
-        //     upgrade(db) {
-        //         if (!db.objectStoreNames.contains(storeName)) {
-        //             db.createObjectStore(storeName, { keyPath: "id", autoIncrement: true});
-        //         }
-        //     }
-        // });
 
         //create a transaction on the passed-in store in read/write mode
-        console.log("Pre transaction")
         const tx = db.transaction(storeName, 'readwrite')
 
         const promises: Promise<IDBValidKey>[] = values.map((value) =>

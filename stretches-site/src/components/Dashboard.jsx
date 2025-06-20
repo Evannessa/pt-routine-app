@@ -148,6 +148,7 @@ function Dashboard(props) {
     const params = useParams();
     const location = useLocation(); //location in url
     const user = { role: "admin" }
+    const useLocalDB = true
     const db = new IndexedDBHelper('routine-app', 1.1)
     // const { user } = useGlobalContext();
     const theme = useContext(ThemeContext)
@@ -211,27 +212,27 @@ function Dashboard(props) {
         }
     }
 
-    function createDefaultDataInDB(){
-  console.log("Creating new from indexedDB")
+    function createDefaultDataInDB() {
+        console.log("Creating new from indexedDB")
         // const db = new IndexedDBHelper('routine-app', 1.1)
         const storeData = new DBStoreData(
-            'routines', 
+            'routines',
             [
-                {indexName: "label", options: {unique: false}}, 
-                { indexName: 'timers', options:{unique: false, multiEntry: true}},
-                {indexName: "youtubeLink", options: {unique: false}}, 
-                {indexName: "spotifyLink", options: {unique: false}}, 
-                {indexName: "repeatNumber", options: {unique: false}},
+                { indexName: "label", options: { unique: false } },
+                { indexName: 'timers', options: { unique: false, multiEntry: true } },
+                { indexName: "youtubeLink", options: { unique: false } },
+                { indexName: "spotifyLink", options: { unique: false } },
+                { indexName: "repeatNumber", options: { unique: false } },
 
             ],
             {
-                keyPath: "id"
+                keyPath: "_id"
             }
         )
         db.createStoreInDB(storeData)
         db.addItemsToStore(storeData, [
             {
-                "id": "seated-exercises",
+                "_id": "seated-exercises",
                 "label": "PT Timer - Seated",
                 "timers": [
                     {
@@ -330,7 +331,7 @@ function Dashboard(props) {
                 "repeatNumber": 1,
             },
             {
-                "id": "wall-exercises",
+                "_id": "wall-exercises",
                 "label": "PT Timer - Wall",
                 "timers": [
                     {
@@ -384,7 +385,7 @@ function Dashboard(props) {
                 "repeatNumber": 1,
             },
             {
-                "id": "floor-exercises",
+                "_id": "floor-exercises",
                 "label": "PT Timer - Floor",
                 "timers": [
                     {
@@ -550,11 +551,13 @@ function Dashboard(props) {
     async function getFromIndexedDB() {
         // const dbName = "routine-app"
         const isExisting = (await window.indexedDB.databases()).map(db => db.name).includes(db.dbName);
-        if(!isExisting){
+        if (!isExisting) {
             createDefaultDataInDB()
         }
         db.getItemFromStore("routines", 'seated-exercises')
-      
+        const routines = await db.getAllItemsFromStore("routines")
+        console.log(routines)
+        setTimerSets(routines);
     }
 
 
@@ -577,7 +580,10 @@ function Dashboard(props) {
             timerSets,
             embedUrls
         }
-        localStorage.setItem("defaultRoutineData", JSON.stringify(defaultRoutineData));
+        if(this.useLocalDB){
+
+        }
+        // localStorage.setItem("defaultRoutineData", JSON.stringify(defaultRoutineData));
     }
     function updateTimerSets(response) {
         if (response != null) {
