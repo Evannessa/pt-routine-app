@@ -13,6 +13,7 @@ export default function TimerFactory(props) {
     });
     const [saved, setSaved] = React.useState(false);
 
+    console.log(timerSets)
     //for when something in the form changes
     function handleChange(event) {
         let { name, value, type, checked } = event.target;

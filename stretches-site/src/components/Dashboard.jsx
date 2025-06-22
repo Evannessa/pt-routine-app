@@ -150,6 +150,22 @@ function Dashboard(props) {
     const user = { role: "admin" }
     const useLocalDB = true
     const db = new IndexedDBHelper('routine-app', 1.1)
+    let routineStoreData = new DBStoreData( 'routines',
+            [
+                { indexName: "label", options: { unique: false } },
+                { indexName: 'timers', options: { unique: false, multiEntry: true } },
+                { indexName: "youtubeLink", options: { unique: false } },
+                { indexName: "spotifyLink", options: { unique: false } },
+                { indexName: "repeatNumber", options: { unique: false } },
+
+            ],
+            {
+                keyPath: "_id"
+            })
+    // let embedStoreData = new DBStoreData('defaultEmbeds', [
+    //         spotifyEmbed: "",
+    //         youtubeEmbed: ""
+    // ])
     // const { user } = useGlobalContext();
     const theme = useContext(ThemeContext)
     const inDisplayMode = location.pathname.includes("display") || location.pathname.includes("factory")
@@ -180,24 +196,15 @@ function Dashboard(props) {
     useEffect(() => {
         getFromIndexedDB()
         // getFromLocalStorage()
-        // let storedData = localStorage.getItem("defaultRoutineData");
-        // if (storedData && storedData !== "undefined") {
-        //     setTimerSets(JSON.parse(storedData.timerSets));
-        //     setEmbedUrls(JSON.parse(storedData.embedUrls))
-        // } else {
-        //     setTimerSets(mockTimerSets);
-        //     setEmbedUrls(mockEmbedUrls)
-        // }
+      
     }, []);
 
     // save our timer sets if we have saved them before
     useEffect(() => {
         //if we have saved our timer sets before, save them again
         // saveToLocalStorage()
-        // let storedData = localStorage.getItem("defaultRoutineData");
-        // if (storedData && storedData !== "undefined") {
-        //     onSave()
-        // }
+        saveToIndexedDB()
+      
     }, [timerSets, embedUrls]);
 
     // get default routine data from local storage
@@ -323,7 +330,7 @@ function Dashboard(props) {
                         "isBreak": false,
                         "isAutoBreak": false,
                         "repeatNumber": 2,
-                        "_id": "cat-cow"
+                        "_id": "cat-cow1"
                     }
                 ],
                 "youtubeLink": "",
@@ -522,22 +529,8 @@ function Dashboard(props) {
                         "isAutoBreak": false,
                         "repeatNumber": 4,
                         "_id": "cat-cow"
-                    },
-                    {
-                        "time": {
-                            "seconds": 0,
-                            "minutes": 1,
-                            "hours": 0
-                        },
-                        "label": "Cat Cow",
-                        "slideImagePath": "/uploads/PT/cat_cow_2.jpg",
-                        "description": "Cat Cow",
-                        "autostart": true,
-                        "isBreak": false,
-                        "isAutoBreak": false,
-                        "repeatNumber": 2,
-                        "_id": "cat-cow"
                     }
+                  
                 ],
                 "youtubeLink": "",
                 "spotifyLink": "",
@@ -554,16 +547,18 @@ function Dashboard(props) {
         if (!isExisting) {
             createDefaultDataInDB()
         }
-        db.getItemFromStore("routines", 'seated-exercises')
+        // db.getItemFromStore("routines", 'seated-exercises')
         const routines = await db.getAllItemsFromStore("routines")
-        console.log(routines)
+        // console.log(routines)
         setTimerSets(routines);
     }
 
 
     // save default routine data from indexedDB
-    function saveToIndexedDB() {
-
+    async function saveToIndexedDB() {
+        if(timerSets){
+            await db.updateItemsInStore(routineStoreData, timerSets)
+        }
     }
 
     // save default routine data to local storage
@@ -580,7 +575,8 @@ function Dashboard(props) {
             timerSets,
             embedUrls
         }
-        if(this.useLocalDB){
+        if (this.useLocalDB) {
+            saveToIndexedDB()
 
         }
         // localStorage.setItem("defaultRoutineData", JSON.stringify(defaultRoutineData));
@@ -606,8 +602,45 @@ function Dashboard(props) {
             };
             await requests.axiosRequest(options);
         } else {
+            // if not an admin and using the IndexedDB
             console.log("Not admin");
+            if (useLocalDB) {
+                let id = nanoid()
+                await db.addItemToStore("routines", createDefaultRoutine(id))
+                navigateToFactory(id)
+            }
         }
+    }
+    function createDefaultTimers(number) {
+        let timers = [];
+        for (let i = 0; i < number; i++) {
+            const data = {
+                _id: nanoid(),
+                label: "New Timer",
+                time: {
+                    seconds: 0,
+                    minutes: 0,
+                    hours: 0,
+                },
+                slideImagePath: "",
+            }
+            timers.push(data)
+            return timers;
+        }
+    }
+
+    function createDefaultRoutine(id) {
+        let defaultRoutine = {
+            _id: id,
+            label: "New Timer Set",
+            timers:
+                createDefaultTimers(3)
+            ,
+            youtubeLink: "",
+            spotifyLink: "",
+            repeatNumber: 1,
+        }
+        return defaultRoutine
     }
 
     function getTimerSets() {
@@ -619,7 +652,12 @@ function Dashboard(props) {
             };
             requests.axiosRequest(options);
         } else {
-            console.log("Can't get sets -- not admin");
+            if (useLocalDB) {
+                db.getAllItemsFromStore('routines')
+                // get
+            } else {
+                console.log("Can't get sets -- not admin");
+            }
         }
     }
 
@@ -669,6 +707,7 @@ function Dashboard(props) {
         navigate(`/dashboard/`);
     }
 
+    // hide the delete prompt
     function cancelShowDeletePrompt() {
         setShowDeletePrompt(prevValue => {
             return {
@@ -678,6 +717,7 @@ function Dashboard(props) {
             }
         })
     }
+    // show a prompt that asks for confirmation to delete
     function toggleShowDeletePrompt(id) {
         setShowDeletePrompt(prevValue => {
             return {
@@ -688,15 +728,19 @@ function Dashboard(props) {
         })
     }
 
-    function deleteSet(id) {
+    async function deleteSet(id) {
         console.log("Test. Will delete", id)
-        let options = {
-            method: "DELETE",
-            pathsArray: ["factory", id],
-            setStateCallback: getTimerSets,
-        };
-        requests.axiosRequest(options);
-        cancelShowDeletePrompt()
+        if (!useLocalDB) {
+            let options = {
+                method: "DELETE",
+                pathsArray: ["factory", id],
+                setStateCallback: getTimerSets,
+            };
+            requests.axiosRequest(options);
+            cancelShowDeletePrompt()
+        } else {
+            await db.deleteItemFromStore("routines", id)
+        }
     }
     const updateSets = async function (action, id) {
         // console.log("Doing " + action + " to " + id);

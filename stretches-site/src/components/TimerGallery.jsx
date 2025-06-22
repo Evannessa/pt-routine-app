@@ -1,4 +1,5 @@
 import React, { useCallback, useState } from "react";
+import { IndexedDBHelper, DBStoreData } from "../modules/indexed-db";
 import throttle from "lodash.throttle";
 import PreviewTimer from "./PreviewTimer";
 import { placeholderImages, getPlaceholderImage } from "./Images";
@@ -58,8 +59,10 @@ export default function TimerGallery(props) {
 
 
     const [timerSets, getTimerSets, embedUrls, user] = useOutletContext();
+    const db = new IndexedDBHelper('routine-app', 1.1)
     // const user = {role: "admin"}
     // let { timerSets, getTimerSets } = props;
+    const useLocalDB = true
     const { theme, updateTheme } = React.useContext(ThemeContext);
     const observer = React.useRef(); //intersection Observer
     const childRefs = React.useRef([]); //the references to all timer objects
@@ -76,7 +79,7 @@ export default function TimerGallery(props) {
     const [uiToggles, setUiToggles] = useState({
         sortMode: false,
         showAutoBreak: false,
-        
+
     })
     const navigate = useNavigate();
 
@@ -101,7 +104,7 @@ export default function TimerGallery(props) {
             onSubmit: linkYoutube,
         },
     ];
-    const isTablet = useMediaQuery({ query: device.tablet})
+    const isTablet = useMediaQuery({ query: device.tablet })
 
 
     /**
@@ -120,19 +123,30 @@ export default function TimerGallery(props) {
      * Get timer set with this id
      */
     React.useEffect(() => {
-        const getTimerSet = async () => {
-            // if(user && user.role == "admin"){
+
+        if (!useLocalDB) {
+            const getTimerSet = async () => {
+                // if(user && user.role == "admin"){
                 let options = {
                     method: "GET",
                     pathsArray: ["factory", id],
                     setStateCallback: updateTimerSet,
                 };
-            await requests.axiosRequest(options);
-        };
-        getTimerSet();
-        return () => {};
+                await requests.axiosRequest(options);
+            };
+            getTimerSet();
+        } else {
+            const getTimerSet = async () => {
+                // if(user && user.role == "admin"){
+                const routine = await db.getItemFromStore("routines", id)
+                // console.log(routines)
+                updateTimerSet(routine);
+            };
+            getTimerSet()
+        }
+        return () => { };
     }, [id]);
-   
+
 
     //when timer data changes, update the entire set of timers timer
     React.useEffect(() => {
@@ -237,14 +251,14 @@ export default function TimerGallery(props) {
      * @param {id} id = the id of the timer we're updating
      */
     function updateSpecificTimer(data, id) {
-      /*   console.log(
-            "Updating",
-            data,
-            formData.timers?.filter((timer) => timer._id === id).pop()
-        );
-        console.log({
-            timers: formData.timers?.map((timer)=> timer._id === id ? {...timer, ...data} : timer)
-        }) */
+        /*   console.log(
+              "Updating",
+              data,
+              formData.timers?.filter((timer) => timer._id === id).pop()
+          );
+          console.log({
+              timers: formData.timers?.map((timer)=> timer._id === id ? {...timer, ...data} : timer)
+          }) */
         setFormData((prevFormData) => {
             return {
                 ...prevFormData,
@@ -260,8 +274,8 @@ export default function TimerGallery(props) {
      * @param {String} property - the name of the property we're toggling
      * @param {*} value - the value we're changing the property to
      */
-    function updateUiToggles(property, value){
-        setUiToggles((prevValue)=> {
+    function updateUiToggles(property, value) {
+        setUiToggles((prevValue) => {
             return {
                 ...prevValue,
                 [property]: value
@@ -290,8 +304,8 @@ export default function TimerGallery(props) {
 
         //remove it from timer data after a bit
         let filteredTimers = formData.timers.filter(timer => timer._id !== id)
-        setTimeout(()=> updateFormData("timers", [...filteredTimers]), 100);
-            // updateFormData("timers", [...formData.timers.filter((timer) => timer._id !== id)]),
+        setTimeout(() => updateFormData("timers", [...filteredTimers]), 100);
+        // updateFormData("timers", [...formData.timers.filter((timer) => timer._id !== id)]),
         // );
     }
 
@@ -325,34 +339,34 @@ export default function TimerGallery(props) {
      */
     const actionData = [
         ActionFactory(
-            "startRoutine", 
-            "play_circle", 
-            ()=> navigateToDisplay(),
+            "startRoutine",
+            "play_circle",
+            () => navigateToDisplay(),
             "Start the Routine"
         ),
         ActionFactory(
             "addMediaLink",
             "add_link",
-            ()=> {
-                setShowModal({isOpen: true, currentModalIndex: 1})
+            () => {
+                setShowModal({ isOpen: true, currentModalIndex: 1 })
             },
             "Add a link to a YouTube video, Spotify track, or playlist"
         ),
-      
+
         ActionFactory(
-            "addSpotifyLink", 
-            "music_note", 
-            (event)=>{
+            "addSpotifyLink",
+            "music_note",
+            (event) => {
                 setShowModal({ isOpen: true, currentModalIndex: 0 });
-            }, 
+            },
             "Add a link to a spotify playlist"
         ),
         ActionFactory(
-            "addYoutubeLink", 
-            "youtube_activity", 
-            (event)=>{
+            "addYoutubeLink",
+            "youtube_activity",
+            (event) => {
                 setShowModal({ isOpen: true, currentModalIndex: 1 });
-            }, 
+            },
             "Add a link to a YouTube video or playlist"
         ),
     ]
@@ -416,7 +430,7 @@ export default function TimerGallery(props) {
         }
     }
 
- 
+
     //update all the data in the form
     const updateFormData = useCallback(async (property, data) => {
         // console.log("Updating", property, data);
@@ -437,31 +451,31 @@ export default function TimerGallery(props) {
      */
     const previewTimers = formData
         ? formData.timers?.map((timer, index) => (
-              <div
-                  className={`timer-holder ${timer.isBreak ? "break" : ""}`}
-                  key={timer._id}
-                  ref={(element) => {
-                      childRefs.current[index] = element;
-                  }}
-                  datakey={timer._id}
-              >
-                  <PreviewTimer
-                      number={index + 1}
-                      key={timer._id}
-                      id={timer._id}
-                      isBreak={timer.isBreak}
-                      isRep={timer.isRep}
-                      time={timer.time}
-                      autostart={timer.autostart}
-                      description={timer.description}
-                      label={timer.label}
-                      updateTimerData={updateSpecificTimer}
-                      slideImagePath={timer.slideImagePath}
-                      repeatNumber={timer.repeatNumber}
-                      theme={theme}
-                  />
-              </div>
-          ))
+            <div
+                className={`timer-holder ${timer.isBreak ? "break" : ""}`}
+                key={timer._id}
+                ref={(element) => {
+                    childRefs.current[index] = element;
+                }}
+                datakey={timer._id}
+            >
+                <PreviewTimer
+                    number={index + 1}
+                    key={timer._id}
+                    id={timer._id}
+                    isBreak={timer.isBreak}
+                    isRep={timer.isRep}
+                    time={timer.time}
+                    autostart={timer.autostart}
+                    description={timer.description}
+                    label={timer.label}
+                    updateTimerData={updateSpecificTimer}
+                    slideImagePath={timer.slideImagePath}
+                    repeatNumber={timer.repeatNumber}
+                    theme={theme}
+                />
+            </div>
+        ))
         : [];
 
     //handle change event on the form
@@ -495,10 +509,10 @@ export default function TimerGallery(props) {
             autostart: false,
             isBreak: false,
             repeatNumber: 0,
-        } : helpers.cloneObject(formData.timers[position], true) 
+        } : helpers.cloneObject(formData.timers[position], true)
 
         //delete the id 
-        if(duplicate){
+        if (duplicate) {
             delete newTimerData._id
         }
 
@@ -517,7 +531,7 @@ export default function TimerGallery(props) {
             newArray.splice(insertAtIndex, 0, { ...newTimerData });
             // setTimeout(()=> updateFormData("timers", newArray), 100)
             await updateFormData("timers", newArray);
-          
+
         }
     }
 
@@ -553,7 +567,7 @@ export default function TimerGallery(props) {
                     setParentTimers={updateAllTimers}
                     deleteParentTimer={deleteTimer}
                     navigateToParentTimer={navigateToTimer}
-                    // duplicateParentTimer={duplicateTimer}
+                // duplicateParentTimer={duplicateTimer}
                 />
 
             </ThemeProvider>
@@ -563,9 +577,9 @@ export default function TimerGallery(props) {
                     {previewTimers}
                 </TimerWrapper>
             </ThemeProvider>
-            {uiToggles.showAutoBreak && <AutoBreakConfig 
+            {uiToggles.showAutoBreak && <AutoBreakConfig
                 timer={formData && formData.autoBreakTimer}
-                time={formData ? formData.autoBreakTime : {hours: 0, minutes: 0, seconds:5}}
+                time={formData ? formData.autoBreakTime : { hours: 0, minutes: 0, seconds: 5 }}
                 updateFormData={updateFormData}
             />}
             {showModal.isOpen && (
